@@ -1,0 +1,549 @@
+<?php 
+$redirectUrl = (!empty(@$_SESSION['hm_wb_logged_in'] && $_SESSION['hm_wb_logged_in'] === true)) ? 'home.php' : 'index.php';
+?>
+<!DOCTYPE html>
+<html lang="en">
+    <?php include('includes/head.php') ?>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css" rel="stylesheet">
+    <body>
+        <?php include('includes/nav-header.php') ?>
+
+        <?php
+        if($ads_Id > 0 || $post_Id > 0){
+            $userCompanies = array_filter($userCompanies, function($mem) use ($companyIds) {
+                return in_array($mem['id'], $companyIds);
+            });
+        }
+        ?>
+
+        <header class="post-upload-header">
+            <div class="post-upload-ads">
+                <div class="header-left">
+                    <a href="home.php" class="back-arr">
+                        <img src="assets/img/left-arr.png" alt="" />
+                    </a>
+                </div>
+                <div class="steps">
+                    <div class="single-step" id="step2-tab">
+                        <h3><span>2</span></h3>
+                        <p>Boost Details</p>
+                    </div>
+                    <div class="single-step" id="step3-tab">
+                        <h3><span>3</span></h3>
+                        <p>Call To Action</p>
+                    </div>
+                    <div class="single-step" id="step4-tab">
+                        <h3><span>4</span></h3>
+                        <p>Confirm & Pay</p>
+                    </div>
+                    <div class="step-bar"></div>
+                </div>
+            </div>
+        </header>
+        
+        <form class="postDetailsBody" method="post" enctype="multipart/form-data" onsubmit="return validateForm();">
+
+            <!-- Step 1: Post Details -->
+            <div class="form-step" id="step1">
+                <div class="upload-container set-border-radius-half">
+                    <div class="upload-communitie">
+                        <!-- FOR IMAGES -->
+                        <div class="row secondary-images">
+                            <div class="col-12">
+                                <div class="d-flex justify-content-center mb-4">
+                                    <h2 class="create-title create-title-space fw-bold text-center mt-4">
+                                        Boost Post 
+                                    </h2>
+                                </div>
+                            </div>
+
+                            <div class="create-company-upload-grp-pic">
+                                <?php
+                                // Total image upload slots
+                                $totalSlots = 1;
+                                if($post_Id > 0){
+                                    $existingImages = $adsData[0]['post_images'] ?? [];
+                                }else{
+                                    $existingImages = $adsData[0]['sponser_ads_images'] ?? [];
+                                }
+                                for ($i = 0; $i < $totalSlots; $i++):
+                                    $inputId = 'imageUploadInput' . ($i + 4);
+                                    $previewId = 'previewImg' . ($i + 4);
+                                    $textId = 'textHd' . ($i + 4);
+                                    $hiddenField = 'listing_cropped_image' . ($i + 1);
+                                    $imageLabel = ($i === 0) ? 'Ad Image (Primary)' : 'Ad Image';
+                                    if($post_Id > 0){
+                                        $imageSrc = isset($existingImages[$i]['image']) ? MEDIA_BASE_URL . $existingImages[$i]['image'] : '';
+                                    }else{
+                                        $imageSrc = isset($existingImages[$i]['media']) ? MEDIA_BASE_URL . $existingImages[$i]['media'] : '';
+                                    }
+                                    $hasImage = !empty($imageSrc);
+                                ?>
+                                    <div class="comunity-image-upload-wrapper company-img-upload-2 ad-image-upload offset-11">
+                                        <label class="<?= ($ads_Id != 0 || $post_Id != 0) && $i === 0 && $hasImage ? 'd-none' : 'comunity-image-upload-label' ?>" for="<?= $inputId ?>">
+                                            <span class="uploadIconComunity">
+                                                <img src="assets/img/tabler_upload.png" class="img-fluid" alt="Upload Icon" />
+                                            </span>
+                                            <span class="uploadTextcomunity" id="<?= $textId ?>"><?= $imageLabel ?></span>
+                                        </label>
+                                        <input type="file" class="comunity-image-upload-input" id="<?= $inputId ?>" style="display: none"
+                                            onchange="previewImage(event, '<?= $previewId ?>', '<?= $textId ?>', '<?= $hiddenField ?>')" accept="image/*" />
+                                        <input type="hidden" name="<?= $hiddenField ?>" id="<?= $hiddenField ?>" value="" />
+                                        
+                                        <div class="comunity-image-upload-preview comunity-image-upload-preview-Ads" style="<?= $hasImage ? '' : 'display: none' ?>">
+                                            <?php if($hasImage): ?>
+                                                <?php if($post_Id > 0){ ?>
+                                                    <div class="remove-img"></div>
+                                                <?php } else { ?>
+                                                    <div class="remove-img" onclick="deleteMedia(<?= $existingImages[$i]['id'] ?>)">
+                                                        <img src="assets/img/cross1.png" class="img-fluid" alt="Remove" />
+                                                    </div>
+                                                <?php } ?>
+                                            <?php else: ?>
+                                            <div class="remove-img">
+                                                <img src="assets/img/cross1.png" class="img-fluid" alt="Remove" />
+                                            </div>
+                                            <?php endif; ?>
+                                            <img class="previewImage" id="<?= $previewId ?>" src="<?= $hasImage ? $imageSrc : '' ?>" class="img-fluid" alt="Preview Image" />
+                                        </div>
+                                    </div>
+                                <?php endfor; ?>
+                            </div>
+
+                            <!-- Preview Video -->
+                            <div class="comunity-image-upload-wrapper company-img-upload-2 ad-video-upload" style="display: none;">
+                                <label class="comunity-image-upload-label" for="imageUploadInput69">
+                                    <span class="uploadIconComunity" id="upIcon69">
+                                        <img src="assets/img/tabler_upload.png" class="img-fluid" alt="Upload Icon" />
+                                    </span>
+                                    <span class="uploadTextcomunity" id="textHd69">Ad Video</span>
+                                    <div class="comunity-image-upload-preview comunity-image-upload-preview-Ads" id="videoRm" style="display: none">
+                                        <div class="remove-img">
+                                            <img src="assets/img/cross1.png" class="img-fluid" alt="Remove" />
+                                        </div>
+                                        <video id="previewVideo" style="display: none;"></video>
+                                    </div>
+                                </label>
+                                <input type="file" name="image" class="comunity-image-upload-input" id="imageUploadInput69" style="display: none" onchange="previewMedia(event)" accept="video/*" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ******************* -->
+                <!-- Start Date -->
+                <!-- ******************* -->
+                <div class="upload-container mt-4 set-border-radius-full">
+                    <div class="upload-communities">
+                        <div class="row communities-row">
+                            <div class="col-12">
+                                <div class="accordion details-accordion" id="boostAccordion">
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header">
+                                            <button class="accordion-button flow-title" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+                                                <div class="accordian-title-main">
+                                                    <span class="fw-bold">Begins On</span>
+                                                </div>
+                                            </button>
+                                        </h2>
+
+                                        <div id="collapseTwo" class="accordion-collapse collapse show" aria-labelledby="headingTwo" data-bs-parent="#boostAccordion">
+                                            <div class="accordion-body">
+                                                <!-- CONTENT -->
+                                                <div class="input-wrapper set-date-picker-end-start position-relative">
+                                                    <img src="assets/img/clarity_date-line.png" alt="calendar" class="set-calendar-icon-input"> 
+                                                    <input type="text" name="datefilter" onfocus="this.setAttribute('autocomplete', 'off');" autocomplete="off" value="" class="w-100 set-zindex-1001 form-input" placeholder="Start Date" />
+                                                    <input type="hidden" name="start_date" id="hiddenStartDate">
+                                                    <input type="hidden" name="end_date" id="hiddenEndDate">
+                                                </div>
+
+                                                <div class="boost-plan-section mt-3 d-flex flex-row  justify-content-between">
+                                                    <div class="planDrop">
+                                                        <label for="boostPlanSelect" class="form-label fw-bold">Choose Boost Plan:</label>
+                                                        <select id="boostPlanSelect" name="boost_plan" class="form-select">
+                                                            <option value="">Select Plan</option>
+                                                            <?php foreach ($boostPlans as $plan): ?>
+                                                                <option value="<?= $plan['id'] ?>" data-price="<?= $plan['price'] ?>" data-code="<?= $plan['code'] ?>">
+                                                                    <?= $plan['title'] ?> - $<?= number_format($plan['price'], 2) ?>
+                                                                </option>
+                                                            <?php endforeach; ?>
+                                                        </select>
+                                                    </div>
+
+                                                    <div class="boost-quantity mt-3 d-flex align-items-center gap-2">
+                                                        <label class="mb-0 fw-bold">Duration:</label>
+                                                        <button type="button" class="btn btn-outline-secondary btn-sm" onclick="adjustBoostQty(-1)">–</button>
+                                                        <input type="number" name="boost_quantity" id="boostQuantityInput" class="form-control w-auto text-center" value="0" readonly />
+                                                        <button type="button" class="btn btn-outline-secondary btn-sm" onclick="adjustBoostQty(1)">+</button>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                        <div class="col-12 upload-container py-2">
+                                            <div id="costBreakdownBox" style="display: none;" class="text-end mx-3">
+                                                <div>Sub Total: <span id="subTotalAmount" class="text-dark">$0.00</span></div>
+                                                <div>Tax (<span id="taxRatePercent"><?php echo $imagePlans[0]['tax']; ?></span>%): <span id="taxAmount" class="text-dark">$0.00</span></div>
+                                                <div class="fw-bold">Current Campaign: <span id="totalCost" class="text-primary">$0.00</span></div>
+                                            </div>
+                                        </div>
+                                        <input type="hidden" id="sub_total" name="sub_total" value="0.00">
+                                        <input type="hidden" id="tax_amount" name="tax_amount" value="0.00">
+                                        <input type="hidden" id="total_amount" name="total_amount" value="0.00">
+                                        <input type="hidden" id="charged_breakdown" name="charged_breakdown" value="">
+                                        <input type="hidden" id="total_days" name="total_days" value="">
+                                        <input type="hidden" id="payment" name="payment" value="0">
+                                        <input type="hidden" id="is_manual" name="is_manual" value="0">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-end upload-container set-bg-transparent mt-5">
+                    <button type="button" onclick="nextStep(2)" class="mx-3 upload-buttom-top setNextBtn set-btn-save-next">Save &amp; Next <img src="assets/img/Arrow Forward.svg" alt="Arrow"></button>
+                </div>
+            </div>
+
+            <!-- Step 2: Payment -->
+            <div class="form-step" id="step2" style="display: none;">
+                <section class="flow" id="locations">
+                    <div class="preview-container">
+                        <div class="preview-box flex-xl-row flex-column offset-4">
+                            <div class="price-preview">
+                                <div class="priview-title-wrapper">
+                                    <h2 class="flow-location-title">Payment</h2>
+                                </div>
+                                <div class="price-priver-inner price-priver-inner-gap">
+                                    <div class="price-priver-inner-top">
+                                        <div class="price-priver-inner-top-text">
+                                            <h3>Your boost payment statistics</h3>
+                                        </div>
+                                        <div class="horaizontl-line"></div>
+                                        <div class="price-priver-inner-top-prices">
+                                            <div class="price-priver-inner-top-prices-inner">
+                                                <div class="price-priver-inner-top-prices-left">
+                                                    <span>Sub Total</span>
+                                                </div>
+                                                <div class="price-priver-inner-top-prices-right" id="sub_total_amount_summary">
+                                                    <span>$0.00</span>
+                                                </div>
+                                            </div>
+                                            <div class="price-priver-inner-top-prices-inner">
+                                                <div class="price-priver-inner-top-prices-left">
+                                                    <span>Sales Tax <?= $imagePlans[0]['tax'] ?>%</span>
+                                                </div>
+                                                <div class="price-priver-inner-top-prices-right" id="tax_amount_summary">
+                                                    <span>$0.00</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="horaizontl-line"></div>
+                                        <div class="price-priver-inner-top-prices">
+                                            <div class="price-priver-inner-top-prices-inner">
+                                                <div class="price-priver-inner-top-prices-left">
+                                                    <span>Total Amount</span>
+                                                </div>
+                                                <div class="price-priver-inner-top-prices-right">
+                                                    <span id="total_amount_summary">$0.00</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="horaizontl-line"></div>
+                                        <!-- Use Credits -->
+                                        <div class="price-priver-inner-top-prices-inner">
+                                            <div class="price-priver-inner-top-prices-left">
+                                                <span>Use Credits ($<?= $userDetails['wallet'] ?>)</span>
+                                            </div>
+                                            <div class="price-priver-inner-top-prices-right">
+                                                <span><input type="checkbox" id="use_credits" class="form-input" name="use_credits" value="1" /></span>
+                                                <input type="hidden" name="credit" id="credit" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <input type="hidden" name="post_id" id="bp_post_id" value="<?= $post_Id ?>" />
+                                        <div class="price-priver-inner-bottom d-flex justify-content-between flex-column">
+                                            <button type="submit" name="boostPost" class="price-priver-top-button setNextBtn">
+                                                Confirm & Pay
+                                                <img src="assets/img/Arrow Forward.svg" alt="Arrow" />
+                                            </button>
+                                            <button type="button" name="saveForLater" type="submit" class="price-priver-middle-button share-fn" data-id="<?php echo base64_encode($post_Id); ?>" data-title="Boost This Post Free" data-type="get_posts" data-meta="boost_post">Boost It Free</button>
+
+                                            <button type="button" class="upload-buttom-bottom" onclick="prevStep(1)">Back</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </form>
+        <div class="modal fade" id="selecComunityDetailsModal" tabindex="-1" aria-labelledby="selecComunityDetailsModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <section class="select-community-container set-community-main-modal-create-ad">
+                            <div class="comunity-container">
+                                <div class="comunity-title">
+                                    <h2>Choose Communities</h2>
+                                </div>
+                                <!-- comunity select  -->
+                                <div class="comunity-select">
+                                    <div class="comunity-search">
+                                        <div class="comunity-search-input">
+                                            <input type="text" placeholder="Search Community" class="form-control" />
+                                            <img src="assets/img/searchform.png" alt="" />
+                                        </div>
+                                    </div>
+                                    <div class="community-summary">
+                                        <div class="community-stats">
+                                            <div class="stat-item">
+                                                <p>Communities</p>
+                                                <h4><?= count($communities) ?></h4>
+                                            </div>
+                                            <div class="stat-item-2">
+                                                <p>Selected</p>
+                                                <h4>0</h4>
+                                            </div>
+                                        </div>
+                                        <div class="community-action-buttons">
+                                            <button class="btn-unselect-all">Select All</button>
+                                        </div>
+                                    </div>
+        
+                                    <?php if(count($communities)){ ?>
+                                        <!-- Community Boxes -->
+                                        <div class="comunity-boxes comunity-boxes-my thin-scrollbar cpScrlB">
+                                            <?php foreach ($communities as $community): ?>
+                                            <!-- Single Community Item -->
+                                            <div class="single-com-box new-single-com-box">
+                                                <label class="custom-checkbox w-100">
+                                                    <input
+                                                        type="checkbox"
+                                                        name="selected_community"
+                                                        class="checkbox-input community-radio-ch"
+                                                        value="<?= $community['id']; ?>"
+                                                        data-address="<?= $community['address']; ?>"
+                                                        data-latitude="<?= $community['latitude']; ?>"
+                                                        data-longitude="<?= $community['longitude']; ?>"
+                                                        data-country-code="<?= $community['country_code']; ?>"
+                                                        data-name="<?= $community['name']; ?>"
+                                                        data-description="<?= $community['description']; ?>"
+                                                        data-state="<?= $community['state']; ?>"
+                                                        data-city="<?= $community['city']; ?>"
+                                                    />
+                                                    <a class="com-img position-relative">
+                                                        <div class="w-100">
+                                                            <img src="<?php echo !empty($community['image']) ? MEDIA_BASE_URL.$community['image'] : generateBase64Image($community['name']); ?>" alt="" />
+                                                            <!-- Overlay -->
+                                                            <div class="overlay-comm <?= ($community['is_private'] && !$community['status']) ? '' : 'com-hidden' ?>"></div>
+                                                            <div class="overlay-text-comm <?= ($community['is_private'] && !$community['status']) ? '' : 'com-hidden' ?>">
+                                                                <img src="assets/img/game-icons_sands-of-time.svg" alt="" />
+                                                                <?php if ($community['is_private'] && !$community['is_approved']): ?>
+                                                                <p>Membership Approval Pending</p>
+                                                                <?php endif; ?>
+                                                                <?php if ($community['is_private'] && !$community['status']): ?>
+                                                                <p>Community waiting for approval by Himish</p>
+                                                                <?php endif; ?>
+                                                            </div>
+                                                        </div>
+                                                        <span class="position-absolute private-tag <?= $community['is_private'] ? '' : 'com-hidden' ?>">private</span>
+                                                    </a>
+                                                    <div class="com-body">
+                                                        <span class="com-title"><?= $community['name'] ?></span>
+                                                        <span class="com-text"><?= $community['description'] ?></span>
+                                                        <?php if(!empty($community['latitude']) && !empty($community['longitude'])){ ?>
+                                                        <span class="com-text">
+                                                            <i class="fa fa-map-pin"></i>
+                                                            <?= $community['city'].', '.$community['state'] ?>
+                                                        </span>
+                                                        <?php } ?>
+                                                        <!-- Lock -->
+                                                        <span class="user-comm-count-item-right <?= $community['is_private'] ? '' : 'com-hidden' ?>">
+                                                            <img src="assets/img/solar_lock-linear.svg" alt="" />
+                                                        </span>
+                                                    </div>
+                                                </label>
+                                            </div>
+                                            <?php endforeach; ?>
+                                        </div>
+                                        <?php }else{
+                                            echo renderNoDataCard('No Communities Joined!', '', 'You have not joined any communities yet.');
+                                        } ?>
+                                </div>
+                            </div>
+                            <div class="not-find cpScrlF d-flex justify-content-between align-items-center">
+                                <input type="hidden" id="selectedCommunitiesInput" name="selectedCommunities">
+                                
+                                <button type="button" class="saveBtn join-comm-fn mt-0" data-bs-dismiss="modal">
+                                    <span class="saveBtnTxt">Save</span>
+                                    <span class="saveBtnImg"><img src="assets/img/forward.png" class="img-fluid w-100" alt="" /></span>
+                                </button>
+                                
+                                <button type="button" class="skipBtn" data-bs-dismiss="modal">Cancel</button>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <?php include('includes/footer-scripts.php') ?>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js?v=<?= time() ?>"></script>
+
+        <script>
+
+        const pricingBoost = {};
+
+        <?php foreach ($boostPlans as $plan): ?>
+            pricingBoost["<?php echo $plan['id']; ?>"] = {
+                days: <?php echo ($plan['code'] === 'month' ? 30 : ($plan['code'] === 'week' ? 7 : 1)); ?>,
+                price: <?php echo $plan['price']; ?>
+            };
+        <?php endforeach; ?>
+
+
+        // Default initial pricing
+        let pricing = pricingBoost;
+
+        const taxRate = <?php echo $boostPlans[0]['tax']; ?>;
+        const userCredits = <?php echo $userDetails['wallet']; ?>;
+
+        function calculateBoostPostCost(count, selectedUnit) {
+            let subtotal = 0;
+            let breakdown = '';
+
+            // Get start date from hidden field (set by your datepicker)
+            const startDateStr = $('#hiddenStartDate').val(); // format: MM/DD/YYYY
+            const startMoment = moment(startDateStr, "MM/DD/YYYY");
+            
+            // Ensure valid unit is selected
+            if (!pricing[selectedUnit]) {
+                $.toastr.error("Invalid pricing unit selected.", {position: 'top-center', time: 5000});
+                return;
+            }
+
+            if (!startDateStr) {
+                $.toastr.error("Please select start date.", {position: 'top-center', time: 5000});
+                return;
+            }
+
+            const unitPrice = pricing[selectedUnit].price;
+            const unitName = selectedUnit.charAt(0).toUpperCase() + selectedUnit.slice(1);
+            const unitDays = pricing[selectedUnit].days;
+
+            subtotal = count * unitPrice;
+
+            const totalDays = count * unitDays;
+
+            const taxAmount = subtotal * (taxRate / 100);
+            const totalBeforeCredit = subtotal + taxAmount;
+
+            let creditUsed = 0;
+            let finalTotal = totalBeforeCredit;
+
+            if ($('#use_credits').is(':checked')) {
+                creditUsed = Math.min(userCredits, totalBeforeCredit);
+                finalTotal = totalBeforeCredit - creditUsed;
+            }
+
+            // Calculate end date
+            const endMoment = startMoment.clone().add(totalDays, 'days');
+            const endDateStr = endMoment.format("MM/DD/YYYY");
+
+            // Update UI for end date
+            $('#hiddenEndDate').val(endDateStr);
+
+            // Update display
+            $("#subTotalAmount").text(`$${subtotal.toFixed(2)}`);
+            $("#sub_total_amount_summary").text(`$${subtotal.toFixed(2)}`);
+            $("#taxAmount").text(`$${taxAmount.toFixed(2)}`);
+            $("#tax_amount_summary").text(`$${taxAmount.toFixed(2)}`);
+            $("#totalCost").text(`$${finalTotal.toFixed(2)}`);
+            $("#total_amount_summary").text(`$${finalTotal.toFixed(2)}`);
+            $("#ad_duration_summary").text(breakdown);
+
+            // Set hidden fields
+            $("#sub_total").val(subtotal.toFixed(2));
+            $("#tax_amount").val(taxAmount.toFixed(2));
+            $("#total_amount").val(finalTotal.toFixed(2));
+            $("#charged_breakdown").val(breakdown);
+            $("#total_days").val(totalDays);
+            $("#credit").val(creditUsed.toFixed(2));
+
+            $("#costBreakdownBox").show();
+        }
+
+        $(document).ready(function () {
+            $("#use_credits").on('change', function () {
+
+                const input = document.getElementById('boostQuantityInput');
+                let value = parseInt(input.value) || 0;
+
+                // Get selected option from dropdown
+                const selectedType = document.getElementById('boostPlanSelect').value;
+
+                calculateBoostPostCost(value, selectedType);
+            });
+        });
+
+        </script>
+
+        <script>
+        $(function () {
+            const dateInput = $('input[name="datefilter"]');
+
+            dateInput.daterangepicker({
+                singleDatePicker: true,         // 👈 Only one date selectable
+                showDropdowns: true,            // Optional: shows year/month dropdowns
+                autoUpdateInput: false,
+                drops: "up",                    // Calendar opens above the input
+                minDate: moment(),              // Disable past dates
+                locale: {
+                    cancelLabel: "Clear",
+                    format: "MM/DD/YYYY"        // You can change the format as needed
+                }
+            });
+
+            dateInput.on("apply.daterangepicker", function (ev, picker) {
+                ev.preventDefault();
+                ev.stopPropagation();
+
+                // Prevent any scroll jump
+                document.activeElement.blur();
+
+                const start = picker.startDate.format("MM/DD/YYYY");
+
+                $(this).val(`${start}`);
+
+                // Set hidden fields for start and end dates
+                $('#hiddenStartDate').val(start);
+            });
+        });
+        </script>
+
+        <script src="assets/js/boost-post.js?v=<?= time() ?>"></script>
+
+        <script>
+        function adjustBoostQty(change) {
+            const input = document.getElementById('boostQuantityInput');
+            let value = parseInt(input.value) || 0;
+            value = Math.max(0, value + change);
+            input.value = value;
+
+            // Get selected option from dropdown
+            const selectedType = document.getElementById('boostPlanSelect').value;
+
+            // Call calculateAdCost with current value and selected type
+            calculateBoostPostCost(value, selectedType);
+        }
+
+        document.getElementById('boostPlanSelect').addEventListener('change', function () {
+            const currentQty = parseInt(document.getElementById('boostQuantityInput').value) || 0;
+            adjustBoostQty(0); // Passing 0 to keep quantity unchanged, but trigger cost recalculation
+        });
+        </script>
+    </body>
+</html>

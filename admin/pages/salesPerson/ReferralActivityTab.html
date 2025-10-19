@@ -1,0 +1,403 @@
+<html><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script> window.FontAwesomeConfig = { autoReplaceSvg: 'nest'};</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    
+    <style>
+        ::-webkit-scrollbar { display: none;}
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+    <script>tailwind.config = {
+  "theme": {
+    "extend": {
+      "colors": {
+        "primary": "#2563eb",
+        "secondary": "#64748b",
+        "success": "#10b981",
+        "warning": "#f59e0b",
+        "danger": "#ef4444"
+      },
+      "fontFamily": {
+        "sans": [
+          "Inter",
+          "sans-serif"
+        ]
+      }
+    }
+  }
+};</script>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;500;600;700;800;900&amp;display=swap"><style>
+  .highlighted-section {
+    outline: 2px solid #3F20FB;
+    background-color: rgba(63, 32, 251, 0.1);
+  }
+
+  .edit-button {
+    position: absolute;
+    z-index: 1000;
+  }
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
+
+  html, body {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  </style></head>
+<body class="bg-gray-50">
+
+<div id="header" class="fixed top-0 left-0 right-0 bg-white border-b border-gray-200 z-50">
+    <div class="px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-16">
+            <div class="flex items-center">
+                <button id="backBtn" class="mr-3 p-2 text-gray-400 hover:text-gray-600">
+                    <i class="fa-solid fa-arrow-left"></i>
+                </button>
+                <h1 class="text-2xl font-bold text-primary">Himish</h1>
+                <span class="ml-2 text-sm text-gray-500">My Posts</span>
+            </div>
+            <div class="flex items-center space-x-4">
+                <div class="relative">
+                    <button id="notificationBtn" class="p-2 text-gray-400 hover:text-gray-600 relative">
+                        <i class="fa-solid fa-bell text-lg"></i>
+                        <span class="absolute -top-1 -right-1 bg-danger text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">3</span>
+                    </button>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-2.jpg" alt="Profile" class="h-8 w-8 rounded-full">
+                    <span class="text-sm font-medium text-gray-700">John Smith</span>
+                    <button class="text-gray-400 hover:text-gray-600">
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="main-content" class="pt-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <div id="posts-header" class="flex justify-between items-center mb-8">
+            <div>
+                <h2 class="text-3xl font-bold text-gray-900 mb-2">My Posts</h2>
+                <p class="text-gray-600">Manage all your created posts and track their performance</p>
+            </div>
+            <button class="bg-primary text-white px-6 py-3 rounded-lg font-medium hover:bg-primary/90 transition-colors">
+                <i class="fa-solid fa-plus mr-2"></i>Create New Post
+            </button>
+        </div>
+
+        <div id="posts-stats" class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                <div class="flex items-center">
+                    <div class="p-3 bg-primary/10 rounded-lg">
+                        <i class="fa-solid fa-clipboard-list text-primary text-xl"></i>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-600">Total Posts</p>
+                        <p class="text-2xl font-bold text-gray-900">47</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                <div class="flex items-center">
+                    <div class="p-3 bg-success/10 rounded-lg">
+                        <i class="fa-solid fa-check-circle text-success text-xl"></i>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-600">Active Posts</p>
+                        <p class="text-2xl font-bold text-gray-900">24</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                <div class="flex items-center">
+                    <div class="p-3 bg-success/10 rounded-lg">
+                        <i class="fa-solid fa-dollar-sign text-success text-xl"></i>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-600">Total Earnings</p>
+                        <p class="text-2xl font-bold text-gray-900">$8,750</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                <div class="flex items-center">
+                    <div class="p-3 bg-warning/10 rounded-lg">
+                        <i class="fa-solid fa-clock text-warning text-xl"></i>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-600">Pending</p>
+                        <p class="text-2xl font-bold text-gray-900">8</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="posts-filters" class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-4 sm:space-y-0">
+                <div class="flex flex-wrap gap-2">
+                    <button class="px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium">All Posts</button>
+                    <button class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-200">Active</button>
+                    <button class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-200">Expired</button>
+                    <button class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-200">Converted</button>
+                    <button class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-200">Pending</button>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <div class="relative">
+                        <input type="text" placeholder="Search posts..." class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary focus:border-transparent">
+                        <i class="fa-solid fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                    </div>
+                    <button class="p-2 border border-gray-300 rounded-lg text-gray-600 hover:bg-gray-50">
+                        <i class="fa-solid fa-filter"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="posts-list" class="space-y-4">
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                <div class="flex flex-col lg:flex-row lg:items-center justify-between">
+                    <div class="flex-1 mb-4 lg:mb-0">
+                        <div class="flex items-start justify-between mb-3">
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-900 mb-1">Digital Marketing Services</h3>
+                                <p class="text-sm text-gray-600">Complete digital marketing solutions for small businesses</p>
+                            </div>
+                            <span class="px-3 py-1 bg-success text-white text-sm font-medium rounded-full">Active</span>
+                        </div>
+                        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
+                            <div>
+                                <p class="text-gray-600">Created</p>
+                                <p class="font-medium">Dec 15, 2024</p>
+                            </div>
+                            <div>
+                                <p class="text-gray-600">Expires</p>
+                                <p class="font-medium">Jan 15, 2025</p>
+                            </div>
+                            <div>
+                                <p class="text-gray-600">Clicks</p>
+                                <p class="font-medium">142</p>
+                            </div>
+                            <div>
+                                <p class="text-gray-600">Earnings</p>
+                                <p class="font-medium text-success">$450</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <div class="flex items-center space-x-2">
+                            <input type="text" value="https://postersz.com/post/dm-services-ref-js" class="text-xs bg-gray-50 border border-gray-200 rounded px-2 py-1 w-48" readonly="">
+                            <button class="p-1 text-gray-400 hover:text-gray-600">
+                                <i class="fa-solid fa-copy"></i>
+                            </button>
+                        </div>
+                        <button class="p-2 text-gray-400 hover:text-gray-600">
+                            <i class="fa-solid fa-external-link-alt"></i>
+                        </button>
+                        <button class="p-2 text-gray-400 hover:text-gray-600">
+                            <i class="fa-solid fa-ellipsis-v"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                <div class="flex flex-col lg:flex-row lg:items-center justify-between">
+                    <div class="flex-1 mb-4 lg:mb-0">
+                        <div class="flex items-start justify-between mb-3">
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-900 mb-1">Web Development Package</h3>
+                                <p class="text-sm text-gray-600">Full-stack web development services</p>
+                            </div>
+                            <span class="px-3 py-1 bg-warning text-white text-sm font-medium rounded-full">Pending</span>
+                        </div>
+                        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
+                            <div>
+                                <p class="text-gray-600">Created</p>
+                                <p class="font-medium">Dec 20, 2024</p>
+                            </div>
+                            <div>
+                                <p class="text-gray-600">Expires</p>
+                                <p class="font-medium">Jan 20, 2025</p>
+                            </div>
+                            <div>
+                                <p class="text-gray-600">Clicks</p>
+                                <p class="font-medium">89</p>
+                            </div>
+                            <div>
+                                <p class="text-gray-600">Earnings</p>
+                                <p class="font-medium text-warning">$320</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <div class="flex items-center space-x-2">
+                            <input type="text" value="https://postersz.com/post/web-dev-ref-js" class="text-xs bg-gray-50 border border-gray-200 rounded px-2 py-1 w-48" readonly="">
+                            <button class="p-1 text-gray-400 hover:text-gray-600">
+                                <i class="fa-solid fa-copy"></i>
+                            </button>
+                        </div>
+                        <button class="p-2 text-gray-400 hover:text-gray-600">
+                            <i class="fa-solid fa-external-link-alt"></i>
+                        </button>
+                        <button class="p-2 text-gray-400 hover:text-gray-600">
+                            <i class="fa-solid fa-ellipsis-v"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                <div class="flex flex-col lg:flex-row lg:items-center justify-between">
+                    <div class="flex-1 mb-4 lg:mb-0">
+                        <div class="flex items-start justify-between mb-3">
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-900 mb-1">SEO Optimization Services</h3>
+                                <p class="text-sm text-gray-600">Complete SEO audit and optimization</p>
+                            </div>
+                            <span class="px-3 py-1 bg-danger text-white text-sm font-medium rounded-full">Expired</span>
+                        </div>
+                        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
+                            <div>
+                                <p class="text-gray-600">Created</p>
+                                <p class="font-medium">Nov 25, 2024</p>
+                            </div>
+                            <div>
+                                <p class="text-gray-600">Expired</p>
+                                <p class="font-medium text-danger">Dec 25, 2024</p>
+                            </div>
+                            <div>
+                                <p class="text-gray-600">Clicks</p>
+                                <p class="font-medium">67</p>
+                            </div>
+                            <div>
+                                <p class="text-gray-600">Earnings</p>
+                                <p class="font-medium text-gray-400">$0</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <div class="flex items-center space-x-2">
+                            <input type="text" value="https://postersz.com/post/seo-services-ref-js" class="text-xs bg-gray-50 border border-gray-200 rounded px-2 py-1 w-48" readonly="">
+                            <button class="p-1 text-gray-400 hover:text-gray-600">
+                                <i class="fa-solid fa-copy"></i>
+                            </button>
+                        </div>
+                        <button class="p-2 text-gray-400 hover:text-gray-600">
+                            <i class="fa-solid fa-redo"></i>
+                        </button>
+                        <button class="p-2 text-gray-400 hover:text-gray-600">
+                            <i class="fa-solid fa-ellipsis-v"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                <div class="flex flex-col lg:flex-row lg:items-center justify-between">
+                    <div class="flex-1 mb-4 lg:mb-0">
+                        <div class="flex items-start justify-between mb-3">
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-900 mb-1">Social Media Management</h3>
+                                <p class="text-sm text-gray-600">Complete social media strategy and management</p>
+                            </div>
+                            <span class="px-3 py-1 bg-success text-white text-sm font-medium rounded-full">Active</span>
+                        </div>
+                        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
+                            <div>
+                                <p class="text-gray-600">Created</p>
+                                <p class="font-medium">Jan 2, 2025</p>
+                            </div>
+                            <div>
+                                <p class="text-gray-600">Expires</p>
+                                <p class="font-medium">Feb 2, 2025</p>
+                            </div>
+                            <div>
+                                <p class="text-gray-600">Clicks</p>
+                                <p class="font-medium">234</p>
+                            </div>
+                            <div>
+                                <p class="text-gray-600">Earnings</p>
+                                <p class="font-medium text-success">$680</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <div class="flex items-center space-x-2">
+                            <input type="text" value="https://postersz.com/post/social-media-ref-js" class="text-xs bg-gray-50 border border-gray-200 rounded px-2 py-1 w-48" readonly="">
+                            <button class="p-1 text-gray-400 hover:text-gray-600">
+                                <i class="fa-solid fa-copy"></i>
+                            </button>
+                        </div>
+                        <button class="p-2 text-gray-400 hover:text-gray-600">
+                            <i class="fa-solid fa-external-link-alt"></i>
+                        </button>
+                        <button class="p-2 text-gray-400 hover:text-gray-600">
+                            <i class="fa-solid fa-ellipsis-v"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                <div class="flex flex-col lg:flex-row lg:items-center justify-between">
+                    <div class="flex-1 mb-4 lg:mb-0">
+                        <div class="flex items-start justify-between mb-3">
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-900 mb-1">E-commerce Solutions</h3>
+                                <p class="text-sm text-gray-600">Complete online store setup and management</p>
+                            </div>
+                            <span class="px-3 py-1 bg-blue-500 text-white text-sm font-medium rounded-full">Converted</span>
+                        </div>
+                        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
+                            <div>
+                                <p class="text-gray-600">Created</p>
+                                <p class="font-medium">Dec 10, 2024</p>
+                            </div>
+                            <div>
+                                <p class="text-gray-600">Converted</p>
+                                <p class="font-medium text-blue-600">Dec 28, 2024</p>
+                            </div>
+                            <div>
+                                <p class="text-gray-600">Clicks</p>
+                                <p class="font-medium">156</p>
+                            </div>
+                            <div>
+                                <p class="text-gray-600">Earnings</p>
+                                <p class="font-medium text-success">$1,250</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <div class="flex items-center space-x-2">
+                            <input type="text" value="https://postersz.com/post/ecommerce-ref-js" class="text-xs bg-gray-50 border border-gray-200 rounded px-2 py-1 w-48" readonly="">
+                            <button class="p-1 text-gray-400 hover:text-gray-600">
+                                <i class="fa-solid fa-copy"></i>
+                            </button>
+                        </div>
+                        <button class="p-2 text-gray-400 hover:text-gray-600">
+                            <i class="fa-solid fa-external-link-alt"></i>
+                        </button>
+                        <button class="p-2 text-gray-400 hover:text-gray-600">
+                            <i class="fa-solid fa-ellipsis-v"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="pagination" class="flex justify-center items-center space-x-2 mt-8">
+            <button class="px-3 py-2 border border-gray-300 rounded-lg text-gray-600 hover:bg-gray-50">
+                <i class="fa-solid fa-chevron-left"></i>
+            </button>
+            <button class="px-3 py-2 bg-primary text-white rounded-lg">1</button>
+            </div></div></div></body></html>

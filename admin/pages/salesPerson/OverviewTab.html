@@ -1,0 +1,385 @@
+<html><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script> window.FontAwesomeConfig = { autoReplaceSvg: 'nest'};</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://code.highcharts.com/highcharts.js?v=<?= time() ?>"></script>
+    
+    <style>
+        ::-webkit-scrollbar { display: none;}
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+    <script>tailwind.config = {
+  "theme": {
+    "extend": {
+      "colors": {
+        "primary": "#2563eb",
+        "secondary": "#64748b",
+        "success": "#10b981",
+        "warning": "#f59e0b",
+        "danger": "#ef4444"
+      },
+      "fontFamily": {
+        "sans": [
+          "Inter",
+          "sans-serif"
+        ]
+      }
+    }
+  }
+};</script>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;500;600;700;800;900&amp;display=swap"><style>
+  .highlighted-section {
+    outline: 2px solid #3F20FB;
+    background-color: rgba(63, 32, 251, 0.1);
+  }
+
+  .edit-button {
+    position: absolute;
+    z-index: 1000;
+  }
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
+
+  html, body {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  </style></head>
+<body class="bg-gray-50">
+
+<div id="header" class="fixed top-0 left-0 right-0 bg-white border-b border-gray-200 z-50">
+    <div class="px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-16">
+            <div class="flex items-center">
+                <h1 class="text-2xl font-bold text-primary">Himish</h1>
+                <span class="ml-2 text-sm text-gray-500">Sales Dashboard</span>
+            </div>
+            <div class="flex items-center space-x-4">
+                <div class="relative">
+                    <button id="notificationBtn" class="p-2 text-gray-400 hover:text-gray-600 relative">
+                        <i class="fa-solid fa-bell text-lg"></i>
+                        <span class="absolute -top-1 -right-1 bg-danger text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">3</span>
+                    </button>
+                    <div id="notificationDropdown" class="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-lg border border-gray-200 hidden">
+                        <div class="p-4 border-b border-gray-200">
+                            <h3 class="text-sm font-semibold text-gray-900">Notifications</h3>
+                        </div>
+                        <div class="max-h-96 overflow-y-auto">
+                            <div class="p-4 border-b border-gray-100 hover:bg-gray-50">
+                                <div class="flex items-start space-x-3">
+                                    <div class="p-2 bg-red-100 rounded-full">
+                                        <i class="fa-solid fa-exclamation-triangle text-danger text-sm"></i>
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <p class="text-sm font-medium text-gray-900">Referral link expired</p>
+                                        <p class="text-xs text-gray-600">Marketing Campaign #MC001 needs renewal</p>
+                                        <p class="text-xs text-gray-400 mt-1">2 minutes ago</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="p-4 border-b border-gray-100 hover:bg-gray-50">
+                                <div class="flex items-start space-x-3">
+                                    <div class="p-2 bg-green-100 rounded-full">
+                                        <i class="fa-solid fa-check-circle text-success text-sm"></i>
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <p class="text-sm font-medium text-gray-900">New ad conversion</p>
+                                        <p class="text-xs text-gray-600">Commission earned: $125</p>
+                                        <p class="text-xs text-gray-400 mt-1">1 hour ago</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="p-4 hover:bg-gray-50">
+                                <div class="flex items-start space-x-3">
+                                    <div class="p-2 bg-blue-100 rounded-full">
+                                        <i class="fa-solid fa-users text-primary text-sm"></i>
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <p class="text-sm font-medium text-gray-900">New community member</p>
+                                        <p class="text-xs text-gray-600">Tech Startups gained 3 members</p>
+                                        <p class="text-xs text-gray-400 mt-1">3 hours ago</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-2.jpg" alt="Profile" class="h-8 w-8 rounded-full">
+                    <span class="text-sm font-medium text-gray-700">John Smith</span>
+                    <button class="text-gray-400 hover:text-gray-600">
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="main-content" class="pt-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <div id="dashboard-header" class="mb-8">
+            <h2 class="text-3xl font-bold text-gray-900 mb-2">Overview Dashboard</h2>
+            <p class="text-gray-600">Track your performance, earnings, and activity at a glance</p>
+        </div>
+
+        <div id="stats-overview" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div id="earnings-card" class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        <div class="p-3 bg-success/10 rounded-lg">
+                            <i class="fa-solid fa-dollar-sign text-success text-xl"></i>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm font-medium text-gray-600">Total Earnings</p>
+                            <p class="text-2xl font-bold text-gray-900">$12,450</p>
+                            <p class="text-xs text-success">+12.5% from last month</p>
+                        </div>
+                    </div>
+                    <button class="text-gray-400 hover:text-gray-600">
+                        <i class="fa-solid fa-external-link-alt"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div id="posts-card" class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        <div class="p-3 bg-primary/10 rounded-lg">
+                            <i class="fa-solid fa-clipboard-list text-primary text-xl"></i>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm font-medium text-gray-600">Active Posts</p>
+                            <p class="text-2xl font-bold text-gray-900">24</p>
+                            <p class="text-xs text-gray-500">8 pending approval</p>
+                        </div>
+                    </div>
+                    <button class="text-gray-400 hover:text-gray-600">
+                        <i class="fa-solid fa-external-link-alt"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div id="communities-card" class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        <div class="p-3 bg-purple-100 rounded-lg">
+                            <i class="fa-solid fa-users text-purple-600 text-xl"></i>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm font-medium text-gray-600">Communities</p>
+                            <p class="text-2xl font-bold text-gray-900">8</p>
+                            <p class="text-xs text-gray-500">156 total members</p>
+                        </div>
+                    </div>
+                    <button class="text-gray-400 hover:text-gray-600">
+                        <i class="fa-solid fa-external-link-alt"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div id="referrals-card" class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        <div class="p-3 bg-warning/10 rounded-lg">
+                            <i class="fa-solid fa-clock text-warning text-xl"></i>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm font-medium text-gray-600">Pending Referrals</p>
+                            <p class="text-2xl font-bold text-gray-900">15</p>
+                            <p class="text-xs text-warning">3 expiring soon</p>
+                        </div>
+                    </div>
+                    <button class="text-gray-400 hover:text-gray-600">
+                        <i class="fa-solid fa-external-link-alt"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+            <div id="notifications-section" class="lg:col-span-2">
+                <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-lg font-semibold text-gray-900">Recent Activity</h3>
+                        <button class="text-sm text-primary hover:text-primary/80">View All</button>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="flex items-start p-4 bg-red-50 border border-red-200 rounded-lg">
+                            <div class="p-2 bg-red-100 rounded-full mr-4">
+                                <i class="fa-solid fa-exclamation-triangle text-danger text-sm"></i>
+                            </div>
+                            <div class="flex-1">
+                                <div class="flex items-center justify-between">
+                                    <p class="text-sm font-medium text-gray-900">Referral link expired</p>
+                                    <span class="text-xs text-gray-500">2 min ago</span>
+                                </div>
+                                <p class="text-xs text-gray-600 mt-1">Marketing Campaign #MC001 link needs renewal</p>
+                                <button class="text-xs text-primary hover:text-primary/80 mt-2">Renew Link</button>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start p-4 bg-green-50 border border-green-200 rounded-lg">
+                            <div class="p-2 bg-green-100 rounded-full mr-4">
+                                <i class="fa-solid fa-check-circle text-success text-sm"></i>
+                            </div>
+                            <div class="flex-1">
+                                <div class="flex items-center justify-between">
+                                    <p class="text-sm font-medium text-gray-900">New ad created via your link</p>
+                                    <span class="text-xs text-gray-500">1 hr ago</span>
+                                </div>
+                                <p class="text-xs text-gray-600 mt-1">Commission earned: $125 from Web Development Package</p>
+                                <button class="text-xs text-primary hover:text-primary/80 mt-2">View Details</button>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                            <div class="p-2 bg-blue-100 rounded-full mr-4">
+                                <i class="fa-solid fa-users text-primary text-sm"></i>
+                            </div>
+                            <div class="flex-1">
+                                <div class="flex items-center justify-between">
+                                    <p class="text-sm font-medium text-gray-900">Community member joined</p>
+                                    <span class="text-xs text-gray-500">3 hr ago</span>
+                                </div>
+                                <p class="text-xs text-gray-600 mt-1">Tech Startups community gained 3 new members</p>
+                                <button class="text-xs text-primary hover:text-primary/80 mt-2">View Community</button>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+                            <div class="p-2 bg-yellow-100 rounded-full mr-4">
+                                <i class="fa-solid fa-star text-warning text-sm"></i>
+                            </div>
+                            <div class="flex-1">
+                                <div class="flex items-center justify-between">
+                                    <p class="text-sm font-medium text-gray-900">Achievement unlocked</p>
+                                    <span class="text-xs text-gray-500">1 day ago</span>
+                                </div>
+                                <p class="text-xs text-gray-600 mt-1">Reached 100 successful referrals milestone</p>
+                                <button class="text-xs text-primary hover:text-primary/80 mt-2">View Badge</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="quick-actions-section">
+                <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
+                    <div class="space-y-3">
+                        <button class="w-full bg-primary text-white py-3 px-4 rounded-lg font-medium hover:bg-primary/90 transition-colors flex items-center justify-center">
+                            <i class="fa-solid fa-plus mr-2"></i>
+                            Create New Post
+                        </button>
+                        <button class="w-full bg-purple-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-purple-700 transition-colors flex items-center justify-center">
+                            <i class="fa-solid fa-users mr-2"></i>
+                            Create Community
+                        </button>
+                        <button class="w-full bg-gray-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-gray-700 transition-colors flex items-center justify-center">
+                            <i class="fa-solid fa-link mr-2"></i>
+                            Generate Link
+                        </button>
+                        <button class="w-full bg-green-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-green-700 transition-colors flex items-center justify-center">
+                            <i class="fa-solid fa-user-plus mr-2"></i>
+                            Invite Members
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="performance-metrics" class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">This Month</h3>
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <div class="w-2 h-2 bg-success rounded-full mr-3"></div>
+                                <span class="text-sm text-gray-600">Conversions</span>
+                            </div>
+                            <span class="text-sm font-medium text-gray-900">18</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <div class="w-2 h-2 bg-primary rounded-full mr-3"></div>
+                                <span class="text-sm text-gray-600">Click Rate</span>
+                            </div>
+                            <span class="text-sm font-medium text-gray-900">24.5%</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <div class="w-2 h-2 bg-purple-500 rounded-full mr-3"></div>
+                                <span class="text-sm text-gray-600">New Members</span>
+                            </div>
+                            <span class="text-sm font-medium text-gray-900">32</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <div class="w-2 h-2 bg-warning rounded-full mr-3"></div>
+                                <span class="text-sm text-gray-600">Avg. Commission</span>
+                            </div>
+                            <span class="text-sm font-medium text-gray-900">$285</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div id="recent-posts-section" class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="text-lg font-semibold text-gray-900">Recent Posts</h3>
+                    <button class="text-sm text-primary hover:text-primary/80">View All Posts</button>
+                </div>
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
+                        <div class="flex-1">
+                            <h4 class="text-sm font-medium text-gray-900">Digital Marketing Services</h4>
+                            <p class="text-xs text-gray-600 mt-1">142 clicks • $450 earned</p>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <span class="px-2 py-1 text-xs bg-success text-white rounded-full">Active</span>
+                            <button class="text-gray-400 hover:text-gray-600">
+                                <i class="fa-solid fa-external-link-alt text-xs"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
+                        <div class="flex-1">
+                            <h4 class="text-sm font-medium text-gray-900">Web Development Package</h4>
+                            <p class="text-xs text-gray-600 mt-1">89 clicks • $320 earned</p>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <span class="px-2 py-1 text-xs bg-warning text-white rounded-full">Pending</span>
+                            <button class="text-gray-400 hover:text-gray-600">
+                                <i class="fa-solid fa-external-link-alt text-xs"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
+                        <div class="flex-1">
+                            <h4 class="text-sm font-medium text-gray-900">SEO Optimization</h4>
+                            <p class="text-xs text-gray-600 mt-1">67 clicks • $0 earned</p>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <span class="px-2 py-1 text-xs bg-danger text-white rounded-full">Expired</span>
+                            <button class="text-gray-400 hover:text-gray-600">
+                                <i class="fa-solid fa-redo text-xs"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="top-communities-section" class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="text-lg font-semibold text-gray-900">Top Communities</h3>
+                    <button class="text-sm text-primary hover:text-primary/80">View All Communities</button>
+                </div>
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
+                        <div class="flex items-center">
+                            </div></div></div></div></div></div></div></body></html>

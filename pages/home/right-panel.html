@@ -1,0 +1,188 @@
+<div class="col-xl-3 mt-0">
+    <div class="sideBar-2 hide-scrollbar">
+        <div class="set-main-right-bar">
+            <!-- AD 1 -->
+            <?php if(count($top_right_ads)){ ?>
+            <div class="set-inner-card-right-bar mt-0">
+                <div class="">
+                    <div class=" mt-0">
+                        <div class="">
+                            <div class="set-responsive container set-slider-ad-slick" id="set-responsive-ads-0">
+                            <?php foreach ($top_right_ads as $ad): ?>
+                                <?php 
+                                    $mediaUrl = MEDIA_BASE_URL . $ad['media'];
+                                    $shouldSkip = empty($ad['media']) || !@getimagesize($mediaUrl); // Use getimagesize only for images
+                                    if ($shouldSkip) continue;
+                                ?>
+                                <div class="" id="lcp-<?php echo ($ad['id']); ?>">
+                                    <div class="position-relative set-overflow-hidden set-cursor-pointer">
+                                        <input type="hidden" class="set-ad-id" value="<?= $ad['id'] ?>">
+                                        <input type="hidden" class="set-i-spotted" value="<?= $ad['i_spotted'] ?>">
+                                        <a href="<?= !empty($ad['url']) ? $ad['url'] : 'javascript:void(0)' ?>" <?= !empty($ad['url']) ? 'target="_blank"' : '' ?>>
+                                            <!-- BLUR IMG -->
+                                            <img src="assets/img/inner-catagory-item.png" alt="bg-blur-img" class="set-bg-blur-img">
+
+                                            <div class="set-inner-card-story">
+                                                <div class="set-img-video-story-card">
+                                                    <?php if ($ad['media_type'] == 1): ?>
+                                                        <!-- VIDEO -->
+                                                        <video width="100%" height="100%" muted playsinline loop preload="none" controls class="set-story-content-video">
+                                                            <source src="<?= $mediaUrl ?>" type="video/mp4">
+                                                            <source src="<?= $mediaUrl ?>" type="video/webm">
+                                                        </video>
+                                                    <?php else: ?>
+                                                        <!-- IMAGE -->
+                                                        <img src="<?= $mediaUrl ?>" class="set-story-content-img" alt="Ad Image" >
+                                                    <?php endif; ?>
+                                                </div>
+                                            </div>
+                                        </a>
+
+                                        <div class="post-interactions set-interaction-ad-custom">
+                                            <div class="post-actions-left">
+                                                <div class="interaction-item ads--fn" data-id="<?= $ad['id'] ?>" data-title="">
+                                                    <img src="assets/img/view-ad.png" alt="Views">
+                                                    <span class="data-total-spotted"><?php echo ($ad['total_spotted'] == 0) ? '' : $ad['total_spotted']; ?></span>
+                                                </div>
+                                                <div class="interaction-item like-ads-fn" 
+                                                    data-ads-id="<?= $ad['id'] ?>"  
+                                                    data-ads-type="1" 
+                                                    data-liked="<?= $ad['i_like'] ?>">
+                                                    <img src="assets/img/love.png" alt="Like">
+                                                    <span class="like-count"><?php echo ($ad['total_likes'] == 0) ? '' : $ad['total_likes']; ?></span>
+                                                </div>
+                                                <div class="interaction-item ads-comments-fn" data-id="<?= base64_encode($ad['id']) ?>"  
+                                                    data-ads-type="1"  data-title="">
+                                                    <img src="assets/img/cmnt.png" alt="Comment">
+                                                    <span><?php echo ($ad['total_comments'] == 0) ? '' : $ad['total_comments']; ?></span>
+                                                </div>
+                                                <div class="interaction-item share-fn" data-id="<?php echo base64_encode($ad['id']); ?>" data-title="" data-type="ad">
+                                                    <img src="assets/img/share.png" alt="Share">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <?php endforeach; ?>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <?php } ?>
+
+            <!-- AD 2 -->
+            <?php if(count($middle_right_ads)){ ?>
+            <div class="set-inner-card-right-bar">
+                <div class="">
+                    <div class=" mt-0">
+                        <div class="">
+                            <div class="set-responsive container set-slider-ad-slick" id="set-responsive-ads-2">
+                            <?php foreach ($middle_right_ads as $ad): ?>
+                                <?php 
+                                    $mediaUrl = MEDIA_BASE_URL . $ad['media'];
+                                    $shouldSkip = empty($ad['media']) || !@getimagesize($mediaUrl); // Use getimagesize only for images
+                                    if ($shouldSkip) continue;
+                                ?>
+                                <div class="" id="lcp-<?php echo ($ad['id']); ?>">
+                                    <div class="position-relative set-overflow-hidden set-cursor-pointer">
+                                        <input type="hidden" class="set-ad-id" value="<?= $ad['id'] ?>">
+                                        <input type="hidden" class="set-i-spotted" value="<?= $ad['i_spotted'] ?>">
+                                        <a href="<?= !empty($ad['url']) ? $ad['url'] : 'javascript:void(0)' ?>" <?= !empty($ad['url']) ? 'target="_blank"' : '' ?>>
+                                            <!-- BLUR IMG -->
+                                            <img src="assets/img/inner-catagory-item.png" alt="bg-blur-img" class="set-bg-blur-img">
+
+                                            <div class="set-inner-card-story">
+                                                <div class="set-img-video-story-card">
+                                                    <?php if ($ad['media_type'] == 1): ?>
+                                                        <!-- VIDEO -->
+                                                        <video width="100%" height="100%" muted playsinline loop preload="none" controls class="set-story-content-video">
+                                                            <source src="<?= $mediaUrl ?>" type="video/mp4">
+                                                            <source src="<?= $mediaUrl ?>" type="video/webm">
+                                                        </video>
+                                                    <?php else: ?>
+                                                        <!-- IMAGE -->
+                                                        <img src="<?= $mediaUrl ?>" class="set-story-content-img" alt="Ad Image" >
+                                                    <?php endif; ?>
+                                                </div>
+                                            </div>
+                                        </a>
+
+                                        <div class="post-interactions set-interaction-ad-custom">
+                                            <div class="post-actions-left">
+                                                <div class="interaction-item ads--fn" data-id="<?= $ad['id'] ?>" data-title="">
+                                                    <img src="assets/img/view-ad.png" alt="Views">
+                                                    <span class="data-total-spotted"><?php echo ($ad['total_spotted'] == 0) ? '' : $ad['total_spotted']; ?></span>
+                                                </div>
+                                                <div class="interaction-item like-ads-fn" 
+                                                    data-ads-id="<?= $ad['id'] ?>" 
+                                                    data-liked="<?= $ad['i_like'] ?>"  
+                                                    data-ads-type="1">
+                                                    <img src="assets/img/love.png" alt="Like">
+                                                    <span class="like-count"><?php echo ($ad['total_likes'] == 0) ? '' : $ad['total_likes']; ?></span>
+                                                </div>
+                                                <div class="interaction-item ads-comments-fn" data-id="<?= base64_encode($ad['id']) ?>"  
+                                                    data-ads-type="1"  data-title="">
+                                                    <img src="assets/img/cmnt.png" alt="Comment">
+                                                    <span><?php echo ($ad['total_comments'] == 0) ? '' : $ad['total_comments']; ?></span>
+                                                </div>
+                                                <div class="interaction-item share-fn" data-id="<?php echo base64_encode($ad['id']); ?>" data-title="" data-type="ad">
+                                                    <img src="assets/img/share.png" alt="Share">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <?php endforeach; ?>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <?php } ?>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function(){
+        $('#featured_deal').slick({
+            vertical: true,
+            verticalSwiping: true,
+            slidesToShow: 2,
+            slidesToScroll: 1,
+            infinite: true,
+            autoplay: true,
+            autoplaySpeed: 2500,
+            arrows: true,
+            prevArrow: $('.custom-prev'),
+            nextArrow: $('.custom-next'),
+            adaptiveHeight: false
+        });
+    });
+
+    $(document).ready(function(){
+        $('.set-responsive').on('init', function(){
+            playActiveSlideVideo();
+        }).on('afterChange', function(){
+            playActiveSlideVideo();
+        });
+
+        initSliderWithTracking('#set-responsive-ads-0');
+        initSliderWithTracking('#set-responsive-ads-2');
+        initSliderWithTracking('#set-responsive-ads-3');
+    });
+</script>
+<!-- <script>
+    // Initial Fetch on Page Load
+    $(document).ready(function () {
+        // get ads
+        getAds({
+            type: '3',
+            radius: '<?= $radius ?>',
+            user_id: 0,
+            ads_id: 0,
+            container: '#ads-container'
+        });
+    });
+</script> -->

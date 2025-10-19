@@ -1,0 +1,169 @@
+<html>
+    <?php include('includes/head.php'); ?>
+    <script>
+    tailwind.config = { theme: { extend: { colors: { primary: "#4F46E5", secondary: "#6366F1", accent: "#818CF8", dark: "#1F2937", light: "#F9FAFB", }, fontFamily: { sans: ["Inter", "sans-serif"], }, }, }, };
+    </script>
+    <body class="bg-gray-50 h-full font-sans">
+        <div id="login-container" class="flex h-[800px] w-full">
+            <!-- Left Section - Login Form -->
+            <div id="login-form-section" class="w-full lg:w-1/2 bg-dark flex flex-col items-center justify-center p-6">
+                <div class="mb-8 text-center">
+                    <div class="bg-white/10 h-16 w-16 rounded-lg flex items-center justify-center mx-auto">
+                        <div class="bg-primary h-10 w-10 rounded-md flex items-center justify-center">
+                            <i class="fa-solid fa-p text-white text-xl"></i>
+                        </div>
+                    </div>
+                    <h1 class="text-white text-2xl font-bold mt-3">
+                        Himish
+                    </h1>
+                    <p class="text-gray-400 mt-1">Sales Rep Dashboard</p>
+                </div>
+                <div id="login-form" class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+                    <h2 class="text-xl font-semibold text-gray-800 mb-6 text-center">Create Account</h2>
+                    <form class="space-y-5" id="emailVerification" data-parsley-validate>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-600 mb-1" for="email">
+                                Name
+                            </label>
+                            <input class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" id="name" type="name" placeholder="Enter your name" required />
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-600 mb-1" for="email">
+                                Email
+                            </label>
+                            <input class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" id="email" type="email" placeholder="Enter your email address" required />
+                        </div>
+                        <input type="hidden" name="timezone" id="timezone" />
+                        <div>
+                            <label class="block text-sm font-medium text-gray-600 mb-1" for="password">
+                                Password
+                            </label>
+                            <div class="relative">
+                                <input class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" id="password" type="password" placeholder="Enter your password" required />
+                                <button type="button" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                                    <i class="fa-regular fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <button id="login-button" class="w-full py-2 px-4 bg-primary hover:bg-primary/90 text-white font-medium rounded-md flex items-center justify-center transition-colors" type="submit" name="registerButton">
+                            Continue
+                            <i class="fa-solid fa-arrow-right ml-2"></i>
+                        </button>
+                        <div class="mt-4 flex justify-center">
+                            <a href="index.php">
+                                <span class="text-sm font-medium text-primary hover:underline cursor-pointer">
+                                    Already have an account? Login
+                                </span>
+                            </a>
+                        </div>
+                    </form>
+                    <div class="mt-6 text-center text-sm text-gray-600">
+                        <p>
+                            By logging in, you agree to our
+                            <a href="../terms.php" target="_blank">
+                                <span class="text-primary hover:underline cursor-pointer">
+                                    Terms of Service
+                                </span>
+                            </a>
+                            and
+                            <a href="../privacy.php" target="_blank">
+                                <span class="text-primary hover:underline cursor-pointer">
+                                    Privacy Policy
+                                </span>
+                            </a>
+                            .
+                        </p>
+                    </div>
+                </div>
+                <div id="help-section" class="mt-6 text-center">
+                    <p class="text-gray-400 text-sm">Need help? <span class="text-blue-300 hover:underline cursor-pointer">Contact support</span></p>
+                </div>
+            </div>
+
+            <!-- Right Section - Marketing Content -->
+            <div id="marketing-section" class="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-primary to-secondary p-6 flex-col items-center justify-center">
+                <div class="max-w-md mx-auto text-center">
+                    <h2 class="text-white text-3xl font-semibold mb-3">
+                        Manage Your Sales Network
+                    </h2>
+                    <p class="text-white/90 text-lg mb-8">
+                        Track referrals, run communities, and monitor your earnings all in one place.
+                    </p>
+
+                    <div id="feature-cards" class="grid grid-cols-2 gap-4 mb-10">
+                        <div class="bg-white/10 p-4 rounded-lg text-white text-left">
+                            <div class="bg-white/20 w-10 h-10 rounded-full flex items-center justify-center mb-3">
+                                <i class="fa-solid fa-user-plus text-white"></i>
+                            </div>
+                            <h3 class="font-medium mb-1">Track Referrals</h3>
+                            <p class="text-sm text-white/80">Monitor all your referral activities in real-time</p>
+                        </div>
+
+                        <div class="bg-white/10 p-4 rounded-lg text-white text-left">
+                            <div class="bg-white/20 w-10 h-10 rounded-full flex items-center justify-center mb-3">
+                                <i class="fa-solid fa-users text-white"></i>
+                            </div>
+                            <h3 class="font-medium mb-1">Manage Communities</h3>
+                            <p class="text-sm text-white/80">Build and grow your sales communities</p>
+                        </div>
+
+                        <div class="bg-white/10 p-4 rounded-lg text-white text-left">
+                            <div class="bg-white/20 w-10 h-10 rounded-full flex items-center justify-center mb-3">
+                                <i class="fa-solid fa-chart-line text-white"></i>
+                            </div>
+                            <h3 class="font-medium mb-1">Track Earnings</h3>
+                            <p class="text-sm text-white/80">View detailed reports of your commission</p>
+                        </div>
+
+                        <div class="bg-white/10 p-4 rounded-lg text-white text-left">
+                            <div class="bg-white/20 w-10 h-10 rounded-full flex items-center justify-center mb-3">
+                                <i class="fa-solid fa-link text-white"></i>
+                            </div>
+                            <h3 class="font-medium mb-1">Generate Links</h3>
+                            <p class="text-sm text-white/80">Create and share custom invitation links</p>
+                        </div>
+                    </div>
+
+                    <div id="testimonial" class="bg-white/10 p-5 rounded-lg text-left relative">
+                        <div class="absolute -top-3 -right-3 bg-white text-primary w-8 h-8 rounded-full flex items-center justify-center">
+                            <i class="fa-solid fa-quote-right"></i>
+                        </div>
+                        <p class="text-white italic mb-4">
+                            "Himish has transformed how I manage my sales network. I've increased my referrals by 45% in just three months!"
+                        </p>
+                        <div class="flex items-center">
+                            <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-5.jpg" class="w-10 h-10 rounded-full mr-3" alt="User avatar" />
+                            <div>
+                                <p class="text-white font-medium">Sarah Johnson</p>
+                                <p class="text-white/70 text-sm">Top Sales Representative</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+
+            var userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+            $("#timezone").val(userTimezone);
+
+            // Toggle password visibility
+            document.querySelector('button[type="button"]').addEventListener("click", function () {
+                const passwordInput = document.getElementById("password");
+                const icon = this.querySelector("i");
+
+                if (passwordInput.type === "password") {
+                    passwordInput.type = "text";
+                    icon.classList.remove("fa-eye");
+                    icon.classList.add("fa-eye-slash");
+                } else {
+                    passwordInput.type = "password";
+                    icon.classList.remove("fa-eye-slash");
+                    icon.classList.add("fa-eye");
+                }
+            });
+        </script>
+    </body>
+    <?php include('includes/footer-scripts.php'); ?>
+</html>

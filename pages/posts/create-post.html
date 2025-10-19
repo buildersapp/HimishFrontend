@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+    <?php include('includes/head.php') ?>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css" rel="stylesheet">
+    <?php if(isset($_GET['act']) && $_GET['act']=="nauth"){ ?>
+    <style>
+        .feed-header, .stb-container {
+            display: none !important;
+        }
+    </style>
+    <?php } ?>
+    <body>
+        <?php include('includes/nav-header.php') ?>
+        <header class="post-upload-header" <?php if(isset($_GET['act']) && $_GET['act']=="nauth"){ echo 'style="background-color: #5975ba;"'; } ?>>
+            <div class="post-upload">
+                <div class="header-left">
+                    <?php if(!isset($_GET['act']) && $_GET['act']=="nauth"){ ?>
+                        <a href="home.php" class="back-arr">
+                            <img src="assets/img/left-arr.png" alt="" />
+                        </a>
+                        <h3>Create Post</h3>
+                    <?php }else if(isset($_GET['act']) && $_GET['act']=="nauth"){ ?>
+                        <div class="logo">
+                            <a href="#"><img src="assets/img/logo.png" class="img-fluid" alt="Logo" width="250" /></a>
+                        </div>
+                    <?php } ?>
+                </div>
+                <div class="steps">
+                    <div class="single-step step-active" id="step1-tab">
+                        <h3><span>1</span></h3>
+                        <p>Upload Image</p>
+                    </div>
+                    <div class="single-step" id="step2-tab">
+                        <h3><span>2</span></h3>
+                        <p>Company Details</p>
+                    </div>
+                    <div class="single-step" id="step3-tab">
+                        <h3><span>3</span></h3>
+                        <p>Post Details</p>
+                    </div>
+                    <div class="step-bar"></div>
+                </div>
+            </div>
+        </header>
+        
+        <form class="postDetailsBody" method="post" enctype="multipart/form-data" onsubmit="return validateForm();">
+            <!-- <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#createPostDetailOffcanvas" aria-controls="offcanvasExample">
+                Button target
+            </button> -->
+            <!-- Step 1: Upload -->
+            <div class="form-step" id="step1">
+                <div class="postUpload-container set-bg-transparent-org">
+                    <button class="header-flow-left-inner-button" onclick="
+                        if (window.history.length > 1) {
+                            window.history.back();
+                        } else {
+                            window.location.href = 'home.php';
+                        }
+                    ">
+                        <img src="assets/img/left-arrow.svg" alt="left-arrow" />
+                    </button>
+                </div>
+                <div id="globalDropZone" style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 9999; display: none;"></div>
+                <div class="postUpload-container">
+                    <div class="postUpload-title">
+                        <h2>Upload Image</h2>
+                        <p>Upload primary post image to scan and capture the post details.</p>
+                    </div>
+                    <div class="comunity-image-upload-wrapper">
+                        <label for="imageUploadInput" class="comunity-image-upload-label">
+                            <span class="uploadIconComunity set-w-img-auto">
+                                <img src="assets/images/bezier.png" class="img-fluid" alt="Upload Icon"/>
+                            </span>
+                            <span class="uploadTextcomunity">Upload Image</span>
+                        </label>
+                        <input type="file" name="image" id="imageUploadInput" style="display: none;" accept="image/*" onchange="previewImage(event, 'previewImg', 'textHd1')" />
+                        <input type="hidden" name="cropped_image" id="croppedImage" />
+                        <input type="hidden" name="sp_auth" id="sp_auth" value="<?= !empty($sp_auth) ? $sp_auth : '' ?>" />
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 2: Company Details -->
+            <div class="form-step" id="step2" style="display: none;">
+                <div class="postUpload-container-s2">
+                    <main>
+                        <section class="postDetailsBody">
+                            <div class="postUpload-container autocapture-container">
+                                <div class="postUpload-title">
+                                    <h2>Company Details</h2>
+                                    <p id="textHd1">
+                                        Upload primary post image to scan and capture the post details.
+                                    </p>
+                                </div>
+                                <div class="comunity-image-upload-wrapper">
+                                    <!-- Preview Image is Visible Initially -->
+                                    <div class="comunity-image-upload-preview justify-content-center" style="display: flex;">
+                                        <div class="remove-img">
+                                            <img src="assets/img/cross1.png" class="img-fluid" alt="Remove" onclick="location.reload()" />
+                                        </div>
+                                        <img id="previewImg" src="assets/img/uploadImg.png" class="img-fluid" alt="Preview Image" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="company-section">
+                                <!-- company name  -->
+                                <div>
+                                    <label for="company-input" class="post-something-form-label input-left">Company Name</label>
+                                    <div class="post-something-form-group">
+                                        <div class="input-wrapper input-right">
+                                            <input type="text" placeholder="Company Name" id="company_name" name="company" class="form-input company-suggestion-search" required onfocus="this.setAttribute('autocomplete', 'new-company-2');" />
+                                            <div class="global-search-dropdown-cmp" style="display: none;"></div>
+                                            
+                                            <input type="hidden" name="selected_company_id" id="selected_company_id" value="0" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Container for all phone number fields -->
+                                <div id="phone-number-fields">
+                                    <div class="input-left">
+                                        <label for="phone-input-1" class="post-something-form-label">Phone No.</label>
+                                    </div>
+                                    <div class="post-something-form-group location-group phone-field">
+                                        <div class="input-right location-wraper">
+                                            <div class="input-wrapper">
+                                                <input type="text" placeholder="Phone Number" id="phone-input-1" class="form-input phone-input"  onfocus="this.setAttribute('autocomplete', 'new-phonee-2');" name="phone" />
+                                            </div>
+                                            <div class="addPhone-button-wrapper">
+                                                <button type="button" id="add-phone-button">
+                                                    <img src="assets/img/plusblue.png" alt="Add Phone" />
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="company-section mt-0 pt-0">
+                                <!-- location -->
+                                <label for="phone-input-1" class="post-something-form-label">Locations(s)</label>
+                                <div class="location-group">
+                                    <div class="addPhone-button-wrapper" id="locationSelGroupBtn" style="display: none;">
+                                        <button type="button" id="multiLocBtn" onclick="addField('default')">
+                                            <img src="assets/img/plusblue.png" alt="" />
+                                        </button>
+                                    </div>
+                                  <div class="checkbox-grp" id="locationSelGroup">
+                                    <!-- location check box -->
+                                    <div class="private-check-wraper">
+                                      <label class="private-custom-checkbox" for="mobile-checkbox">
+                                        <span class="private-custom-checkbox-text">Mobile Business</span>
+                                        <input type="checkbox" class="private-checkbox-input" id="mobile-checkbox" />
+                                        <span class="private-checkbox-custom"></span>
+                                      </label>
+                                      <button class="tooltipBtnLoc" data-bs-toggle="tooltip" data-bs-placement="top" title="Mobile Business lets you set a radius around an address.">
+                                        <img src="assets/img/tooltip.png" class="img-fluid" alt="" />
+                                      </button>
+                                    </div>
+                                    <!-- location check box -->
+                                    <div class="private-check-wraper">
+                                      <label class="private-custom-checkbox" for="worldwide-checkbox">
+                                        <span class="private-custom-checkbox-text">Worldwide</span>
+                                        <input type="checkbox" class="private-checkbox-input" id="worldwide-checkbox" />
+                                        <span class="private-checkbox-custom"></span>
+                                      </label>
+                                      <button class="tooltipBtnLoc" data-bs-toggle="tooltip" data-bs-placement="top" title="Worldwide allows you to reach users across the globe.">
+                                        <img src="assets/img/tooltip.png" class="img-fluid" alt="" />
+                                      </button>
+                                    </div>
+                                    <!-- Nationwide check box -->
+                                    <!-- <div class="private-check-wraper">
+                                      <label class="private-custom-checkbox" for="nationwide-checkbox">
+                                        <span class="private-custom-checkbox-text">Nationwide</span>
+                                        <input type="checkbox" class="private-checkbox-input" id="nationwide-checkbox" />
+                                        <span class="private-checkbox-custom"></span>
+                                      </label>
+                                      <button class="tooltipBtnLoc" data-bs-toggle="tooltip" data-bs-placement="top" title="Nationwide allows you to reach users within a country.">
+                                        <img src="assets/img/tooltip.png" class="img-fluid" alt="" />
+                                      </button>
+                                    </div> -->
+                                  </div>
+                                </div>
+                                <!-- Address  -->
+                                <div class="post-something-form-group location-group" id="defaultAddrDf">
+                                    <div class="input-right location-wraper">
+                                        <div class="input-wrapper">
+                                            <input type="text" placeholder="City, State, or Zip Code" id="address" name="address" class="form-input" oninput="initAutocomplete()" onfocus="this.setAttribute('autocomplete', 'off');" />
+                                            <input type="hidden" name="latitude" id="latitude" value="">
+                                            <input type="hidden" name="longitude" id="longitude" value="">
+                                            <input type="hidden" name="city" id="city" value="">
+                                            <input type="hidden" name="state" id="state" value="">
+                                            <input type="hidden" name="country_code" id="country_code" value="">
+                                            <input type="hidden" name="business_location_type" id="business_location_type" value="Local">
+                                            <input type="hidden" name="is_worldwide" id="is_worldwide" value="0">
+                                        </div>
+                                        <i class="fa fa-times text-danger" onclick="clearDefaultLocationAddressField();"></i>
+                                        <div class="addPhone-button-wrapper">
+                                            <button type="button" id="snTLocBtn" onclick="addField('default')">
+                                                <img src="assets/img/plusblue.png" alt="" />
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                              
+                                <!-- Dynamic location fields -->
+                                <div id="dynamicLocationFields"></div>
+                              
+                                <!-- Hidden JSON fields -->
+                                <input type="hidden" id="company_branches_array" name="company_branches_array" value="[]" />
+                                <input type="hidden" id="company_service_areas_array" name="company_service_areas_array" value="" />
+                            </div>
+                            <div class="not-find">
+                                <button type="button" class="saveBtn" onclick="nextStep(3)">
+                                    <span class="saveBtnTxt">Next</span>
+                                    <span class="saveBtnImg"><img src="assets/img/forward.png" class="img-fluid w-100" alt="" /></span>
+                                </button>
+                                <button class="cancelbtn" type="button" onclick="if(confirm('Are you sure you want to discard ?')){ return 'home.php'; }">Cancel</button>
+                            </div>
+                        </section>
+                    </main>
+                </div>
+            </div>
+
+            <!-- Step 3: Post Details -->
+            <div class="form-step" id="step3" style="display: none;">
+                <div class="postUpload-container-s3">
+                    <main>
+                        <!-- title start -->
+                        <section class="flow detailss post-details px-3" id="titleDetails">
+                            <div class="upload-container">
+                                <div class="details-communities">
+                                    <div class="row flow-row">
+                                        <div class="col-12">
+                                            <div class="d-flex justify-content-center">
+                                                <h2 class="flow-location-title details-title-space">
+                                                    Post Details
+                                                </h2>
+                                            </div>
+                                            <!-- Post Title  -->
+                                            <div>
+                                                <label for="company-input" class="post-something-form-label input-left">Post Title</label>
+                                                <div class="post-something-form-group">
+                                                    <div class="input-wrapper input-right">
+                                                        <input type="text" id="title" class="form-input" name="title" required placeholder="Post Title.." onfocus="this.setAttribute('autocomplete', 'new-title-2');" />
+                                                    </div>
+                                                    <input type="hidden" name="service" id="service">
+                                                    <input type="hidden" name="keywords" id="keywords">
+                                                    <p>Post Title will be the post heading</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                        <!-- Keywords start -->
+                        <section class="flow detailssTwo post-details px-3" id="communitiess">
+                            <div class="upload-container">
+                                <div class="details-communities">
+                                    <div class="row communities-row">
+                                        <div class="col-12">
+                                            <div class="communites-contentss">
+                                                <div class="row justify-content-between align-items-start">
+                                                    <div class="col-8">
+                                                        <div class="communites-contentss-title-left">
+                                                            <h3>Keywords</h3>
+                                                            <p>Select keywords that match this post</p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-4">
+                                                        <div class="communites-contentss-title-right text-end">
+                                                            <p>Selected <span id="selectedCount">0</span></p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <div class="keywords-wraper-post-details">
+                                              
+                                            </div>
+                                        </div>                                          
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                        <!-- Communities start -->
+                        <!-- <section class="flow detailssTwo post-details px-3" id="communitiess">
+                            <div class="upload-container">
+                                <div class="details-communities">
+                                    <div class="row communities-row">
+                                        <div class="col-12">
+                                            <div class="communites-contentss">
+                                                <div class="row justify-content-between align-items-start">
+                                                    <div class="col-8">
+                                                        <div class="communites-contentss-title-left">
+                                                            <h3>Communities</h3>
+                                                            <p>Only user from same community will see this post</p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-4">
+                                                        <div class="communites-contentss-title-right text-end">
+                                                            <p>Selected: <span id="totalSelectedComm">0</span></p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <div class="communites-contentsx">
+                                                <label class="communites-contentsx-item d-flex align-items-center justify-content-center">
+                                                    <input type="radio" name="community_type" value="1" class="community-radio" hidden>
+                                                    <span>My Community</span>
+                                                </label>
+                                        
+                                                <label class="communites-contentsx-item d-flex align-items-center justify-content-center">
+                                                    <input type="radio" name="community_type" value="0" class="community-radio" hidden>
+                                                    <span>All Communities</span>
+                                                </label>
+                                        
+                                                <label class="communites-contentsx-item d-flex align-items-center justify-content-center">
+                                                    <input type="radio" name="community_type" value="2" class="community-radio" hidden>
+                                                    <span>Choose Communities</span>
+                                                </label>
+                                            </div>
+                                        <div>                                                            
+                                    </div>
+                                </div>
+                            </div>
+                        </section> -->
+                        <!-- Post expire start -->
+                        <section class="flow detailss post-details px-3" id="titleDetails">
+                            <div class="upload-container">
+                                <div class="details-communities">
+                                    <div class="row flow-row">
+                                        <div class="col-12">
+                                            <!-- Post Title  -->
+                                             <label for="date-expire" class="post-something-form-label input-left">Post Expires</label>
+                                            <div class="post-something-form-group">
+                                                <div class="input-wrapper input-right">
+                                                    <input type="text" id="expire_date" class="form-input" name="expire_date" placeholder="Select Expiry Date" onfocus="this.setAttribute('autocomplete', 'new-expiry-date-2');"  />
+                                                </div>
+                                                <p>
+                                                    Enter the date when post is no longer relevant i.e. Sale Ends
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                         <!-- Select Location Where you want to post -->
+                        <section class="flow detailssTwo post-details px-3" id="listingLoc" style="display: none;">
+                            <div class="upload-container">
+                                <div class="details-communities">
+                                    <div class="row communities-row">
+                                        <div class="col-12">
+                                            <div class="communites-contentss">
+                                                <div class="row justify-content-between align-items-start">
+                                                    <div class="col-8">
+                                                        <div class="communites-contentss-title-left">
+                                                            <h3>Post Locations</h3>
+                                                            <p>Please select where you want your post to be visible</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <!-- Checkbox Container -->
+                                            <div id="locationCheckboxes"></div>
+                                        <div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                        <!-- Show Username in post -->
+                        <section class="flow detailss post-details px-3" id="titleDetails">
+                            <div class="upload-container">
+                                <div class="details-communities">
+                                    <div class="row flow-row">
+                                        <div class="col-12">
+                                            <label for="date-expire" class="post-something-form-label input-left">Post As</label>
+                                            <div class="location-group">
+                                                <div class="checkbox-grp" id="locationSelGroup">
+                                                    <!-- location check box -->
+                                                    <div class="private-check-wraper">
+                                                    <label class="private-custom-checkbox" for="user-type-checkbox">
+                                                        <span class="private-custom-checkbox-text"><?= $posterName ?? 'Himish' ?></span>
+                                                        <input type="radio" class="private-checkbox-input" id="user-type-checkbox" name="user_type" value="0" />
+                                                        <span class="private-checkbox-custom"></span>
+                                                    </label>
+                                                    <button type="button" class="tooltipBtnLoc" data-bs-toggle="tooltip" data-bs-placement="top" title="Your name will be shown with the post, the owner may reward you.">
+                                                        <img src="assets/img/tooltip.png" class="img-fluid" alt="" />
+                                                    </button>
+                                                    </div>
+                                                    <!-- location check box -->
+                                                    <div class="private-check-wraper">
+                                                    <label class="private-custom-checkbox" for="user-type-checkbox-2">
+                                                        <span class="private-custom-checkbox-text">Anonymous</span>
+                                                        <input type="radio" class="private-checkbox-input" id="user-type-checkbox-2" name="user_type" value="1" />
+                                                        <span class="private-checkbox-custom"></span>
+                                                    </label>
+                                                    <button type="button" class="tooltipBtnLoc" data-bs-toggle="tooltip" data-bs-placement="top" title="Your name will not be shown to the public. Posters will however see your info.">
+                                                        <img src="assets/img/tooltip.png" class="img-fluid" alt="" />
+                                                    </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                        <!-- Buttons -->
+                        <section class="flow detailssTwo detailssTwo-keyword px-3" id="communitiess">
+                            <input type="hidden" id="scanResults" name="scanResults">
+                            <input type="hidden" id="selectedCommunitiesInput" name="selected_communities">
+                            <input type="hidden" id="selectedLocationsInput" name="selected_locations">
+                            <div class="button-location-container button-upload-container">
+                                <div class="upload-button-wrapper d-flex justify-content-center flex-column">
+                                    <button type="submit" name="addPost" class="upload-buttom-top"> Confirm & Post <img src="assets/img/Arrow Forward.svg" alt="Arrow" /> </button>
+                                    <button type="button" class="upload-buttom-bottom" onclick="prevStep(2)">Back</button>
+                                    <button class="cancelbtn" type="button" onclick="if(confirm('Are you sure you want to discard ?')){ window.location.href = 'home.php'; }">Cancel</button>
+                                </div>
+                            </div>
+                        </section>
+                    </main>
+                </div>
+            </div>
+        </form>
+        <div class="modal fade" id="selecComunityDetailsModal" tabindex="-1" aria-labelledby="selecComunityDetailsModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <section class="select-community-container">
+                            <div class="comunity-container">
+                                <div class="comunity-title">
+                                    <h2>Choose Communities</h2>
+                                </div>
+                                <!-- comunity select  -->
+                                <div class="comunity-select">
+                                    <div class="comunity-search">
+                                        <div class="comunity-search-input">
+                                            <input type="text" placeholder="Search Community" class="form-control" />
+                                            <img src="assets/img/searchform.png" alt="" />
+                                        </div>
+                                    </div>
+                                    <div class="community-summary">
+                                        <div class="community-stats">
+                                            <div class="stat-item">
+                                                <p>Communities</p>
+                                                <h4><?= count($communities) ?></h4>
+                                            </div>
+                                            <div class="stat-item-2">
+                                                <p>Selected</p>
+                                                <h4>0</h4>
+                                            </div>
+                                        </div>
+                                        <div class="community-action-buttons">
+                                            <button class="btn-unselect-all">Select All</button>
+                                        </div>
+                                    </div>
+        
+                                    <?php if(count($communities)){ ?>
+                                        <!-- Community Boxes -->
+                                        <div class="comunity-boxes comunity-boxes-my thin-scrollbar cpScrlB">
+                                            <?php foreach ($communities as $community): ?>
+                                            <!-- Single Community Item -->
+                                            <div class="single-com-box new-single-com-box">
+                                                <label class="custom-checkbox w-100">
+                                                    <input
+                                                        type="checkbox"
+                                                        name="selected_community"
+                                                        class="checkbox-input community-radio-ch"
+                                                        value="<?= $community['id']; ?>"
+                                                        data-address="<?= $community['address']; ?>"
+                                                        data-latitude="<?= $community['latitude']; ?>"
+                                                        data-longitude="<?= $community['longitude']; ?>"
+                                                        data-name="<?= $community['name']; ?>"
+                                                        data-description="<?= $community['description']; ?>"
+                                                        data-state="<?= $community['state']; ?>"
+                                                        data-city="<?= $community['city']; ?>"
+                                                        data-country-code="<?= $community['country_code']; ?>"
+                                                    />
+                                                    <a href="#" class="com-img position-relative">
+                                                        <div class="w-100">
+                                                            <img src="<?php echo !empty($community['image']) ? MEDIA_BASE_URL.$community['image'] : generateBase64Image($community['name']); ?>" alt="" />
+                                                            <!-- Overlay -->
+                                                            <div class="overlay-comm <?= ($community['is_private'] && !$community['status']) ? '' : 'com-hidden' ?>"></div>
+                                                            <div class="overlay-text-comm <?= ($community['is_private'] && !$community['status']) ? '' : 'com-hidden' ?>">
+                                                                <img src="assets/img/game-icons_sands-of-time.svg" alt="" />
+                                                                <?php if ($community['is_private'] && !$community['is_approved']): ?>
+                                                                <p>Membership Approval Pending</p>
+                                                                <?php endif; ?>
+                                                                <?php if ($community['is_private'] && !$community['status']): ?>
+                                                                <p>Community waiting for approval by Himish</p>
+                                                                <?php endif; ?>
+                                                            </div>
+                                                        </div>
+                                                        <span class="position-absolute private-tag <?= $community['is_private'] ? '' : 'com-hidden' ?>">private</span>
+                                                    </a>
+                                                    <div class="com-body">
+                                                        <span class="com-title"><?= $community['name'] ?></span>
+                                                        <span class="com-text"><?= $community['description'] ?></span>
+                                                        <?php if(!empty($community['latitude']) && !empty($community['longitude'])){ ?>
+                                                        <span class="com-text">
+                                                            <i class="fa fa-map-pin"></i>
+                                                            <?= $community['city'].', '.$community['state'] ?>
+                                                        </span>
+                                                        <?php } ?>
+                                                        <!-- Lock -->
+                                                        <span class="user-comm-count-item-right <?= $community['is_private'] ? '' : 'com-hidden' ?>">
+                                                            <img src="assets/img/solar_lock-linear.svg" alt="" />
+                                                        </span>
+                                                    </div>
+                                                </label>
+                                            </div>
+                                            <?php endforeach; ?>
+                                        </div>
+                                        <?php }else{
+                                            echo renderNoDataCard('No Communities Joined!', '', 'You have not joined any communities yet.');
+                                        } ?>
+                                </div>
+                            </div>
+                            <div class="not-find cpScrlF d-flex justify-content-between align-items-center">
+                                <input type="hidden" id="selectedCommunitiesInput" name="selectedCommunities">
+                                
+                                <button type="button" class="saveBtn join-comm-fn mt-0" data-bs-dismiss="modal">
+                                    <span class="saveBtnTxt">Save</span>
+                                    <span class="saveBtnImg"><img src="assets/img/forward.png" class="img-fluid w-100" alt="" /></span>
+                                </button>
+                                
+                                <button type="button" class="skipBtn" data-bs-dismiss="modal">Cancel</button>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <?php include('includes/footer-scripts.php') ?>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js?v=<?= time() ?>"></script>
+        <?php if(!isset($_GET['act'])){ ?>
+        <script>
+            localStorage.setItem("scanApiUrl", "<?= $userDetails['python_api_url'] ?>");
+        </script>
+        <?php } ?>
+        <script>
+            // Ensure locationsArray exists before appending
+            window.allCommunityLocations = window.allCommunityLocations || [];
+            window.myCommunityLocations = window.myCommunityLocations || [];
+
+            // Check if allCommunityLocations is not empty and append to window.locationsArray
+            <?php if (!empty($allCommunityLocations)): ?>
+                const phpAllCommunityLocations = <?php echo json_encode($allCommunityLocations, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>;
+                window.allCommunityLocations = window.allCommunityLocations.concat(phpAllCommunityLocations);
+            <?php endif; ?>
+        
+            // Check if myCommunityLocations is not empty and append to window.locationsArray
+            <?php if (!empty($myCommunityLocations)): ?>
+                const phpMyCommunityLocations = <?php echo json_encode($myCommunityLocations, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>;
+                window.myCommunityLocations = window.myCommunityLocations.concat(phpMyCommunityLocations);
+            <?php endif; ?>
+        </script>
+        <script src="assets/js/home.js?v=<?= time() ?>"></script>
+        <script>
+            getUserLocation(false);
+        </script>
+        <script src="assets/js/create-post.js?v=<?= time() ?>"></script>
+    </body>
+</html>

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+    <?php include('includes/head.php') ?>
+    <body>
+        <?php include('includes/nav-header.php') ?>
+        <main>
+            <section class="header-profile-sponsor">
+                <div class="container">
+                    <div class="row header-flow-row align-items-center">
+                        <div class="col ps-0 ps-xl-auto">
+                            <div class="header-flow-left ps-3">
+                                <div class="header-flow-left-inner">
+                                    <a href="communities.php">
+                                        <button class="header-flow-left-inner-button">
+                                        <img src="assets/img/left-arrow.svg" alt="left-arrow" /></button>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col d-xl-block d-none"></div>
+                    </div>
+                </div>
+            </section>
+            <section class="dashboardx">
+                <div class="container">
+                    <div class="row">
+                        <div class="col">
+                            <div class="dashboard-cover" style="background-image: url('<?= !empty($communityDetails['image']) ? MEDIA_BASE_URL . addslashes($communityDetails['image']) : assets/img/maps-locationa-ads.png; ?>');"></div>
+                        </div>
+                    </div>
+                    <div class="row dashboardx-tabs new-dashboardx-tabs align-items-center">
+                        <div class="col-xl-4">
+                            <div class="d-flex align-items-center justify-content-between new-dashboardx-profile">
+                                <h4><?= $communityDetails['name'] ?></h4>
+                                <!-- <button class="edit-btns morphisum-inner">
+                                    <img src="assets/img/Edit.svg" alt="" />
+                                </button> -->
+                            </div>
+                        </div>
+                        <div class="col-xl-8">
+                            <!-- tab button  -->
+                            <div class="new-members-com">
+                                <button class="nav-linkx"><img src="assets/img/ph_users-three-red.svg" alt="" /> Members</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" id="dashboard-row">
+                        <!-- user profile  -->
+                        <div class="col-xl-4">
+                            <div class="sideBar-wrapers hide-scrollbar">
+                                <div class="user-profile">
+                                    <!-- profile card  -->
+                                    <div class="profile-divider"></div>
+                                    <div class="profile-stats-community new-profile-stats-community">
+                                        <div class="">
+                                            <div class="new-builder-com">
+                                                <p>Community Type</p>
+                                                <span>
+                                                    <?= $communityDetails['is_private'] ? 'Private' : 'Public' ?> 
+                                                    <?php if($communityDetails['is_private']){ ?>
+                                                    <img src="assets/img/builder-lock.svg" alt="" />
+                                                    <?php } ?>
+                                                </span>
+                                            </div>
+                                            <div class="new-builder-com new-builder-com-two">
+                                                <p>Description</p>
+                                                <span><?= $communityDetails['description'] ?></span>
+                                            </div>
+                                        </div>
+                                        <?php if(!empty($userDetails)){ ?>
+
+                                            <?php if($isMyCommunity){ ?>
+                                                <button type="button" class="delet-buttton-com delete-community-fn" data-id="<?= $communityDetails['id'] ?>">Delete Community</button>
+                                                <button type="button" class="delet-buttton-com invite-buttton-com share-fn" data-id="<?php echo base64_encode($communityDetails['id']); ?>" data-title="Community" data-type="invite_community" data-meta="invite_community">Invite Members</button>
+                                            <?php }else{ ?>
+                                                <button type="button" class="delet-buttton-com leave-community-fn" data-id="<?= $communityDetails['id'] ?>">Leave Community</button>
+                                            <?php } ?>
+                                        <?php }else{ ?>
+                                            <a href="login.php"><button type="button" class="delet-buttton-com">Join Community</button></a>
+                                        <?php } ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- content tab  -->
+                        <div class="col-lg-8 col-xl-6">
+                            <div class="main-content sideBar-wraper hide-scrollbar main-content-new">
+                                <div class="posts-feedx">
+                                    <!-- tab content  -->
+                                    <div class="tab-content" id="pills-tabContent">
+                                        <!-- My post tab content  -->
+                                        <div class="tab-pane fade show active" id="pills-myposts" role="tabpanel" aria-labelledby="pills-myposts-tab">
+                                            <div class="post-cards">
+                                                <div>
+                                                    <!-- post list  -->
+                                                    <div class="post-card-litss d-flex align-items-center">
+                                                        <button class="post-card-litss-buttons-active tab-com-button">
+                                                            Active (<?= count($active_community_members) ?>)
+                                                        </button>
+                                                        <?php if($communityDetails['is_private'] && $isMyCommunity){ ?>
+                                                        <button class="post-card-litss-buttons tab-com-button">
+                                                            Request (<?= count($community_member_requests) ?>)
+                                                        </button>
+                                                        <?php } ?>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="first-com">
+                                        <?php if(count($active_community_members)){ ?>
+                                        <!-- single item -->
+                                            <?php foreach ($active_community_members as $members) : ?>
+                                            <div class="single-com">
+                                                <div class="notification-imgBox new-notification-imgBox">
+                                                    <div class="new-notification-img">
+                                                        <img src="<?php echo !empty($members['user']['image']) ? MEDIA_BASE_URL.$members['user']['image'] : generateBase64Image($members['user']['name']); ?>" class="img-fluid w-100 rounded-circle" alt="" />
+                                                    </div>
+                                                    <div class="notification-content new-notification-content ms-2">
+                                                        <a href="user-details.php?id=<?= base64_encode($members['user']['id']) ?>" class="new-read-title"><?= $members['user']['name'] ?><img src="assets/img/mdi_approve-check.svg" alt="" /></a>
+                                                    </div>
+                                                </div>
+                                                <div class="notification-btns new-notification-btns">
+                                                    <button class="cancel-btn com-hidden">Reject</button>
+                                                    <button class="accept-btn com-hidden">Accept</button>
+                                                </div>
+                                            </div>
+                                            <?php endforeach; ?>
+                                        <?php }else{
+                                            echo renderNoDataCard('No Members Yet!', '', 'It looks like no one has joined this community.');
+                                        } ?>
+                                    </div>
+                                    <?php if($communityDetails['is_private'] && $isMyCommunity){ ?>
+                                    <div class="second-com">
+                                        <?php if(count($community_member_requests)){ ?>
+                                            <?php foreach ($community_member_requests as $members) : ?>
+                                            <!-- single item -->
+                                            <div class="single-com">
+                                                <div class="notification-imgBox new-notification-imgBox">
+                                                    <div class="new-notification-img">
+                                                        <img src="<?php echo !empty($members['user']['image']) ? MEDIA_BASE_URL.$members['user']['image'] : generateBase64Image($members['user']['name']); ?>" class="img-fluid w-100 rounded-circle" alt="" />
+                                                    </div>
+                                                    <div class="notification-content new-notification-content ms-2">
+                                                        <a href="" class="new-read-title"><?= $members['user']['name'] ?><img src="assets/img/mdi_approve-check.svg" alt="" /></a>
+                                                    </div>
+                                                </div>
+                                                <div class="notification-btns new-notification-btns">
+                                                    <button class="cancel-btn acceptRejectCommunityReq" data-id="<?= $members['id'] ?>" data-community-id="<?= $communityId ?>" data-status="2">Reject</button>
+                                                    <button class="accept-btn acceptRejectCommunityReq" data-id="<?= $members['id'] ?>" data-community-id="<?= $communityId ?>" data-status="1">Accept</button>
+                                                </div>
+                                            </div>
+                                            <?php endforeach; ?>
+                                        <?php }else{
+                                            echo renderNoDataCard('No Members Yet!', '', 'It looks like no one has requested for this community.');
+                                        } ?>
+                                    </div>
+                                    <?php } ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>            
+        </main>
+        <script src="assets/js/community-detail.js?v=<?= time() ?>"></script>
+        <script src="assets/js/communities.js?v=<?= time() ?>"></script>
+        <?php include('includes/footer-scripts.php') ?>
+    </body>
+</html>

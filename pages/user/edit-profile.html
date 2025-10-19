@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+    <?php include('includes/head.php') ?>
+    <body>
+        <?php include('includes/nav-header.php') ?>
+        <!-- main start -->
+        <main>
+            <!-- title start -->
+            <h4 class="text-center title-2x-bg">
+                Edit Profile
+            </h4>
+            <form method="post" data-parsley-validate enctype="multipart/form-data">
+
+                <!-- Images start -->
+                <section class="flow detailssTwo" id="runads">
+                    <div class="upload-container">
+                        <div class="details-communities">
+                            <div class="row communities-row">
+                                <div class="col-12">
+                                    <div class="accordion details-accordion" id="boostAccordion">
+                                        <div class="accordion-item">
+                                            <h2 class="accordion-header" id="headingTwo">
+                                                <button class="accordion-button flow-title" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="true" aria-controls="collapseThree">
+                                                    <div class="accordian-title-main">
+                                                        <span>Upload Profile Picture</span>
+                                                    </div>
+                                                </button>
+                                            </h2>
+
+                                            <div id="collapseThree" class="accordion-collapse collapse show" aria-labelledby="headingTwo" data-bs-parent="#boostAccordion">
+                                                <div class="accordion-body">
+                                                    <div class="add-img-wraper set-frame-block-2">
+                                                        <div class="profile-card">
+                                                            <div class="profile-img">
+                                                                <?php
+                                                                    $imgData = "";
+                                                                    if(empty(@$userDetails['image'])){
+                                                                        $imgData = '<img class="img-placeholder profile-imimg" src="'.generateBase64Image(@$userDetails['name'] ?? 'G U').'" alt="" />';
+                                                                    }else{
+                                                                        $imgData = '<img src="'. MEDIA_BASE_URL .''.@$userDetails['image'].'" alt="" class="profile-imimg" />';
+                                                                    }
+                                                                ?>
+                                                                <?php echo $imgData; ?>
+                                                            </div>
+                                                        </div>
+                                                        <?php for ($i = 0; $i < 1; $i++) : ?>
+                                                            <div class="comunity-image-upload-wrapper">
+                                                                <!-- Hidden File Input -->
+                                                                <input type="file" name="images[]" id="imageUploadInput<?= $i ?>" class="comunity-image-upload-input" style="display: none;" />
+
+                                                                <!-- Upload Label -->
+                                                                <label for="imageUploadInput<?= $i ?>" class="comunity-image-upload-label">
+                                                                    <span class="uploadIconComunity">
+                                                                        <img src="assets/img/tabler_upload.png" class="img-fluid" alt="Upload Icon" />
+                                                                    </span>
+                                                                    <span class="uploadTextcomunity">Upload Image</span>
+                                                                </label>
+
+                                                                <!-- Image Preview -->
+                                                                <div id="previewWrapper<?= $i ?>" class="comunity-image-upload-preview" style="display: none;">
+                                                                    <div class="remove-img" data-index="<?= $i ?>">
+                                                                        <img src="assets/img/cross1.png" class="img-fluid" alt="Remove" />
+                                                                    </div>
+                                                                    <img id="previewImage<?= $i ?>" src="" class="img-fluid preview-img" alt="Preview Image" data-index="<?= $i ?>" />
+                                                                </div>
+
+                                                                <!-- Hidden Cropped Image Field -->
+                                                                <input type="hidden" name="croppedImages[]" id="croppedImage<?= $i ?>" value="" />
+                                                            </div>
+                                                        <?php endfor; ?>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="flow detailss" id="titleDetails">
+                    <div class="upload-container">
+                        <div class="details-communities">
+                            <div class="row flow-row">
+                                <div class="col-12">
+                                    <div class="create-wrapper mx-auto">
+                                        <div class="boots-input-title">
+                                                <label for="infos-textarea">Name</label>
+                                            </div>
+                                        <div class="lookingFor-input-wraper lookingFor-input-wraper-newss">
+                                            
+                                            <div class="input-wrapper input-right">
+                                                <input type="text" placeholder="Name" id="title-input" class="form-input" name="name" required value="<?= @$userDetails['name'] ?>" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="create-wrapper mx-auto">
+                                        <div class="boots-input-title">
+                                            <label for="infos-textarea">Handle Name</label>
+                                        </div>
+                                        <div class="lookingFor-input-wraper lookingFor-input-wraper-newss">
+                                            <div class="input-wrapper input-right">
+                                                <input type="text" placeholder="Handle Name.." id="title-input" class="form-input" name="handle_name" required value="<?= @$userDetails['handle_name'] ?>" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="upload-container">
+                    <div class="not-find">
+                        <button type="submit" name="editProfile" class="set-btn-primary d-flex gap-2 justify-content-center">
+                            <span class="saveBtnTxt">Save</span>
+                            <span class="saveBtnImg"><img src="assets/img/forward.png" class="img-fluid w-100" alt="" /></span>
+                        </button>
+                    </div>
+                </section>
+                <section class="set-fill-empty-space"></section>
+            </form>
+        </main>
+        <!-- main end -->
+        <?php include('includes/footer-scripts.php') ?>
+        <script src="assets/js/create-showcase.js?v=<?= time() ?>"></script>
+    </body>
+</html>

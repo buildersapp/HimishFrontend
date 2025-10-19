@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+    <?php include('includes/head.php'); ?>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <body class="bg-gray-50 font-sans">
+        <div id="main-container" class="flex h-screen">
+            <?php include('includes/sidebar.php'); ?>
+            <main id="main-content" class="flex-1 overflow-auto">
+                <?php include('includes/nav-header.php'); ?>
+
+                <!-- Create Post Form -->
+                <div id="create-post-content" class="p-8">
+                    <form method="post" id="createPostForm" data-parsley-validate onsubmit="return validateCreatePost($(this));">
+                        <div class="max-w-4xl mx-auto">
+                            <input type="hidden" name="linkID" value="<?= intval($_GET['linkID'] ?? 0) ?>" />
+                            <!-- Post Details Section -->
+                            <section id="post-details" class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-6">
+                                <h3 class="text-lg font-semibold text-gray-900 mb-4">Post Selection</h3>
+
+                                <div class="space-y-4">
+                                    <div class="flex space-x-1 bg-gray-100 p-1 rounded-lg">
+                                        <button type="button" id="selectExistingBtn" class="flex-1 px-4 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900"><i class="fa-solid fa-list mr-2"></i>Select Existing Post</button>
+                                        <button
+                                            type="button"
+                                            id="createNewBtn"
+                                            onclick="window.location.href='../create-post.php?act=nauth&rd_srep=sales&repID=<?= base64_encode($userDetails['id']) ?>'"
+                                            class="flex-1 px-4 py-2 text-sm font-medium rounded-md bg-white text-blue-600 shadow-sm hover:bg-blue-50 transition"
+                                        >
+                                            <i class="fa-solid fa-plus mr-2"></i>Create New Post
+                                        </button>
+                                    </div>
+
+                                    <!-- Existing Post Dropdown -->
+                                    <div id="existingPostDropdown">
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Select from Existing Posts</label>
+
+                                        <!-- Search Bar -->
+                                        <div class="relative mb-4">
+                                            <i class="fa-solid fa-search absolute left-3 top-3 text-gray-400"></i>
+                                            <input id="postSearch" type="text" placeholder="Search posts..." class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none" />
+                                        </div>
+
+                                        <!-- Scrollable Post List -->
+                                        <input type="hidden" name="selectedPostId" id="selectedPostId" value="0" />
+                                        <div id="postList" class="max-h-40 overflow-y-auto space-y-3 pr-1">
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+
+                            <!-- Discount Settings Section -->
+                            <section id="discount-settings" class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-6">
+                                <div class="flex items-center justify-between mb-4">
+                                    <div>
+                                        <h3 class="text-lg font-semibold text-gray-900">Discount Settings</h3>
+                                        <p class="text-sm text-gray-600">Add a discount to make your post more attractive</p>
+                                    </div>
+                                    <label class="relative inline-flex items-center cursor-pointer">
+                                        <input type="checkbox" class="sr-only peer" id="discountToggle" />
+                                        <div
+                                            class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"
+                                        ></div>
+                                    </label>
+                                </div>
+
+                                <!-- Hidden field to track toggle -->
+                                <input type="hidden" id="has_discount" name="has_discount" value="0" />
+
+                                <div id="discountFields" class="space-y-4 opacity-50 pointer-events-none">
+                                    <div class="grid grid-cols-2 gap-4">
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-2">Discount Amount (%)</label>
+                                            <input 
+                                                type="text" 
+                                                name="discount_amount" 
+                                                placeholder="15"
+                                                step="0.01"
+                                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                                                data-parsley-type="number"
+                                                data-parsley-min="1"
+                                                data-parsley-max="100"
+                                            />
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-2">Expiry Date</label>
+                                            <input 
+                                                type="date"
+                                                name="discount_expiry"
+                                                id="discount_expiry" 
+                                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                                                placeholder="Select Date"
+                                                onclick="this.showPicker ? this.showPicker() : this.click()"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+
+                            <!-- Message Templates Section -->
+                            <section id="message-templates" class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-6">
+                                <h3 class="text-lg font-semibold text-gray-900 mb-4">Message Templates</h3>
+
+                                <!-- Template Tabs -->
+                                <div id="template-tabs" class="flex space-x-1 bg-gray-100 p-1 rounded-lg mb-6">
+                                    <button type="button" class="flex-1 px-4 py-2 text-sm font-medium rounded-md bg-white text-blue-600 shadow-sm" data-type="whatsapp">
+                                    <i class="fa-brands fa-whatsapp mr-2"></i>WhatsApp
+                                    </button>
+                                    <button type="button" class="flex-1 px-4 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900" data-type="sms">
+                                    <i class="fa-solid fa-sms mr-2"></i>SMS
+                                    </button>
+                                    <button type="button" class="flex-1 px-4 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900" data-type="email">
+                                    <i class="fa-solid fa-envelope mr-2"></i>Email
+                                    </button>
+                                    <button type="button" class="flex-1 px-4 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900" data-type="copy_share">
+                                    <i class="fa-solid fa-link mr-2"></i>Copy & Share
+                                    </button>
+                                </div>
+
+                                <!-- Templates -->
+                                <div class="template-category space-y-4" data-type="whatsapp">
+                                    <label class="block text-sm font-medium text-gray-700">Title</label>
+                                    <input type="text" class="template-title w-full px-4 py-2 border border-gray-300 rounded-lg" placeholder="WhatsApp Title">
+                                    
+                                    <label class="block text-sm font-medium text-gray-700">Message</label>
+                                    <textarea class="template-message w-full px-4 py-3 border border-gray-300 rounded-lg resize-none"><?= $settings['post_default_template_whatsapp'] ?></textarea>
+                                </div>
+
+                                <div class="template-category space-y-4 hidden" data-type="sms">
+                                    <label class="block text-sm font-medium text-gray-700">Title</label>
+                                    <input type="text" class="template-title w-full px-4 py-2 border border-gray-300 rounded-lg" placeholder="SMS Title">
+                                    
+                                    <label class="block text-sm font-medium text-gray-700">Message</label>
+                                    <textarea class="template-message w-full px-4 py-3 border border-gray-300 rounded-lg resize-none"><?= $settings['post_default_template_sms'] ?></textarea>
+                                </div>
+
+                                <div class="template-category space-y-4 hidden" data-type="email">
+                                    <label class="block text-sm font-medium text-gray-700">Title</label>
+                                    <input type="text" class="template-title w-full px-4 py-2 border border-gray-300 rounded-lg" placeholder="Email Title">
+                                    
+                                    <label class="block text-sm font-medium text-gray-700">Message</label>
+                                    <textarea class="template-message w-full px-4 py-3 border border-gray-300 rounded-lg resize-none"><?= $settings['post_default_template_email'] ?></textarea>
+                                </div>
+
+                                <div class="template-category space-y-4 hidden" data-type="copy_share">
+                                    <label class="block text-sm font-medium text-gray-700">Title</label>
+                                    <input type="text" class="template-title w-full px-4 py-2 border border-gray-300 rounded-lg" placeholder="Copy & Share Title">
+                                    
+                                    <label class="block text-sm font-medium text-gray-700">Message</label>
+                                    <textarea class="template-message w-full px-4 py-3 border border-gray-300 rounded-lg resize-none"><?= $settings['post_default_template_copy_share'] ?></textarea>
+                                </div>
+
+                                <!-- Common Options -->
+                                <div class="flex items-center justify-between mt-4">
+                                    <div class="flex items-center space-x-2">
+                                    <input type="checkbox" name="save_template" id="saveTemplate" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                                    <label for="saveTemplate" class="text-sm text-gray-600">Save template after sending</label>
+                                    </div>
+                                    <button type="button" id="loadTemplate" class="text-blue-600 text-sm font-medium hover:text-blue-700">
+                                    <i class="fa-solid fa-clock-rotate-left mr-1"></i> Load Previous Template
+                                    </button>
+                                </div>
+
+                                <!-- Hidden field to store JSON -->
+                                <input type="hidden" id="templates_json" name="templates_json">
+                            </section>
+
+                            <!-- Generate Link Button -->
+                            <section id="generate-section" class="flex justify-end space-x-4">
+                                <button type="button" name="draftPost" class="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50 upcomingFeatureTrigger">
+                                    Save as Draft
+                                </button>
+                                <button type="submit" name="generateLink" class="px-8 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 flex items-center space-x-2">
+                                    <i class="fa-solid fa-link"></i>
+                                    <span>Generate Link</span>
+                                </button>
+                            </section>
+                        </div>
+                    </form>
+                </div>
+            </main>
+        </div>
+    </body>
+    <?php include('includes/footer-scripts.php'); ?>
+    <script src="https://cdn.ckeditor.com/ckeditor5/40.0.0/classic/ckeditor.js?v=<?= time() ?>"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="assets/js/create-post.js?v=<?= time() ?>"></script>
+    <script>
+    let lData = {
+        search: '', 
+        user_id: `<?= $userDetails['id'] ?>`,
+        container: '#postList'
+    };
+    getUserPostsDropdownList(lData);
+    enableScrollPagination(lData,'#postList');
+
+    // 🔍 Handle search
+    const searchInput = document.getElementById('postSearch');
+    let searchTimer;
+
+    searchInput.addEventListener('input', function() {
+        clearTimeout(searchTimer); // debounce typing
+        searchTimer = setTimeout(() => {
+            lData.search = this.value.trim();
+            lData.page = 1; // reset pagination when searching
+            document.querySelector(lData.container).innerHTML = ''; // clear old results
+            getUserPostsDropdownList(lData);
+        }, 400); // wait 400ms after typing
+    });
+    </script>
+</html>

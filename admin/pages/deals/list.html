@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+    <?php include('includes/head.php') ?>
+    <link rel="stylesheet" href="assets/plugins/datatable/css/dataTables.bootstrap5.min.css" />
+      <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.7.1/css/buttons.dataTables.min.css" />
+    <style>
+      .select2-container {
+          z-index: 1050 !important; /* Should be higher than Bootstrap modal (1040) */
+      }
+      .select2-container--open {
+          z-index: 1060 !important; /* Slightly higher for the open dropdown */
+      }
+    </style>
+    <body>
+        <!-- wrapper start  -->
+        <div class="wrapper relative">
+            <?php include('includes/sidebar.php') ?>
+
+            <!-- header start  -->
+            <?php include('includes/nav-header.php') ?>
+            <!-- header end  -->
+
+            <!-- content area start  -->
+            <div class="deals-page-sec">
+                <main>
+                    <section class="userList">
+                        <div class="">
+                            <div class="row">
+                                <!-- top -->
+                                <div class="search-sec-cmn user-page d-flex align-items-center mb-2">
+                                  <?php if (hasPermission('Deals', 'add')) { ?>
+                                    <div class="addUser">
+                                      <a href="#" class="btn-primary btn-small" title="Add <?= $title ?>" data-bs-toggle="modal" data-bs-target="#addModal"><i class="fa fa-plus-circle fa-2x"></i> </a>
+                                    </div>
+                                    <?php } ?>
+                                    <div class="search-form me-2">
+                                        <button class="btn p-0 outline-0" type="submit"><img src="assets/img/list/search.svg" alt="search icon" /></button>
+                                        <input type="search" class="form-control form-input border-0" id="searchDeals" placeholder="Search Deals" />
+                                    </div>
+                                    <?php if (hasPermission('Deals', 'edit')) { ?>
+                                    <form id="uploadForm" action="" method="POST" enctype="multipart/form-data" class="addUser d-flex gap-3 align-items-center justify-content-between">
+                                        <div class="upload-file-btn position-relative">
+                                            <input type="file" id="excelFileInput" name="excel" style="display: none;" accept=".xls,.xlsx,.csv">
+                                            <a href="#" class="btn  px-3 btn-up" id="uploadExcelBtn">
+                                                <span><img src="assets/img/pro-ser/upload.svg" alt="upload"></span>
+                                                <span>Upload Excel</span>
+                                            </a>
+                                        </div>
+                                        <a href="?id=<?= uniqid().mt_rand() ?>&inc=<?= md5(microtime()) ?>&tp=export" class="btn btn-ex px-3">
+                                            <span><img src="assets/img/pro-ser/export.svg" alt="export"></span>
+                                            <span>Export to Excel</span>
+                                        </a>
+                                    </form>
+                                    <?php } ?>
+                                    <?php if (hasPermission('Deals', 'delete')) { ?>
+                                    <div class="addUser d-flex gap-1">
+                                      <a href="#" class="btn btn-cst px-3 bg-danger mt-0" style="display: none;" id="postDltButton" 
+                                      >Delete</a>
+                                    <?php } ?>
+                                  </div>
+                                </div>
+
+                                <!-- bottom -->
+                                <div class="col-12">
+                                    <div class="list-users table-responsive">
+                                        <!-- table -->
+                                        <table class="table data-table-cmn dealsTable " id="dealsTable">
+                                            <thead>
+                                                <tr class="table-header">
+                                                    <th scope="col" class="th-checkbox">
+                                                      <input type="checkbox" class="chk-box select-all" value="0"/>                                                    </th>
+                                                    <th scope="col" class="th-no">
+                                                      <a href="javascript:void(0)" class="userHeading">
+                                                        No 
+                                                      </a>
+                                                    </th>
+                                                    <th scope="col">
+                                                      <a href="javascript:void(0)" class="userHeading">
+                                                         Title 
+                                                      </a>
+                                                    </th>
+                                                    <th scope="col">
+                                                      <a href="javascript:void(0)" class="userHeading">
+                                                        Store
+                                                      </a>
+                                                    </th>
+
+                                                    <th scope="col" class="userHeading-size">
+                                                        <a href="#" class="userHeading"> Visible   </a>
+                                                    </th>
+                          
+                                                    <!-- <th scope="col">
+                                                      <a href="javascript:void(0)" class="userHeading">
+                                                        Location 
+                                                      </a>
+                                                    </th>
+                           -->
+                                                    <th scope="col">
+                                                      <a href="javascript:void(0)" class="userHeading">
+                                                        Regular Price 
+                                                      </a>
+                                                    </th>
+                          
+                                                    <th scope="col">
+                                                      <a href="javascript:void(0)" class="userHeading">
+                                                        Sale Price 
+                                                      </a>
+                                                    </th>
+                          
+                                                    <th scope="col">
+                                                      <a href="#" class="userHeading">
+                                                      Categorization 
+                                                      </a>
+                                                  </th>
+                                                    <th scope="col">
+                                                      <a href="javascript:void(0)" class="userHeading">
+                                                        Created By 
+                                                      </a>
+                                                    </th>
+                                                    <th scope="col">
+                                                      <a href="javascript:void(0)" class="userHeading">
+                                                        Status 
+                                                      </a>
+                                                    </th>
+                          
+                                                    <th scope="col">
+                                                      <a href="javascript:void(0)" class="userHeading">
+                                                        Created at
+                                                      </a>
+                                                    </th>
+                          
+                                                    <th scope="col">
+                                                      <a href="javascript:void(0)" class="userHeading">
+                                                        Featured
+                                                      </a>
+                                                    </th>
+
+                                                    <th scope="col">
+                                                        <a href="#" class="userHeading"> Shares   </a>
+                                                    </th>
+                          
+                                                    <th scope="col">
+                                                      <div class="userHeading">ACTION</div>
+                                                    </th>
+                                                  </tr>
+                                            </thead>
+                                            <tbody></tbody>
+                                        </table>
+                                        <div id="noDataMessage" class="no-data-container" style="display: none;">
+                                            <div class="set-box-tag-deals">
+                                              <img src="assets/images/offer.png" alt="tag" class="m-0">
+                                            </div>
+                                            <div class="row">
+                                              <div class="col-lg-5 mx-auto text-center">
+                                                <div>
+                                                  <h3 class="fw-semibold mt-4">No Deals Yet!</h3>
+                                                  <p class="set-font-14-text mt-3">This space is ready for your first amazing deal. Get started by creating one or uploading from Excel!</p>
+                                                  
+                                                </div>
+                                              </div>
+                                              <div class="col-12"></div>
+                                              <div class="col-lg-7 mx-auto text-center mt-4">
+                                                <div class="d-flex align-items-center justify-content-center gap-3">
+                                                    <a href="#" class="set-btn-grey-fill">+ Create Your First Deal</a>
+                                                    <a href="#" class="set-btn-outline-import-grey"><img src="assets/images/import.png" alt="import">Import from Excel</a>
+                                                </div>
+                                                <div class="mt-3">
+                                                  <a href="#" class="set-anchor-small-quick-guide">Need help? View the quick-start guide</a>
+                                                </div>
+                                              </div>
+                                              <div class="col-lg-12 mx-auto text-center mt-4">
+                                                <div class="set-welcome-bar-upload-deal">
+                                                  <img src="assets/images/help.png" alt="img">
+                                                  <span>Welcome! start by uploading a deal or creating your first one.</span>
+                                                </div>
+                                              </div>
+                                            </div>
+
+                                            <!-- <img src="<?= NO_DATA_IMG ?>" alt="No Data" />
+                                            <h3><?= NO_DATA_TITLE ?></h3>
+                                            <p><?= NO_DATA_DESC ?></p> -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <!-- content area end -->
+                    <div class="modal fade customModal" id="addModal" tabindex="-1" aria-labelledby="addUserLabel" aria-hidden="true">
+                      <div class="modal-dialog modal-dialog-centered">
+                          <div class="modal-content">
+                              <div class="modal-header">
+                                  <h2 class="modal-title fs-5" id="addUserLabel">Add <?= $title ?></h2>
+                              </div>
+                              <div class="modal-body">
+                                  <form class="user-form p-0 d-flex flex-column gap-3" method="post" action="" data-parsley-validate enctype="multipart/form-data" onsubmit="return validateForm();">
+                                      
+                                      <div>
+                                        <div class="img-upload-add-post">
+                                          <input type="file" name="image" accept="image/*" id="imageShow" class="d-none" onchange="previewImage(event)" />
+                                          <label for="imageShow">
+                                              <span>
+                                                  <img id="previewImg" src="assets/img/user/plus.png" alt="Upload Image"  />
+                                              </span>
+                                              <span id="textHd">Upload Image</span>
+                                          </label>
+                                        </div>
+                                      </div>
+
+                                      <div>
+                                        <label>Select User (If no user is selected, Posterz Admin will be assigned by default.)</label>
+                                        <select class="form-control w-100" name="user_id" id="users" aria-label="Default select example">
+                                          <option value="">Select User</option>
+                                          <?php foreach ($users as $ku=>$vu) { ?>
+                                              <option value="<?= $vu['id']; ?>"><?= $vu['name']; ?></option>
+                                          <?php } ?>
+                                        </select>
+                                      </div>
+
+                                      <div>
+                                        <input type="text" name="title" id="TITLE" placeholder="Title"  class="form-control m-0" value="<?= @$apiDataU['title'] ?>" required />
+                                        <input type="hidden" name="cropped_image" id="croppedImage" value="">
+                                      </div>
+
+                                      <div>
+                                        <textarea class="form-control" name="description" id="description" rows="3" placeholder="Description" required><?= @$apiDataU['description'] ?></textarea>
+                                      </div>
+      
+                                      <div>
+                                          <input type="text" name="regular_price" id="regular_price" data-parsley-type="number" placeholder="Regular Price" class="form-control m-0" value="<?= @$apiDataU['regular_price'] ?>" required />
+                                      </div>
+
+                                      <div>
+                                        <input type="text" data-parsley-type="number" name="sale_price" id="sale_price" placeholder="Sale Price" class="form-control m-0" value="<?= @$apiDataU['sale_price'] ?>" required />
+                                      </div>
+
+                                      <div>
+                                        <input type="text" name="store_name" id="store_name" placeholder="Store Name" class="form-control m-0" value="<?= @$apiDataU['store_name'] ?>" required />
+                                      </div>
+      
+                                      <div>
+                                          <input type="text" name="address" id="address" placeholder="Address" oninput="initAutocomplete()" autocomplete="off" value="<?= @$apiDataU['address'] ?>" class="form-control m-0" />
+                                          <input type="hidden" name="latitude" id="latitude" value="<?php echo @$apiDataU['latitude']; ?>">
+                                          <input type="hidden" name="longitude" id="longitude" value="<?php echo @$apiDataU['longitude']; ?>">
+                                          <input type="hidden" name="city" id="city" value="<?php echo @$apiDataU['city']; ?>">
+                                          <input type="hidden" name="state" id="state" value="<?php echo @$apiDataU['state']; ?>">
+                                          <input type="hidden" name="country_code" id="country_code" value="<?php echo @$apiDataU['country_code']; ?>">
+                                          
+                                          <input type="checkbox" name="loc_type" id="loc_type"  value="1" class="form- mt-2" style="width: 20px; height: 20px !important;" />&nbsp;<span>Anywhere</span>
+                                      </div>
+      
+                                      <div>
+                                          <input type="url" name="url" id="url" placeholder="Store Link" value="<?= @$apiDataU['url'] ?>" class="form-control m-0" required />
+                                      </div>
+      
+                                      <div class="mt-2 gap-3 d-flex flex-row">
+                                          <button type="submit" name="addPost" class="btn btnSave">Save</button>
+                                          <a href="#" onclick="window.location.reload();"><button type="button" class="btn btnClose">Close</button></a>
+                                      </div>
+                                  </form>
+                              </div>
+                          </div>
+                      </div>
+                    </div>
+                </main>
+            </div>
+            <!-- content area end -->
+        </div>
+        <!-- wrapper end  -->
+        <script src="assets/plugins/datatable/js/jquery.dataTables.min.js?v=<?= time() ?>"></script>
+        <?php include('includes/footer-scripts.php') ?>
+        <script src="assets/js/posts.js?v=<?= time() ?>"></script>
+        <script src="assets/plugins/select2/select2-custom.js?v=<?= time() ?>"></script>
+        <?php if($err == 1){ ?>
+          <script>
+            const modal = new bootstrap.Modal(document.getElementById('addModal'));
+            modal.show();
+          </script>
+        <?php } ?>
+          <script>
+            function previewImage(event) {
+              var img = event.target.files[0];
+
+              if (!pixelarity.open(img, false, function (res, faces) {
+                  console.log("Faces detected:", faces);
+
+                  // Set cropped image preview
+                  var previewImg = document.getElementById('previewImg');
+                  previewImg.src = res;
+                  previewImg.style.height = "100px";
+                  previewImg.style.width = "100px";
+                  previewImg.style.objectFit = "cover";
+
+                  // Remove upload text
+                  document.getElementById('textHd').innerHTML = '';
+                  document.getElementById('croppedImage').value = res;
+
+                  // Remove previous face rectangles
+                  document.querySelectorAll('.face').forEach(el => el.remove());
+
+                  // Draw face detection boxes (if any)
+                  faces.forEach(face => {
+                      let faceBox = document.createElement('div');
+                      faceBox.className = 'face';
+                      faceBox.style.position = 'absolute';
+                      //faceBox.style.border = '2px solid red';
+                      faceBox.style.height = face.height + "px";
+                      faceBox.style.width = face.width + "px";
+                      faceBox.style.top = (previewImg.getBoundingClientRect().top + face.y) + "px";
+                      faceBox.style.left = (previewImg.getBoundingClientRect().left + face.x) + "px";
+
+                      document.body.appendChild(faceBox);
+                  });
+
+              }, "jpg", 0.7, true)) {
+                  alert("Whoops! That is not an image!");
+              }
+            }
+
+            $(document).ready(function () {
+              $('#users').select2({
+                  placeholder: "Select User",
+                  width: '100%',
+                  allowClear: true,
+                  minimumResultsForSearch: 0,
+                  dropdownParent: $('#addModal')
+              });
+            });
+
+            function validateForm() {
+              let address = document.getElementById("address").value;
+              let latitude = document.getElementById("latitude").value;
+              let longitude = document.getElementById("longitude").value;
+              let anywhereChecked = document.getElementById("loc_type").checked;
+
+              // Prevent submission if lat/lng are missing and "Anywhere" is not checked
+              if (!anywhereChecked && (!address || !latitude || !longitude)) {
+                alert("Please enter an address or select 'Anywhere'.");
+                return false; // Prevent form submission
+              }
+              return true; // Allow form submission
+            }
+        </script>
+    </body>
+</html>

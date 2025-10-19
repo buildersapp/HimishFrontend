@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<?php include('includes/head.php') ?>
+<link rel="stylesheet" href="assets/plugins/datatable/css/dataTables.bootstrap5.min.css" />
+<style>
+    #pageLoader {
+        position: fixed;
+        z-index: 9999;
+        background: white;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .fixed-height-row {
+        height: calc(100vh - 150px); /* Adjust depending on your header height */
+        overflow: hidden;
+    }
+
+    .scrollable-panel {
+        height: 100%;
+        overflow-y: auto;
+        padding-right: 10px;
+    }
+    pre.pretty-json {
+        background: #f1f1f1;
+        padding: 20px;
+        border-radius: 8px;
+        font-size: 13px;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+    }
+</style>
+
+<body>
+    <div class="wrapper relative">
+        <?php include('includes/sidebar.php') ?>
+        <?php include('includes/nav-header.php') ?>
+
+        <!-- Loader -->
+        <div id="pageLoader" style="
+        position: fixed;
+        z-index: 9999;
+        background: rgba(255,255,255,0.8);
+        top: 0;
+        left: 0;
+        height: 100vh;
+        width: 100vw;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        font-family: sans-serif;
+    ">
+        <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;"></div>
+        <p style="margin-top: 15px; font-size: 16px; color: #333;">Please wait while we process your listings.<br/>
+            This may take a few moments as we fetch and prepare data using OpenAI.</p>
+    </div>
+
+        <div class="listings-page-sec">
+            <main>
+                <section class="userList">
+                    <!-- Main Content -->
+                    <div class="row fixed-height-row">
+                        <!-- Left Side: Cards -->
+                        <div class="col-md-4 scrollable-panel" id="listingContainer">
+                            <!-- Cards will be loaded here -->
+                        </div>
+
+                        <!-- Right Side: JSON Output -->
+                        <div class="col-md-8 scrollable-panel" id="fJson">
+                            <h5 class="text-center">Formatted JSON</h5>
+                            <pre id="jsonOutput" class="pretty-json">Click any "View JSON" button to display content here.</pre>
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <script src="assets/plugins/datatable/js/jquery.dataTables.min.js?v=<?= time() ?>"></script>
+    <?php include('includes/footer-scripts.php') ?>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            fetchListings();
+        });
+
+        function fetchListings() {
+            fetch("ajax.php?action=getListingPreviewForConversion")
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success && Array.isArray(data.body)) {
+                        renderListings(data.body);
+                    } else {
+                        document.getElementById("listingContainer").innerHTML =
+                            "<div class='alert alert-warning'>No listings found.</div>";
+                    }
+                })
+                .catch(error => {
+                    console.error("Error fetching listings:", error);
+                    document.getElementById("listingContainer").innerHTML =
+                        "<div class='alert alert-danger'>Error loading data.</div>";
+                })
+                .finally(() => {
+                    document.getElementById("pageLoader").style.display = "none";
+                });
+        }
+
+        function renderListings(listings) {
+            const container = document.getElementById("listingContainer");
+            let html = '<div class="row">';
+            listings.forEach((item, index) => {
+                const prettyJson = JSON.stringify(JSON.parse(item.listing_json_data_v2), null, 2)
+            .replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                html += `
+                <div class="col-md-12 mb-4">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title text-primary mb-3">${item.title}</h5>
+                            <p class="card-text mb-4">${item.description}</p>
+                            <button class="btn btn-sm btn-info view-json-btn" data-json='${prettyJson}'>View JSON</button>
+                        </div>
+                    </div>
+                </div>`;
+            });
+            html += '</div>';
+            container.innerHTML = html;
+
+            document.querySelectorAll(".view-json-btn").forEach(btn => {
+                btn.addEventListener("click", function () {
+                    const json = btn.getAttribute("data-json");
+                    const output = document.getElementById("jsonOutput");
+                    const scrollDiv = document.getElementById("fJson");
+                    output.textContent = json;
+                    scrollDiv.scrollTop = 0; // Scroll to top
+                });
+            });
+        }
+    </script>
+</body>
+</html>

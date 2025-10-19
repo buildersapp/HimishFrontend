@@ -1,0 +1,326 @@
+<?php 
+$adminId = $_SESSION['hm_auth_data']['id'];
+?>
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <?php include('includes/head.php'); ?>
+        <link rel="stylesheet" href="assets/css/messaging.css" />
+        <script src="https://cdn.socket.io/4.5.0/socket.io.min.js?v=<?= time() ?>"></script>
+        <style>
+            .loader {
+                position: absolute;
+                top: 0; /* Ensure loader is positioned at the top */
+                left: 0;
+                width: 100%; /* Full width of the parent div */
+                height: 100%; /* Full height of the parent div */
+                z-index: 9999; /* Ensure it appears on top */
+                display: flex;
+                justify-content: center;
+                align-items: center; /* Vertically center the loader */
+            }
+
+            .spinner {
+                border: 5px solid #f3f3f3;
+                border-top: 5px solid #3498db;
+                border-radius: 50%;
+                width: 50px;
+                height: 50px;
+                animation: spin 1s linear infinite;
+            }
+
+            @keyframes spin {
+                0% {
+                    transform: rotate(0deg);
+                }
+                100% {
+                    transform: rotate(360deg);
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="wrapper relative">
+            <?php include('includes/sidebar.php'); ?>
+            <?php include('includes/nav-header.php'); ?>
+            <div class="faqs-page-sec">
+                <main>
+                    <section class="userList">
+                        <div class="container">
+                            <div class="messaging">
+                                <div class="loader" style="display: block;">
+                                    <div class="spinner"></div>
+                                </div>
+                                <div class="inbox_msg">
+                                    <div class="inbox_people">
+                                        <div class="headind_srch">
+                                            <div class="recent_heading"><h4>Messaging</h4></div>
+                                            <div class="" style="float: right;"><a href="ananomousRequest.php">Ananomous</a></div>
+                                            
+                                            <div class="" style="margin-top: 36px;">
+                                                <div class="stylish-input-group">
+                                                    <input type="text" class="search-bar" placeholder="Search" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="inbox_chat"></div>
+                                    </div>
+                                    <div class="mesgs">
+                                        <div class="msg_history"></div>
+                                        <div class="type_msg">
+                                            <div class="input_msg_write">
+                                                <input type="text" class="write_msg" placeholder="Type a message" />
+                                                <button class="msg_send_btn mt-2" type="button">
+                                                    <i class="fa fa-arrow-right"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </main>
+            </div>
+        </div>
+
+        <script>
+            const BASE_URL = "https://himish.com:4002";
+            const MEDIA_BASE_URL = "<?= MEDIA_BASE_URL ?>";
+            const NO_DATA_IMG = "<?= NO_DATA_IMG ?>";
+            let isFirstLoad = true;
+            let lastMessageId = null;
+
+            const showLoader = () => {
+                document.querySelector(".loader").style.display = "flex";
+            };
+
+            const hideLoader = () => {
+                document.querySelector(".loader").style.display = "none";
+            };
+
+            const socket = io(BASE_URL);
+            const adminId = <?= $adminId ?>;
+
+            const connectUser = (userId) => {
+                socket.emit("connectUser", { user_id: userId });
+                socket.on("connectUserListener", (response) => {
+                    console.log("User Connected:", response);
+                });
+            };
+
+            const loadInbox = (userId) => {
+                showLoader();
+                socket.emit("inbox", { user_id: userId, platform: "wb" });
+
+                socket.on("inboxListener", (inbox) => {
+                    hideLoader();
+                    const inboxChat = document.querySelector(".inbox_chat");
+                    inboxChat.innerHTML = ""; // Clear previous content
+                    const userIdFromPHP = '<?= $userId ?>';
+                    var matchedUserId = 0;
+
+                    if(userIdFromPHP > 0){
+                        const matchedItem = inbox.find(item => parseInt(item.user_id) === parseInt(userIdFromPHP));
+                        matchedUserId = matchedItem.id;
+                    }
+
+                    const savedActiveChatId = matchedUserId > 0 ? matchedUserId : localStorage.getItem("activeChatId");
+
+                    inbox.forEach((chat, index) => {
+                        const activeChat = document.querySelector(".chat_list.active_chat");
+                        const isActive = savedActiveChatId 
+                            ? savedActiveChatId.toString() === chat.id.toString() 
+                            : index === 0; // Default to 0th index if no saved chat
+                        const badge = chat.unread_count > 0 
+                            ? `<span class="unread_badge">${chat.unread_count}</span>` 
+                            : "";
+                        const chatHtml = `
+                            <div class="chat_list ${isActive ? "active_chat" : ""}" 
+                                data-chat-id="${chat.id}" 
+                                data-user2-id="${chat.user_id}" 
+                                data-resource-id="${chat.resource_id}" 
+                                data-resource-type="${chat.resource_type}">
+                                <div class="chat_people">
+                                    <div class="chat_img">
+                                        <img src="${MEDIA_BASE_URL}/${chat.user.image}" alt="user" 
+                                            onerror="this.onerror=null; this.src='${NO_DATA_IMG}';">
+                                    </div>
+                                    <div class="chat_ib">
+                                        <h5>${chat.user.name} ${badge}
+                                            <span class="chat_date">${new Date(chat.updated_at).toLocaleDateString()}</span>
+                                        </h5>
+                                        <p>${chat.chat.message.substring(0, 30)}</p>
+                                    </div>
+                                </div>
+                            </div>`;
+                        inboxChat.innerHTML += chatHtml;
+                    });
+
+                    if (inbox.length) {
+                        const activeChat = document.querySelector(".chat_list.active_chat");
+                        const firstChat = activeChat || document.querySelector(".chat_list");
+                        if (firstChat) {
+                            const constantId = firstChat.dataset.chatId;
+                            const user2Id = firstChat.dataset.user2Id;
+                            const resourceId = firstChat.dataset.resourceId;
+                            const resourceType = firstChat.dataset.resourceType;
+
+                            localStorage.setItem("activeChatId", constantId);
+
+                            loadMessages(user2Id, resourceId, resourceType, constantId);
+                        }
+                    }
+
+                    document.querySelectorAll(".chat_list").forEach((chatItem) => {
+                        chatItem.addEventListener("click", () => {
+                            document.querySelectorAll(".chat_list").forEach((el) => el.classList.remove("active_chat"));
+                            chatItem.classList.add("active_chat");
+
+                            const constantId = chatItem.dataset.chatId;
+                            const user2Id = chatItem.dataset.user2Id;
+                            const resourceId = chatItem.dataset.resourceId;
+                            const resourceType = chatItem.dataset.resourceType;
+
+                            localStorage.setItem("activeChatId", constantId);
+
+                            loadMessages(user2Id, resourceId, resourceType, constantId);
+                        });
+                    });
+                });
+            };
+
+            const loadMessages = (user2Id, resourceId, resourceType, constantId) => {
+                socket.emit("getMessage", {
+                    user_id: adminId,
+                    user2_id: user2Id,
+                    resource_id: resourceId,
+                    resource_type: resourceType,
+                });
+
+                socket.on("getMessageListener", (messages) => {
+                    const msgHistory = document.querySelector(".msg_history");
+                    msgHistory.innerHTML = ""; // Clear previous messages
+
+                    messages.chat.forEach((msg) => {
+                        const messageClass = msg.user_id === adminId ? "outgoing_msg" : "incoming_msg";
+                        const messageHtml = `
+                            <div class="${messageClass}">
+                                <div class="${messageClass === "outgoing_msg" ? "sent_msg" : "received_withd_msg"}">
+                                    <p>${msg.message}</p>
+                                    <span class="time_date">${new Date(msg.created_at).toLocaleString()}</span>
+                                </div>
+                            </div>`;
+                        msgHistory.innerHTML += messageHtml;
+                    });
+
+                    const newLastMessageId = messages.chat[messages.chat.length - 1]?.id;
+
+                    if (isFirstLoad || newLastMessageId !== lastMessageId) {
+                        scrollToBottom();
+                        focusMessageInput();
+                        lastMessageId = newLastMessageId;
+                    }
+
+                    if (isFirstLoad) {
+                        isFirstLoad = false;
+                    }
+
+                    // Emit readMessage when messages are loaded
+                    //readMessage(adminId, user2Id, constantId);
+                });
+            };
+
+            const focusMessageInput = () => {
+                const messageInput = document.querySelector(".write_msg");
+                if (messageInput) {
+                    messageInput.focus();
+                }
+            };
+
+            const sendMessage = (data) => {
+                socket.emit("sendMessage", data);
+                socket.on("sendMessageListener", (response) => {
+                    loadMessages(data.user2_id, data.resource_id, data.resource_type, data.constantId);
+                });
+            };
+
+            const scrollToBottom = () => {
+                const msgHistory = document.querySelector(".msg_history");
+                if (msgHistory) {
+                    msgHistory.scrollTop = msgHistory.scrollHeight;
+                }
+            };
+
+            socket.on("sendMessageListener", (newMessageData) => {
+                console.log("sendMessageListener");
+                const activeChat = document.querySelector(".chat_list.active_chat");
+                const currentChatId = activeChat ? activeChat.dataset.chatId : null;
+
+                if (currentChatId && currentChatId === newMessageData.chat_id) {
+                    loadMessages(newMessageData.user2_id, newMessageData.resource_id, newMessageData.resource_type, currentChatId);
+                } else {
+                    loadInbox(adminId);
+                }
+            });
+
+            socket.on('readMessage', (data) => {
+                const { user_id, user2_id, chat_constant_id } = data;
+
+                // Perform necessary operations to mark the message as read (e.g., updating the database)
+
+                // After marking as read, emit 'readMessageListener' to the client
+                socket.emit('readMessageListener', { status: 'success', message: 'Message marked as read' });
+
+                // Alternatively, you could also emit this to the other user in the chat
+                socket.to(user2_id).emit('readMessageListener', { status: 'success', message: 'Your message has been read' });
+            });
+
+            document.addEventListener("DOMContentLoaded", () => {
+                connectUser(adminId);
+                loadInbox(adminId);
+
+                const messageInput = document.querySelector(".write_msg");
+                const searchInput = document.querySelector(".search-bar");
+
+                const sendMessageHandler = () => {
+                    const activeChat = document.querySelector(".chat_list.active_chat");
+                    if (activeChat) {
+                        const data = {
+                            user_id: adminId,
+                            user2_id: activeChat.dataset.user2Id,
+                            resource_id: activeChat.dataset.resourceId,
+                            resource_type: activeChat.dataset.resourceType,
+                            message: messageInput.value,
+                            constantId: activeChat.dataset.chatId,
+                            adminWeb: 1,
+                        };
+
+                        if(messageInput.value){
+                            sendMessage(data);
+                        }
+                    }
+                    messageInput.value = ""; // Clear message input
+                };
+
+                document.querySelector(".msg_send_btn").addEventListener("click", sendMessageHandler);
+
+                messageInput.addEventListener("keydown", (e) => {
+                    if (e.key === "Enter") {
+                        sendMessageHandler();
+                    }
+                });
+
+                searchInput.addEventListener("keyup", (e) => {
+                    const query = e.target.value.toLowerCase();
+                    const chatItems = document.querySelectorAll(".chat_list");
+                    chatItems.forEach((item) => {
+                        const name = item.querySelector("h5").innerText.toLowerCase();
+                        item.style.display = name.includes(query) ? "block" : "none";
+                    });
+                });
+            });
+        </script>
+        <?php include('includes/footer-scripts.php') ?>
+    </body>
+</html>

@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+    <?php include('includes/head.php') ?>
+    <body>
+        <?php include('includes/nav-header.php') ?>
+        <!-- title start -->
+        <h4 class="text-center title-2x-bg">
+            Create Deal
+        </h4>
+        <form class="postDetailsBody" method="post" enctype="multipart/form-data" data-parsley-validate onsubmit="return validateForm();">
+            <div class="postUpload-container">
+                <div class="postUpload-title">
+                    <h2>Upload Photo or Video</h2>
+                </div>
+                <?php if(isset($_GET['id'])){ ?>
+                <?php for ($j = 0; $j < count($apiDataU['post_images']); $j++) : ?>
+                    <div class="comunity-image-upload-wrapper mt-3">
+                        <!-- Image Preview -->
+                        <div id="previewWrapper<?= $j ?>" class="comunity-image-upload-preview">
+                            <div class="remove-img" data-index="<?= $i ?>">
+                                <a href="create-listing.php?id=<?= base64_encode($postId); ?>&act=del&act=<?= uniqid().mt_rand() ?>&img_id=<?= base64_encode($apiDataU['post_images'][$j]['id']); ?>"><img src="assets/img/cross1.png" class="img-fluid" alt="Remove" /></a>
+                            </div>
+                            <img id="previewImage<?= $i ?>" src="<?= MEDIA_BASE_URL.$apiDataU['post_images'][$j]['image'] ?>" class="img-fluid preview-img" alt="Preview Image" data-index="<?= $j ?>" />
+                        </div>
+                    </div>
+                <?php endfor; ?>
+                <?php } ?>
+                <div class="comunity-image-upload-wrapper mt-5">
+                    <label for="imageShow" class="comunity-image-upload-label">
+                        <span class="uploadIconComunity">
+                            <img src="assets/img/tabler_upload.png" id="previewImg" class="img-fluid" alt="Upload Icon" />
+                            <video id="previewVideo" style="display: none;" controls></video>
+                        </span>
+                        <span class="uploadTextcomunity" id="textHd">Upload Image or Video</span>
+                    </label>
+                    <input type="file" name="image" id="imageShow" class="comunity-image-upload-input" style="display: none;" onchange="previewMedia(event)" accept="image/*, video/*" />
+                    <div class="comunity-image-upload-preview" style="display: none;">
+                        <div class="remove-img">
+                            <img src="assets/img/cross1.png" class="img-fluid" alt="Remove" />
+                        </div>
+                        <img id="previewImage" src="" class="img-fluid" alt="Preview Image" />
+                    </div>
+                </div>
+            </div>
+            <div class="postUpload-container set-bg-transparent-create-deal mt-3">
+                <div action="" class="form-container">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <!-- Title -->
+                            <label for="title-input" class="post-something-form-label input-left">Deal Title</label>
+                            <div class="post-something-form-group">
+                                <div class="input-wrapper input-right">
+                                    <input type="text" placeholder="Deal Title" id="title-input" class="form-input" name="title" required value="<?= @$apiDataU['title'] ?>" />
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <!-- Info -->
+                            <label for="info-textarea" class="post-something-form-label input-left">Info</label>
+                            <div class="textarea-group">
+                                <div class="textarea-wrapper input-right">
+                                    <textarea placeholder="Your Description" autocomplete="off" id="info-textarea" class="form-textarea" rows="1" name="description" required><?= @$apiDataU['info'] ?></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <!-- Regular Price -->
+                            <label for="price-input" class="post-something-form-label input-left">Regular Price</label>
+                            <div class="post-something-form-group">
+                                <div class="input-wrapper input-right">
+                                    <input type="text" placeholder=" Regular Price (Optional)" id="price-input" name="regular_price" class="form-input" value="<?= @$apiDataU['regular_price'] ?>" autocomplete="off" data-parsley-type="number" required />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <!-- Sale Price -->
+                            <label for="price-input2" class="post-something-form-label input-left">Sale Price</label>
+                            <div class="post-something-form-group">
+                                <div class="input-wrapper input-right">
+                                    <input type="text" placeholder="Sale Price" id="price-input2" class="form-input" name="sale_price" value="<?= @$apiDataU['price'] ?>" autocomplete="off" data-parsley-type="number" required />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-12">
+                            <!-- Store Name -->
+                            <label for="price-input3" class="post-something-form-label input-left">Store Name</label>
+                            <div class="post-something-form-group">
+                                
+                                <div class="input-wrapper input-right">
+                                    <input type="text" placeholder=" Store Name" id="price-input3" class="form-input" name="store_name" value="<?= @$apiDataU['company'] ?>" autocomplete="off" required />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-12">
+                            <!-- Add Location -->
+                             
+                            <div class="post-something-form-group location-group">
+                                <div class="input-right location-wraper">
+                                    <div class="input-wrapper">
+                                        <div class="input-left">
+                                            <label for="location-input" class="post-something-form-label">Add Location</label>
+                                        </div>
+                                        <input 
+                                            type="text" 
+                                            placeholder="Enter Location" 
+                                            id="address" 
+                                            class="form-input" 
+                                            name="address" 
+                                            value="<?= @$apiDataU['address'] ?>" 
+                                            oninput="initAutocomplete()" 
+                                            autocomplete="off" 
+                                        />
+                                    </div>
+
+                                    <div class="separator">
+                                        <span>or</span>
+                                    </div>
+
+                                    <!-- NationWide and WorldWide buttons -->
+                                    <div class="anywhere-button-wrapper">
+                                        <button type="button" class="anywhere-button mb-2 set-font-btn-wide" onclick="selectLocType(1)" id="worldBtn">WorldWide</button>
+                                        <button type="button" class="anywhere-button mb-2 set-font-btn-wide" onclick="selectLocType(2)" id="nationBtn">NationWide</button>
+                                    </div>
+
+                                    <!-- Hidden fields -->
+                                    <input type="hidden" name="latitude" id="latitude" value="<?= @$apiDataU['latitude']; ?>" />
+                                    <input type="hidden" name="longitude" id="longitude" value="<?= @$apiDataU['longitude']; ?>" />
+                                    <input type="hidden" name="city" id="city" value="<?= @$apiDataU['city']; ?>" />
+                                    <input type="hidden" name="state" id="state" value="<?= @$apiDataU['state']; ?>" />
+                                    <input type="hidden" name="country_code" id="country_code" />
+                                    <input type="hidden" name="loc_type" id="loc_type" value="0" />
+                                    <input type="hidden" name="cropped_image" id="croppedImage" value="" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-12">
+                            <!-- Buy Link -->
+                            <label for="link-input" class="post-something-form-label input-left">Buy Link</label>
+                            <div class="post-something-form-group">
+                                
+                                <div class="input-wrapper input-right">
+                                    <input type="url" placeholder=" Buy Link. https://www.google.com/test" id="link-input" class="form-input auto-prepend-https" name="url" required value="<?= @$apiDataU['url'] ?>" autocomplete="off" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-12">
+                            <?php if($postId==0){ ?>
+                            <!-- Make deal as featured -->
+                            <div class="post-something-form-group">
+                                <label for="link-input" class="post-something-form-label input-left"></label>
+                                <input type="checkbox" id="is_featured_deal" class="form-input" name="is_featured_deal" value="1" /> Make Featured on Home Page <b>($<?= $featuredDealsPlan[0]['price'] ?>)</b>
+                            </div>
+                            <?php } ?>
+                        </div>
+                        <div class="col-lg-12">
+                            <?php if ($postId == 0): ?>
+                            <div class="horaizontl-line-separator d-xl-none"></div>
+                            <div class="price-preview mt-5" id="paymentSummary" style="display: none;">
+                                <div class="priview-title-wrapper">
+                                    <h2 class="flow-location-title">Payment</h2>
+                                </div>
+                                <div class="price-priver-inner price-priver-inner-gap">
+                                    <div class="price-priver-inner-top">
+                                        <div class="horaizontl-line"></div>
+                                        <div class="price-priver-inner-top-prices">
+
+
+
+                                            <!-- Number of Days Dropdown -->
+                                            <div class="price-priver-inner-top-prices-inner">
+                                                <div class="price-priver-inner-top-prices-left">
+                                                    <label for="num_days">Select Number of Days</label>
+                                                </div>
+                                                <div class="price-priver-inner-top-prices-right">
+                                                    <select id="num_days" name="num_days" class="form-select">
+                                                        <?php for ($i = 1; $i <= 20; $i++): ?>
+                                                            <option value="<?= $i ?>" <?= $i == 7 ? 'selected' : '' ?>>
+                                                                <?= $i ?>
+                                                            </option>
+                                                        <?php endfor; ?>
+                                                    </select>
+                                                    <input type="hidden" id="expiry_timestamp" name="expire_date" value="0" />
+                                                </div>
+                                            </div>
+
+                                            <!-- Use Credits -->
+                                            <div class="price-priver-inner-top-prices-inner">
+                                                <div class="price-priver-inner-top-prices-left">
+                                                    <span>Use Credits ($<?= $userDetails['wallet'] ?>)</span>
+                                                </div>
+                                                <div class="price-priver-inner-top-prices-right">
+                                                    <span><input type="checkbox" id="use_credits" class="form-input" name="use_credits" value="1" /></span>
+                                                    <input type="hidden" name="credit" id="credit" />
+                                                </div>
+                                            </div>
+
+                                            <!-- Base Price -->
+                                            <div class="price-priver-inner-top-prices-inner">
+                                                <div class="price-priver-inner-top-prices-left">
+                                                    <span>Total Amt.</span>
+                                                </div>
+                                                <div class="price-priver-inner-top-prices-right">
+                                                    <span>$ <?= $featuredDealsPlan[0]['price'] ?></span>
+                                                </div>
+                                            </div>
+
+                                            <!-- Tax Display -->
+                                            <div class="price-priver-inner-top-prices-inner">
+                                                <div class="price-priver-inner-top-prices-left">
+                                                    <span>Sales Tax (<span id="taxRateDisplay"><?= $featuredDealsPlan[0]['tax'] ?></span>%)</span>
+                                                </div>
+                                                <div class="price-priver-inner-top-prices-right">
+                                                    <span>$ <span id="taxAmountDisplay"><?= number_format(($featuredDealsPlan[0]['price'] * $featuredDealsPlan[0]['tax']) / 100, 2) ?></span></span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="horaizontl-line"></div>
+
+                                        <!-- Subtotal -->
+                                        <div class="price-priver-inner-top-prices">
+                                            <div class="price-priver-inner-top-prices-inner">
+                                                <div class="price-priver-inner-top-prices-left">
+                                                    <span>Sub Total</span>
+                                                </div>
+                                                <div class="price-priver-inner-top-prices-right">
+                                                    <span id="subTotalEle">
+                                                        $ <?= number_format(($featuredDealsPlan[0]['price'] * $featuredDealsPlan[0]['tax']) / 100 + $featuredDealsPlan[0]['price'], 2) ?>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <?php endif; ?>
+                        </div>
+                        <div class="col-lg-12">
+                            <div class="not-find">
+                                <button class="saveBtn svs-btns" name="<?= ($postId==0) ? 'addPost' : 'updatePost' ?>">
+                                    <span class="saveBtnTxt" id="txtBtnS"><?= ($postId==0) ? 'Save' : 'Update' ?></span>
+                                    <span class="saveBtnImg"><img src="assets/img/forward.png" class="img-fluid w-100" alt="" /></span>
+                                </button>
+                                <button type="button" class="cancelbtn" data-bs-toggle="modal" data-bs-target="#draftModal" onclick="window.history.back();">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+                
+            </div>
+            
+        </form>
+        <?php include('includes/footer-scripts.php') ?>
+        <script src="assets/js/deals.js?v=<?= time() ?>"></script>
+        <script>
+        const featuredCheckbox = document.getElementById('is_featured_deal');
+        const useCreditsCheckbox = document.getElementById('use_credits');
+        const paymentSummary = document.getElementById('paymentSummary');
+        const spanText = document.getElementById('txtBtnS');
+        const creditInput = document.getElementById('credit');
+        const numDaysDropdown = document.getElementById('num_days');
+        const expiryTimestampInput = document.getElementById('expiry_timestamp');
+        const subTotalElement = document.getElementById('subTotalEle');
+        const taxAmountDisplay = document.getElementById('taxAmountDisplay');
+        const taxRateDisplay = document.getElementById('taxRateDisplay');
+
+        // Set PHP values
+        const fdCost = parseFloat("<?= $featuredDealsPlan[0]['price'] ?>");
+        const taxRate = parseFloat("<?= $featuredDealsPlan[0]['tax'] ?>");
+        const walletBalance = parseFloat("<?= $userDetails['wallet'] ?>");
+
+        function updateSubTotal() {
+            const numberOfDays = parseInt(numDaysDropdown.value || 1);
+            const taxAmount = ((fdCost * taxRate) / 100) * numberOfDays;
+            const baseTotal = (fdCost * numberOfDays) + taxAmount;
+
+            let usedCredits = 0;
+            if (useCreditsCheckbox.checked && walletBalance > 0) {
+                usedCredits = Math.min(walletBalance, baseTotal);
+            }
+
+            const finalTotal = baseTotal - usedCredits;
+
+            // Update UI
+            creditInput.value = usedCredits;
+            subTotalElement.textContent = `$ ${finalTotal.toFixed(2)}`;
+            taxAmountDisplay.textContent = taxAmount.toFixed(2);
+            taxRateDisplay.textContent = taxRate.toFixed(3); // Show 8.875 etc.
+
+            spanText.textContent = finalTotal > 0 ? 'Confirm & Pay' : 'Save';
+
+            // Set expiry timestamp
+            const currentTime = new Date();
+            const expiryDate = new Date(currentTime.getTime() + numberOfDays * 24 * 60 * 60 * 1000);
+            expiryTimestampInput.value = Math.floor(expiryDate.getTime() / 1000);
+        }
+
+        featuredCheckbox.addEventListener('change', function () {
+            const isChecked = this.checked;
+            paymentSummary.style.display = isChecked ? 'block' : 'none';
+            spanText.textContent = isChecked ? 'Confirm & Pay' : 'Save';
+
+            if (isChecked) {
+                updateSubTotal();
+            }
+        });
+
+        useCreditsCheckbox.addEventListener('change', function () {
+            if (featuredCheckbox.checked) {
+                updateSubTotal();
+            }
+        });
+
+        numDaysDropdown.addEventListener('change', function () {
+            if (featuredCheckbox.checked) {
+                updateSubTotal();
+            }
+        });
+
+        window.addEventListener('DOMContentLoaded', () => {
+            if (featuredCheckbox.checked) {
+                paymentSummary.style.display = 'block';
+                updateSubTotal();
+                spanText.textContent = 'Confirm & Pay';
+            }
+        });
+        </script>
+    </body>
+</html>

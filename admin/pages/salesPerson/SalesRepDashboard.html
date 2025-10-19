@@ -1,0 +1,357 @@
+<html><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script> window.FontAwesomeConfig = { autoReplaceSvg: 'nest'};</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://code.highcharts.com/highcharts.js?v=<?= time() ?>"></script>
+    
+    <style>
+        ::-webkit-scrollbar { display: none;}
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+    <script>tailwind.config = {
+  "theme": {
+    "extend": {
+      "colors": {
+        "primary": "#2563eb",
+        "secondary": "#64748b",
+        "success": "#10b981",
+        "warning": "#f59e0b",
+        "danger": "#ef4444"
+      },
+      "fontFamily": {
+        "sans": [
+          "Inter",
+          "sans-serif"
+        ]
+      }
+    }
+  }
+};</script>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;500;600;700;800;900&amp;display=swap"><style>
+  .highlighted-section {
+    outline: 2px solid #3F20FB;
+    background-color: rgba(63, 32, 251, 0.1);
+  }
+
+  .edit-button {
+    position: absolute;
+    z-index: 1000;
+  }
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
+
+  html, body {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  </style></head>
+<body class="bg-gray-50">
+
+<div id="header" class="fixed top-0 left-0 right-0 bg-white border-b border-gray-200 z-50">
+    <div class="px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-16">
+            <div class="flex items-center">
+                <h1 class="text-2xl font-bold text-primary">Himish</h1>
+                <span class="ml-2 text-sm text-gray-500">Sales Dashboard</span>
+            </div>
+            <div class="flex items-center space-x-4">
+                <div class="relative">
+                    <button id="notificationBtn" class="p-2 text-gray-400 hover:text-gray-600 relative">
+                        <i class="fa-solid fa-bell text-lg"></i>
+                        <span class="absolute -top-1 -right-1 bg-danger text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">3</span>
+                    </button>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-2.jpg" alt="Profile" class="h-8 w-8 rounded-full">
+                    <span class="text-sm font-medium text-gray-700">John Smith</span>
+                    <button class="text-gray-400 hover:text-gray-600">
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="main-content" class="pt-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <div id="dashboard-header" class="mb-8">
+            <h2 class="text-3xl font-bold text-gray-900 mb-2">Sales Dashboard</h2>
+            <p class="text-gray-600">Manage your posts, track referrals, and monitor earnings</p>
+        </div>
+
+        <div id="stats-overview" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                <div class="flex items-center">
+                    <div class="p-3 bg-success/10 rounded-lg">
+                        <i class="fa-solid fa-dollar-sign text-success text-xl"></i>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-600">Total Earnings</p>
+                        <p class="text-2xl font-bold text-gray-900">$12,450</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                <div class="flex items-center">
+                    <div class="p-3 bg-primary/10 rounded-lg">
+                        <i class="fa-solid fa-clipboard-list text-primary text-xl"></i>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-600">Active Posts</p>
+                        <p class="text-2xl font-bold text-gray-900">24</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                <div class="flex items-center">
+                    <div class="p-3 bg-purple-100 rounded-lg">
+                        <i class="fa-solid fa-users text-purple-600 text-xl"></i>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-600">Communities</p>
+                        <p class="text-2xl font-bold text-gray-900">8</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                <div class="flex items-center">
+                    <div class="p-3 bg-warning/10 rounded-lg">
+                        <i class="fa-solid fa-clock text-warning text-xl"></i>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-600">Pending Referrals</p>
+                        <p class="text-2xl font-bold text-gray-900">15</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="dashboard-tabs" class="bg-white rounded-lg shadow-sm border border-gray-200">
+            <div class="border-b border-gray-200">
+                <nav class="flex space-x-8 px-6" aria-label="Tabs">
+                    <button class="tab-btn active py-4 px-1 border-b-2 border-primary font-medium text-sm text-primary" data-tab="overview">
+                        Overview
+                    </button>
+                    <button class="tab-btn py-4 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300" data-tab="referrals">
+                        Referral Activity
+                    </button>
+                    <button class="tab-btn py-4 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300" data-tab="communities">
+                        Communities
+                    </button>
+                    <button class="tab-btn py-4 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300" data-tab="links">
+                        Link Generator
+                    </button>
+                    <button class="tab-btn py-4 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300" data-tab="earnings">
+                        Earnings
+                    </button>
+                </nav>
+            </div>
+
+            <div id="overview-tab" class="tab-content p-6">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div class="lg:col-span-2">
+                        <div id="notifications-section" class="mb-6">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-4">Recent Notifications</h3>
+                            <div class="space-y-3">
+                                <div class="flex items-center p-4 bg-red-50 border border-red-200 rounded-lg">
+                                    <i class="fa-solid fa-exclamation-triangle text-danger mr-3"></i>
+                                    <div>
+                                        <p class="text-sm font-medium text-gray-900">Referral link expired</p>
+                                        <p class="text-xs text-gray-600">Marketing Campaign #MC001 link needs renewal</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center p-4 bg-green-50 border border-green-200 rounded-lg">
+                                    <i class="fa-solid fa-check-circle text-success mr-3"></i>
+                                    <div>
+                                        <p class="text-sm font-medium text-gray-900">New ad created via your link</p>
+                                        <p class="text-xs text-gray-600">Commission earned: $125</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                                    <i class="fa-solid fa-info-circle text-primary mr-3"></i>
+                                    <div>
+                                        <p class="text-sm font-medium text-gray-900">Community member joined</p>
+                                        <p class="text-xs text-gray-600">Tech Startups community gained 3 new members</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <div id="quick-actions" class="bg-gray-50 rounded-lg p-6">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
+                            <div class="space-y-3">
+                                <button class="w-full bg-primary text-white py-3 px-4 rounded-lg font-medium hover:bg-primary/90 transition-colors">
+                                    <i class="fa-solid fa-plus mr-2"></i>
+                                    Create New Post
+                                </button>
+                                <button class="w-full bg-purple-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-purple-700 transition-colors">
+                                    <i class="fa-solid fa-users mr-2"></i>
+                                    Create Community
+                                </button>
+                                <button class="w-full bg-gray-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-gray-700 transition-colors">
+                                    <i class="fa-solid fa-link mr-2"></i>
+                                    Generate Link
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="referrals-tab" class="tab-content p-6 hidden">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-lg font-semibold text-gray-900">Referral Activity</h3>
+                    <div class="flex space-x-2">
+                        <button class="px-3 py-1 text-sm bg-success text-white rounded-full">Active</button>
+                        <button class="px-3 py-1 text-sm bg-gray-200 text-gray-700 rounded-full">Expired</button>
+                        <button class="px-3 py-1 text-sm bg-gray-200 text-gray-700 rounded-full">Converted</button>
+                    </div>
+                </div>
+                
+                <div id="referrals-table" class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Post Title</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Clicks</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Commission</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Expiry</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Digital Marketing Services</td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-2 py-1 text-xs font-medium bg-success text-white rounded-full">Active</span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">142</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">$450</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Jan 15, 2025</td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Web Development Package</td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-2 py-1 text-xs font-medium bg-warning text-white rounded-full">Pending</span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">89</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">$320</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Jan 20, 2025</td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">SEO Optimization</td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-2 py-1 text-xs font-medium bg-danger text-white rounded-full">Expired</span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">67</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">$0</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Dec 30, 2024</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="communities-tab" class="tab-content p-6 hidden">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-lg font-semibold text-gray-900">My Communities</h3>
+                    <button class="bg-purple-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-purple-700">
+                        <i class="fa-solid fa-plus mr-2"></i>Create Community
+                    </button>
+                </div>
+                
+                <div id="communities-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
+                        <div class="flex justify-between items-start mb-4">
+                            <h4 class="text-lg font-semibold text-gray-900">Tech Startups</h4>
+                            <span class="px-2 py-1 text-xs bg-green-100 text-green-800 rounded-full">Public</span>
+                        </div>
+                        <div class="space-y-2 text-sm text-gray-600 mb-4">
+                            <p><i class="fa-solid fa-users mr-2"></i>45 Members</p>
+                            <p><i class="fa-solid fa-clock mr-2"></i>Last activity: 2 hours ago</p>
+                            <p><i class="fa-solid fa-dollar-sign mr-2"></i>Commission: $1,250</p>
+                        </div>
+                        <div class="flex space-x-2">
+                            <button class="flex-1 bg-primary text-white py-2 px-3 rounded text-sm font-medium">View</button>
+                            <button class="flex-1 bg-gray-200 text-gray-700 py-2 px-3 rounded text-sm font-medium">Edit</button>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
+                        <div class="flex justify-between items-start mb-4">
+                            <h4 class="text-lg font-semibold text-gray-900">Marketing Pros</h4>
+                            <span class="px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded-full">Private</span>
+                        </div>
+                        <div class="space-y-2 text-sm text-gray-600 mb-4">
+                            <p><i class="fa-solid fa-users mr-2"></i>28 Members</p>
+                            <p><i class="fa-solid fa-clock mr-2"></i>Last activity: 1 day ago</p>
+                            <p><i class="fa-solid fa-dollar-sign mr-2"></i>Commission: $890</p>
+                        </div>
+                        <div class="flex space-x-2">
+                            <button class="flex-1 bg-primary text-white py-2 px-3 rounded text-sm font-medium">View</button>
+                            <button class="flex-1 bg-gray-200 text-gray-700 py-2 px-3 rounded text-sm font-medium">Edit</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="links-tab" class="tab-content p-6 hidden">
+                <h3 class="text-lg font-semibold text-gray-900 mb-6">Link Generator</h3>
+                
+                <div id="link-generator" class="space-y-6">
+                    <div class="bg-gray-50 rounded-lg p-6">
+                        <h4 class="font-medium text-gray-900 mb-4">Company Profile Link</h4>
+                        <div class="flex items-center space-x-2">
+                            <input type="text" value="https://postersz.com/ref/john-smith" class="flex-1 bg-white border border-gray-300 rounded-lg px-3 py-2 text-sm" readonly="">
+                            <button class="bg-primary text-white px-4 py-2 rounded-lg text-sm font-medium">Copy</button>
+                        </div>
+                        <div class="flex space-x-2 mt-3">
+                            <button class="bg-green-600 text-white px-3 py-1 rounded text-sm">WhatsApp</button>
+                            <button class="bg-blue-600 text-white px-3 py-1 rounded text-sm">SMS</button>
+                            <button class="bg-gray-600 text-white px-3 py-1 rounded text-sm">Email</button>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-gray-50 rounded-lg p-6">
+                        <h4 class="font-medium text-gray-900 mb-4">Direct Ad Creation Link</h4>
+                        <div class="flex items-center space-x-2">
+                            <input type="text" value="https://postersz.com/create-ad/ref/john-smith" class="flex-1 bg-white border border-gray-300 rounded-lg px-3 py-2 text-sm" readonly="">
+                            <button class="bg-primary text-white px-4 py-2 rounded-lg text-sm font-medium">Copy</button>
+                        </div>
+                        <p class="text-xs text-gray-600 mt-2">Expires: Jan 15, 2025</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="earnings-tab" class="tab-content p-6 hidden">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-lg font-semibold text-gray-900">Earnings &amp; Commissions</h3>
+                    <button class="bg-gray-600 text-white px-4 py-2 rounded-lg text-sm font-medium">
+                        <i class="fa-solid fa-download mr-2"></i>Download Report
+                    </button>
+                </div>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                    <div class="bg-white border border-gray-200 rounded-lg p-6">
+                        <h4 class="font-medium text-gray-900 mb-4">Commission Breakdown</h4>
+                        <div class="space-y-3">
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Referral-based</span>
+                                <span class="font-medium">$8,450</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Community-based</span>
+                                <span class="font-medium">$4,000</span>
+                            </div>
+                            </div></div></div></div></div></div></div></body></html>

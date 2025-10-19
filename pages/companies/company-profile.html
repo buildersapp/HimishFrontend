@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+    <?php include('includes/head.php') ?>
+    <!-- Include RateIt CSS & JS -->
+    <body>
+        <?php include('includes/nav-header.php') ?>
+        <main class="page-color vh-100">
+            <section class="dashboard set-margin-52">
+                <div class="container">
+                    <div class="row" id="dashboard-row">
+                        <div class="col-lg-3 mt-0">
+                        </div>
+                        <div class="col-lg-6 mt-0">
+                            <div class="main-content">
+                                <div class="posts-feed">
+                                    <!-- Company Filter Section -->
+                                    <!-- <div class="company-filter-wrapper">
+                                        <div class="company-filter">
+                                            <button class="company-filter-btn <?= $product_service_id === 0 ? 'active' : '' ?>" data-filter="">All</button>
+                                            <?php //foreach ($filters as $filter): ?>
+                                                <button class="company-filter-btn <?= $product_service_id == $filter['id'] ? 'active' : '' ?>" data-filter="<?= $filter['id'] ?>">
+                                                    <?= htmlspecialchars($filter['name']) ?>
+                                                </button>
+                                            <?php //endforeach; ?>
+                                        </div>
+                                    </div> -->
+                                
+                                    <!-- Company Listings -->
+                                    <div class="company-listings" id="companies-container">
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                        </div>
+                    </div>
+                <a href="create-company.php">
+                    <button type="button" class="create-company-btn">
+                        <span class="saveBtnTxt">Create Company</span>
+                        <span class="saveBtnIcon"><i class="fas fa-arrow-right"></i></span>
+                    </button>
+                </a>
+                </div>
+            </section>
+        </main>
+    </body>
+    <?php include('includes/footer-scripts.php');?>
+    <script src="assets/js/companies.js?v=<?= time() ?>"></script>
+    <script>
+    
+    let companiesData = {
+        type: '<?= $type ?>',
+        radius: '<?= $radius ?>',
+        search: '', 
+        user_id: '<?= $userId ?>',
+        company_id: 0,
+        category_id: 0,
+        product_service_id: '<?= $product_service_id ?>',
+    };
+
+    // Initial Fetch on Page Load
+    $(document).ready(function () {
+        getCompanies(companiesData); // Load initial posts with the default data
+        enableScrollPagination(companiesData, "#companies-container"); // Enable infinite scroll
+    });
+    </script>
+</html>

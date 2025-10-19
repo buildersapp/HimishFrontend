@@ -1,0 +1,165 @@
+[
+  {
+    "id": 1,
+    "ad_type": "Product",
+    "title": "UltraPhone X Launch Sale",
+    "ad_valid_from": "2025-07-01",
+    "ad_valid_to": "2025-12-31",
+    "industry": "Electronics",
+    "category": "Mobile Phones",
+    "sub_category": "Smartphones",
+    "sub_sub_category": "Android Flagships",
+    "keywords": ["smartphone", "android", "sale"],
+    "description": "Introducing the all-new UltraPhone X with 120Hz display, 108MP camera, and 5G support.",
+    "notes": "Free shipping for pre-orders placed by July 15.",
+    "ad_purpose": "Offering",
+    "image": "chat/com_PosU_29c548288ad33656bab4192250d0ec62e37086a3.png",
+    "owner": "BestSeller Inc.",
+    "company_name": "",
+    "contacts": [
+      {
+        "types": "Business",
+        "name": "BestSeller Inc.",
+        "website": "https://bestseller.example.com",
+        "social_media": [
+          "https://twitter.com/bestseller",
+          "https://facebook.com/bestseller"
+        ],
+        "mobile_number": ["+1234567890", "+1098765432"]
+      }
+    ],
+    "locations": [
+      {
+        "latitude": "40.712776",
+        "longitude": "-74.005974",
+        "address": "123 Main St, New York, NY 10001",
+        "city": "New York",
+        "state": "NY",
+        "country_code": "US"
+      }
+    ],
+    "phone_numbers": ["+1234567890", "+1098765432"],
+    "email_addresses": ["support@bestseller.example.com"],
+    "companies": [],
+    "categoryArray": [
+      {
+        "type": "2",
+        "industry": "Electronics",
+        "category": "Mobile Phones",
+        "subcategory": "Smartphones",
+        "subsubcategory": "Android Flagships",
+        "keywords1": "smartphone",
+        "keywords2": "android",
+        "keywords3": "sale",
+        "tab_label_option_posts": "Electronics",
+        "tab_label_option_company": "",
+        "tab_label_option_looking_for": "",
+        "pills": ["smartphone", "android", "sale"]
+      }
+    ],
+    "job_listings": [
+      {
+        "employment_type": "Full-time",
+        "job_type": "Product Manager",
+        "schedule": "9 5",
+        "salary": "$120k/year",
+        "posting_type": "Internal",
+        "application_method": "Send resume to hr@example.com",
+        "application_link": "https://careers.example.com/ultraphonex-pm",
+        "experience": "3+ years",
+        "skills": ["roadmapping", "stakeholder management"],
+        "perks": ["health insurance", "stock options"],
+        "availability": "Immediate"
+      }
+    ],
+    "real_estate_listings": [
+      {
+        "listing_type": "For Sale",
+        "property_type": "Condo",
+        "custom_property_type": "",
+        "status": "New",
+        "property_location": "456 Park Ave, New York, NY",
+        "price": "950000",
+        "square_footage": "850",
+        "lot_size": "N/A",
+        "bedrooms": "2",
+        "bathrooms": "2",
+        "floor_level": "10",
+        "furnished": false,
+        "amenities": "Pool, Gym, Doorman",
+        "condition": "Excellent"
+      }
+    ],
+    "product_listings": [
+      {
+        "product_name": "UltraPhone X",
+        "price": "799.00",
+        "category": "Smartphones",
+        "brand": "TechBrand",
+        "department": "Electronics",
+        "condition": "New",
+        "u_o_m": "Piece",
+        "sale_price": "749.00",
+        "reg_price": "799.00",
+        "availability": "In Stock",
+        "ad_purpose": "Offering",
+        "special_notes": "Includes free case and screen protector",
+        "size": "6.5 inch",
+        "color": "Midnight Black",
+        "age": "0"
+      }
+    ],
+    "event_listings": [
+      {
+        "name": "UltraPhone X Online Launch",
+        "highlights": "Live demo, Q&A with product team",
+        "purpose": "Launch Event",
+        "time": "18:00",
+        "date": "2025-08-01",
+        "address": "Virtual  Zoom link sent upon RSVP"
+      }
+    ],
+    "car_sales": [
+      {
+        "year": "2024",
+        "make": "AutoMaker",
+        "model": "Speedster",
+        "mileage": "5,000",
+        "condition": "Like new",
+        "price": "35,000"
+      }
+    ],
+    "general_items": [],
+    "service_listings": [
+      {
+        "title": "One-Year Extended Warranty",
+        "description": "Covers accidental damage and defects",
+        "service": "Warranty",
+        "ad_purpose": "Offering"
+      }
+    ],
+    "dress": [
+      {
+        "listing_type": "Rent",
+        "status": "Available",
+        "price": "49.99",
+        "color": "Red",
+        "size": "M",
+        "age": "New",
+        "occasion": ["Evening", "Party"],
+        "condition": "Excellent",
+        "fabric_type": "Silk",
+        "rental_policy": "48-hour rental",
+        "designer_brand": "Gala Couture",
+        "suggested_for": "Weddings"
+      }
+    ],
+    "found_lost_listings": [],
+    "sale_ending_date": "2025-09-01",
+    "service_area": ["US", "CA"],
+    "community": 347,
+    "company_user_assignment": [],
+    "event_user_assignment": [],
+    "real_estate_agent_assignment": []
+  }
+]

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+    <?php include('includes/head.php') ?>
+    <link rel="stylesheet" href="assets/plugins/datatable/css/dataTables.bootstrap5.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.7.1/css/buttons.dataTables.min.css" />
+    <body>
+        <!-- wrapper start  -->
+        <div class="wrapper relative">
+            <?php include('includes/sidebar.php') ?>
+
+            <!-- header start  -->
+            <?php include('includes/nav-header.php') ?>
+            <!-- header end  -->
+
+            <!-- content area start  -->
+            <div class="master-detail-page-sec">
+                <main class="user-main">
+                    <div class="user-rigt cmn-card my-0">
+                        <!-- Tab header -->
+                        <div class="tab-header flex-xl-wrap flex-wrap gap-4 justify-content-xl-between">
+                            <!-- Tab list -->
+                            <ul class="tablist mb-3">
+                                <p class="tablist text-primary"><?= implode(' > ', $breadcrumbCat); ?></p>
+                            </ul>
+                        </div>
+
+                        <!-- Tab content (initially, only one should be visible) -->
+                        <div id="user-details" class="tab-content mt-3">
+                            <form class="user-form" method="post" action="" enctype="multipart/form-data" id="userEditForm" data-parsley-validate>
+                                <div class="row" id="user-form-row">
+                                        <input type="hidden" name="id" id="id" value="<?= $id ?>" />
+                                        <div class="col-md-3 mt-2">
+                                            <div>
+                                                <label for="industry">Industry:</label>
+                                                <textarea name="child[]" id="industry" class="form-control" required><?= $final['industry']['name'] ?? '' ?></textarea>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-3 mt-2">
+                                            <div>
+                                                <label for="category">Category:</label>
+                                                <textarea name="child[]" id="category" class="form-control" required><?= $final['category']['name'] ?? '' ?></textarea>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-3 mt-2">
+                                            <div>
+                                                <label for="subcategory">Sub Category:</label>
+                                                <textarea name="child[]" id="subcategory" class="form-control"><?= $final['subcategory']['name'] ?? '' ?></textarea>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-3 mt-2">
+                                            <div>
+                                                <label for="subsubcategory">Sub Sub Category:</label>
+                                                <textarea name="child[]" id="subsubcategory" class="form-control"><?= $final['subsubcategory']['name'] ?? '' ?></textarea>
+                                            </div>
+                                        </div>
+                                        <!-- Posts & Ads (K) -->
+                                        <div class="col-md-4 mt-2">
+                                            <label class="mt-2">Posts & Ads (K)</label>
+                                            <textarea class="form-control" id="keywords1" name="keywords1" rows="2"><?= $final['keywords1'] ?></textarea>
+                                        </div>
+                                        <!-- Company (K) -->
+                                        <div class="col-md-4 mt-2">
+                                            <label class="mt-2">Company (K)</label>
+                                            <textarea class="form-control" id="keywords2" name="keywords2" rows="2"><?= $final['keywords2'] ?></textarea>
+                                        </div>
+                                        <input type="hidden" name="type" id="type" value="<?= $final['type'] ?>" />
+                                         <!-- Looking For (K) -->
+                                        <div class="col-md-4 mt-2">
+                                            <label class="mt-2">Looking For (K)</label>
+                                            <textarea class="form-control" id="keywords3" name="keywords3" rows="2"><?= $final['keywords3'] ?></textarea>
+                                        </div>
+                                        <!-- Deals (K) -->
+                                        <div class="col-md-4 mt-2">
+                                            <label class="mt-2">Deals (K)</label>
+                                            <textarea class="form-control" id="keywords4" name="keywords4" rows="2"><?= $final['keywords4'] ?></textarea>
+                                        </div>
+                                         <!-- Comments (K) -->
+                                        <div class="col-md-4 mt-2">
+                                            <label class="mt-2">Comments (K)</label>
+                                            <textarea class="form-control" id="keywords5" name="keywords5" rows="2"><?= $final['keywords5'] ?></textarea>
+                                        </div>
+                                        <!-- Posts (T) -->
+                                        <div class="col-md-4 mt-2">
+                                            <label class="mt-2">Posts (T)</label>
+                                            <textarea class="form-control" id="tab_label_option_posts" name="tab_label_option_posts" rows="2"><?= $final['tab_label_option_posts'] ?></textarea>
+                                        </div>
+                                        <!-- Company (T) -->
+                                        <div class="col-md-4 mt-2">
+                                            <label class="mt-2">Company (T)</label>
+                                            <textarea class="form-control" id="tab_label_option_company" name="tab_label_option_company" rows="2"><?= $final['tab_label_option_company'] ?></textarea>
+                                        </div>
+                                        <!-- Looking For (T) -->
+                                        <div class="col-md-4 mt-2">
+                                            <label class="mt-2">Looking For (T)</label>
+                                            <textarea class="form-control" id="tab_label_option_looking_for" name="tab_label_option_looking_for" rows="2"><?= $final['tab_label_option_looking_for'] ?></textarea>
+                                        </div>
+                                        <!-- Show in Filter -->
+                                        <div class="col-md-4 mt-2">
+                                            <label class="mt-2">Show in Filter</label>
+                                            <select name="show_in_filter" id="show_in_filter" class="form-control">
+                                                <option value="1" <?= isset($final['show_in_filter']) && $final['show_in_filter'] == 1 ? 'selected' : '' ?>>Yes</option>
+                                                <option value="0" <?= isset($final['show_in_filter']) && $final['show_in_filter'] == 0 ? 'selected' : '' ?>>No</option>
+                                            </select>
+                                        </div>
+                                </div>
+                                <div class="mt-5 edit-btn d-flex align-content-center align-items-center gap-3 flex-md-nowrap flex-wrap justify-content-md-end justify-content-center" id="updateCategoryBtn">
+                                    <button type="submit" name="cateSbtOld">
+                                        <span>Update Existing</span>
+                                    </button>
+                                    <a href="master.php?type=<?= $final['type'] ?>">
+                                        <button type="button" onclick="location.reload();">
+                                            <span>Cancel</span>
+                                        </button>
+                                    </a>
+                                    <button type="submit" name="cateSbt">
+                                        <span>Create New</span>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </main>
+            </div>
+            <!-- content area end -->
+        </div>
+        <!-- wrapper end  -->
+        <script src="assets/plugins/datatable/js/jquery.dataTables.min.js?v=<?= time() ?>"></script>
+        <?php include('includes/footer-scripts.php') ?>
+        <script src="assets/js/companyDetails.js?v=<?= time() ?>"></script>
+    </body>
+</html>

@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+    <?php include('includes/head.php') ?>
+    <link rel="stylesheet" href="assets/plugins/datatable/css/dataTables.bootstrap5.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.7.1/css/buttons.dataTables.min.css" />
+    <style>
+        .select2-container {
+            z-index: 1050 !important; /* Should be higher than Bootstrap modal (1040) */
+        }
+        .select2-container--open {
+            z-index: 1060 !important; /* Slightly higher for the open dropdown */
+        }
+    </style>
+    <body>
+        <!-- wrapper start  -->
+        <div class="wrapper relative">
+            <?php include('includes/sidebar.php') ?>
+
+            <!-- header start  -->
+            <?php include('includes/nav-header.php') ?>
+            <!-- header end  -->
+
+            <!-- content area start  -->
+            <div class="Community-page-sec">
+                <main>
+                    <section class="userList">
+                        <div class="">
+                            <div class="row">
+                                <!-- top -->
+                                <div class="search-sec-cmn user-page d-flex align-items-center justify-content-between mb-4">
+                                    <div class="search-form me-2">
+                                        <button class="btn p-0 outline-0" type="submit"><img src="assets/img/list/search.svg" alt="search icon" /></button>
+                                        <input type="search" class="form-control form-input border-0" id="searchCommunities" placeholder="Search Community" />
+                                    </div>
+                                    <div class="addCommunity d-flex gap-3">
+                                        <a href="#" class="btn btn-cst px-3 mt-0" data-bs-toggle="modal" data-bs-target="#addCommunityModal">Add New Community</a>
+                                    </div>
+                                </div>
+
+                                <!-- bottom -->
+                                <div class="col-12">
+                                    <div class="list-users table-responsive">
+                                        <!-- table -->
+                                        <table class="table data-table-cmn" id="communitiesTable">
+                                            <thead>
+                                                <tr class="table-header">
+                                                    <th scope="col" class="th-checkbox">
+                                                        <input type="checkbox" class="chk-box" />
+                                                    </th>
+                                                    <th scope="col" class="th-no">
+                                                        <a href="#" class="userHeading"> No  </a>
+                                                    </th>
+                                                    <th scope="col">
+                                                        <a href="#" class="userHeading"> Image  </a>
+                                                    </th>
+                                                    <th scope="col">
+                                                        <a href="#" class="userHeading"> Name  </a>
+                                                    </th>
+                                                    <th scope="col">
+                                                        <a href="#" class="userHeading"> Location  </a>
+                                                    </th>
+
+                                                    <th scope="col">
+                                                        <a href="#" class="userHeading"> Created By  </a>
+                                                    </th>
+
+                                                    <th scope="col">
+                                                        <a href="#" class="userHeading"> Total Members  </a>
+                                                    </th>
+
+                                                    <th scope="col">
+                                                        <a href="#" class="userHeading"> Posts  </a>
+                                                    </th>
+
+                                                    <th scope="col">
+                                                        <a href="#" class="userHeading"> LF  </a>
+                                                    </th>
+                                                    <th scope="col">
+                                                        <a href="#" class="userHeading"> Price  </a>
+                                                    </th>
+
+                                                    <!-- <th scope="col">
+                                                        <a href="#" class="userHeading"> Deals  </a>
+                                                    </th>
+
+                                                    <th scope="col">
+                                                        <a href="#" class="userHeading"> Deal Share  </a>
+                                                    </th> -->
+
+                                                    <th scope="col">
+                                                        <a href="#" class="userHeading"> Type  </a>
+                                                    </th>
+
+                                                    <th scope="col">
+                                                        <a href="#" class="userHeading"> Status  </a>
+                                                    </th>
+
+                                                    <th scope="col">
+                                                        <a href="#" class="userHeading"> Created At  </a>
+                                                    </th>
+                                                    <th scope="col">
+                                                        <a href="#" class="userHeading"> Invite  </a>
+                                                    </th>
+
+                                                    <th scope="col">
+                                                        <div class="userHeading">ACTION</div>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody></tbody>
+                                        </table>
+                                        <div id="noDataMessage" class="no-data-container" style="display: none;">
+                                            <img src="<?= NO_DATA_IMG ?>" alt="No Data" />
+                                            <h3><?= NO_DATA_TITLE ?></h3>
+                                            <p><?= NO_DATA_DESC ?></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </main>
+            </div>
+            <!-- content area end -->
+            <div class="modal fade customModal" id="addCommunityModal" tabindex="-1" aria-labelledby="addCommunityModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h2 class="modal-title fs-5" id="addCommunityModalLabel">Add New Community</h2>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form class="user-form p-0 d-flex flex-column gap-3" method="post" action="" data-parsley-validate enctype="multipart/form-data">
+                                <div class="img-upload w-100 bg-white">
+                                    <input type="file" id="imgUploadUser" name="image" class="d-none" />
+                                    <label for="imgUploadUser" class="m-0 bg-white w-100 gap-3">
+                                        <span><img src="assets/img/user/plus.png" alt="" id="imgPreview" /></span>
+                                        <span>Upload image in png or jpg</span>
+                                    </label>
+                                </div>
+
+                                <div>
+                                    <input type="text" name="name" id="Community" placeholder="Community name" class="form-control m-0" required />
+                                </div>
+
+                                <div>
+                                    <select class="form-select" name="is_private" aria-label="Default select example">
+                                        <option selected value="0">Public</option>
+                                        <option value="1">Private</option>
+                                    </select>
+                                </div>
+                                
+                                <div>
+                                    <select class="form-select" name="gender" aria-label="Default select example">
+                                        <?php foreach ($profileGroups as $gender): ?>
+                                            <option value="<?= htmlspecialchars($gender['id']) ?>">
+                                                <?= htmlspecialchars($gender['name']) ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <input type="text" name="address" id="address" placeholder="Address" oninput="initAutocomplete()" autocomplete="off" class="form-control m-0" />
+                                    <input type="hidden" name="latitude" id="latitude">
+                                    <input type="hidden" name="longitude" id="longitude">
+                                    <input type="hidden" name="city" id="city">
+                                    <input type="hidden" name="state" id="state">
+                                </div>
+
+                                <div>
+                                    <textarea class="form-control" id="exampleFormControlTextarea1" name="description" rows="3" placeholder="Enter description..." required></textarea>
+                                </div>
+                                <div>
+                                    <input type ="number" step="0.001" name="price" class="form-control" id="price" placeholder="Enter community price..." />
+                                </div>
+
+                                <div class="mt-2 gap-3 d-flex flex-row">
+                                    <button type="submit" name="addCommunity" class="btn btnSave">Save</button>
+                                    <button type="button" class="btn btnClose" data-bs-dismiss="modal">Close</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- invite modal -->
+            <div class="modal fade inviteUserModal" id="inviteUserModal" tabindex="-1" aria-labelledby="addUserLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h2 class="modal-title fs-5" id="inviteUserModal">Invite Users</h2>
+                        </div>
+                        <div class="modal-body">
+                            <form class="user-form p-0 d-flex flex-column gap-3" method="post" action="" data-parsley-validate>
+                                <div class="post-community1">
+                                    <label for="Twitter">Users:</label>
+                                    <select class="form-" name="users[]" id="multiUser" multiple="multiple" required>
+                                        <option value="">Please select users</option>
+                                        <?php foreach ($users as $k=>$v) { ?>
+                                            <option value="<?php echo $v['id'];?>"><?php echo $v['name'];?></option>
+                                            <?php } ?>
+                                    </select>
+                                </div>
+                        
+                                <input type="hidden" name="communityId"  id="cID">
+
+                                <div class="mt-2 gap-3 d-flex flex-row">
+                                    <button type="submit" name="inviteUsersButton" class="btn btnSave">Invite</button>
+                                    <a href="communities.php"><button type="button" class="btn btnClose">Close</button></a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+        <!-- wrapper end  -->
+        <script src="assets/plugins/datatable/js/jquery.dataTables.min.js?v=<?= time() ?>"></script>
+        <script src="assets/plugins/select2/select2-custom.js?v=<?= time() ?>"></script>
+
+        <?php include('includes/footer-scripts.php') ?>
+        <script src="assets/js/posts.js?v=<?= time() ?>"></script>
+        <script>
+            $(document).on('click','.inviteUser',function(){
+                var c_id = $(this).attr('rel');
+                $('#cID').val(c_id)
+
+                $.ajax({
+                        url: 'ajax.php?action=getUserByCommunity',
+                        type: 'POST',
+                        data: { community_id: c_id },
+                        success: function(response) {
+                            console.log(response,"==========categories")
+                            var __categories = JSON.parse(response);
+                            var categories = __categories.body
+                            
+                            $('#multiUser').empty();
+
+                            var __html ='<option value="">Select user</option>'
+                            for(var i in categories)
+                            {
+                                __html += '<option value="' + categories[i].id + '">' + categories[i].name + ' ----(' + categories[i].email + ')</option>';
+                                
+                            }
+
+                            $('#multiUser').html(__html);
+
+                            const modal = new bootstrap.Modal(document.getElementById('inviteUserModal'));
+                            modal.show();
+
+                        },
+                        error: function(xhr, status, error) {
+                            console.log('Error: ' + error);
+                        }
+                    });
+                  
+        
+            })
+
+            $(document).ready(function () {
+                $('#multiUser').select2({
+                    placeholder: "Select users",
+                    allowClear: true,
+                    width: '100%',
+                    allowClear: true,
+                    minimumResultsForSearch: 0,
+                    dropdownParent: $('#inviteUserModal') // Ensures dropdown stays inside modal
+                });
+            });
+            </script>
+    </body>
+</html>

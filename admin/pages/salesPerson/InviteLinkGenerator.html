@@ -1,0 +1,393 @@
+<html><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script> window.FontAwesomeConfig = { autoReplaceSvg: 'nest'};</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    
+    <style>
+        ::-webkit-scrollbar { display: none;}
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+    <script>tailwind.config = {
+  "theme": {
+    "extend": {
+      "colors": {
+        "primary": "#2563eb",
+        "secondary": "#64748b",
+        "success": "#10b981",
+        "warning": "#f59e0b",
+        "danger": "#ef4444"
+      },
+      "fontFamily": {
+        "sans": [
+          "Inter",
+          "sans-serif"
+        ]
+      }
+    }
+  }
+};</script>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;500;600;700;800;900&amp;display=swap"><style>
+  .highlighted-section {
+    outline: 2px solid #3F20FB;
+    background-color: rgba(63, 32, 251, 0.1);
+  }
+
+  .edit-button {
+    position: absolute;
+    z-index: 1000;
+  }
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
+
+  html, body {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  </style></head>
+<body class="bg-gray-50">
+
+<div id="header" class="fixed top-0 left-0 right-0 bg-white border-b border-gray-200 z-50">
+    <div class="px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-16">
+            <div class="flex items-center">
+                <h1 class="text-2xl font-bold text-primary">Himish</h1>
+                <span class="ml-2 text-sm text-gray-500">Sales Dashboard</span>
+            </div>
+            <div class="flex items-center space-x-4">
+                <div class="relative">
+                    <button id="notificationBtn" class="p-2 text-gray-400 hover:text-gray-600 relative">
+                        <i class="fa-solid fa-bell text-lg"></i>
+                        <span class="absolute -top-1 -right-1 bg-danger text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">3</span>
+                    </button>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-2.jpg" alt="Profile" class="h-8 w-8 rounded-full">
+                    <span class="text-sm font-medium text-gray-700">John Smith</span>
+                    <button class="text-gray-400 hover:text-gray-600">
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="main-content" class="pt-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <div id="dashboard-header" class="mb-8">
+            <h2 class="text-3xl font-bold text-gray-900 mb-2">Link Generator &amp; Management</h2>
+            <p class="text-gray-600">Generate referral links, track usage status, and share across platforms</p>
+        </div>
+
+        <div id="link-stats" class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                <div class="flex items-center">
+                    <div class="p-3 bg-primary/10 rounded-lg">
+                        <i class="fa-solid fa-link text-primary text-xl"></i>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-600">Active Links</p>
+                        <p class="text-2xl font-bold text-gray-900">18</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                <div class="flex items-center">
+                    <div class="p-3 bg-success/10 rounded-lg">
+                        <i class="fa-solid fa-mouse-pointer text-success text-xl"></i>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-600">Total Clicks</p>
+                        <p class="text-2xl font-bold text-gray-900">2,847</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                <div class="flex items-center">
+                    <div class="p-3 bg-purple-100 rounded-lg">
+                        <i class="fa-solid fa-share-nodes text-purple-600 text-xl"></i>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-600">Shares</p>
+                        <p class="text-2xl font-bold text-gray-900">456</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                <div class="flex items-center">
+                    <div class="p-3 bg-warning/10 rounded-lg">
+                        <i class="fa-solid fa-clock text-warning text-xl"></i>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-600">Expiring Soon</p>
+                        <p class="text-2xl font-bold text-gray-900">3</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="link-generator-section" class="bg-white rounded-lg shadow-sm border border-gray-200 mb-8">
+            <div class="p-6 border-b border-gray-200">
+                <h3 class="text-lg font-semibold text-gray-900">Generate New Links</h3>
+                <p class="text-gray-600 text-sm">Create referral links for different actions and purposes</p>
+            </div>
+            
+            <div id="link-types" class="p-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div class="border border-gray-200 rounded-lg p-6 hover:border-primary transition-colors">
+                    <div class="flex items-center mb-4">
+                        <div class="p-3 bg-blue-100 rounded-lg">
+                            <i class="fa-solid fa-building text-blue-600 text-xl"></i>
+                        </div>
+                        <div class="ml-3">
+                            <h4 class="font-semibold text-gray-900">Company Profile Link</h4>
+                            <p class="text-sm text-gray-600">Direct users to company profile</p>
+                        </div>
+                    </div>
+                    <button class="w-full bg-primary text-white py-2 px-4 rounded-lg font-medium hover:bg-primary/90">
+                        Generate Link
+                    </button>
+                </div>
+                
+                <div class="border border-gray-200 rounded-lg p-6 hover:border-primary transition-colors">
+                    <div class="flex items-center mb-4">
+                        <div class="p-3 bg-green-100 rounded-lg">
+                            <i class="fa-solid fa-plus-circle text-green-600 text-xl"></i>
+                        </div>
+                        <div class="ml-3">
+                            <h4 class="font-semibold text-gray-900">Direct Ad Creation</h4>
+                            <p class="text-sm text-gray-600">Skip to ad creation page</p>
+                        </div>
+                    </div>
+                    <button class="w-full bg-success text-white py-2 px-4 rounded-lg font-medium hover:bg-success/90">
+                        Generate Link
+                    </button>
+                </div>
+                
+                <div class="border border-gray-200 rounded-lg p-6 hover:border-primary transition-colors">
+                    <div class="flex items-center mb-4">
+                        <div class="p-3 bg-purple-100 rounded-lg">
+                            <i class="fa-solid fa-users text-purple-600 text-xl"></i>
+                        </div>
+                        <div class="ml-3">
+                            <h4 class="font-semibold text-gray-900">Community Invite</h4>
+                            <p class="text-sm text-gray-600">Invite users to community</p>
+                        </div>
+                    </div>
+                    <button class="w-full bg-purple-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-purple-700">
+                        Generate Link
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="active-links-section" class="bg-white rounded-lg shadow-sm border border-gray-200">
+            <div class="p-6 border-b border-gray-200">
+                <div class="flex justify-between items-center">
+                    <h3 class="text-lg font-semibold text-gray-900">Active Links &amp; Usage Status</h3>
+                    <div class="flex space-x-2">
+                        <button class="px-3 py-1 text-sm bg-success text-white rounded-full">Active</button>
+                        <button class="px-3 py-1 text-sm bg-gray-200 text-gray-700 rounded-full">Expired</button>
+                        <button class="px-3 py-1 text-sm bg-gray-200 text-gray-700 rounded-full">All</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="links-list" class="p-6 space-y-4">
+                <div class="border border-gray-200 rounded-lg p-4 hover:shadow-sm transition-shadow">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="flex items-center">
+                            <div class="p-2 bg-blue-100 rounded-lg mr-3">
+                                <i class="fa-solid fa-building text-blue-600"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-900">Company Profile Link</h4>
+                                <p class="text-sm text-gray-600">Created: Dec 28, 2024</p>
+                            </div>
+                        </div>
+                        <span class="px-2 py-1 text-xs bg-success text-white rounded-full">Active</span>
+                    </div>
+                    
+                    <div class="bg-gray-50 rounded-lg p-3 mb-3">
+                        <div class="flex items-center space-x-2">
+                            <input type="text" value="https://postersz.com/ref/john-smith-cp001" class="flex-1 bg-white border border-gray-300 rounded px-3 py-2 text-sm" readonly="">
+                            <button class="bg-primary text-white px-4 py-2 rounded text-sm font-medium hover:bg-primary/90">
+                                <i class="fa-solid fa-copy mr-1"></i>Copy
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-3 gap-4 mb-3">
+                        <div class="text-center">
+                            <p class="text-2xl font-bold text-gray-900">142</p>
+                            <p class="text-xs text-gray-600">Clicks</p>
+                        </div>
+                        <div class="text-center">
+                            <p class="text-2xl font-bold text-gray-900">23</p>
+                            <p class="text-xs text-gray-600">Shares</p>
+                        </div>
+                        <div class="text-center">
+                            <p class="text-2xl font-bold text-success">$450</p>
+                            <p class="text-xs text-gray-600">Earned</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex space-x-2">
+                        <button class="flex-1 bg-green-600 text-white py-2 px-3 rounded text-sm font-medium hover:bg-green-700">
+                            <i class="fa-brands fa-whatsapp mr-1"></i>WhatsApp
+                        </button>
+                        <button class="flex-1 bg-blue-600 text-white py-2 px-3 rounded text-sm font-medium hover:bg-blue-700">
+                            <i class="fa-solid fa-sms mr-1"></i>SMS
+                        </button>
+                        <button class="flex-1 bg-gray-600 text-white py-2 px-3 rounded text-sm font-medium hover:bg-gray-700">
+                            <i class="fa-solid fa-envelope mr-1"></i>Email
+                        </button>
+                        <button class="flex-1 bg-purple-600 text-white py-2 px-3 rounded text-sm font-medium hover:bg-purple-700">
+                            <i class="fa-solid fa-share mr-1"></i>More
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="border border-gray-200 rounded-lg p-4 hover:shadow-sm transition-shadow">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="flex items-center">
+                            <div class="p-2 bg-green-100 rounded-lg mr-3">
+                                <i class="fa-solid fa-plus-circle text-green-600"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-900">Direct Ad Creation Link</h4>
+                                <p class="text-sm text-gray-600">Created: Dec 25, 2024</p>
+                            </div>
+                        </div>
+                        <span class="px-2 py-1 text-xs bg-warning text-white rounded-full">Expires in 2 days</span>
+                    </div>
+                    
+                    <div class="bg-gray-50 rounded-lg p-3 mb-3">
+                        <div class="flex items-center space-x-2">
+                            <input type="text" value="https://postersz.com/create-ad/ref/john-smith-da002" class="flex-1 bg-white border border-gray-300 rounded px-3 py-2 text-sm" readonly="">
+                            <button class="bg-primary text-white px-4 py-2 rounded text-sm font-medium hover:bg-primary/90">
+                                <i class="fa-solid fa-copy mr-1"></i>Copy
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-3 gap-4 mb-3">
+                        <div class="text-center">
+                            <p class="text-2xl font-bold text-gray-900">89</p>
+                            <p class="text-xs text-gray-600">Clicks</p>
+                        </div>
+                        <div class="text-center">
+                            <p class="text-2xl font-bold text-gray-900">15</p>
+                            <p class="text-xs text-gray-600">Shares</p>
+                        </div>
+                        <div class="text-center">
+                            <p class="text-2xl font-bold text-success">$320</p>
+                            <p class="text-xs text-gray-600">Earned</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex space-x-2">
+                        <button class="flex-1 bg-green-600 text-white py-2 px-3 rounded text-sm font-medium hover:bg-green-700">
+                            <i class="fa-brands fa-whatsapp mr-1"></i>WhatsApp
+                        </button>
+                        <button class="flex-1 bg-blue-600 text-white py-2 px-3 rounded text-sm font-medium hover:bg-blue-700">
+                            <i class="fa-solid fa-sms mr-1"></i>SMS
+                        </button>
+                        <button class="flex-1 bg-gray-600 text-white py-2 px-3 rounded text-sm font-medium hover:bg-gray-700">
+                            <i class="fa-solid fa-envelope mr-1"></i>Email
+                        </button>
+                        <button class="flex-1 bg-purple-600 text-white py-2 px-3 rounded text-sm font-medium hover:bg-purple-700">
+                            <i class="fa-solid fa-share mr-1"></i>More
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="border border-red-200 rounded-lg p-4 bg-red-50">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="flex items-center">
+                            <div class="p-2 bg-purple-100 rounded-lg mr-3">
+                                <i class="fa-solid fa-users text-purple-600"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-900">Tech Startups Community Invite</h4>
+                                <p class="text-sm text-gray-600">Created: Dec 20, 2024</p>
+                            </div>
+                        </div>
+                        <span class="px-2 py-1 text-xs bg-danger text-white rounded-full">Expired</span>
+                    </div>
+                    
+                    <div class="bg-gray-50 rounded-lg p-3 mb-3">
+                        <div class="flex items-center space-x-2">
+                            <input type="text" value="https://postersz.com/community/tech-startups/invite/john-smith" class="flex-1 bg-white border border-gray-300 rounded px-3 py-2 text-sm opacity-60" readonly="">
+                            <button class="bg-primary text-white px-4 py-2 rounded text-sm font-medium hover:bg-primary/90">
+                                <i class="fa-solid fa-refresh mr-1"></i>Renew
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-3 gap-4">
+                        <div class="text-center">
+                            <p class="text-2xl font-bold text-gray-900">67</p>
+                            <p class="text-xs text-gray-600">Clicks</p>
+                        </div>
+                        <div class="text-center">
+                            <p class="text-2xl font-bold text-gray-900">12</p>
+                            <p class="text-xs text-gray-600">Shares</p>
+                        </div>
+                        <div class="text-center">
+                            <p class="text-2xl font-bold text-success">$180</p>
+                            <p class="text-xs text-gray-600">Earned</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const copyButtons = document.querySelectorAll('button:has(i.fa-copy)');
+    
+    copyButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const input = this.parentElement.querySelector('input');
+            input.select();
+            document.execCommand('copy');
+            
+            const originalText = this.innerHTML;
+            this.innerHTML = '<i class="fa-solid fa-check mr-1"></i>Copied';
+            this.classList.add('bg-success');
+            this.classList.remove('bg-primary');
+            
+            setTimeout(() => {
+                this.innerHTML = originalText;
+                this.classList.remove('bg-success');
+                this.classList.add('bg-primary');
+            }, 2000);
+        });
+    });
+    
+    const filterButtons = document.querySelectorAll('#active-links-section button[class*="rounded-full"]');
+    filterButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            filterButtons.forEach(btn => {
+                btn.classList.remove('bg-success', 'text-white');
+                btn.classList.add('bg-gray-200', 'text-gray-700');
+            });
+            this.classList.remove('bg-gray-200', 'text-gray-700');
+            this.classList.add('bg-success', 'text-white');
+        });
+    });
+});
+</script>
+
+
+</body></html>

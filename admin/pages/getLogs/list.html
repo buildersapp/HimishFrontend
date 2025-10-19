@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+    <?php include('includes/head.php') ?>
+    <link rel="stylesheet" href="assets/plugins/datatable/css/dataTables.bootstrap5.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.7.1/css/buttons.dataTables.min.css">
+    <body>
+        <!-- wrapper start  -->
+        <div class="wrapper relative">
+            <?php include('includes/sidebar.php') ?>
+
+            <!-- header start  -->
+            <?php include('includes/nav-header.php') ?>
+            <!-- header end  -->
+
+            <!-- content area start  -->
+            <div class="user-page-sec">
+                <main>
+                    <section class="userList">
+                        <div class="">
+                            <div class="row">
+                                <!-- top -->
+                                 <div class="col-12">
+                                    <div class="search-sec-cmn user-page d-flex align-items-center justify-content- mb-4">
+                                        <!-- <div class="addUser">
+                                            <a href="#" class="btn-primary btn-small" title="Add User" data-bs-toggle="modal" data-bs-target="#addUserModal"><i class="fa fa-plus-circle fa-2x"></i> </a>
+                                          </div> -->
+                                        <div class="search-form me-2">
+                                            <button class="btn p-0 outline-0" type="submit"><img src="assets/img/list/search.svg" alt="search icon" /></button>
+                                            <input type="search" class="form-control form-input border-0" id="searchLogs" placeholder="Search.." />
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- bottom -->
+                                <div class="col-12">
+                                    <div class="list-users table-responsive">
+                                        <!-- table -->
+                                        <table class="table data-table-cmn" id="getLogsTable">
+                                            <thead>
+                                                <tr class="table-header">
+
+                                                    <th scope="col" class="userHeading-size">
+                                                        USER 
+                                                    </th>
+                                                    <th scope="col">
+                                                        Message 
+                                                    </th>
+                                                    <th scope="col">
+                                                        Level
+                                                    </th>
+                                                    <th scope="col">
+                                                        Agent 
+                                                    </th>
+                                                    <th scope="col">
+                                                        Date
+                                                    </th>
+                                                    <!-- <th scope="col">
+                                                        <div class="userHeading">ACTION</div>
+                                                    </th> -->
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            </tbody>
+                                        </table>
+                                        <div id="noDataMessage" class="no-data-container" style="display: none;">
+                                            <img src="<?= NO_DATA_IMG ?>" alt="No Data">
+                                            <h3><?= NO_DATA_TITLE ?></h3>
+                                            <p><?= NO_DATA_DESC ?></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </main>
+            </div>
+            <!-- content area end -->
+            <div class="modal fade customModal" id="addUserModal" tabindex="-1" aria-labelledby="addUserLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h2 class="modal-title fs-5" id="addUserLabel">Add <?= $title ?></h2>
+                        </div>
+                        <div class="modal-body">
+                            <form class="user-form p-0 d-flex flex-column gap-3" method="post" action="" data-parsley-validate enctype="multipart/form-data">
+
+                                <div>
+                                    <input type="text" name="name" id="NAME" placeholder="Name"  class="form-control m-0" value="<?= @$apiDataU['name'] ?>" required />
+                                    <input type="hidden" name="account_type" id="account_type" value="2">
+                                </div>
+
+                                <div>
+                                    <input type="email" name="email" id="EMAIL" placeholder="Email" class="form-control m-0" value="<?= @$apiDataU['email'] ?>" required />
+                                </div>
+
+                                <div>
+                                    <input type="text" name="password" id="PASSWORD" placeholder="Password" class="form-control m-0" required />
+                                </div>
+
+                                <div>
+                                    <input type="text" data-parsley-type="number" name="phone" id="PHONE" placeholder="Phone"  value="<?= @$apiDataU['phone'] ?>" class="form-control m-0" required />
+                                </div>
+
+                                <div>
+                                    <input type="url" name="facebook" id="facebook" placeholder="Facebook" value="<?= @$apiDataU['facebook'] ?>" class="form-control m-0" />
+                                </div>
+
+                                <div>
+                                    <input type="url" name="instagram" id="instagram" placeholder="Instagram" value="<?= @$apiDataU['instagram'] ?>" class="form-control m-0" />
+                                </div>
+
+                                <div>
+                                    <input type="url" name="twitter" id="twitter" placeholder="Twitter" value="<?= @$apiDataU['twitter'] ?>" class="form-control m-0" />
+                                </div>
+
+                                <div class="mt-2 gap-3 d-flex flex-row">
+                                    <button type="submit" name="addUser" class="btn btnSave">Save</button>
+                                    <a href="#" onclick="window.location.reload();"><button type="button" class="btn btnClose">Close</button></a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- wrapper end  -->
+        <script src="assets/plugins/datatable/js/jquery.dataTables.min.js?v=<?= time() ?>"></script>
+        <?php include('includes/footer-scripts.php') ?>
+        <script src="assets/js/users.js?v=<?= time() ?>"></script>
+        <?php if($err == 1){ ?>
+        <script>
+            const modal = new bootstrap.Modal(document.getElementById('addUserModal'));
+            modal.show();
+        </script>
+        <?php } ?>
+    </body>
+</html>

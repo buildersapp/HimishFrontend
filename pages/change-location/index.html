@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+    <?php include('includes/head.php') ?>
+    <body>
+        <?php 
+        include('includes/nav-header.php');
+        $defaultLatitude = $userDetails['latitude'] ?? 40.712776; // Default: New York
+        $defaultLongitude = $userDetails['longitude'] ?? -74.005974;
+        $defaultRadius = $userDetails['radius'] ?? 200;
+        ?>
+        
+        <main>
+            <section class="location-search-section">
+                <div class="container">
+                    <form id="locationForm" method="POST" action="">
+                        <input type="hidden" id="address" name="address">
+                        <input type="hidden" id="city" name="city">
+                        <input type="hidden" id="state" name="state">
+                        <input type="hidden" id="country_code" name="country_code">
+                        <input type="hidden" id="latitude" name="latitude" value="<?= $defaultLatitude ?>">
+                        <input type="hidden" id="longitude" name="longitude" value="<?= $defaultLongitude ?>">
+                        <input type="hidden" id="radius" name="radius" value="<?= $defaultRadius ?>">
+                        <div class="select-location-container">
+                            <div class="feed-location">
+                                <div id="map" style="width: 100%; height: 400px;"></div>  <!-- Google Map Here -->
+                                
+                                <div class="feed-location-input-section">
+                                    <div class="input-wrapper-container">
+                                        <div class="input-wrapper">
+                                            <input type="text" placeholder="Search Location" id="searchLocation" name="location" class="form-input" value="<?= @$userDetails['location'] ?>">
+                                            
+                                        </div>
+                                    </div>
+                                    <div class="gps-icon-container">
+                                        <button type="button" id="currentLocationBtn">
+                                            <img src="assets/img/gps.png" alt="">
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="feed-location-radius-section">
+                                    <div class="radius-selector">
+                                        <div class="radius-text">
+                                            <span class="radius-label">Select Radius</span>
+                                            <span class="radius-value" id="radiusValue">200 Miles</span>
+                                        </div>
+                                        <input type="range" min="1" max="200" value="<?= $userDetails['radius'] ?>" class="w-full" id="radiusRange">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <?php if($userDetails){ ?>
+                            <button type="submit" name="save_location" class="saveBtn">
+                                <span class="saveBtnTxt">Save</span>
+                                <span class="saveBtnImg"><img src="assets/img/forward.png" class="img-fluid w-100" alt=""></span>
+                            </button>
+                            <?php }else{ ?>
+                                <button type="button" id="nu_save_location" class="saveBtn">
+                                    <span class="saveBtnTxt">Save Location</span>
+                                    <span class="saveBtnImg"><img src="assets/img/forward.png" class="img-fluid w-100" alt=""></span>
+                                </button>
+                            <?php } ?>
+                        </div>
+                    </form>
+                </div>
+            </section>
+        </main>
+        <script>
+
+            document.getElementById('nu_save_location').addEventListener('click', function () {
+                // Save to localStorage locationManuallySet
+                localStorage.setItem('gu_change_location', 1);
+                localStorage.setItem('locationManuallySet', 1);
+                window.location.href = 'home.php?type=0';
+            });
+
+            document.getElementById('locationForm').addEventListener('submit', function (e) {
+                const city = document.getElementById('city').value.trim();
+                const state = document.getElementById('state').value.trim();
+        
+                if (!city || !state) {
+                    e.preventDefault(); // Stop form from submitting
+                    alert('Please select a valid location.');
+                }
+            });
+        </script>        
+        <?php include('includes/footer-scripts.php') ?>       
+        <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA8-xD4gQvyPqth_tvkgSuKwf7-p0cmSvc&libraries=places&callback=initMap"></script>
+        <script>
+            let map, marker, circle, geocoder, autocomplete;
+
+            let defaultLocation = { 
+                lat: <?= $defaultLatitude ?>, 
+                lng: <?= $defaultLongitude ?>
+            };
+
+            function initMap() {
+                map = new google.maps.Map(document.getElementById("map"), {
+                    center: defaultLocation,
+                    zoom: 8,
+                });
+
+                geocoder = new google.maps.Geocoder();
+                autocomplete = new google.maps.places.Autocomplete(document.getElementById("searchLocation"));
+
+                // Auto-fill Address, Lat, Lng when a Place is Selected
+                autocomplete.addListener("place_changed", function () {
+                    let place = autocomplete.getPlace();
+                    if (!place.geometry) return;
+
+                    let location = place.geometry.location;
+                    updateLocation(location.lat(), location.lng(), place.formatted_address, place);
+                    setMarker(location);
+                });
+
+                marker = new google.maps.Marker({
+                    position: defaultLocation,
+                    map: map,
+                    draggable: true,
+                });
+
+                circle = new google.maps.Circle({
+                    map: map,
+                    radius: <?= $defaultRadius ?> * 1609.34, // Convert miles to meters
+                    fillColor: "#0099ff",
+                    fillOpacity: 0.2,
+                    strokeColor: "#0099ff",
+                    strokeOpacity: 0.5,
+                    strokeWeight: 1,
+                });
+
+                circle.bindTo("center", marker, "position");
+
+                google.maps.event.addListener(marker, "dragend", function () {
+                    let position = marker.getPosition();
+                    updateLocation(position.lat(), position.lng());
+                });
+
+                document.getElementById("radiusRange").addEventListener("input", function () {
+                    let miles = this.value;
+                    document.getElementById("radiusValue").textContent = `${miles} Miles`;
+                    circle.setRadius(miles * 1609.34);
+                    document.getElementById("radius").value = miles;
+                });
+
+                document.getElementById("currentLocationBtn").addEventListener("click", function () {
+                    if (navigator.geolocation) {
+                        navigator.geolocation.getCurrentPosition(
+                            function (position) {
+                                let userLocation = {
+                                    lat: position.coords.latitude,
+                                    lng: position.coords.longitude,
+                                };
+                                setMarker(userLocation);
+                                updateLocation(userLocation.lat, userLocation.lng);
+                                reverseGeocode(userLocation.lat, userLocation.lng);
+                            },
+                            function () {
+                                alert("Geolocation failed!");
+                            }
+                        );
+                    } else {
+                        alert("Geolocation is not supported by this browser.");
+                    }
+                });
+            }
+
+            function reverseGeocode(lat, lng) {
+                const apiKey = 'AIzaSyA8-xD4gQvyPqth_tvkgSuKwf7-p0cmSvc';
+                const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${apiKey}`;
+
+                fetch(url)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === "OK" && data.results.length > 0) {
+                            const result = data.results[0];
+                            const address1 = result.formatted_address;
+                             // Remove last comma segment (usually the country)
+                            const parts = address1.split(',');
+                            const cleanedAddress = parts.slice(0, -1).join(',').trim();
+                            const address =  cleanedAddress
+
+                            let city = "";
+                            let state = "";
+
+                            // Prefer locality first for city
+                            for (let i = 0; i < result.address_components.length; i++) {
+                                const component = result.address_components[i];
+                                
+                                if (component.types.includes("locality")) {
+                                    console.log("Found locality");
+                                    city = component.long_name;
+                                    break; // Stop here if locality found
+                                }
+                            }
+
+                            // If locality not found, look for sublocality
+                            if (!city) {
+                                for (let i = 0; i < result.address_components.length; i++) {
+                                    const component = result.address_components[i];
+                                    
+                                    if (component.types.includes("sublocality")) {
+                                        console.log("Fallback to sublocality");
+                                        city = component.long_name;
+                                        break;
+                                    }
+                                }
+                            }
+
+                            // Find state (no need to break; multiple types may apply)
+                            for (let i = 0; i < result.address_components.length; i++) {
+                                const component = result.address_components[i];
+                                
+                                if (component.types.includes("administrative_area_level_1")) {
+                                    state = component.short_name;
+                                    break; // optional: break if you only want the first match
+                                }
+                            }
+
+
+                            // Update form fields
+                            document.getElementById("address").value = address;
+                            document.getElementById("city").value = city;
+                            document.getElementById("state").value = state;
+                            document.getElementById("searchLocation").value = address;
+                        } else {
+                            alert("No location details found.");
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Reverse geocoding failed:", error);
+                        alert("Failed to get location details.");
+                    });
+            }
+
+            function setMarker(location) {
+                marker.setPosition(location);
+                map.setCenter(location);
+            }
+
+            function updateLocation(lat, lng, address = null, place = null) {
+                document.getElementById("latitude").value = lat;
+                document.getElementById("longitude").value = lng;
+
+                localStorage.setItem('userLatitude', lat);
+                localStorage.setItem('userLongitude', lng);
+
+                const updateAddressFields = (formattedAddress, components) => {
+                    let city = "";
+                    let state = "";
+                    let country_code = "";
+
+                    // Loop through components to extract city and state with proper priority
+                    for (let i = 0; i < components.length; i++) {
+                        const component = components[i];
+
+                        // Find state
+                        if (!state && component.types.includes("administrative_area_level_1")) {
+                            state = component.short_name;
+                        }
+
+                        // Prioritize 'locality' for city
+                        if (!city && component.types.includes("locality")) {
+                            console.log("Found locality");
+                            city = component.long_name;
+                        }
+
+                        // Country
+                        if (!country_code && component.types.includes("country")) {
+                            country_code = component.short_name;
+                        }
+                    }
+
+                    // If 'locality' not found, fallback to 'sublocality'
+                    if (!city) {
+                        for (let i = 0; i < components.length; i++) {
+                            const component = components[i];
+                            if (component.types.includes("sublocality")) {
+                                console.log("Fallback to sublocality");
+                                city = component.long_name;
+                                break;
+                            }
+                        }
+                    }
+
+                    const __parts = formattedAddress.split(',');
+                    const __cleanedAddress = __parts.slice(0, -1).join(',').trim();
+                    document.getElementById("address").value = __cleanedAddress;
+                    document.getElementById("searchLocation").value = __cleanedAddress;
+
+                    //document.getElementById("searchLocation").value = formattedAddress;
+                    //document.getElementById("address").value = formattedAddress;
+                    document.getElementById("city").value = city;
+                    document.getElementById("state").value = state;
+                    document.getElementById("country_code").value = country_code;
+
+                    localStorage.setItem('userCity', city);
+                    localStorage.setItem('userState', state);
+                    localStorage.setItem('userAddress', __cleanedAddress);
+                    localStorage.setItem('userCountryCode', country_code);
+                };
+
+                if (address && place) {
+                    updateAddressFields(address, place.address_components);
+                } else {
+                    geocoder.geocode({ location: { lat, lng } }, function (results, status) {
+                        if (status === "OK" && results[0]) {
+                            updateAddressFields(results[0].formatted_address, results[0].address_components);
+                        }
+                    });
+                }
+            }
+        </script>
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const radiusSlider = document.getElementById("radiusRange");
+                const radiusDisplay = document.getElementById("radiusValue");
+                const minRadius = parseInt(radiusSlider.min);
+                const maxRadius = parseInt(radiusSlider.max);
+
+                function updateRadius() {
+                    const value = parseInt(radiusSlider.value);
+                    const percent = ((value - minRadius) / (maxRadius - minRadius)) * 100;
+                    
+                    // Update displayed radius value
+                    radiusDisplay.textContent = `${value} Miles`;
+                    
+                    // Update CSS variable dynamically
+                    radiusSlider.style.setProperty('--value', value);
+                    radiusSlider.style.setProperty('--percent', `${percent}%`);
+                }
+
+                // Set initial value from PHP
+                updateRadius();
+
+                // Update on slider input
+                radiusSlider.addEventListener("input", updateRadius);
+            });
+        </script>
+    </body>
+</html>

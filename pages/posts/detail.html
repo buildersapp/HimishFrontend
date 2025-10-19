@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+    <?php include('includes/head.php') ?>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@splidejs/splide@1.2.0/dist/css/splide.min.css">
+    <body>
+        <?php include('includes/nav-header.php') ?>
+        <main class="set-post-details-bg-org">
+            <section class="header-profile-sponsor">
+                <div class="container">
+                    <div class="row header-flow-row align-items-center">
+                        <div class="col ps-0 ps-xl-auto">
+                            <div class="header-flow-left ps-3">
+                                <div class="header-flow-left-inner">
+                                    <button class="header-flow-left-inner-button" onclick="
+                                        if (window.history.length > 1) {
+                                            window.history.back();
+                                        } else {
+                                            window.location.href = 'home.php';
+                                        }
+                                    ">
+                                        <img src="assets/img/left-arrow.svg" alt="left-arrow" />
+                                    </button>
+                                    <span class="mx-auto d-xl-none d-block"><?= $title ?></span>
+                                    <span class="me-auto d-xl-block d-none"><?= $title ?></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col d-xl-block d-none"></div>
+                    </div>
+                </div>
+            </section>
+            <section class="<?php echo $dashboardClass; ?>">
+                <div class="<?php echo $containerClass; ?>">
+                    <?php
+                    // Check if there are posts
+                    if (count($posts) > 0) {
+                        $postCardsDetail = '';
+                        // Loop through the posts and render each post using renderPostCard
+                        foreach ($posts as $post) {
+                            $postCardsDetail .= renderPostCard($post, $post['type'], 1, 0,  $show_listing_images,1); // Append the HTML of each post card
+                        }
+                    }else{
+                        echo renderNoDataCard('Something went wrong !', '', 'This post is unavailable or may have been deleted.');
+                    }
+                    ?>
+                </div>
+            </section>
+        </main>
+        <?php include('includes/footer-scripts.php') ?>
+        <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@1.2.0/dist/js/splide.min.js?v=<?= time() ?>"></script>
+        <script>
+        // Parse URL to check if trigger=comments is present
+        const params = new URLSearchParams(window.location.search);
+        if (params.get('trigger') === 'comments') {
+            // Find the first element with class 'post-comments-fn' and trigger click
+            const commentBtn = document.querySelector('.post-comments-fn');
+            if (commentBtn) {
+                commentBtn.click();
+            }
+        }
+        </script>
+        <script>
+        // Count thumbnail slides
+        const thumbnailSlides = document.querySelectorAll('#thumbnail_slider .splide__slide').length;
+
+        // Determine if arrows should be shown
+        const showArrows = thumbnailSlides > 3;
+
+        // Initialize thumbnail slider
+        var thumbnailSlider = new Splide('#thumbnail_slider', {
+            rewind: true,
+            fixedWidth: 157,
+            fixedHeight: 128,
+            isNavigation: true,
+            gap: 5,
+            focus: 'center',
+            pagination: false,
+            cover: true,
+            arrows: showArrows,
+            breakpoints: {
+            '600': {
+                fixedWidth: 120,
+                fixedHeight: 82,
+            }
+            }
+        }).mount();
+
+        // Initialize primary slider
+        var primarySlider = new Splide('#primary_slider', {
+            type: 'fade',
+            pagination: false,
+            arrows: false,
+            cover: true,
+            fixedHeight: 424,
+            fixedWidth: 484,
+            breakpoints: {
+            '600': {
+                fixedWidth: 362,
+            }
+            }
+        });
+
+        // Sync primary with thumbnail
+        primarySlider.sync(thumbnailSlider).mount();
+    </script>
+    </body>
+</html>

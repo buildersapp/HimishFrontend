@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+    <?php include('includes/head.php') ?>
+    <link rel="stylesheet" href="assets/plugins/datatable/css/dataTables.bootstrap5.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.7.1/css/buttons.dataTables.min.css" />
+    <style>
+        .list-group-item a {
+            text-decoration: none;
+            color: #007bff;
+        }
+
+        .list-group-item a:hover {
+            text-decoration: underline;
+            color: #0056b3;
+        }
+        /* Set height for Select2 input box */
+        .select2-container .select2-selection--single {
+            height: 35px;  /* Adjust height of the select input box */
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__rendered {
+            line-height: 30px !important;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__arrow {
+            top: 5px !important;
+        }
+    
+        /* Set max-height for the dropdown list */
+        .select2-container--default .select2-results__options {
+            max-height: 200px;  /* Adjust the dropdown height */
+            overflow-y: auto;   /* Enable scrolling if content exceeds height */
+        }
+    </style>
+    <body>
+        <!-- wrapper start  -->
+        <div class="wrapper relative">
+            <?php include('includes/sidebar.php') ?>
+
+            <!-- header start  -->
+            <?php include('includes/nav-header.php') ?>
+            <!-- header end  -->
+
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="pt-3 cmn-img-bottom">
+                        <img src="<?php echo (count($final['post_images']) > 0) ?  MEDIA_BASE_URL.$final['post_images'][0]['image'] : 'assets/img/user/poster.png';?>" alt="poster" class="img-fluid w-100">
+                    </div>
+                </div>
+                <div class="col-md-9">
+
+                    <!-- content area start  -->
+                    <div class="master-detail-page-sec">
+                        <main class="user-main">
+                            <div class="user-rigt cmn-card my-0">
+                                <!-- Tab list -->
+                                <ul class="tablist mb-3">
+                                    <p class="tablist text-primary">Add / Update Category</p>
+                                </ul>
+                                <h3 class="text-center text-danger" id="catIds"></h3>
+                                <a href="add-update-master-category.php?post_id=<?= base64_encode($id) ?>&gpt=1"><button class="btn btn-info">Use GPT</button></a>
+                                <div class="tab-header2">
+                                    <hr/>
+                                    <div class="row" id="">
+                                        <div class="col-md-2">
+                                            <select id="post_type" class="form-select" name="type" required>
+                                                <option value="">Type</option>
+                                                <option value="1" <?= @$gptCategory['type']==1 ? 'selected' : '' ?>>Services</option>
+                                                <option value="2" <?= @$gptCategory['type']==2 ? 'selected' : '' ?>>Products</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-10">
+                                            <div>
+                                                <select id="post_category_master" class="form-select" name="post_category_master">
+                                                    <option value="">Select Category</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Tab content (initially, only one should be visible) -->
+                                <div id="user-details" class="tab-content mt-3">
+                                    <form class="user-form p-0" method="post" action="" enctype="multipart/form-data" id="userEditFormA" data-parsley-validate>
+                                        <div class="row" id="user-form-row mb-4">
+                                            <div id="child-categories d-flex mb-3">
+                                                <!-- Child Category 1 -->
+                                                <div class="child-category row" id="child-1">
+                                                    <input type="hidden" name="type" id="type" />
+                                                    <input type="hidden" name="id" id="id" />
+                                                    <div class="col-md-3">
+                                                        <label for="child1_name">Industry</label>
+                                                        <input type="text" class="form-control" id="child1_name" name="child[]" value="<?= @$gptCategory['industry'] ?>" required>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <label for="child2_name">Category</label>
+                                                        <input type="text" class="form-control" id="child2_name" name="child[]" value="<?= @$gptCategory['category'] ?>" required>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <label for="child3_name">Sub Category</label>
+                                                        <input type="text" class="form-control" id="child3_name" name="child[]" value="<?= @$gptCategory['sub_category'] ?>" required>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <label for="child4_name">Sub Sub Category</label>
+                                                        <input type="text" class="form-control" id="child4_name" name="child[]" value="<?= @$gptCategory['sub_sub_category'] ?>" required>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="row mt-2">
+                                                <div class="col-md-2">
+                                                    <label class="mt-3">Posts & Ads (K)</label>
+                                                </div>
+                                                <div class="col-md-10">
+                                                    <textarea class="form-control" id="keywords1" name="keywords1" rows="2" required><?= @$gptCategory['keywords'] ?></textarea>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="row mt-2">
+                                                <div class="col-md-2">
+                                                    <label class="mt-2">Company (K)</label>
+                                                </div>
+                                                <div class="col-md-10">
+                                                    <textarea class="form-control" id="keywords2" name="keywords2" rows="2" required></textarea>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="row mt-2">
+                                                <div class="col-md-2">
+                                                    <label class="mt-2">Looking For (K)</label>
+                                                </div>
+                                                <div class="col-md-10">
+                                                    <textarea class="form-control" id="keywords3" name="keywords3" rows="2" required></textarea>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="row mt-2">
+                                                <div class="col-md-2">
+                                                    <label class="mt-2">Deals (K)</label>
+                                                </div>
+                                                <div class="col-md-10">
+                                                    <textarea class="form-control" id="keywords4" name="keywords4" rows="2" required></textarea>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="row mt-2">
+                                                <div class="col-md-2">
+                                                    <label class="mt-2">Comments (K)</label>
+                                                </div>
+                                                <div class="col-md-10">
+                                                    <textarea class="form-control" id="keywords5" name="keywords5" rows="2" required></textarea>
+                                                </div>
+                                            </div>
+                                            
+                                            <!-- Tab Label Options -->
+                                            <div class="col-md-4 mt-2">
+                                                <div class="col-md-6">
+                                                    <label for="tab_label_option_posts">Posts (T)</label>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <textarea class="form-control" id="tab_label_option_posts" name="tab_label_option_posts" rows="2" required></textarea>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-4 mt-2">
+                                                <div class="col-md-6">
+                                                    <label for="tab_label_option_company">Company (T)</label>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <textarea class="form-control" id="tab_label_option_company" name="tab_label_option_company" rows="2" required></textarea>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-4 mt-2">
+                                                <div class="col-md-6">
+                                                    <label for="tab_label_option_looking_for">Looking For (T)</label>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <textarea class="form-control" id="tab_label_option_looking_for" name="tab_label_option_looking_for" rows="2" required></textarea>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    
+                                        <div class="mt-5 edit-btn d-flex align-content-center align-items-center gap-3 flex-md-nowrap flex-wrap justify-content-md-end justify-content-center" id="updateCategoryBtn">
+                                            <button type="submit" name="cateSbtOld">
+                                                <span>Update Existing</span>
+                                            </button>
+                                            <button type="button" onclick="location.reload();">
+                                                <span>Cancel</span>
+                                            </button>
+                                            <button type="submit" name="cateSbt">
+                                                <span>Create New</span>
+                                            </button>
+                                        </div>
+                                    </form>                                    
+                                </div>
+                            </div>
+                        </main>
+                    </div>
+                    <!-- content area end -->
+                </div>
+            </div>
+        </div>
+        <!-- wrapper end  -->
+        <script src="assets/plugins/datatable/js/jquery.dataTables.min.js?v=<?= time() ?>"></script>
+        <script src="assets/plugins/select2/select2-custom.js?v=<?= time() ?>"></script>
+        <?php include('includes/footer-scripts.php') ?>
+        <script>
+            $(document).ready(function () {
+
+                $('#post_category_master').select2();
+
+                // get product / service based on type
+                $('#post_type').change(function() {
+                    var selectedType = $(this).val();
+
+                    // Send the new value via AJAX
+                    $.ajax({
+                        url: 'ajax.php?action=get_master_sub_cat__by_type',
+                        type: 'POST',
+                        data: { type: selectedType },
+                        success: function(response) {
+                            var categories = JSON.parse(response);
+                            
+                            $('#post_category_master').empty();
+                            $('#category').empty();
+
+                            // Append keywords to the existing value of service
+                            const existingService = "<?php echo $final['service']; ?>";
+                            $('#service').val(existingService);
+                            $('#type').val(selectedType);
+                            //$('#service').empty();
+
+                            $('#post_category_master').append('<option value="">Select Category</option>');
+
+                            categories.forEach(function(category) {
+                                var categoryPath = category.names.slice(0, -1).join(' > ');
+                                var lastCategory = category.names[category.names.length - 1];
+                                
+                                var option = $('<option></option>')
+                                    .val(category.id)
+                                    .data('id', category.id)
+                                    .data('type', category.type)
+                                    .data('catIds', category.ids.join(" - "))
+                                    .data('industry', category.names[0])
+                                    .data('category', category.names[1])
+                                    .data('subcategory', category.names[2])
+                                    .data('subsubcategory', category.names[3])
+                                    .data('keywords1', category.keywords1)
+                                    .data('keywords2', category.keywords2)
+                                    .data('keywords3', category.keywords3)
+                                    .data('keywords4', category.keywords4)
+                                    .data('keywords5', category.keywords5)
+                                    .data('tabLabelOptionPosts', category.tabLabelOptionPosts)
+                                    .data('tabLabelOptionCompany', category.tabLabelOptionCompany)
+                                    .data('tabLabelOptionLookingFor', category.tabLabelOptionLookingFor)
+                                    .html('<small class="grey">' + categoryPath + '</small>' + 
+                                        (categoryPath ? ' > ' : '') + 
+                                        '<p class="bold">' + lastCategory + '</p>');
+                                
+                                $('#post_category_master').append(option);
+                            });
+                        },
+                        error: function(xhr, status, error) {
+                            console.log('Error: ' + error);
+                        }
+                    });
+                });
+
+                $('#post_category_master').change(function () {
+                    // Get the selected option
+                    const selectedOption = $(this).find(':selected');
+                    const catIds = selectedOption.data('catIds');
+                    const ID = selectedOption.data('id');
+                    const type = selectedOption.data('type');
+                    const industry = selectedOption.data('industry');
+                    const category = selectedOption.data('category');
+                    const subcategory = selectedOption.data('subcategory');
+                    const subsubcategory = selectedOption.data('subsubcategory');
+                    const keywords1 = selectedOption.data('keywords1');
+                    const keywords2 = selectedOption.data('keywords2');
+                    const keywords3 = selectedOption.data('keywords3');
+                    const keywords4 = selectedOption.data('keywords4');
+                    const keywords5 = selectedOption.data('keywords5');
+                    const tabLabelOptionPosts = selectedOption.data('tabLabelOptionPosts');
+                    const tabLabelOptionCompany = selectedOption.data('tabLabelOptionCompany');
+                    const tabLabelOptionLookingFor = selectedOption.data('tabLabelOptionLookingFor');
+
+                    // Populate form fields with the selected option's data
+                    $('#catIds').text(catIds);
+                    $('#id').val(ID);
+                    //$('#type').val(type);
+                    $('#child1_name').val(industry);
+                    $('#child2_name').val(category);
+                    $('#child3_name').val(subcategory);
+                    $('#child4_name').val(subsubcategory);
+
+                    $('#keywords1').val(keywords1);
+                    $('#keywords2').val(keywords2);
+                    $('#keywords3').val(keywords3);
+                    $('#keywords4').val(keywords4);
+                    $('#keywords5').val(keywords5);
+
+                    $('#tab_label_option_posts').val(tabLabelOptionPosts);
+                    $('#tab_label_option_company').val(tabLabelOptionCompany);
+                    $('#tab_label_option_looking_for').val(tabLabelOptionLookingFor);
+                });
+
+                // 2. Set the value
+                $('#post_type').val("<?= @$gptCategory['type'] ?>");
+
+                // 3. Then trigger change only if value is selected
+                const selectedType = $('#post_type').val();
+                    if (selectedType) {
+                        $('#post_type').trigger('change');
+                    }
+                });
+        </script>
+    </body>
+</html>

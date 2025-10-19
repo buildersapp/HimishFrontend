@@ -1,0 +1,441 @@
+<?php 
+$redirectUrl = (!empty(@$_SESSION['hm_wb_logged_in'] && $_SESSION['hm_wb_logged_in'] === true)) ? 'home.php' : 'index.php';
+?>
+<!DOCTYPE html>
+<html lang="en">
+    <?php include('includes/head.php'); ?>
+    <style>
+        .modal-backdrop.show {
+            opacity: 1;
+        }
+
+        .set-step {
+            display: none;
+        }
+        .set-step.set-active {
+            display: block;
+        }
+        .set-step-indicator span {
+            margin-right: 10px;
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+        .set-step-indicator .set-active {
+            background-color: #0d6efd;
+            color: white;
+        }
+    </style>
+    <body>
+        <header>
+            <div class="terms-nav">
+                <div class="container">
+                    <div class="logo">
+                        <a href="<?= $redirectUrl; ?>"><img src="assets/img/logo.png" alt=""></a>
+                    </div>
+                </div>
+            </div>
+        </header>
+        
+        <!-- *********************************************** -->
+        <!-- CREATE AD -->
+        <!-- *********************************************** -->
+        <header class="post-upload-header">
+            <div class="post-upload adsSt">
+                <div class="header-left">
+                    <a href="home.php" class="back-arr">
+                        <img src="assets/img/left-arr.png" alt="">
+                    </a>
+                    <h3>Create Ad</h3>
+                </div>
+            </div>
+        </header>
+        <section class="terms-condition pt-0">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col">
+                            <div class="create-ad-cover"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="container">
+                    <form id="setMultiStepForm">
+                        <!-- STEP 1 -->
+                        <div class="set-step set-active">
+                            <div class="upload-container set-border-radius-half">
+                                <div class="upload-communities ">
+                                    <div class="row flow-row">
+                                        <div class="col-12">
+                                            <div class="d-flex">
+                                                <h2 class="create-title create-title-space fw-bold">
+                                                    Select Company
+                                                </h2>
+                                            </div>
+                                            <div class="row">
+                                                <!-- Date Input -->
+                                                <div class="col-3 d-md-block d-none">
+                                                    <div class="boots-input-title">
+                                                        <label for="detail_titles">Company</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 col-md-9">
+                                                    <div class="dropdown">
+                                                        <button class="btn btn-secondary dropdown-toggle boots-select set-select-dropdown" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                                            Select Company
+                                                        </button>
+                                                        <ul class="boots-dropdown-menu dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                            <li>
+                                                                <a class="dropdown-item" href="#">Luck</a>
+                                                            </li>
+                                                            <li>
+                                                                <a class="dropdown-item" href="#">Radha Tours</a>
+                                                            </li>
+                                                            <li>
+                                                                <a class="dropdown-item" href="#">Rest Inc.</a>
+                                                            </li>
+                                                            <li>
+                                                                <a class="dropdown-item" href="#">Space Imports</a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- ******************* -->
+                            <!-- BUTTON -->
+                            <!-- ******************* -->
+                            <div class="d-flex justify-content-end upload-container set-bg-transparent mt-5">
+                                <button type="submit" class="upload-buttom-top setNextBtn set-btn-save-next">Save &amp; Next <img src="assets/img/Arrow Forward.svg" alt="Arrow"></button>
+                            </div>
+                        </div>
+                        <!-- STEP 2 -->
+                        <div class="set-step">
+                            <div class="flow">
+                                <div class="upload-container set-border-radius-half">
+                                    <div class="upload-communities">
+                                        <div class="row flow-row">
+                                            <div class="col-12">
+                                                <div class="d-flex">
+                                                    <h2 class="create-title create-title-space fw-bold">
+                                                        Selected Company
+                                                    </h2>
+                                                </div>
+                                                <div class="row">
+                                                    <!-- Date Input -->
+                                                    <div class="col-3 d-md-block d-none">
+                                                        <div class="boots-input-title">
+                                                            <label for="detail_titles">Company</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 col-md-9">
+                                                        <div class="input-wrapper input-right">
+                                                            <input type="text" placeholder="Company Name" value="Radha Tours" id="" name="company" class="form-input" required="">
+                                                            <div class="global-search-dropdown-cmp" style="display: none;"></div>
+                                                            <label for="company-input" class="input-icon">
+                                                                <img src="assets/img/bi_building-fill.png" alt="company Icon">
+                                                            </label>
+                                                            <label for="" class="postdetails-form-bar"> </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="button-location-container button-upload-container">
+                                    <div class="upload-button-wrapper d-flex justify-content-center flex-column">
+                                        <div class="d-flex justify-content-between">
+                                            <button type="button" class="upload-buttom-top setNextBtn">Video Ads <img src="assets/img/Arrow Forward.svg" alt="Arrow"></button>
+                                            <button type="button" class="upload-buttom-top setNextBtn">Image Ads <img src="assets/img/Arrow Forward.svg" alt="Arrow"></button>
+                                        </div>
+                                        <button type="button" class="upload-buttom-bottom" onclick="window.location.href='home.php';">Cancel</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- STEP 3 -->
+                        <div class="set-step">
+                            <div class="upload-container set-border-radius-half">
+                                <div class="upload-communities ">
+                                    <div class="row flow-row">
+                                        <div class="col-12">
+                                            <div class="d-flex justify-content-center mb-5">
+                                                <!-- CONDITION -->
+                                                <h2 class="create-title create-title-space fw-bold text-center">
+                                                    Create Image Ad / Create Video Ad
+                                                </h2>
+                                            </div>
+                                            <div class="row">
+                                                <!-- Date Input -->
+                                                <div class="col-3 d-md-block d-none">
+                                                    <div class="boots-input-title">
+                                                        <label for="detail_titles">Title</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 col-md-9">
+                                                    <div class="input-wrapper input-right">
+                                                        <input type="text" placeholder="Title" name="" class="form-input" required="">
+                                                        <div class="global-search-dropdown-cmp" style="display: none;"></div>
+                                                        <label for="company-input" class="input-icon">
+                                                            <img src="assets/img/bi_building-fill.png" alt="company Icon">
+                                                        </label>
+                                                        <label for="" class="postdetails-form-bar"></label>
+                                                    </div>
+                                                </div>
+                                                <!-- Date Input -->
+                                                <div class="col-3 d-md-block d-none mt-4">
+                                                    <div class="boots-input-title">
+                                                        <label for="detail_titles">Company</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 col-md-9 mt-4">
+                                                    <div class="input-wrapper input-right">
+                                                        <input type="text" placeholder="Title" value="Radha Tours" name="" class="form-input" required="">
+                                                        <div class="global-search-dropdown-cmp" style="display: none;"></div>
+                                                        <label for="" class="input-icon">
+                                                            <img src="assets/img/bi_building-fill.png" alt="company Icon">
+                                                        </label>
+                                                        <label for="company-input" class="postdetails-form-bar"></label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- ******************* -->
+                            <!-- Start Date & End Date -->
+                            <!-- ******************* -->
+                            <div class="upload-container mt-4 set-border-radius-full">
+                                        <div class="upload-communities">
+                                            <div class="row communities-row">
+                                                <div class="col-12">
+                                                    <div class="accordion details-accordion" id="boostAccordion">
+                                                        <div class="accordion-item">
+                                                            <h2 class="accordion-header">
+                                                                <button class="accordion-button flow-title" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+                                                                    <div class="accordian-title-main">
+                                                                        <span class="fw-bold">Start Date Time & End Date Time</span>
+                                                                    </div>
+                                                                </button>
+                                                            </h2>
+
+                                                            <div id="collapseTwo" class="accordion-collapse collapse show" aria-labelledby="headingTwo" data-bs-parent="#boostAccordion">
+                                                                <div class="accordion-body">
+                                                                    <!-- CONTENT -->
+                                                                    <div class="row align-items-center">
+                                                                        <!-- Date Input -->
+                                                                        <div class="col-6 mt-2">
+                                                                            <div class="boots-input-title justify-content-start">
+                                                                                <label for="company_name">Start</label>
+                                                                            </div>
+                                                                            <div class="input-wrapper input-right">
+                                                                                <input type="datetime-local" id="start_date" class="form-input" name="start_date" />
+                                                                                <label for="date-start" class="input-icon" id="custom-date-icon">
+                                                                                    <img src="assets/img/calender.png" alt="company Icon" />
+                                                                                </label>
+                                                                                <label for="date-start" class="postdetails-form-bar"></label>
+                                                                            </div>
+                                                                        </div>
+                                                                        <!-- Date Input -->
+                                                                        <div class="col-6 mt-2">
+                                                                            <div class="boots-input-title justify-content-start">
+                                                                                <label for="company_name">End</label>
+                                                                            </div>
+                                                                            <div class="input-wrapper input-right">
+                                                                                <input type="datetime-local" id="end_date" class="form-input" name="end_date" />
+                                                                                <label for="date-end" class="input-icon" id="custom-date-icon">
+                                                                                    <img src="assets/img/calender.png" alt="company Icon" />
+                                                                                </label>
+                                                                                <label for="date-end" class="postdetails-form-bar"></label>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                        </div>
+                            </div>
+                            <!-- ******************* -->
+                            <!-- Select Communities -->
+                            <!-- ******************* -->
+                            <div class="upload-container mt-4 set-border-radius-full">
+                                        <div class="upload-communities">
+                                            <div class="row communities-row">
+                                                <div class="col-12">
+                                                    <div class="accordion details-accordion" id="boostAccordion">
+                                                        <div class="accordion-item">
+                                                            <h2 class="accordion-header">
+                                                                <button class="accordion-button flow-title" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="true" aria-controls="collapseThree">
+                                                                    <div class="accordian-title-main">
+                                                                        <span class="fw-bold">Select Communities</span>
+                                                                    </div>
+                                                                </button>
+                                                            </h2>
+
+                                                            <div id="collapseThree" class="accordion-collapse collapse show" aria-labelledby="headingTwo" data-bs-parent="#boostAccordion">
+                                                                <div class="accordion-body">
+                                                                    <!-- CONTENT -->
+                                                                    <div class="row communities-row">
+                                                                        <div class="col-12">
+                                                                            <div class="communites-contentsx">
+                                                                                <label class="communites-contentsx-item d-flex align-items-center justify-content-center">
+                                                                                    <input type="radio" name="community_type" value="1" class="community-radio" hidden />
+                                                                                    <span>My Community</span>
+                                                                                </label>
+
+                                                                                <label class="communites-contentsx-item d-flex align-items-center justify-content-center">
+                                                                                    <input type="radio" name="community_type" value="0" class="community-radio" hidden />
+                                                                                    <span>All Communities</span>
+                                                                                </label>
+
+                                                                                <label class="communites-contentsx-item d-flex align-items-center justify-content-center">
+                                                                                    <input type="radio" name="community_type" value="2" class="community-radio" hidden />
+                                                                                    <span>Choose Communities</span>
+                                                                                </label>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <!-- SEARCH CONTENT -->
+                                                                    <div class="row communities-row">
+                                                                        <div class="col-12">
+                                                                            <div class="communites-contentss">
+                                                                                <div class="row justify-content-between align-items-start communities-row">
+                                                                                    <div class="col-12 mt-4">
+                                                                                        
+                                                                                            <div class="input-group search-wrapper flow-input set-main-input-searcch">
+                                                                                                <label class="input-group-icon-search"><img src="assets/img/search-line.svg" alt="search" /></label>
+                                                                                                <input type="search" class="form-control set-pad-18"
+                                                                                                placeholder="Search Keywords"
+                                                                                                aria-label="search" aria-describedby="basic-addon1" />
+                                                                                            </div>
+                                                                                        
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-12">
+                                                                            <div class="communites-contentsx-tag mt-4">
+                                                                                <div class="communites-contentsx-tag-item d-flex align-items-center justify-content-center set-tag-size-up">
+                                                                                    <span>Air Conditioners</span>
+                                                                                    <button class="communites-contentsx-tag-item-close d-flex align-items-center justify-content-center">
+                                                                                        <img src="assets/img/delete-tags.svg" alt="" />
+                                                                                    </button>
+                                                                                </div>
+                                                                                <div class="communites-contentsx-tag-item d-flex align-items-center justify-content-center set-tag-size-up">
+                                                                                    <span>Package Discounts</span>
+                                                                                    <button class="communites-contentsx-tag-item-close d-flex align-items-center justify-content-center">
+                                                                                        <img src="assets/img/delete-tags.svg" alt="" />
+                                                                                    </button>
+                                                                                </div>
+                                                                                <div class="communites-contentsx-tag-item d-flex align-items-center justify-content-center set-tag-size-up">
+                                                                                    <span>GE Ovens</span>
+                                                                                    <button class="communites-contentsx-tag-item-close d-flex align-items-center justify-content-center">
+                                                                                        <img src="assets/img/delete-tags.svg" alt="" />
+                                                                                    </button>
+                                                                                </div>
+                                                                            
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <!-- END SEARCH CONTENT -->
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                            </div>
+                            <!-- ******************* -->
+                            <!-- BUTTON -->
+                            <!-- ******************* -->
+                            <div class="d-flex justify-content-end upload-container set-bg-transparent mt-5">
+                                <button type="submit" class="upload-buttom-top set-btn-save-next">Save &amp; Next <img src="assets/img/Arrow Forward.svg" alt="Arrow"></button>
+                            </div>
+                        </div>
+                        <!-- STEP 4 -->
+                        <div class="set-step">4</div>
+                    </form>
+                </div>
+        </section>
+        <!-- COMMUNITY MODAL -->
+        <script>
+                    $(document).ready(function () {
+                        let currentStep = 0;
+                        const $steps = $('.set-step');
+                        const $indicators = $('.set-step-count');
+
+                        function showStep(index) {
+                        $steps.removeClass('set-active').eq(index).addClass('set-active');
+                        $indicators.removeClass('set-active').eq(index).addClass('set-active');
+
+                        $('.setPrevBtn').toggle(index !== 0);
+                        // $('.setNextBtn').text(index === $steps.length - 1 ? 'Submit' : 'Next');
+                        }
+
+                        $('.setNextBtn').click(function () {
+                        if (currentStep < $steps.length - 1) {
+                            currentStep++;
+                            showStep(currentStep);
+                        } else {
+                            $('.setMultiStepForm').submit();
+                        }
+                        });
+
+                        $('.setPrevBtn').click(function () {
+                        if (currentStep > 0) {
+                            currentStep--;
+                            showStep(currentStep);
+                        }
+                        });
+
+                        showStep(currentStep);
+                    });
+        </script>
+        <!-- *********************************************** -->
+        <!-- END CREATE AD -->
+        <!-- *********************************************** -->
+
+
+
+
+        
+        <section class="terms-condition">
+            <div class="container">
+                <h1 class="terms-title">Frequently Asked Questions</h1>
+                <div class="accordion" id="faqAccordion">
+                    <?php foreach ($generalSettings as $index => $faq) { ?>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="heading<?php echo $faq['id']; ?>">
+                                <button class="accordion-button <?php echo ($index === 0) ? '' : 'collapsed'; ?>" 
+                                        type="button" 
+                                        data-bs-toggle="collapse" 
+                                        data-bs-target="#collapse<?php echo $faq['id']; ?>" 
+                                        aria-expanded="<?php echo ($index === 0) ? 'true' : 'false'; ?>" 
+                                        aria-controls="collapse<?php echo $faq['id']; ?>">
+                                    <?php echo htmlspecialchars($faq['question']); ?>
+                                </button>
+                            </h2>
+                            <div id="collapse<?php echo $faq['id']; ?>" 
+                                 class="accordion-collapse collapse <?php echo ($index === 0) ? 'show' : ''; ?>" 
+                                 aria-labelledby="heading<?php echo $faq['id']; ?>" 
+                                 data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    <?php echo nl2br(htmlspecialchars($faq['answer'])); ?>
+                                </div>
+                            </div>
+                        </div>
+                    <?php } ?>
+                </div>
+            </div>
+        </section>
+        <?php include('includes/footer-scripts.php'); ?>
+    </body>
+</html>

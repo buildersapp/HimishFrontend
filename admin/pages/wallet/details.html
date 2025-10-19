@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+    <?php include('includes/head.php') ?>
+    <link rel="stylesheet" href="assets/plugins/datatable/css/dataTables.bootstrap5.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.7.1/css/buttons.dataTables.min.css" />
+    <body>
+        <!-- wrapper start  -->
+        <div class="wrapper relative">
+            <?php include('includes/sidebar.php') ?>
+
+            <!-- header start  -->
+            <?php include('includes/nav-header.php') ?>
+            <!-- header end  -->
+
+            <!-- content area start  -->
+            <div class="user-detail-page-sec">
+                <main class="user-main">
+                    <div class="user-row">
+                        <!-- avatar card  -->
+                        <div class="user-left">
+                            <?php
+                            $imgData = "";
+                                if(empty($final['image'])){
+                                    $imgData = '<img class="img-placeholder" src="assets/img/fav-icon.png" alt="" />'; }else{ $imgData = '<img class="img-fluid" src="'. MEDIA_BASE_URL .''.$final['image'].'" alt="" />'; } ?>
+                            <div class="avatar-img">
+                                <?= $imgData; ?>
+                            </div>
+
+                            <?php
+                            $userStatus = "";
+                                if($final['status'] == 1){
+                                    $userStatus = '<div class="content userActive" status="0" user-id="'.$final['id'].'" onclick="changeUserStatus(this)" data-bs-toggle="tooltip" data-bs-placement="top" title="click to deactivate">
+                            Active
+                        </div>
+                        '; }else{ $userStatus = '
+                        <div class="content userInactive" status="1" user-id="'.$final['id'].'" onclick="changeUserStatus(this)" data-bs-toggle="tooltip" data-bs-placement="top" title="click to activate">Inactive</div>
+                        '; } ?>
+
+                        <div class="avatar-content">
+                            <h1 class="text-uppercase"><?= $final['name'] ?></h1>
+                            <?= $userStatus ?>
+                        </div>
+                        <div class="avatar-icon-box-wraper">
+                            <div class="avatar-icon-box">
+                                <div class="avatat-icon-img">
+                                    <img src="assets/img/user/camera.png" alt="" />
+                                </div>
+                                <div class="avatat-icon-content">
+                                    <h2><?= formatNumberUS($final['total_posts']) ?></h2>
+                                    <p>Total Posts</p>
+                                </div>
+                            </div>
+                            <div class="avatar-icon-box">
+                                <div class="avatat-icon-img">
+                                    <h3>Ad</h3>
+                                </div>
+                                <div class="avatat-icon-content">
+                                    <h2><?= formatNumberUS($final['total_ads']) ?></h2>
+                                    <p>Total Ads</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="user-right">
+                        <!-- Tab header -->
+                        <div class="tab-header flex-xl-wrap flex-wrap gap-4 justify-content-xl-between justify-content-center">
+                            <!-- Tab list -->
+                            <ul class="tablist me-auto">
+                                <li id="userDetailsTab" class="active-tablist" data-tab="user-details">
+                                    User Details
+                                </li>
+                                <li id="userCompaniesTab" data-tab="companies">Companies</li>
+                                <li id="userPostsTab" data-tab="posts">Posts</li>
+                                <li id="userWalletTab" data-tab="wallet">Wallet</li>
+                            </ul>
+                            <!-- Edit button -->
+                            <div class="edit-btn d-flex align-content-center align-items-center gap-3 flex-md-nowrap flex-wrap justify-content-md-end justify-content-center" id="editUserBtn">
+                                <button>
+                                    <span class="button-icon"><img src="assets/img/user/edit.png" class="w-100" alt="" /></span>
+                                    <span>Edit</span>
+                                </button>
+                            </div>
+                            <div class="edit-btn w-187 d-flex align-content-center align-items-center gap-3 flex-md-nowrap flex-wrap justify-content-md-end justify-content-center" id="increaseViewsBtn" style="display: none !important;">
+                                <button>
+                                    <span>Increase Views</span>
+                                </button>
+                            </div>
+                            <div
+                                class="edit-btn w-auto d-flex align-content-center align-items-center gap-3 flex-md-nowrap flex-wrap justify-content-md-end justify-content-center"
+                                id="walletBtn"
+                                style="display: none !important;"
+                                data-bs-toggle="modal"
+                                data-bs-target="#creditModal"
+                            >
+                                <p class="TotalCreditsText">
+                                    <span class="text">Total Credits in Wallet</span>
+                                    <span class="price">$<?= formatNumberUS($final['wallet']) ?></span>
+                                </p>
+                                <button>
+                                    <span>Add/Remove Credits ($)</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Tab content (initially, only one should be visible) -->
+                        <div id="user-details" class="tab-content">
+                            <form class="user-form" method="post" action="" enctype="multipart/form-data" id="userEditForm" data-parsley-validate>
+                                <div class="img-upload">
+                                    <input type="file" name="image" id="imgUploadUser" class="d-none" accept="image/*" />
+                                    <label for="imgUploadUser">
+                                        <span><img src="assets/img/user/plus.png" alt="" id="imgPreview" /></span>
+                                        <span>Upload Image</span>
+                                    </label>
+                                </div>
+                                <div class="row" id="user-form-row">
+                                    <div class="col-md-6">
+                                        <div>
+                                            <label for="name">Name:</label>
+                                            <input type="text" name="name" id="name" class="form-control" value="<?= $final['name'] ?>" readonly />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div>
+                                            <label for="email">Email:</label>
+                                            <input type="email" name="email" id="email" value="<?= $final['email'] ?>" class="form-control" readonly />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div>
+                                            <label for="handle">Handle</label>
+                                            <input type="url" name="handle_name" id="Facebook" placeholder="<?= $final['handle_name'] ?>" class="form-control" readonly disabled />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div>
+                                            <label for="phone">Phone Number</label>
+                                            <input type="text" name="phone" id="phone" value="<?= $final['phone'] ?>" class="form-control" readonly />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div>
+                                            <label for="acc">Account Created</label>
+                                            <input type="text" name="acc" id="acc" value="<?= formatToUSDate($final['created_at']) ?>" class="form-control" readonly disabled />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="edit-btn d-flex align-content-center align-items-center gap-3 flex-md-nowrap flex-wrap justify-content-md-end justify-content-center" id="updateUserBtn" style="display: none !important;">
+                                    <button type="submit" name="updateUser">
+                                        <span>Update</span>
+                                    </button>
+                                    <button type="button" onclick="location.reload();">
+                                        <span>Cancel</span>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                        <div id="companies" class="tab-content hidden">
+                            <div class="table-responsive table-space mt-4">
+                                <table class="table w-100" id="userCompaniesTable" data-user-id="<?= base64_encode($final['id']) ?>">
+                                    <thead>
+                                        <tr class="table-header">
+                                            <th scope="col" class="userHeading-size">
+                                                <a href="#" class="userHeading"> COMPANY </a>
+                                            </th>
+                                            <!--  -->
+                                            <th scope="col">
+                                                <a href="#" class="userHeading"> ASSOCIATION </a>
+                                            </th>
+                                            <th scope="col">
+                                                <a href="#" class="userHeading"> EMAIL </a>
+                                            </th>
+                                            <th scope="col">
+                                                <a href="#" class="userHeading"> STATUS </a>
+                                            </th>
+                                            <th scope="col">
+                                                <a href="#" class="userHeading"> JOINED </a>
+                                            </th>
+                                            <th scope="col">
+                                                <div class="userHeading">ACTION</div>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                                <div id="noDataMessageUC" class="no-data-container" style="display: none;">
+                                    <img src="<?= NO_DATA_IMG ?>" alt="No Data" />
+                                    <h3><?= NO_DATA_TITLE ?></h3>
+                                    <p><?= NO_DATA_DESC ?></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="posts" class="tab-content hidden">
+                            <div class="table-responsive table-space mt-4">
+                                <table class="table" id="userPostsTable" data-user-id="<?= base64_encode($final['id']) ?>">
+                                    <thead>
+                                        <tr class="table-header">
+                                            <!-- <th scope="col" class="th-checkbox">
+                                            <input type="checkbox" class="chk-box" />
+                                            </th>
+                                            <th scope="col" class="th-no">
+                                            <a href="#" class="userHeading">
+                                                NO 
+                                            </a>
+                                            </th> -->
+                                            <th scope="col" class="userHeading-size">
+                                                <a href="#" class="userHeading">
+                                                    USERNAME
+                                                </a>
+                                            </th>
+                                            <th scope="col">
+                                                <a href="#" class="userHeading">
+                                                    ANONYMOUS
+                                                </a>
+                                            </th>
+                                            <th scope="col">
+                                                <a href="#" class="userHeading">
+                                                    COMPANY NAME
+                                                </a>
+                                            </th>
+                                            <th scope="col">
+                                                <a href="#" class="userHeading">
+                                                    VIEW
+                                                </a>
+                                            </th>
+                                            <th scope="col">
+                                                <a href="#" class="userHeading">
+                                                    KEYWORD
+                                                </a>
+                                            </th>
+                                            <th scope="col">
+                                                <a href="#" class="userHeading">
+                                                    Status
+                                                </a>
+                                            </th>
+                                            <th scope="col">
+                                                <a href="#" class="userHeading">
+                                                    CREATED
+                                                </a>
+                                            </th>
+                                            <th scope="col">
+                                                <div class="userHeading">ACTION</div>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                                <div id="noDataMessageUP" class="no-data-container" style="display: none;">
+                                    <img src="<?= NO_DATA_IMG ?>" alt="No Data" />
+                                    <h3><?= NO_DATA_TITLE ?></h3>
+                                    <p><?= NO_DATA_DESC ?></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="wallet" class="tab-content hidden">
+                            <div class="table-responsive table-space mt-4">
+                                <table class="table" id="userWalletTxnTable" data-user-id="<?= base64_encode($final['id']) ?>">
+                                    <thead>
+                                        <tr class="table-header">
+                                            <th scope="col" class="userHeading-size">
+                                                <a href="#" class="userHeading"> Credit Used For  </a>
+                                            </th>
+                                            <th scope="col">
+                                                <a href="#" class="userHeading">
+                                                    Credits
+                                                    
+                                                </a>
+                                            </th>
+                                            <th scope="col">
+                                                <a href="#" class="userHeading"> Date  </a>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                                <div id="noDataMessageUW" class="no-data-container" style="display: none;">
+                                    <img src="<?= NO_DATA_IMG ?>" alt="No Data" />
+                                    <h3><?= NO_DATA_TITLE ?></h3>
+                                    <p><?= NO_DATA_DESC ?></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+            </div>
+            <!-- content area end -->
+            <div class="modal fade customModal" id="creditModal" tabindex="-1" aria-labelledby="creditModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h2 class="modal-title fs-5" id="creditModalLabel">Add/Remove Credits ($)</h2>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form class="user-form p-0 d-flex flex-column gap-3" action="" method="post" data-parsley-validate="">
+                                <div class="row">
+                                    <div class="col-12 mb-3">
+                                        <div class="d-flex flex-wrap gap-4 check-cmn">
+                                            <div class="form-check">
+                                                <input class="form-check-input me-2" type="radio" name="credit_debit" value="0" id="flexRadioDefault1" checked />
+                                                <label class="form-check-label" for="flexRadioDefault1">
+                                                    Add Credits ($)
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input me-2" type="radio" name="credit_debit" value="1" id="flexRadioDefault2" />
+                                                <label class="form-check-label" for="flexRadioDefault2">
+                                                    Remove Credits ($)
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <div>
+                                            <input type="text" data-parsley-type="number" name="credits" id="credits" placeholder="Enter Credits($)" class="form-control m-0" required />
+                                        </div>
+                                    </div>
+                                </div>
+                            
+                                <div class="TotalCreditsContent">
+                                    <p>Total Credits Will be</p>
+                                    <h6 id="totalCredits">
+                                        $<?= $final['wallet'] ?> + $0.00 <span>= $<?= $final['wallet'] ?></span>
+                                    </h6>
+                                </div>
+                            
+                                <div class="mt-2 gap-3 d-flex flex-row">
+                                    <button type="submit" class="btn btnSave" name="addCredits">Save</button>
+                                    <button type="button" class="btn btnClose" data-bs-dismiss="modal">Close</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- wrapper end  -->
+        <script src="assets/plugins/datatable/js/jquery.dataTables.min.js?v=<?= time() ?>"></script>
+        <?php include('includes/footer-scripts.php') ?>
+        <script src="assets/js/companyDetails.js?v=<?= time() ?>"></script>
+        <script>
+            $(document).ready(function () {
+                const walletBalance = <?= $final ['wallet'] ?>; // Initial wallet balance
+                const $creditsInput = $('#credits');
+                const $totalCredits = $('#totalCredits');
+                const $creditDebitRadios = $('input[name="credit_debit"]');
+        
+                function updateTotalCredits() {
+                    const enteredCredits = parseFloat($creditsInput.val()) || 0; // Default to 0 if invalid
+                    const isAdding = $creditDebitRadios.filter(':checked').val() === '0'; // Check if "Add Credits" is selected
+                    let finalCredits;
+        
+                    if (isAdding) {
+                        finalCredits = walletBalance + enteredCredits; // Add credits
+                    } else {
+                        finalCredits = walletBalance - enteredCredits; // Remove credits
+                    }
+        
+                    // Update the total credits display
+                    $totalCredits.html(`$${walletBalance} + $${enteredCredits.toFixed(2)} <span>= $${finalCredits.toFixed(2)}</span>`);
+                }
+        
+                // Event listeners
+                $creditsInput.on('input', updateTotalCredits);
+                $creditDebitRadios.on('change', updateTotalCredits);
+            });
+        </script>
+    </body>
+</html>

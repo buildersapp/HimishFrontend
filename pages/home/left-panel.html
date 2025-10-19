@@ -1,0 +1,316 @@
+<?php
+$isGuest = empty($userDetails);
+$hasCompanies = !$connectToExisting;
+?>
+<div class="col-lg-4 col-xl-3 d-none d-lg-block mt-0">
+    <div class="sideBar-wraper hide-scrollbar">
+        <div class="user-profile">
+            <!-- profile card  -->
+            <!-- <div class="profile-card">
+                <div class="profile-img">
+                    <?php
+                        $imgData = "";
+                        if(empty(@$userDetails['image'])){
+                            $imgData = '<img class="img-placeholder profile-imimg" src="'.generateBase64Image(@$userDetails['name'] ?? 'G U').'" alt="" />';
+                        }else{
+                            $imgData = '<img src="'. MEDIA_BASE_URL .''.@$userDetails['image'].'" alt="" class="profile-imimg" />';
+                        }
+                    ?>
+                    <?php echo $imgData; ?>
+                    <div class="edit-icon">
+                        <a href="edit-profile.php"><img src="assets/img/edit.png" alt=""></a>
+                    </div>
+                </div>
+                
+                <h2><?= @$userDetails['name'] ?? 'Guest Login' ?></h2>
+                <p>@<?= @$userDetails['handle_name'] ?? 'guestuser' ?></p>
+
+                <?php if(@$userDetails){ ?>
+                <a href="user-details.php?id=<?= base64_encode(@$userDetails['id']) ?>&type=0" class="profile-link">
+                    <img src="assets/img/link.png" alt="">
+                </a>
+                <?php } ?>
+            </div> -->
+
+            <!-- profile-stats  -->
+            <!-- <div class="profile-stats">
+                <div class="left-stats-box">
+                    <a data-bs-toggle="offcanvas" id="allConnectionsCanvas" data-bs-target="#connectionOffcanvas" aria-controls="connectionOffcanvas" class="left-stats-box" data-tab="all">
+                        <p>Connections</p>
+                        <h3><?= (@$userDetails['following'] + @$userDetails['followers']) ?></h3>
+                    </a>
+                </div>
+                <div class="right-stats-box">
+                    <div class="stats-info">
+                        <img src="assets/img/connect-right.png" alt="" data-bs-toggle="offcanvas" id="outConnectionsCanvas" data-bs-target="#connectionOffcanvas" aria-controls="connectionOffcanvas" data-tab="connects-out">
+                        <span class="connect-num"><?= @$userDetails['following'] ?? 0 ?></span>
+                    </div>
+                    <div class="stats-info">
+                        <img src="assets/img/connect.png" alt="" data-bs-toggle="offcanvas" id="inConnectionsCanvas" data-bs-target="#connectionOffcanvas" aria-controls="connectionOffcanvas" data-tab="connects-in">
+                        <span class="connect-num"><?= @$userDetails['followers'] ?? 0 ?></span>
+                    </div>
+                </div>
+            </div> -->
+
+            <!-- post logos group -->
+            <!-- <div class="post-logos-group">
+                <div class="post-logos-title">
+                    <img src="assets/img/Post.png" class="img-fluid" alt="">
+                </div>
+                <div class="post-buttons-container">
+                    <div class="post-buttons">
+                        <?php if (!empty($userDetails)) { ?>
+                            <a href="create-post.php">
+                                <button class="camera-button post-button" type="button"
+                                    data-bs-toggle="tooltip" data-bs-placement="bottom"
+                                    title="Create a Post about your business.">
+                                    <img src="assets/img/camera-1x.png" class="img-fluid" alt="">
+                                </button>
+                            </a>
+                        <?php } else { ?>
+                            <button class="camera-button post-button" type="button"
+                                data-bs-toggle="tooltip" data-bs-placement="bottom"
+                                title="Create a Post about your business."
+                                onclick="guestLoginModal()">
+                                <img src="assets/img/camera-1x.png" class="img-fluid" alt="">
+                            </button>
+                        <?php } ?>
+                        <?php if (!empty($userDetails)) { ?>
+                            
+                            <a href="create-listing.php">
+                                <button class="doc-button post-button" type="button"
+                                    data-bs-toggle="tooltip" data-bs-placement="bottom"
+                                    title="Post a listing. (sell my car, or looking for an apartment)">
+                                    <img src="assets/img/doc-1x.png" class="img-fluid" alt="">
+                                </button>
+                            </a>
+                        
+                           
+                            <button class="deal-button post-button createDealModalFn" type="button"
+                                data-bs-toggle="tooltip" data-bs-placement="bottom"
+                                title="Post deal or deal share">
+                                <img src="assets/img/deal-1x.png" class="img-fluid" alt="">
+                            </button>
+                        
+                        <?php } else { ?>
+                            
+                            <button class="doc-button post-button" type="button"
+                                data-bs-toggle="tooltip" data-bs-placement="bottom"
+                                title="Post a listing. (sell my car, or looking for an apartment)"
+                                onclick="guestLoginModal()">
+                                <img src="assets/img/doc-1x.png" class="img-fluid" alt="">
+                            </button>
+                        
+                            
+                            <button class="deal-button post-button" type="button"
+                                data-bs-toggle="tooltip" data-bs-placement="bottom"
+                                title="Post deal or deal share"
+                                onclick="guestLoginModal()">
+                                <img src="assets/img/deal-1x.png" class="img-fluid" alt="">
+                            </button>
+                        <?php } ?>                        
+                        <?php if ($isGuest): ?>
+                            
+                            <button class="ad-button post-button" type="button" data-bs-toggle="tooltip"
+                                data-bs-placement="bottom" title="Create Ad for your company" onclick="guestLoginModal()">
+                                <img src="assets/img/ad-1x.png" class="img-fluid" role="button">
+                            </button>
+                        <?php else: ?>
+                            <?php if ($hasCompanies): ?>
+                                
+                                <a href="create-ad.php">
+                                    <button class="ad-button post-button" type="button" data-bs-toggle="tooltip"
+                                        data-bs-placement="bottom" title="Create Ad for your company">
+                                        <img src="assets/img/ad-1x.png" class="img-fluid" role="button">
+                                    </button>
+                                </a>
+                            <?php else: ?>
+                                
+                                <button class="ad-button post-button" type="button" data-bs-toggle="tooltip"
+                                    data-bs-placement="bottom" title="Create Ad for your company" id="notAssociatedCompany">
+                                    <img src="assets/img/ad-1x.png" class="img-fluid" role="button">
+                                </button>
+                            <?php endif; ?>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            </div> -->
+
+            <?php if(count($left_ads) > 0){ ?>
+            <div class="">
+                <!-- AD 4 -->
+                <div class="set-inner-card-right-bar mt-0">
+                    <div class="">
+                        <div class="set-responsive container set-slider-ad-slick" id="set-responsive-ads-4">
+                           <?php foreach ($left_ads as $ad): ?>
+                           <?php 
+                                $mediaUrl = MEDIA_BASE_URL . $ad['media'];
+                                $shouldSkip = empty($ad['media']) || !@getimagesize($mediaUrl); // Use getimagesize only for images
+                                if ($shouldSkip) continue;
+                            ?>
+                            <div class="" id="lcp-<?php echo ($ad['id']); ?>">
+                                <div class="position-relative set-overflow-hidden set-cursor-pointer">
+                                    <input type="hidden" class="set-ad-id" value="<?= $ad['id'] ?>">
+                                    <input type="hidden" class="set-i-spotted" value="<?= $ad['i_spotted'] ?>">
+                                    <a href="<?= !empty($ad['url']) ? $ad['url'] : 'javascript:void(0)' ?>" <?= !empty($ad['url']) ? 'target="_blank"' : '' ?>>
+                                        <!-- BLUR IMG -->
+                                        <img src="assets/img/inner-catagory-item.png" alt="bg-blur-img" class="set-bg-blur-img">
+
+                                        <div class="set-inner-card-story">
+                                            <div class="set-img-video-story-card">
+                                                <?php if ($ad['media_type'] == 1): ?>
+                                                    <!-- VIDEO -->
+                                                    <video width="100%" height="100%" muted playsinline loop preload="none" controls class="set-story-content-video">
+                                                        <source src="<?= MEDIA_BASE_URL .$ad['media'] ?>" type="video/mp4">
+                                                        <source src="<?= MEDIA_BASE_URL . $ad['media'] ?>" type="video/webm">
+                                                    </video>
+                                                <?php else: ?>
+                                                    <!-- IMAGE -->
+                                                    <img src="<?= MEDIA_BASE_URL . $ad['media'] ?>" class="set-story-content-img" alt="Ad Image">
+                                                <?php endif; ?>
+                                            </div>
+                                        </div>
+                                    </a>
+
+                                    <div class="post-interactions set-interaction-ad-custom">
+                                        <div class="post-actions-left">
+                                            <div class="interaction-item post-fn" data-id="<?= $ad['id'] ?>" data-title="">
+                                                <img src="assets/img/view-ad.png" alt="Views">
+                                                <span class="data-total-spotted"><?php echo ($ad['total_spotted'] == 0) ? '' : $ad['total_spotted']; ?></span>
+                                            </div>
+                                            <div class="interaction-item like-ads-fn" 
+                                                data-ads-id="<?= $ad['id'] ?>" 
+                                                data-liked="<?= $ad['i_like'] ?>"
+                                                data-ads-type="1">
+                                                <img src="assets/img/love.png" alt="Like">
+                                                <span class="like-count"><?php echo ($ad['total_likes'] == 0) ? '' : $ad['total_likes']; ?></span>
+                                            </div>
+                                            <div class="interaction-item ads-comments-fn" data-id="<?= base64_encode($ad['id']) ?>" data-title="" data-ads-type="1">
+                                                <img src="assets/img/cmnt.png" alt="Comment">
+                                                <span><?php echo ($ad['total_comments'] == 0) ? '' : $ad['total_comments']; ?></span>
+                                            </div>
+                                            <div class="interaction-item share-fn" data-id="<?php echo base64_encode($ad['id']); ?>" data-title="" data-type="ad">
+                                                <img src="assets/img/share.png" alt="Share">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <?php } ?>
+
+            <!-- AD 3 -->
+            <?php if(count($bottom_right_ads)){ ?>
+            <div class="set-inner-card-right-bar">
+                <div class="">
+                    <div class=" mt-0">
+                        <div class="">
+                            <div class="set-responsive container set-slider-ad-slick" id="set-responsive-ads-3">
+                            <?php foreach ($bottom_right_ads as $ad): ?>
+                                <?php 
+                                    $mediaUrl = MEDIA_BASE_URL . $ad['media'];
+                                    $shouldSkip = empty($ad['media']) || !@getimagesize($mediaUrl); // Use getimagesize only for images
+                                    if ($shouldSkip) continue;
+                                ?>
+                                <div class="" id="lcp-<?php echo ($ad['id']); ?>">
+                                    <div class="position-relative set-overflow-hidden set-cursor-pointer">
+                                        <input type="hidden" class="set-ad-id" value="<?= $ad['id'] ?>">
+                                        <input type="hidden" class="set-i-spotted" value="<?= $ad['i_spotted'] ?>">
+                                        <a href="<?= !empty($ad['url']) ? $ad['url'] : 'javascript:void(0)' ?>" <?= !empty($ad['url']) ? 'target="_blank"' : '' ?>>
+                                            <!-- BLUR IMG -->
+                                            <img src="assets/img/inner-catagory-item.png" alt="bg-blur-img" class="set-bg-blur-img">
+
+                                            <div class="set-inner-card-story">
+                                                <div class="set-img-video-story-card">
+                                                    <?php if ($ad['media_type'] == 1): ?>
+                                                        <!-- VIDEO -->
+                                                        <video width="100%" height="100%" muted playsinline loop preload="none" controls class="set-story-content-video">
+                                                            <source src="<?= $mediaUrl ?>" type="video/mp4">
+                                                            <source src="<?= $mediaUrl ?>" type="video/webm">
+                                                        </video>
+                                                    <?php else: ?>
+                                                        <!-- IMAGE -->
+                                                        <img src="<?= $mediaUrl ?>" class="set-story-content-img" alt="Ad Image" >
+                                                    <?php endif; ?>
+                                                </div>
+                                            </div>
+                                        </a>
+                                        <div class="post-interactions set-interaction-ad-custom">
+                                            <div class="post-actions-left">
+                                                <div class="interaction-item -comments-fn" data-id="<?= $ad['id'] ?>" data-title="">
+                                                    <img src="assets/img/view-ad.png" alt="Views">
+                                                    <span class="data-total-spotted"><?php echo ($ad['total_spotted'] == 0) ? '' : $ad['total_spotted']; ?></span>
+                                                </div>
+                                                <div class="interaction-item like-ads-fn" 
+                                                    data-ads-id="<?= $ad['id'] ?>" 
+                                                    data-liked="<?= $ad['i_like'] ?>"  
+                                                    data-ads-type="1" >
+                                                    <img src="assets/img/love.png" alt="Like">
+                                                    <span class="like-count"><?php echo ($ad['total_likes'] == 0) ? '' : $ad['total_likes']; ?></span>
+                                                </div>
+                                                <div class="interaction-item ads-comments-fn" data-id="<?= base64_encode($ad['id']) ?>"  
+                                                    data-ads-type="1"  data-title="">
+                                                    <img src="assets/img/cmnt.png" alt="Comment">
+                                                    <span><?php echo ($ad['total_comments'] == 0) ? '' : $ad['total_comments']; ?></span>
+                                                </div>
+                                                <div class="interaction-item share-fn" data-id="<?php echo base64_encode($ad['id']); ?>" data-title="" data-type="ad">
+                                                    <img src="assets/img/share.png" alt="Share">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <?php endforeach; ?>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <?php } ?>
+            <!-- END AD 3 -->
+            <!-- <div class="video-player-container">
+                <img src="assets/img/vidimg.png" class="img-fluid w-100" alt="">
+                <img src="assets/img/play.png" class="play-icon" alt="">
+            </div> -->
+            <!-- profile-bottom-links -->
+            <!-- <ul class="profile-bottom-links">
+                <li>
+                    <a href="#">About</a>
+                </li>
+                <li>
+                    <a href="faqs.php">Help Center</a>
+                </li>
+                <li>
+                    <a href="terms.php">Terms & Conditions</a>
+                </li>
+                <li>
+                    <a href="privacy.php">Privacy Policies</a>
+                </li>
+                <li>
+                    <a href="faqs.php">FAQS</a>
+                </li>
+            </ul> -->
+            <!-- profile-footer  -->
+            <!-- <div class="pf-footer">
+                <img src="assets/img/logo.png" alt="">
+                <span>All Right Reserved <?= date('Y') ?></span>
+            </div> -->
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function(){
+        $('.set-responsive').on('init', function(){
+            playActiveSlideVideo();
+        }).on('afterChange', function(){
+            playActiveSlideVideo();
+        });
+
+        initSliderWithTracking('#set-responsive-ads-4');
+    });
+</script>

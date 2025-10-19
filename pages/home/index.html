@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="en">
+    <?php include('includes/head.php') ?>
+    <body>
+        <?php include('includes/nav-header.php') ?>
+        <style>
+            .modal-backdrop {
+                background-color: #00000085 !important;
+                opacity: 1 !important;
+            }
+
+            .notification-tip {
+  position: fixed;
+      width: 280px;
+  top: 130px;
+    left: 140px;
+  background: #fff;
+  color: #333;
+  padding: 10px 15px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  font-size: 14px;
+  font-family: Arial, sans-serif;
+  z-index: 9999;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+.notification-tip::after {
+  content: "";
+  position: absolute;
+  top: -10px;
+  right: 20px;
+  border-width: 0 8px 10px 8px;
+  border-style: solid;
+  border-color: transparent transparent #fff transparent;
+}
+
+@keyframes fadeIn {
+  from {opacity: 0; transform: translateY(-10px);}
+  to {opacity: 1; transform: translateY(0);}
+}
+        </style>
+        <?php
+        $radius = $userDetails['radius'] ?? 200;
+        ?>
+        <main>
+            <!-- ************************************ -->
+            <!-- HERO SECTION  -->
+            <!-- ************************************ --> 
+            <section class="set-hero-sec">
+                <div class="set-bg-illustration">
+                    <div class="container">
+                    <div class="row">
+                        <div class="col-lg-8 mx-auto">
+                        <div class="text-center">
+                            <h1 class="f-48-w m-0">Find What You Need. Post What You Offer</h1>
+                            <div class="row">
+                            <div class="col-lg-7 mx-auto">
+                                <p class="f-16-w mt-20">Discover local services, listings, and communities— all in one platform.</p>
+                                <div class="d-flex align-items-center gap-3 mt-20">
+
+                                    <?php if (!empty($userDetails)) { ?>
+                                        <!-- href="create-post.php" -->
+                                            <button type="button" data-bs-toggle="modal" data-bs-target="#setMultiStepModal" class="set-btn-primary set-onhover-primary gap-2 d-flex align-items-center justify-content-center text-white">
+                                                <svg width="13" height="12" viewBox="0 0 13 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M5.66797 6.83366H0.667969V5.16699H5.66797V0.166992H7.33464V5.16699H12.3346V6.83366H7.33464V11.8337H5.66797V6.83366Z" fill="white"/></svg>Create Post
+                                            </button>
+                                        <!-- </a> -->
+                                    <?php } else { ?>
+                                        <button type="button" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Create a Post about your business." onclick="guestLoginModal()" class="set-btn-primary set-onhover-primary gap-2 d-flex align-items-center justify-content-center"><svg width="13" height="12" viewBox="0 0 13 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M5.66797 6.83366H0.667969V5.16699H5.66797V0.166992H7.33464V5.16699H12.3346V6.83366H7.33464V11.8337H5.66797V6.83366Z" fill="white"/>
+                                            </svg>Create Post
+                                        </button>
+                                    <?php } ?>
+                                
+                                <a href="companies.php" class="set-btn-primary-outline text-decoration-none text-white">Company</a>
+                                </div>
+                            </div>
+                            </div>
+                            
+                        </div>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            </section>
+            <section class="dashboard">
+                <div class="container">
+                    <!-- ************************************ -->
+                    <!-- FILTERS  -->
+                    <!-- ************************************ --> 
+                    <section class="set-main-filter mt-2">
+                        <form action="" method="" enctype="">
+                        <div class="row align-items-center">
+                            <!-- LOCATION -->
+                            <!-- <div class="col-lg-3 col-md-4 col-12">
+                                <div class="position-relative set-border-line-right">
+                                    <img src="assets/images/select-location.png" alt="location" class="set-position-location">
+                                    <select class="form-select set-select-all set-select-filter" aria-label="Default select example" name="profile_type">
+                                    <option selected>Choose city</option>
+                                    <option value="New York, NY"><img src="assets/images/location-item.png" alt="location">New York, NY</option>
+                                    <option value="Los Angeles">Los Angeles</option>
+                                    <option value="Chicago">Chicago</option>
+                                    <option value="Houston">Houston</option>
+                                    <option value="Philadelphia">Philadelphia</option>
+                                    </select>
+                                </div>
+                            </div> -->
+                            <!-- SEARCH -->
+                            <div class="col-lg-8 col-md-8 col-12">
+                                <div class="search">
+                                    <div action="" class="navSearch set-custom-search" style="position: relative;">
+                                        <input type="text" name="search" class="form-control global-search-inp" placeholder="Search..." data-radius="<?= @$userDetails['radius'] ?>" value="<?= @$_GET['search'] ?>" />
+
+                                        
+                                        <button type="button" class="search-icon <?= (isset($_GET['search'])) ? 'clear-global-search' : 'clear-withoutSrc' ?> mx-4" style="display: <?= (isset($_GET['search'])) ? 'block' : 'none' ?>;">
+                                            <i class="fa fa-times"></i>
+                                        </button>
+                                        <button type="button" class="search-icon manual-global-search">
+                                            <i class="fa fa-search"></i>
+                                        </button>
+                                    </div>
+                                    <div class="global-search-dropdown" style="display: none;"></div>
+                                </div>
+                                <!-- <div class="input-group set-custom-search">
+                                    <input type="text" class="form-control" placeholder="Search anything...">
+                                    <button type="submit" class="input-group-text"><img src="assets/images/search-icon-outline.png" alt="search"></button>
+                                </div> -->
+                            </div>
+                            <!-- SORT + FILTER -->
+                            <div class="col-lg-4 col-md-12 col-12 mt-lg-0 mt-3">
+                            <div class="d-flex align-items-center gap-2">
+                                <div class="position-relative">
+                                <img src="assets/images/sort.png" alt="sort" class="set-position-location set-top-12">
+                                <select class="form-select set-select-all set-select-sort" aria-label="Default select example" name="profile_type">
+                                    <?php foreach ($sortOptions as $key => $label): ?>
+                                        <option value="<?= $key ?>" <?= ($sortKey == $key) ? 'selected' : '' ?>><?= $label ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                                </div>
+                                <div class="set-flex-grow-1">
+                                <button type="button" class="set-btn-filter d-flex align-items-center gap-2 w-100 justify-content-center" data-bs-toggle="modal" data-bs-target="#chooseService">
+                                    <img src="assets/images/filter.png" alt="filter">
+                                    Filter
+                                    <!-- <span class="set-filter-count"></span> -->
+                                </button>
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+                        </form>
+                    </section>
+
+                    <div class="row" id="dashboard-row">
+
+                        <!-- content tab  -->
+                        <div class="col-lg-12 mt-0">
+                            <div class="main-content">
+                                <div class="posts-feed">
+                                    <div  class="nav-wrapper">
+                                        <!-- tab button  -->
+                                        <ul class="nav nav-pills" id="pills-tab" role="tablist">
+                                            <li class="nav-item" role="presentation">
+                                                <button class="nav-link d-flex align-items-center justify-content-center gap-1 <?php echo ($type == 0) ? 'active' : ''; ?>" id="home-posts-tab" data-bs-toggle="pill">Business 
+                                                    <?php if(@$userDetails['total_posts']>0){ ?>
+                                                    <span class="set-tab-count"><?= @$userDetails['total_posts'] ?></span>
+                                                    <?php } ?>
+                                                </button>
+                                            </li>
+                                            <li class="nav-item" role="presentation">
+                                                <button class="nav-link d-flex align-items-center justify-content-center gap-1 <?php echo ($type == 1) ? 'active' : ''; ?>" id="home-listing-tab" data-bs-toggle="pill">Listing 
+                                                    <?php if(@$userDetails['total_looking']>0){ ?>
+                                                    <span class="set-tab-count"><?= @$userDetails['total_looking'] ?></span>
+                                                    <?php } ?>
+                                                </button>
+                                            </li>
+                                            <li class="nav-item" role="presentation">
+                                                <button class="nav-link d-flex align-items-center justify-content-center gap-1 <?php echo ($type == 2) ? 'active' : ''; ?>" id="home-deals-tab" data-bs-toggle="pill">Deals 
+                                                    <?php if(@$userDetails['unread_deals_count']>0){ ?>
+                                                    <span class="set-tab-count"><?= @$userDetails['unread_deals_count'] ?></span>
+                                                    <?php } ?>
+                                                </button>
+                                            </li>  
+                                            <li class="nav-item" role="presentation">
+                                                <button class="nav-link d-flex align-items-center justify-content-center gap-1 <?php echo ($type == 4) ? 'active' : ''; ?>" id="home-onsale-tab" data-bs-toggle="pill">On Sale 
+                                                    <?php if(@$userDetails['unread_on_sale_count']>0){ ?>
+                                                    <span class="set-tab-count"><?= @$userDetails['unread_on_sale_count'] ?></span>
+                                                    <?php } ?>
+                                                </button>
+                                            </li> 
+                                            <!-- <li class="nav-item" role="presentation">
+                                                <button class="nav-link " id="home-event-tab" data-bs-toggle="pill">Events</button>
+                                            </li> -->
+                                        </ul>
+                                    </div>
+                                    <!-- tab content  -->
+                                    <div class="tab-content" id="pills-tabContent">
+                                        <!-- Posts tab content  -->
+                                        <div class="tab-pane fade show active sideBar-wraper1 hide-scrollbar">
+                                            <!-- Posts -->
+                                            <?php if($type==0){ ?>
+                                                <!-- END FEATURE AD'S -->
+                                                <div class="post-cards set-cards-for-home-imp-himish row" id="posts-container">
+                                                </div>
+                                            <!-- Looking For -->
+                                            <?php } else if($type==1){ ?>
+                                                <h2 class="f-32-b text-dark mb-2">All Categories</h2>
+                                                <!-- CATEGORIES -->
+                                                <div class="company-filter-container">
+                                                    
+                                                    <!-- Left Arrow (outside slick slider) -->
+                                                    <button class="slick-category-list-left custom-arrow">&#8592;</button>
+
+                                                    <!-- Slick Slider -->
+                                                    <div class="category-filter set-flex-categories">
+                                                        <?php foreach ($listingCategories as $cat): 
+                                                            $isActive = (strtolower($cat['value']) === strtolower($currentListingCategory)) ? 'set-active-box' : '';
+                                                            $link = '?type=' . $type . '&listing_cat=' . urlencode($cat['value']);
+                                                        ?>
+                                                            <div class="set-category-card text-center">
+                                                                <a href="<?= $link ?>" class="d-block">
+                                                                    <div class="set-card-img <?= $isActive ?>">
+                                                                        <?= $cat['image'] ?>
+                                                                        <!-- <img src="assets/img/<?= htmlspecialchars($cat['image']) ?>" alt="<?= htmlspecialchars($cat['name']) ?>"> -->
+                                                                        <span><?= htmlspecialchars($cat['name']) ?></span>
+                                                                    </div>
+                                                                    
+                                                                </a>
+                                                            </div>
+                                                        <?php endforeach; ?>
+                                                    </div>
+
+
+                                                    <!-- Right Arrow (outsi de slick slider) -->
+                                                    <button class="slick-category-list-right custom-arrow">&#8594;</button>
+                                                </div>
+                                                <div class="row">
+                                                    <!-- user profile  -->
+                                                    <?php include('left-panel.html') ?>
+                                                    <div class="col-lg-6">
+                                                        <div class="row" id="posts-container">
+
+                                                        </div>
+                                                    </div>
+                                                    <!-- Sponsored Posts Section -->
+                                                    <?php include('right-panel.html') ?>
+                                                </div>
+                                            <?php } else if($type==2) { ?>
+                                                <div class="deals-content">
+
+                                                    <!-- Deal Share New UI -->
+                                                    <!-- <section class="set-fb-story-slider">
+                                                        <div class="set-responsive container" id="set-responsive">
+                                                            <?php foreach ($dealShareData as $index => $deal): ?>
+                                                                <?php
+                                                                    $imageData = $deal['post_images'][0] ?? null;
+                                                                    $user = $deal['user'] ?? null;
+                                                                    $userName = $user['name'] ?? 'Unknown User';
+                                                                    $userImage = !empty($user['image']) ? MEDIA_BASE_URL . $user['image'] : 'assets/img/avatar.png';
+                                                                    $mediaPath = $imageData ? MEDIA_BASE_URL . $imageData['image'] : '';
+                                                                    $isVideo = $imageData && $imageData['type'] == 1;
+                                                                ?>
+                                                        
+                                                                <div class="position-relative set-overflow-hidden set-open-modal-slide set-cursor-pointer" data-bs-toggle="modal" data-bs-target="#dealShareModal" data-slide-index="<?= $index ?>">
+                                                                    
+                                                                    <img src="assets/img/inner-catagory-item.png" alt="bg-blur-img" class="set-bg-blur-img">
+                                                        
+                                                                    <div class="set-inner-card-story">
+                                                                        <div class="set-img-video-story-card">
+                                                                            <?php if ($isVideo): ?>
+                                                                                <video 
+                                                                                width="100%" 
+                                                                                height="100%" 
+                                                                                muted 
+                                                                                playsinline
+                                                                                loop 
+                                                                                preload="none"
+                                                                                class="set-story-content-video"
+                                                                                data-src-mp4="<?= $mediaPath ?>"
+                                                                                >
+                                                                                    <source src="<?= $mediaPath ?>" type="video/mp4">
+                                                                                    <source src="<?= $mediaPath ?>" type="video/webm">
+                                                                                </video>
+                                                                            <?php else: ?>
+                                                                                <img src="<?= $mediaPath ?>" class="set-story-content-img">
+                                                                            <?php endif; ?>
+                                                                        </div>
+                                                        
+                                                                        
+                                                                        <div class="set-user-img-story">
+                                                                            <img src="<?= $userImage ?>" alt="avatar" class="rounded-pz">
+                                                                        </div>
+                                                        
+                                                                        
+                                                                        <div class="set-user-name-story">
+                                                                            <?= htmlspecialchars($userName) ?>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            <?php endforeach; ?>
+                                                        </div>
+                                                        
+                                                        <?php if($dealShareId > 0){ ?>
+                                                            <button type="button" onclick="removeIdAndReload()" class="mt-3 upload-buttom-top sk-gradint-button-one">
+                                                                Load All Deal Share
+                                                                <img src="assets/img/Arrow Forward.svg" alt="Arrow" />
+                                                            </button>
+                                                        <?php } ?>
+                                                    </section> -->
+
+                                                    <!-- Deals -->
+                                                    <div class="sort-by">
+                                                        <p for="sort-options">Sort By:</p>
+                                                        <div class="dropdownFilter">
+                                                            <button class="p-0 dropdown-toggle" type="button" id="postActionsFilter"
+                                                                data-bs-toggle="dropdown" aria-expanded="true">
+                                                                <?= $sortLabel ?>
+                                                            </button>
+                                                            <ul class="dropdown-menu deal-sort-menu" aria-labelledby="postActionsFilter" data-popper-placement="bottom-start">
+                                                                <?php foreach ($sortOptions as $key => $label): ?>
+                                                                    <li data-sort="<?= $key ?>" class="<?= ($sortKey === $key) ? 'active' : '' ?>">
+                                                                        <?= $label ?>
+                                                                    </li>
+                                                                <?php endforeach; ?>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="product-list row set-product-list-main" id="posts-container">
+                                                        
+                                                    </div>
+                                                </div>
+                                            <?php } else if($type==4) { ?>
+                                                <div class="row" id="posts-container">
+                                                </div>
+                                            <?php } ?>
+                                        </div>
+                                        <?php if($postId > 0){ ?>
+                                        <button type="button" onclick="removeIdAndReload()" class="mt-3 upload-buttom-top sk-gradint-button-one">
+                                            Load All Feeds
+                                            <img src="assets/img/Arrow Forward.svg" alt="Arrow" />
+                                        </button>
+                                        <?php } ?>
+                                        <div id="loading" style="display: none; text-align: center; padding: 10px;">Loading...</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Deal Share Modal -->
+                <div class="modal fade set-modal-story-fb" id="dealShareModal" tabindex="-1" aria-labelledby="dealShareModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="set-btn-story-card">
+                                <button type="button" class="modal-close" data-bs-dismiss="modal" aria-label="Close">
+                                    <img src="assets/img/cross.png" alt="">
+                                </button>
+                            </div>
+                            <div class="modal-body p-0">
+                                <!-- POPUP SLIDER -->
+                                <div class="set-responsive container" id="set-slide-modal">
+                                    <?php foreach ($dealShareData as $deal): ?>
+                                        <?php
+                                            $imageData = $deal['post_images'][0] ?? null;
+                                            $user = $deal['user'] ?? null;
+                                            $userName = $user['name'] ?? 'Unknown User';
+                                            $userImage = !empty($user['image']) ? MEDIA_BASE_URL . $user['image'] : 'assets/img/avatar.png';
+                                            $mediaPath = $imageData ? MEDIA_BASE_URL . $imageData['image'] : '';
+                                            $isVideo = $imageData && $imageData['type'] == 1;
+                                        ?>
+                                
+                                        <div class="position-relative set-overflow-hidden <?= $isVideo ? 'set-cursor-pointer' : '' ?>" <?= $isVideo ? 'data-bs-toggle="modal" data-bs-target="#dealShareModal"' : '' ?>>
+                                            <!-- BLUR IMG -->
+                                            <img src="assets/img/inner-catagory-item.png" alt="bg-blur-img" class="set-bg-blur-img">
+                                
+                                            <div class="set-inner-card-story">
+                                                <div>
+                                                    <?php if ($isVideo): ?>
+                                                        <video
+                                                            width="100%" 
+                                                            height="100%" 
+                                                            muted 
+                                                            playsinline
+                                                            loop 
+                                                            preload="none"
+                                                            class="set-story-content-video"
+                                                            data-src-mp4="<?= $mediaPath ?>"
+                                                        >
+                                                            <source src="<?= $mediaPath ?>" type="video/mp4">
+                                                            <source src="<?= $mediaPath ?>" type="video/webm">
+                                                        </video>
+                                                    <?php else: ?>
+                                                        <img src="<?= $mediaPath ?>" class="set-story-content-img">
+                                                    <?php endif; ?>
+                                                </div>
+                                
+                                                <!-- USER IMG -->
+                                                <div class="set-user-img-story">
+                                                    <img src="<?= $userImage ?>" alt="avatar" class="rounded-pz">
+                                                </div>
+                                
+                                                <!-- USER TITLE -->
+                                                <div class="set-user-name-story">
+                                                    <?= htmlspecialchars($userName) ?>
+                                                </div>
+                                            </div>
+                                            <!-- SOCIAL INTERACTION -->
+                                            <div class="product-hover-interactions set-interaction-cards-popup-story">
+                                                <?php if(isset($_SESSION['hm_wb_auth_data']) && $_SESSION['hm_wb_auth_data']['id'] == $deal['user']['id']){ ?>
+                                                    <div class="dropdown action-item cmnt-action set-three-dots-org set-story-popup-dots">
+                                                        <button class="btn btn-link p-0 dropdown-toggle" type="button"
+                                                            id="listActionsDropdown1" data-bs-toggle="dropdown" aria-expanded="false">
+                                                            <img src="assets/img/dots.png" alt="More Options" height="18px">
+                                                        </button>
+                                                        <ul class="dropdown-menu" aria-labelledby="listActionsDropdown1">
+                                                            <li><a class="py-0 px-0" href="create-deal-share.php?id=<?= base64_encode($deal['id']) ?>"><p class="dropdown-item text-secondary">Edit</p></a></li>
+                                                            <li><p class="dropdown-item delete-pst-fn" data-id="<?= $deal['id'] ?>">Delete</p></li>
+                                                        </ul>
+                                                    </div>
+                                                <?php } ?>
+                                                <div class="product-hover-share share-fn" data-id="<?php echo base64_encode($deal['id']); ?>" data-title="Deal Share" data-type="get_deal_share">
+                                                    <img src="assets/img/share.png" alt="">
+                                                    <span><?php echo ($deal['total_share'] == 0) ? '' : $deal['total_share']; ?></span>
+                                                </div>
+                                                <div class="product-hover-share fav-post-fn" 
+                                                data-post-id="<?php echo $deal['id']; ?>" 
+                                                data-favorited="<?php echo $deal['i_fav'] ? '1' : '0'; ?>" 
+                                                data-post-type="2">
+                                                    <img src="assets/img/<?php echo $deal['i_fav'] ? 'bookmarkfill.png' : 'bookmarkBlack.png'; ?>" class="img-fluid" alt="">
+                                                </div>
+                                                
+                                                <!-- <div class="product-hover-share share-fn" data-id="<?php echo base64_encode($deal['id']); ?>" data-title="Deal" data-type="get_deals">
+                                                    <img src="assets/img/share.png" alt="">
+                                                    <span><?= $deal['total_share'] ?></span>
+                                                </div> -->
+                                                <!-- <div class="product-hover-share fav-post-fn" 
+                                                data-post-id="<?php echo $deal['id']; ?>" 
+                                                data-favorited="<?php echo $deal['i_fav'] ? '1' : '0'; ?>" 
+                                                data-post-type="2">
+                                                    <img src="assets/img/<?php echo $deal['i_fav'] ? 'bookmarkfill.png' : 'bookmarkBlack.png'; ?>" class="img-fluid" alt="">
+                                                </div> -->
+                                                <div class="product-hover-share post-comments-fn" data-id="<?php echo base64_encode($deal['id']); ?>" data-title="<?= $deal['title'] ?>">
+                                                    <img src="assets/img/cmnt.png" alt="">
+                                                    <span><?php echo ($deal['total_comments'] == 0) ? '' : $deal['total_comments']; ?></span>
+                                                </div>
+                                                <div class="product-hover-share like-post-fn" 
+                                                    data-post-id="<?php echo $deal['id']; ?>" 
+                                                    data-liked="<?php echo $deal['i_like'] ? '1' : '0'; ?>">
+                                                    <img src="assets/img/<?php echo $deal['i_like'] ? 'lovefill.png' : 'love.png'; ?>" alt="Like">
+                                                    <span class="like-count"><?php echo ($deal['total_likes'] == 0) ? '' : $deal['total_likes']; ?></span>
+                                                </div>
+                                            </div>
+                                            <!-- END SOCIAL INTERACTION -->
+                                        </div>
+                                    <?php endforeach; ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- ======================== -->
+    <!-- CREATE POST MODAL -->
+    <!-- ======================== -->
+    <div class="modal fade set-modals-filter" id="setMultiStepModal" tabindex="-1" aria-labelledby="logoutModal" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered set-w-570">
+        <div class="modal-content set-bg-grey-multistep-modal">
+          
+          <div class="modal-body p-0">
+            <!-- Form -->
+            <form id="setMultiStepForm">
+              <!-- ************************* -->
+              <!-- STEP 1 -->
+              <!-- ************************* -->
+              <div class="set-step set-active">
+                <!-- HEADER MODAL -->
+                <div class="modal-header position-relative align-items-center px-0 pb-3 pt-0">
+                  <h2 class="f-20-gb d-flex align-items-center gap-2 mb-0" id="exampleModalLabel">Choose</h2>
+                  <button type="button" class="set-close-btn" data-bs-dismiss="modal" aria-label="Close">
+                    <img src="assets/images/close-circle.png" alt="close modal" style="height: 24px;width: 24px;">
+                  </button>
+                </div>
+                <!-- CENTER CONTENT -->
+                <div class="set-main-multi-step-1-modals">
+                    <div class="set-radio-check-btns">
+                        <input type="radio" class="btn-check" name="options-base" id="option5" autocomplete="off">
+                        <label class="btn set-next-btn" for="option5" data-url="post-all.php">Post All</label>
+                        <div class="hover-text">Create post and listing...</div>
+                    </div>
+
+                    <div class="set-radio-check-btns">
+                        <input type="radio" class="btn-check" name="options-base" id="option6" autocomplete="off">
+                        <label class="btn set-next-btn" for="option6" data-url="create-post.php">Business</label>
+                        <div class="hover-text">List your business text...</div>
+                    </div>
+
+                    <div class="set-radio-check-btns">
+                        <input type="radio" class="btn-check" name="options-base" id="option7" autocomplete="off">
+                        <label class="btn set-next-btn" for="option7" data-url="create-listing.php">Listing</label>
+                        <div class="hover-text">List your Listing text...</div>
+                    </div>
+
+                    <div class="set-radio-check-btns">
+                        <input type="radio" class="btn-check" name="options-base" id="option8" autocomplete="off">
+                        <label class="btn set-next-btn" for="option8" data-url="create-deal.php">Deals</label>
+                        <div class="hover-text">List your Deals text...</div>
+                    </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="notification-tip" id="notifTip" style="display: none;">
+    🔔 Click <b>"Allow"</b> to get instant updates about your business and discover what’s happening with other businesses around you. Don’t miss out!
+    </div>
+
+    </body>
+    <?php include('includes/footer-scripts.php') ?>
+    <script>
+    document.addEventListener('click', function (e) {
+        if (e.target.classList.contains('set-next-btn')) {
+            const url = e.target.getAttribute('data-url');
+            if (url) {
+                window.location.href = url;
+            }
+        }
+    });
+
+    function askForNotification() {
+        // Check if browser supports Notifications
+        if (!("Notification" in window)) {
+            console.log("This browser does not support desktop notifications");
+            return;
+        }
+        const notifTip = document.getElementById("notifTip");
+
+        // Only ask if not granted yet
+        if (Notification.permission !== "granted") {
+            notifTip.style.display = "block";
+
+            Notification.requestPermission().then(function (permission) {
+                notifTip.style.display = "none"; // hide tooltip after choice
+                if (permission === "granted") {
+                    console.log("Notifications enabled");
+                    // get token logic here...
+                } else {
+                    console.log("Notifications denied or dismissed");
+                }
+            });
+        } else {
+            notifTip.style.display = "none";
+            console.log("Notifications already granted");
+        }
+    }
+
+    // Example trigger after 2 seconds
+    setTimeout(() => {
+        askForNotification();
+    }, 2000);
+    </script>
+    <script>
+        // Your Firebase Config
+        var firebaseConfig = {
+            apiKey: "AIzaSyBANwr3eUpU_tdaSXxIkv052raJefEioUg",
+            authDomain: "himish-9d505.firebaseapp.com",
+            projectId: "himish-9d505",
+            storageBucket: "himish-9d505.firebasestorage.app",
+            messagingSenderId: "709596707451",
+            appId: "1:709596707451:web:1dabc003797d3123c080de",
+            measurementId: "G-745G4QYEVL"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+
+        const messaging = firebase.messaging();
+
+        // Register service worker
+        if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('firebase-messaging-sw.js')
+            .then(function (registration) {
+            console.log("Service Worker registered:", registration);
+            messaging.useServiceWorker(registration);
+
+            // Request notification permission
+            Notification.requestPermission().then(function (permission) {
+                if (permission === 'granted') {
+                messaging.getToken({ vapidKey: "BFlxrcewdxJo2dtPfIgkCpKeA3mkwTS1YMX-V0otvHdrEJlWXSJzxE63H8wbl2pkhZD2IOrvnJwWz2PVh9KZI-g" }).then(function (token) {
+
+                    const lastToken = localStorage.getItem("hm_fcm_token");
+                    if (lastToken !== token) {
+                        // Send the token to your server or save it for later use
+                        $.ajax({
+                            url: "ajax.php?action=save_user_fcm_token",
+                            type: "POST",
+                            data: { token: token },
+                            success: function (response) {
+                                console.log("Token saved successfully:");
+                                localStorage.setItem("hm_fcm_token", token);
+                            },
+                            error: function (xhr, status, error) {
+                                console.error("AJAX Error:", status, error);
+                            },
+                        });
+                    } else {
+                        console.log("Token already saved, skipping...");
+                    }
+                }).catch(function (err) {
+                    console.error("Error retrieving token:", err);
+                });
+                } else {
+                console.log("Permission not granted for notifications.");
+                }
+            });
+            })
+            .catch(function (err) {
+            console.error("Service Worker registration failed:", err);
+            });
+        }
+    </script>
+
+    <script>
+        let selectedSlideIndex = 0;
+
+        $(document).ready(function () {
+            // Intercept modal trigger
+            $(document).on('click', '.set-open-modal-slide', function (e) {
+                e.preventDefault(); // prevent default Bootstrap modal open
+                selectedSlideIndex = parseInt($(this).data('slide-index')) || 0;
+
+                const $slider = $('#set-slide-modal');
+                const $modal = $('#dealShareModal');
+
+                // First, initialize modal slider if not already
+                if (!$slider.hasClass('slick-initialized')) {
+                    $slider.slick({
+                        dots: false,
+                        infinite: false,
+                        speed: 300,
+                        slidesToShow: 1,
+                        slidesToScroll: 1
+                    });
+
+                    // Wait a tick before navigating to correct slide
+                    setTimeout(function () {
+                        $slider.slick('slickGoTo', selectedSlideIndex, true);
+                        $modal.modal('show');
+                    }, 50);
+                } else {
+                    $slider.slick('slickGoTo', selectedSlideIndex, true);
+                    $slider.slick('setPosition');
+
+                    // Now show modal
+                    $modal.modal('show');
+                }
+            });
+
+            // Optional: re-set position when modal becomes visible
+            $('#dealShareModal').on('shown.bs.modal', function () {
+                $('#set-slide-modal').slick('setPosition');
+            });
+        });
+
+    </script>
+    <script>
+        function playActiveSlideVideo() {
+            $('.set-responsive .slick-slide video').each(function(){
+                this.pause(); // Pause all videos
+                this.currentTime = 0; // Optional: reset to start
+            });
+
+            $('.set-responsive .slick-slide.slick-current video').each(function(){
+                this.play(); // Play only the active slide video
+            });
+        }
+    
+        $(document).ready(function(){
+            $('.set-responsive').on('init', function(){
+                playActiveSlideVideo();
+            }).on('afterChange', function(){
+                playActiveSlideVideo();
+            });
+            $('#set-responsive').slick({
+                dots: true,
+                infinite: true,
+                speed: 300,
+                slidesToShow: 4,
+                slidesToScroll: 1,
+                dots: false,
+                responsive: [
+                    {
+                    breakpoint: 1024,
+                    settings: {
+                        slidesToShow: 5,
+                        slidesToScroll: 3,
+                        infinite: true,
+                        dots: true
+                    }
+                    },
+                    {
+                    breakpoint: 600,
+                    settings: {
+                        slidesToShow: 3,
+                        slidesToScroll: 2
+                    }
+                    },
+                    {
+                    breakpoint: 480,
+                    settings: {
+                        slidesToShow: 3,
+                        slidesToScroll: 1
+                    }
+                    }
+                ]
+            });
+            $('#set-feature-ads').slick({
+                dots: true,
+                infinite: true,
+                speed: 300,
+                slidesToShow: 4,
+                slidesToScroll: 1,
+                dots: false,
+                autoplay: true,
+                autoplaySpeed: 5000,
+                adaptiveHeight: true,
+                responsive: [
+                    {
+                    breakpoint: 1024,
+                    settings: {
+                        slidesToShow: 4,
+                        slidesToScroll: 3,
+                        infinite: true,
+                        dots: true
+                    }
+                    },
+                    {
+                    breakpoint: 600,
+                    settings: {
+                        slidesToShow: 3,
+                        slidesToScroll: 2
+                    }
+                    },
+                    {
+                    breakpoint: 480,
+                    settings: {
+                        slidesToShow: 3,
+                        slidesToScroll: 1
+                    }
+                    }
+                ]
+            });  
+        });
+        $(document).ready(function () {
+            // Initialize slick only when modal is shown
+            $('#dealShareModal').on('shown.bs.modal', function () {
+                const $slider = $('#set-slide-modal');
+
+                if (!$slider.hasClass('slick-initialized')) {
+                    $slider.slick({
+                        dots: false,
+                        infinite: false,
+                        speed: 300,
+                        slidesToShow: 1,
+                        slidesToScroll: 1
+                    });
+                } else {
+                    // Refresh slick to fix width issues if already initialized
+                    $slider.slick('setPosition');
+                }
+            });
+        });
+        
+    </script>
+    <script>
+        function loadVisibleVideos(container) {
+            $(container).find('.slick-slide.slick-active video[data-src-mp4]').each(function () {
+                const video = this;
+                const src = video.getAttribute('data-src-mp4');
+                if (!video.src || video.src !== src) {
+                    const sourceTag = video.querySelector('source');
+                    if (sourceTag) {
+                        sourceTag.src = src;
+                        video.load();
+                        video.play().catch(() => {});
+                    }
+                }
+            });
+        }
+
+        // On Slick init/change, load only visible videos
+        $(document).ready(function(){
+            $('#set-responsive, #set-slide-modal').on('init afterChange', function(event, slick){
+                loadVisibleVideos(this);
+            });
+
+            // Trigger the loading manually for first time
+            loadVisibleVideos('#set-responsive');
+        });
+        </script>
+
+    <script src="assets/js/home.js?v=<?= time() ?>"></script>      
+    <script>
+        localStorage.removeItem('otpCode');
+        localStorage.removeItem('registerUser');
+        let postsData = {
+            status: 0,
+            type: '<?= $type ?>',
+            radius: '<?= $radius ?>',
+            search: '<?= $search ?>',
+            currentListingCategory: '<?= $currentListingCategory ?>',
+            user_id: 0,
+            post_id: '<?= $postId ?>',
+            ads_id: '<?= $adId ?>',
+            sort: '<?= $sortKey ?>',
+            latitude : localStorage.getItem('userLatitude'),
+            longitude : localStorage.getItem('userLongitude'),
+            country_code: localStorage.getItem('userCountryCode'),
+        };
+
+        // Initial Fetch on Page Load
+        $(document).ready(function () {
+            //console.log(postsData,"===============here")
+            getPosts(postsData); // Load initial posts with the default data
+            enableScrollPagination(postsData,"#posts-container"); // Enable infinite scroll
+
+            // Pass PHP values to JS
+            const phpState = "<?= !empty($userDetails['state']) ? addslashes($userDetails['state']) : '' ?>";
+            const phpCity = "<?= !empty($userDetails['city']) ? addslashes($userDetails['city']) : '' ?>";
+
+            const userState = localStorage.getItem('userState');
+            const userCity = localStorage.getItem('userCity');
+
+            // Only call getUserLocation if both localStorage and PHP values are empty
+            var updateHd = true;
+            // if ((!phpState && !phpCity)) {
+            //     updateHd = true;
+            // }
+
+            getUserLocation(updateHd);
+
+            <?php if (empty(@$userDetails['location'])): ?>
+                    const ifGuestLogin = localStorage.getItem('gu_change_location');
+                    if (ifGuestLogin) {
+                        let city = localStorage.getItem('userCity');
+                        let state = localStorage.getItem('userState');
+                        document.querySelector(".nav-location span").innerText = `${city}, ${state}`;
+                    }
+            <?php endif; ?>
+
+        });
+    
+
+        function addSearchParam(keyword) {
+            const url = new URL(window.location.href);
+            url.searchParams.set('search', keyword);
+            window.location.href = url.toString();
+        }
+    </script>
+    
+        <script>
+            $(document).ready(function () {
+            const $sliderCategory = $('.category-filter');
+
+            $sliderCategory.slick({
+                slidesToShow: 4,
+                slidesToScroll: 5,
+                arrows: false,
+                infinite: false,
+                swipeToSlide: true,
+                variableWidth: true
+            });
+
+            $('.slick-category-list-left').on('click', function () {
+                $sliderCategory.slick('slickPrev');
+            });
+
+            $('.slick-category-list-right').on('click', function () {
+                $sliderCategory.slick('slickNext');
+            });
+        });
+        </script>
+    
+</html>

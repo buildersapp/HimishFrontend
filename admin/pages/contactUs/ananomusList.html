@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+    <?php include('includes/head.php') ?>
+    <link rel="stylesheet" href="assets/plugins/datatable/css/dataTables.bootstrap5.min.css" />
+      <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.7.1/css/buttons.dataTables.min.css" />
+    <style>
+      .select2-container {
+          z-index: 1050 !important; /* Should be higher than Bootstrap modal (1040) */
+      }
+      .select2-container--open {
+          z-index: 1060 !important; /* Slightly higher for the open dropdown */
+      }
+    </style>
+    <body>
+        <!-- wrapper start  -->
+        <div class="wrapper relative">
+            <?php include('includes/sidebar.php') ?>
+
+            <!-- header start  -->
+            <?php include('includes/nav-header.php') ?>
+            <!-- header end  -->
+
+            <!-- content area start  -->
+            <div class="deals-page-sec">
+                <main>
+                    <section class="userList">
+                        <div class="">
+                            <div class="row">
+                              
+
+                                <!-- bottom -->
+                                <div class="col-12">
+                                    <div class="list-users table-responsive">
+                                        <!-- table -->
+                                        <table class="table data-table-cmn dealsTable " id="ananomousRequestTable">
+                                            <thead>
+                                                <tr class="table-header">
+                                                    <th scope="col" class="th-no">
+                                                      <a href="javascript:void(0)" class="userHeading">
+                                                        No 
+                                                      </a>
+                                                    </th>
+                                                    <th scope="col">
+                                                      <a href="javascript:void(0)" class="userHeading">
+                                                         Email/Phone
+                                                      </a>
+                                                    </th>
+                                                    <th scope="col">
+                                                      <a href="javascript:void(0)" class="userHeading">
+                                                        Request Type
+                                                      </a>
+                                                    </th>
+
+                                                    <th scope="col" class="userHeading-size">
+                                                        <a href="#" class="userHeading"> Message   </a>
+                                                    </th>
+                          
+                                                
+                                                    <th scope="col">
+                                                      <a href="javascript:void(0)" class="userHeading">
+                                                        Created at
+                                                      </a>
+                                                    </th>
+
+                                                    <th scope="col">
+                                                      <div class="userHeading">ACTION</div>
+                                                    </th>
+                                                  </tr>
+                                            </thead>
+                                            <tbody></tbody>
+                                        </table>
+                                        <div id="noDataMessage" class="no-data-container" style="display: none;">
+                                            <img src="<?= NO_DATA_IMG ?>" alt="No Data" />
+                                            <h3><?= NO_DATA_TITLE ?></h3>
+                                            <p><?= NO_DATA_DESC ?></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                  <!-- Modal -->
+                <!-- Mail Modal with Form -->
+                <div class="modal fade mailPopup" id="mailPopup" tabindex="-1" role="dialog" aria-labelledby="mailPopupLabel" aria-hidden="true">
+                  <div class="modal-dialog" role="document">
+                    <form id="mailForm" method="POST"> <!-- Change action as needed -->
+                      <div class="modal-content">
+
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="mailPopupLabel">Send Email</h5>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="closeMailPopup()">
+                            <span>&times;</span>
+                          </button>
+                        </div>
+
+                        <div class="modal-body">
+                          <label for="mailMessage">Message:</label>
+                          <textarea id="mailMessage" name="message" class="form-control" rows="5" placeholder="Write your message here..." required></textarea>
+                          <input type="hidden" name="id" id="rId" />
+                        </div>
+
+                        <div class="modal-footer">
+                          <button type="submit" name="mailSend" class="btn btn-primary">Send Mail</button>
+                          <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="closeMailPopup()">Cancel</button>
+                        </div>
+
+                      </div>
+                    </form>
+                  </div>
+                </div>
+
+                </main>
+            </div>
+            <!-- content area end -->
+        </div>
+        <!-- wrapper end  -->
+        <script src="assets/plugins/datatable/js/jquery.dataTables.min.js?v=<?= time() ?>"></script>
+        <?php include('includes/footer-scripts.php') ?>
+        <script src="assets/js/ananomousRequest.js?v=<?= time() ?>"></script>
+        <script>
+         
+            function openMailPopup(id) {
+                currentId = id;
+                document.getElementById('rId').value = id;
+                $('.mailPopup').modal('show'); // Bootstrap 4
+              }
+            function closeMailPopup() {
+              document.getElementById('mailMessage').value = '';
+                $('#mailPopup').modal('hide');
+            }
+          
+        </script>
+    </body>
+</html>

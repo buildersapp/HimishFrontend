@@ -1,0 +1,308 @@
+<html>
+    <?php include('includes/head.php'); ?>
+    <body class="bg-gray-50 font-sans">
+    
+    <!-- Sidebar -->
+    <?php include('includes/sidebar.php'); ?>
+
+    <!-- Mobile Header & Mobile Menu (hidden by default) -->
+    <?php include('includes/mobile-menu.php'); ?>
+
+    <!-- Main Content -->
+    <div class="md:ml-64 min-h-screen">
+        <!-- Header -->
+        <?php include('includes/nav-header.php'); ?>
+
+        <!-- Mobile Tabs -->
+        <?php include('includes/mobile-tabs.php'); ?>
+
+        <!-- Communities Content -->
+        <main id="profile-content" class="p-4 md:p-6">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- Left Column - Profile Information -->
+                    <div id="profile-info" class="md:col-span-2">
+                        <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-6">
+                            <h2 class="text-xl font-semibold text-gray-800 mb-6">Personal Information</h2>
+
+                            <div class="grid grid-cols-1 gap-6">
+                                <form method="post" data-parsley-validate="">
+                                    <!-- Profile Photo -->
+                                    <div class="flex flex-col sm:flex-row sm:items-center">
+                                        <div class="w-28 sm:w-32 mb-4 sm:mb-0 sm:mr-6 relative">
+
+                                            <!-- Preview Image -->
+                                            <img 
+                                                id="profile-img"
+                                                class="w-28 h-28 sm:w-32 sm:h-32 rounded-full object-cover border-4 border-gray-100" 
+                                                src="<?= empty(@$userDetails['image']) 
+                                                        ? generateBase64Image(@$userDetails['name'] ?? 'G U') 
+                                                        : MEDIA_BASE_URL . @$userDetails['image'] ?>" 
+                                                alt="User Image"
+                                            />
+
+                                            <!-- Hidden Cropped Input -->
+                                            <input type="hidden" name="croppedImages[]" id="profile-cropped" value="" />
+                                        </div>
+
+                                        <div>
+                                            <div class="flex space-x-3 mb-3">
+                                                <!-- Upload Button Trigger -->
+                                                <label for="upload-profile-photo" class="cursor-pointer bg-primary text-white px-4 py-2 rounded-md text-sm font-medium inline-flex items-center">
+                                                    <i class="fa-solid fa-upload mr-2"></i> Upload Photo
+                                                </label>
+                                                <!-- Actual File Input (Hidden) -->
+                                                <input 
+                                                    type="file" 
+                                                    name="image" 
+                                                    id="upload-profile-photo" 
+                                                    accept="image/*" 
+                                                    class="hidden" 
+                                                    onchange="previewMedia(event, 'profile')" 
+                                                />
+                                            </div>
+                                            <p id="profile-text" class="text-gray-500 text-sm">Recommended: JPG, PNG. Max size 1MB.</p>
+                                        </div>
+
+                                        <!-- Optional Video Preview Support -->
+                                        <div id="profile-video-container" class="mt-2 flex justify-center" style="display: none;">
+                                            <video id="profile-video" controls style="display: none; max-height: 140px;"></video>
+                                        </div>
+                                    </div>
+
+
+                                    <!-- Update Profile -->
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-1">Name</label>
+                                            <input type="text" name="name" value="<?= $userDetails['name'] ?>" class="w-full border border-gray-300 rounded-md p-2.5 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" required />
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
+                                            <input type="email" name="email" value="<?= $userDetails['email'] ?>" class="w-full border border-gray-300 rounded-md p-2.5 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" required />
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
+                                            <input type="tel" name="phone" value="<?= $userDetails['phone'] ?>" class="w-full border border-gray-300 rounded-md p-2.5 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                                            oninput="this.value = formatPhoneNumberUSRC(this.value);"
+                                            required />
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-1">Handle Name</label>
+                                            <input type="tel" name="handle_name" value="<?= $userDetails['handle_name'] ?>" class="w-full border border-gray-300 rounded-md p-2.5 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" required />
+                                        </div>
+                                        <!-- Save Button -->
+                                        <div class="flex pt-4 border-gray-200 mt-2">
+                                            <input type="submit" name="updateProfile" value="Save Changes" class="curpointer bg-primary text-white px-6 py-2.5 rounded-md font-medium">
+                                        </div>
+                                    </div>
+                                </form>
+
+                                <!-- Password Section -->
+                                <form method="post" data-parsley-validate="">
+                                    <div class="border-t border-gray-200 pt-6 mt-2">
+                                        <h3 class="text-lg font-medium text-gray-800 mb-4">Change Password</h3>
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                            <div>
+                                                <label class="block text-sm font-medium text-gray-700 mb-1">Current Password</label>
+                                                <input type="password" name="oldPassword" placeholder="••••••••" class="w-full border border-gray-300 rounded-md p-2.5 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" required />
+                                            </div>
+                                            <div class="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                <div>
+                                                    <label class="block text-sm font-medium text-gray-700 mb-1">New Password</label>
+                                                    <input type="password" name="newPassword" placeholder="••••••••" id="newPassword" class="w-full border border-gray-300 rounded-md p-2.5 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" required />
+                                                </div>
+                                                <div>
+                                                    <label class="block text-sm font-medium text-gray-700 mb-1">Confirm New Password</label>
+                                                    <input type="password" 
+                                                    placeholder="••••••••"
+                                                    data-parsley-equalto="#newPassword" class="w-full border border-gray-300 rounded-md p-2.5 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" required />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <p class="text-sm text-gray-500 mt-2">Password must be at least 8 characters and include a number and special character.</p>
+                                    </div>
+                                    <div class="flex pt-4 border-gray-200 mt-2">
+                                        <input type="submit" name="changePassword" value="Change Password" placeholder="" class="bg-primary text-white px-6 py-2.5 rounded-md font-medium curpointer">
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column - Community Assignments & Account Options -->
+                    <div id="account-options">
+                        <!-- Profile Stats Section - Empty State -->
+                        <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-6 mb-6">
+                            <h2 class="text-lg font-semibold text-gray-800 mb-4">Profile Stats</h2>
+
+                            <!-- Empty State -->
+                            <div class="text-center py-8">
+                                <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <i class="fa-solid fa-chart-bar text-gray-400 text-2xl"></i>
+                                </div>
+                                <h3 class="text-lg font-medium text-gray-800 mb-2">No Activity Yet</h3>
+                                <p class="text-gray-500 text-sm mb-6">No posts or referrals yet. Get started by creating a post or inviting others.</p>
+
+                                <div class="space-y-3">
+                                    <button id="create-post-btn" class="w-full bg-primary text-white px-4 py-2.5 rounded-md font-medium flex items-center justify-center"><i class="fa-solid fa-plus mr-2"></i> Create Post</button>
+                                    <button id="generate-invite-btn" class="w-full bg-white border border-primary text-primary px-4 py-2.5 rounded-md font-medium flex items-center justify-center">
+                                        <i class="fa-solid fa-link mr-2"></i> Generate Invite Link
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- My Posts with Referral Links - Empty State -->
+                        <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-6 mb-6">
+                            <div class="flex items-center justify-between mb-4">
+                                <h2 class="text-lg font-semibold text-gray-800">My Posts with Referral Links</h2>
+                            </div>
+
+                            <!-- Empty State -->
+                            <div class="text-center py-8">
+                                <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <i class="fa-solid fa-file-alt text-gray-400 text-2xl"></i>
+                                </div>
+                                <h3 class="text-lg font-medium text-gray-800 mb-2">No Posts Created</h3>
+                                <p class="text-gray-500 text-sm mb-6">Start creating posts to generate referral links and track your performance.</p>
+
+                                <button class="bg-primary text-white px-6 py-2.5 rounded-md font-medium flex items-center justify-center mx-auto"><i class="fa-solid fa-plus mr-2"></i> Create Your First Post</button>
+                            </div>
+                        </div>
+
+                        <!-- Community Assignments - Empty State -->
+                        <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-6 mb-6">
+                            <h2 class="text-lg font-semibold text-gray-800 mb-4">Community Assignments</h2>
+
+                            <!-- Empty State -->
+                            <div class="text-center py-6">
+                                <div class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                                    <i class="fa-solid fa-users text-gray-400"></i>
+                                </div>
+                                <p class="text-gray-600 font-medium mb-2">No Communities Assigned</p>
+                                <p class="text-xs text-gray-500 mb-4">Communities will appear here once assigned by an admin.</p>
+
+                                <button class="w-full bg-white border border-gray-300 text-gray-600 px-4 py-2 rounded-md text-sm font-medium flex items-center justify-center">
+                                    <i class="fa-solid fa-plus mr-2"></i> Request Community Access
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Linked Employees -->
+                        <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-6 mb-6">
+                            <h2 class="text-lg font-semibold text-gray-800 mb-4">Linked Employees</h2>
+
+                            <div class="p-4 bg-gray-50 rounded-md text-center mb-4">
+                                <div class="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center mx-auto mb-2">
+                                    <i class="fa-solid fa-user-plus text-gray-400"></i>
+                                </div>
+                                <p class="text-gray-600 font-medium">Coming Soon</p>
+                                <p class="text-xs text-gray-500 mt-1">This feature will be available in the next update.</p>
+                            </div>
+                        </div>
+
+                        <!-- Account Options -->
+                    </div>
+                </div>
+            </main>
+    </div>
+
+    <!-- Create Community Modal (Hidden by default) -->
+    <div id="create-community-modal" class="hidden fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center px-4 py-8 overflow-y-auto">
+        <div class="bg-white rounded-lg w-full max-w-xl mx-auto shadow-lg flex flex-col max-h-[90vh]">
+            <div class="bg-white w-full max-w-2xl rounded-lg shadow-lg">
+                <div class="p-6">
+                    <div class="flex justify-between items-start mb-6">
+                        <div>
+                            <h2 class="text-xl font-semibold text-gray-800" id="communityModalLabel">Create New Community</h2>
+                            <p class="text-sm text-gray-500 mt-1" id="communityModalSubLabel">New communities are visible after admin approval.</p>
+                        </div>
+                        <button class="text-gray-500 close-community-btn-fn">
+                            <i class="fa-solid fa-times"></i>
+                        </button>
+                    </div>
+                    <form id="create-community-form" method="POST" data-mode="create" enctype="multipart/form-data" data-parsley-validate>
+                        <div class="space-y-4">
+                            <input type="hidden" id="community_id" name="id" value="0">
+                            <!-- Upload Logo -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Upload Community Logo</label>
+                                
+                                <div id="logo-upload-box" class="relative border border-dashed border-gray-300 rounded-md p-4 text-center cursor-pointer hover:bg-gray-50">
+                                    <i class="fa-solid fa-cloud-upload-alt text-gray-400 text-2xl mb-2"></i>
+                                    <p id="logo-text" class="text-sm text-gray-500">Drag and drop or click to upload</p>
+                                    
+                                    <!-- Input -->
+                                    <input 
+                                    type="file" 
+                                    name="image" 
+                                    id="upload-community-logo" 
+                                    accept="image/*,video/*" 
+                                    class="hidden" 
+                                    onchange="previewMedia(event, 'logo')" 
+                                    />
+
+                                    <!-- Image Preview -->
+                                    <img id="logo-img" class="mx-auto mt-2 rounded-md" style="display: none; max-height: 120px; object-fit: cover;" />
+
+                                    <!-- Video Preview -->
+                                    <div id="logo-video-container" class="mt-2 flex justify-center" style="display: none;">
+                                    <video id="logo-video" controls style="display: none; max-height: 140px;"></video>
+                                    </div>
+                                </div>
+
+                                <!-- Cropped image storage -->
+                                <input type="hidden" id="logo-cropped" name="cropped_image" />
+                            </div>
+
+                            <!-- Community Name -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Community Name</label>
+                                <input type="text" name="community_name" id="community_name" class="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="Enter community name" required>
+                            </div>
+
+                            <!-- Address -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Address</label>
+                                <input type="text" name="address" class="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent address-autocomplete" placeholder="Enter address" id="address">
+                                <input type="hidden" name="latitude" id="latitude" value="">
+                                <input type="hidden" name="longitude" id="longitude">
+                                <input type="hidden" name="city" id="city">
+                                <input type="hidden" name="state" id="state">
+                                <input type="hidden" name="country_code" id="country_code">
+                            </div>
+
+                            <!-- Description -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                                <textarea name="description" class="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent h-24" id="description" placeholder="Write a brief description" required></textarea>
+                            </div>
+
+                            <!-- Private Community -->
+                            <div class="flex items-center space-x-2">
+                                <input type="checkbox" name="is_private" value="1" id="is_private" class="h-4 w-4 text-primary border-gray-300 rounded">
+                                <label for="is_private" class="text-sm text-gray-700">Private Community</label>
+                                <div class="relative group">
+                                    <i class="fa-solid fa-circle-info text-gray-400 cursor-pointer"></i>
+                                    <div class="absolute bottom-full mb-2 left-1/2 transform -translate-x-1/2 w-48 bg-gray-700 text-white text-xs rounded-md px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10">
+                                        Access to private communities, by invitation, or admin permission.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Submit Buttons -->
+                        <div class="mt-6 flex justify-end">
+                            <button type="button" class="bg-gray-200 text-gray-800 px-4 py-2 rounded-md mr-2 close-community-btn-fn" id="cancel-community-modal">Cancel</button>
+                            <button type="submit" name="addCommunity" class="bg-primary text-white px-4 py-2 rounded-md" id="community-submit-btn">Create Community</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="assets/js/communities.js?v=<?= time() ?>"></script>
+</body>
+    <?php include('includes/footer-scripts.php'); ?>
+</html>

@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+    <?php include('includes/head.php') ?>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css" rel="stylesheet">
+    <?php if(isset($_GET['act']) && $_GET['act']=="nauth"){ ?>
+    <style>
+        .feed-header, .stb-container {
+            display: none !important;
+        }
+    </style>
+    <?php } ?>
+    <body>
+        <?php include('includes/nav-header.php') ?>
+        <header class="post-upload-header">
+            <div class="post-upload">
+                <div class="header-left">
+                    <?php if(!isset($_GET['act']) && $_GET['act']=="nauth"){ ?>
+                        <a href="home.php" class="back-arr">
+                            <img src="assets/img/left-arr.png" alt="" />
+                        </a>
+                        <h3>Create Post</h3>
+                    <?php }else if(isset($_GET['act']) && $_GET['act']=="nauth"){ ?>
+                        <div class="logo">
+                            <a href="#"><img src="assets/img/logo.png" class="img-fluid" alt="Logo" /></a>
+                        </div>
+                    <?php } ?>
+                </div>
+                <div class="steps">
+                    <div class="single-step step-active" id="step1-tab">
+                        <h3><span>1</span></h3>
+                        <p>Upload Logo</p>
+                    </div>
+                    <div class="single-step" id="step2-tab">
+                        <h3><span>2</span></h3>
+                        <p>Company Details</p>
+                    </div>
+                    <div class="step-bar"></div>
+                </div>
+            </div>
+        </header>
+        
+        <form class="postDetailsBody" method="post" enctype="multipart/form-data" onsubmit="return validateForm();">
+            <?php if ($companyId > 0): ?>
+                <input type="hidden" name="company_id" value="<?= $companyId ?>">
+            <?php endif; ?>
+
+            <!-- Step 1: Upload -->
+            <div class="form-step" id="step1">
+                <section class="postDetailsBody">
+                    <div class="postUpload-container comunity-logo-cover-upload-container">
+                        <div class="postUpload-title">
+                            <h2>Add Logo & Multiple Cover Images</h2>
+                        </div>
+                        <!-- logo & Cover -->
+                        <div class="comunity-logo-cover-upload" id="comunity-logo-cover-upload">
+                            <!-- logo item -->
+                            <div class="comunity-image-upload-wrapper company-logo-upload">
+                                <label class="comunity-image-upload-label" for="imageUploadInput" style="display: <?= ($companyId > 0 && !empty(@$companyDataEd['logo'])) ? 'none' : 'flex' ?>">
+                                    <span class="uploadIconComunity set-w-img-auto">
+                                        <img src="assets/images/bezier.png" class="img-fluid" alt="Upload Icon" />
+                                    </span>
+                                    <span class="uploadTextcomunity" id="textHd1">Company Logo</span>
+                                </label>
+                                <input type="file" name="logo" class="comunity-image-upload-input" id="imageUploadInput" style="display: none;"
+                                    onchange="previewImage(event, 'previewImg1', 'textHd1', 'logo_cropped_image')" accept="image/*" />
+                                <input type="hidden" name="logo_cropped_image" id="logo_cropped_image" />
+                                <div class="comunity-image-upload-preview <?= ($companyId > 0 && !empty(@$companyDataEd['logo'])) ? 'justify-content-center' : '' ?>" style="display: <?= ($companyId > 0 && !empty(@$companyDataEd['logo'])) ? 'flex' : 'none' ?>">
+                                    <div class="remove-img">
+                                        <img src="assets/img/cross1.png" class="img-fluid" alt="Remove" />
+                                    </div>
+                                    <img class="previewImage" id="previewImg1" src="<?= MEDIA_BASE_URL. '' .$companyDataEd['logo'] ?>" class="img-fluid" alt="Preview Image" />
+                                </div>
+                            </div>
+
+                            <!-- Upload Image 1 -->
+                            <?php
+                            $cover1 = $coverImages[0] ?? null;
+                            ?>
+                            <div class="comunity-image-upload-wrapper company-cover-upload">
+                                <label class="comunity-image-upload-label" for="imageUploadInput2" style="display: <?= $cover1 ? 'none' : 'flex' ?>">
+                                    <span class="uploadIconComunity set-w-img-auto">
+                                        <img src="assets/images/bezier.png" class="img-fluid" alt="Upload Icon" />
+                                    </span>
+                                    <span class="uploadTextcomunity" id="textHd2">Upload Image 1</span>
+                                </label>
+                                <input type="file" class="comunity-image-upload-input" id="imageUploadInput2" style="display: none"
+                                    onchange="previewImage(event, 'previewImg2', 'textHd2', 'cover_cropped_image1')" accept="image/*" />
+                                <input type="hidden" name="cover_cropped_image1" id="cover_cropped_image1" />
+                                <div class="comunity-image-upload-preview" style="display: <?= $cover1 ? 'flex' : 'none' ?>">
+                                    <div class="remove-img">
+                                        <img src="assets/img/cross1.png" class="img-fluid" alt="Remove" />
+                                    </div>
+                                    <img class="previewImage" id="previewImg2" src="<?= $cover1 ? MEDIA_BASE_URL . $cover1['image'] : '' ?>" class="img-fluid" alt="Preview Image" />
+                                </div>
+                            </div>
+
+                            <!-- Upload Image 2 -->
+                            <?php
+                            $cover2 = $coverImages[1] ?? null;
+                            ?>
+                            <div class="comunity-image-upload-wrapper company-img-upload-2">
+                                <label class="comunity-image-upload-label" for="imageUploadInput3" style="display: <?= $cover2 ? 'none' : 'flex' ?>">
+                                    <span class="uploadIconComunity set-w-img-auto">
+                                        <img src="assets/images/bezier.png" class="img-fluid" alt="Upload Icon" />
+                                    </span>
+                                    <span class="uploadTextcomunity" id="textHd3">Upload Image 2</span>
+                                </label>
+                                <input type="file" class="comunity-image-upload-input" id="imageUploadInput3" style="display: none"
+                                    onchange="previewImage(event, 'previewImg3', 'textHd3', 'cover_cropped_image2')" accept="image/*" />
+                                <input type="hidden" name="cover_cropped_image2" id="cover_cropped_image2" />
+                                <div class="comunity-image-upload-preview" style="display: <?= $cover2 ? 'flex' : 'none' ?>">
+                                    <div class="remove-img">
+                                        <img src="assets/img/cross1.png" class="img-fluid" alt="Remove" />
+                                    </div>
+                                    <img class="previewImage" id="previewImg3" src="<?= $cover2 ? MEDIA_BASE_URL . $cover2['image'] : '' ?>" class="img-fluid" alt="Preview Image" />
+                                </div>
+                            </div>
+
+
+                            <!-- group preview images -->
+                            <div class="create-company-upload-grp-pic">
+                                <!-- Preview Image Primary -->
+                                <?php $listing1 = $listingImages[0] ?? null; ?>
+                                <div class="comunity-image-upload-wrapper company-img-upload-2">
+                                    <label class="comunity-image-upload-label" for="imageUploadInput4" style="display: <?= $listing1 ? 'none' : 'flex' ?>">
+                                        <span class="uploadIconComunity set-w-img-auto">
+                                            <img src="assets/images/bezier.png" class="img-fluid" alt="Upload Icon" />
+                                        </span>
+                                        <span class="uploadTextcomunity" id="textHd4">Preview Image (Primary)</span>
+                                    </label>
+                                    <input type="file" class="comunity-image-upload-input" id="imageUploadInput4" style="display: none"
+                                        onchange="previewImage(event, 'previewImg4', 'textHd4', 'listing_cropped_image1')" accept="image/*" />
+                                    <input type="hidden" name="listing_cropped_image1" id="listing_cropped_image1" />
+                                    <div class="comunity-image-upload-preview" style="display: <?= $listing1 ? 'flex' : 'none' ?>">
+                                        <div class="remove-img">
+                                            <img src="assets/img/cross1.png" class="img-fluid" alt="Remove" />
+                                        </div>
+                                        <img class="previewImage" id="previewImg4" src="<?= $listing1 ? MEDIA_BASE_URL . $listing1['image'] : '' ?>" class="img-fluid" alt="Preview Image" />
+                                    </div>
+                                </div>
+
+                                <!-- Preview Image -->
+                                <?php $listing2 = $listingImages[1] ?? null; ?>
+                                <div class="comunity-image-upload-wrapper company-img-upload-3">
+                                    <label class="comunity-image-upload-label" for="imageUploadInput5" style="display: <?= $listing2 ? 'none' : 'flex' ?>">
+                                        <span class="uploadIconComunity set-w-img-auto">
+                                            <img src="assets/images/bezier.png" class="img-fluid" alt="Upload Icon" />
+                                        </span>
+                                        <span class="uploadTextcomunity" id="textHd5">Preview Image (2)</span>
+                                    </label>
+                                    <input type="file" class="comunity-image-upload-input" id="imageUploadInput5" style="display: none"
+                                        onchange="previewImage(event, 'previewImg5', 'textHd5', 'listing_cropped_image2')" accept="image/*" />
+                                    <input type="hidden" name="listing_cropped_image2" id="listing_cropped_image2" />
+                                    <div class="comunity-image-upload-preview" style="display: <?= $listing2 ? 'flex' : 'none' ?>">
+                                        <div class="remove-img">
+                                            <img src="assets/img/cross1.png" class="img-fluid" alt="Remove" />
+                                        </div>
+                                        <img class="previewImage" id="previewImg5" src="<?= $listing2 ? MEDIA_BASE_URL . $listing2['image'] : '' ?>" class="img-fluid" alt="Preview Image" />
+                                    </div>
+                                </div>
+
+                                <!-- Preview Image -->
+                                <?php $listing3 = $listingImages[2] ?? null; ?>
+                                <div class="comunity-image-upload-wrapper company-img-upload-4">
+                                    <label class="comunity-image-upload-label" for="imageUploadInput6" style="display: <?= $listing3 ? 'none' : 'flex' ?>">
+                                        <span class="uploadIconComunity set-w-img-auto">
+                                            <img src="assets/images/bezier.png" class="img-fluid" alt="Upload Icon" />
+                                        </span>
+                                        <span class="uploadTextcomunity" id="textHd6">Preview Image (3)</span>
+                                    </label>
+                                    <input type="file" class="comunity-image-upload-input" id="imageUploadInput6" style="display: none"
+                                        onchange="previewImage(event, 'previewImg6', 'textHd6', 'listing_cropped_image3')" accept="image/*" />
+                                    <input type="hidden" name="listing_cropped_image3" id="listing_cropped_image3" />
+                                    <div class="comunity-image-upload-preview" style="display: <?= $listing3 ? 'flex' : 'none' ?>">
+                                        <div class="remove-img">
+                                            <img src="assets/img/cross1.png" class="img-fluid" alt="Remove" />
+                                        </div>
+                                        <img class="previewImage" id="previewImg6" src="<?= $listing3 ? MEDIA_BASE_URL . $listing3['image'] : '' ?>" class="img-fluid" alt="Preview Image" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <p class="create-company-upload-grp-message">
+                                <img src="assets/img/tooltip.png" alt="">
+                                <span>Preview images will be shown in company listing page.</span>
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="not-find">
+                        <button type="button" onclick="nextStep(2)" class="saveBtn">
+                            <span class="saveBtnTxt">Next</span>
+                            <span class="saveBtnImg"><img src="assets/img/forward.png" class="img-fluid w-100" alt="" /></span>
+                        </button>
+                        <button class="cancelbtn" data-bs-toggle="modal" data-bs-target="#draftModal">Cancel</button>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Step 2: Company Details -->
+            <div class="form-step" id="step2" style="display: none;">
+                <div class="postUpload-container-s2">
+                    <main>
+                        <section class="postDetailsBody">
+
+                            <!-- Basic Company Info  -->
+                            <div class="company-section pb-0">
+                                <!-- company name  -->
+                                <div>
+                                    <label for="company-input" class="post-something-form-label input-left">Company Name</label>
+                                    <div class="post-something-form-group">
+                                        <div class="input-wrapper input-right">
+                                            <input type="text" placeholder="Company Name" id="company_name" name="name" class="form-input company-suggestion-search" required onfocus="this.setAttribute('autocomplete', 'new-company-2');" value="<?= $companyDataEd['name'] ?? '' ?>" />
+                                            <div class="global-search-dropdown-cmp" style="display: none;"></div>
+                                            <input type="hidden" name="selected_company_id" id="selected_company_id" value="0" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Email  -->
+                                 <label for="company-email" class="post-something-form-label input-left">Email</label>
+                                <div class="post-something-form-group">
+                                    <div class="input-wrapper input-right">
+                                        <input type="email" placeholder="Enter Email" id="company_email" name="email" class="form-input company-su" required onfocus="this.setAttribute('autocomplete', 'new-company-45');" value="<?= $companyDataEd['email'] ?? '' ?>" />
+                                    </div>
+                                </div>
+                                <!-- Website  -->
+                                 <label for="company-url" class="post-something-form-label input-left">Website</label>
+                                <div class="post-something-form-group">
+                                    <div class="input-wrapper input-right">
+                                        <input type="url" placeholder="https://www.example.com" id="company_url" name="website" class="form-input auto-prepend-https" onfocus="this.setAttribute('autocomplete', 'new-company-145');" value="<?= $companyDataEd['website'] ?? '' ?>" />
+                                    </div>
+                                </div>
+                                <!-- Container for all phone number fields -->
+                                <div id="phone-number-fields">
+                                    <div class="input-left">
+                                        <label for="phone-input-1" class="post-something-form-label">Phone No.</label>
+                                    </div>
+                                    <div class="post-something-form-group location-group phone-field">
+                                        
+                                        <div class="input-right location-wraper">
+                                            <div class="input-wrapper">
+                                                <input type="text" placeholder="Phone Number" id="phone-input-1" class="form-input phone-input" onfocus="this.setAttribute('autocomplete', 'new-phonee-2');" name="phone" value="<?= !empty($companyDataEd['company_branches'][0]['phone_numbers']) ? htmlspecialchars(explode(',', $companyDataEd['company_branches'][0]['phone_numbers'])[0], ENT_QUOTES, 'UTF-8') : '' ?>" />
+                                            </div>
+                                            <div class="addPhone-button-wrapper">
+                                                <button type="button" id="add-phone-button">
+                                                    <img src="assets/img/plusblue.png" alt="Add Phone" />
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Company Type & Desc  -->
+                            <div class="company-section py-0">
+                                <div class="location-group">
+                                    <h2 class="post-something-form-label">Company Info</h2>
+                                </div>
+
+                                <div class="keywords-wraper-post-details" id="companyTypeGroup">
+                                    <button type="button" data-value="Wholesale" class="<?= $companyDataEd['business_type'] == 'Wholesale' ? 'active' : '' ?>">Wholesale</button>
+                                    <button type="button" data-value="Retail" class="<?= $companyDataEd['business_type'] == 'Retail' ? 'active' : '' ?>">Retail</button>
+                                    <button type="button" data-value="Manufacturer" class="<?= $companyDataEd['business_type'] == 'Manufacturer' ? 'active' : '' ?>">Manufacturer</button>
+                                    <button type="button" data-value="Service Provider" class="<?= $companyDataEd['business_type'] == 'Service Provider' ? 'active' : '' ?>">Service Provider</button>
+                                </div>
+
+                                <!-- Hidden input to store selected type -->
+                                <input type="hidden" id="business_type" name="business_type" value="<?= $companyDataEd['business_type'] ?? '' ?>" />
+
+                                <div class="textarea-wrapper mt-4">
+                                    <textarea placeholder="Describe your company" id="info-textarea" name="info" class="form-textarea" rows="4" spellcheck="false"><?= $companyDataEd['info'] ?? '' ?></textarea>
+                                </div>
+                            </div>
+
+                            <!-- Company Locations  -->
+                            <div class="company-section py-0">
+                                <!-- location -->
+                                 <h2 class="post-something-form-label">Locations(s)</h2>
+                                <div class="location-group">
+                                    <div class="addPhone-button-wrapper" id="locationSelGroupBtn" style="display: none;">
+                                        <button type="button" id="multiLocBtn" onclick="addField('default')">
+                                            <img src="assets/img/plusblue.png" alt="" />
+                                        </button>
+                                    </div>
+                                  <div class="checkbox-grp" id="locationSelGroup">
+                                    <!-- location check box -->
+                                    <div class="private-check-wraper">
+                                      <label class="private-custom-checkbox" for="mobile-checkbox">
+                                        <span class="private-custom-checkbox-text">Mobile Business</span>
+                                        <input type="checkbox" class="private-checkbox-input" id="mobile-checkbox" />
+                                        <span class="private-checkbox-custom"></span>
+                                      </label>
+                                      <button class="tooltipBtnLoc flex-shrink-0" data-bs-toggle="tooltip" data-bs-placement="top" title="Mobile Business lets you set a radius around an address.">
+                                        <img src="assets/img/tooltip.png" class="img-fluid" alt="" />
+                                      </button>
+                                    </div>
+                                    <!-- location check box -->
+                                    <div class="private-check-wraper">
+                                      <label class="private-custom-checkbox" for="worldwide-checkbox">
+                                        <span class="private-custom-checkbox-text">Worldwide</span>
+                                        <input type="checkbox" class="private-checkbox-input" id="worldwide-checkbox" />
+                                        <span class="private-checkbox-custom"></span>
+                                      </label>
+                                      <button class="tooltipBtnLoc flex-shrink-0" data-bs-toggle="tooltip" data-bs-placement="top" title="Worldwide allows you to reach users across the globe.">
+                                        <img src="assets/img/tooltip.png" class="img-fluid" alt="" />
+                                      </button>
+                                    </div>
+                                    <!-- Nationwide check box -->
+                                    <div class="private-check-wraper">
+                                      <label class="private-custom-checkbox" for="nationwide-checkbox">
+                                        <span class="private-custom-checkbox-text">Nationwide</span>
+                                        <input type="checkbox" class="private-checkbox-input" id="nationwide-checkbox" />
+                                        <span class="private-checkbox-custom"></span>
+                                      </label>
+                                      <button class="tooltipBtnLoc flex-shrink-0" data-bs-toggle="tooltip" data-bs-placement="top" title="Nationwide allows you to reach users within a country.">
+                                        <img src="assets/img/tooltip.png" class="img-fluid" alt="" />
+                                      </button>
+                                    </div>
+                                  </div>
+                                </div>
+                                <!-- Address  -->
+                                <div class="post-something-form-group location-group" id="defaultAddrDf">
+                                    <div class="input-right location-wraper">
+                                        <div class="input-wrapper">
+                                            <input type="text" placeholder="City, State, or Zip Code" id="address" name="address" class="form-input" oninput="initAutocomplete()" onfocus="this.setAttribute('autocomplete', 'new-password-2');" value="<?= !empty($companyDataEd['company_branches'][0]['address']) ? htmlspecialchars($companyDataEd['company_branches'][0]['address'], ENT_QUOTES, 'UTF-8') : '' ?>" />
+                                            
+                                            <input type="hidden" name="latitude" id="latitude" value="<?= !empty($companyDataEd['company_branches'][0]['latitude']) ? htmlspecialchars($companyDataEd['company_branches'][0]['latitude'], ENT_QUOTES, 'UTF-8') : '' ?>">
+                                            <input type="hidden" name="longitude" id="longitude" value="<?= !empty($companyDataEd['company_branches'][0]['longitude']) ? htmlspecialchars($companyDataEd['company_branches'][0]['longitude'], ENT_QUOTES, 'UTF-8') : '' ?>">
+                                            <input type="hidden" name="city" id="city" value="<?= !empty($companyDataEd['company_branches'][0]['city']) ? htmlspecialchars($companyDataEd['company_branches'][0]['city'], ENT_QUOTES, 'UTF-8') : '' ?>">
+                                            <input type="hidden" name="state" id="state" value="<?= !empty($companyDataEd['company_branches'][0]['state']) ? htmlspecialchars($companyDataEd['company_branches'][0]['state'], ENT_QUOTES, 'UTF-8') : '' ?>">
+                                            <input type="hidden" name="country_code" id="country_code" value="<?= !empty($companyDataEd['company_branches'][0]['country_code']) ? htmlspecialchars($companyDataEd['company_branches'][0]['country_code'], ENT_QUOTES, 'UTF-8') : '' ?>">
+                                            <input type="hidden" name="business_location_type" id="business_location_type" value="Local">
+                                            <input type="hidden" name="is_worldwide" id="is_worldwide" value="0">
+                                        </div>
+                                        <i class="fa fa-times text-danger" onclick="clearDefaultLocationAddressField();"></i>
+                                        <div class="addPhone-button-wrapper">
+                                            <button type="button" id="snTLocBtn" onclick="addField('default')">
+                                                <img src="assets/img/plusblue.png" alt="" />
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                              
+                                <!-- Dynamic location fields -->
+                                <div id="dynamicLocationFields"></div>
+                              
+                                <!-- Hidden JSON fields -->
+                                <input type="hidden" id="company_branches_array" name="company_branches_array" value="[]" />
+                                <input type="hidden" id="company_service_areas_array" name="company_service_areas_array" value="" />
+                            </div>
+
+                            <!-- Products & Services -->
+                            <div class="company-section py-0">
+                                <div class="association">
+                                    <h2>Select</h2>
+                                </div>
+                                <div class="select-product-details">
+                                    <div class="select-product-details-title">
+                                        <div class="notification-bar"></div>
+                                        <h3>Products</h3>
+                                    </div>
+                                    <div class="select-product-details-add">
+                                        <button type="button" class="open-modal-btn" data-type="2" data-bs-toggle="modal" data-bs-target="#selectItemsModal">+ Products</button>
+                                    </div>
+                                    <div class="communites-contentsx-tag product-selected-divs mt-4"> 
+
+                                    </div>
+                                </div>
+                                <div class="select-product-details">
+                                    <div class="select-product-details-title">
+                                        <div class="notification-bar"></div>
+                                        <h3>Services</h3>
+                                    </div>
+                                    <div class="select-product-details-add">
+                                        <button type="button" class="open-modal-btn" data-type="1" data-bs-toggle="modal" data-bs-target="#selectItemsModal">+ Services</button>
+                                    </div>
+                                    <div class="communites-contentsx-tag services-selected-divs mt-4">
+                                        
+                                    </div>
+                                </div>
+                                <input type="hidden" id="modalType" value="">
+                                <input type="hidden" name="selectedServiceIdsHidden" id="selectedServiceIdsHidden" value="">
+                                <input type="hidden" name="selectedProductIdsHidden" id="selectedProductIdsHidden" value="">
+                            </div>
+
+                            <!-- Keywords -->
+                            <div class="company-section py-0">
+                                <div class="communites-contentss-title-left">
+                                    <h3 id="company-section-title">Keywords</h3>
+                                    <p>Match Company profile.</p>
+                                </div>
+
+                                <div class="input-group search-wrapper flow-input my-3 position-relative">
+                                    <label class="input-group-icon-search" for="search-tags">
+                                        <img src="assets/img/search-line.svg" alt="search">
+                                    </label>
+                                    <input type="search" class="form-control" id="search-tags" placeholder="Search Tags" aria-label="search">
+                                    <div class="input-group-icon-add" id="add-tag-manually">
+                                        <i class="fa fa-check mx-2 text-primary"></i>
+                                    </div>
+                                    
+                                    <!-- Suggestions Dropdown -->
+                                    <div id="keyword-suggestions-dropdown" class="position-absolute bg-white border rounded shadow-sm w-100" style="top: 100%; left: 0; z-index: 1000; display: none;"></div>
+                                </div>
+
+                                <p class="mb-0 small-text-form">Max 5 tags, matches with company profile.</p>
+
+                                <div class="communites-contentsx-tag communites-contentsx-tag-keywords mt-4"></div>
+
+                                <input type="hidden" name="keywords" id="hidden-keywords" value="">
+                                <input type="hidden" name="all_keywords_from_services_products" id="hidden-all-keywords">
+                            </div>
+
+                            <!-- Association  -->
+                            <div class="company-section pt-0">
+                                <div class="association">
+                                    <h2>Your Association with this Company</h2>
+                                </div>
+
+                                <!-- Select Dropdown -->
+                                <?php $selectedRole = $companyDataEd['role'] ?? ''; ?>
+                                <div class="mt-4">
+                                    <select id="role-select" name="role" class="form-select">
+                                        <option value="">Select</option>
+                                        <option value="Owner" <?= $selectedRole === 'Owner' ? 'selected' : '' ?>>Owner</option>
+                                        <option value="Partner" <?= $selectedRole === 'Partner' ? 'selected' : '' ?>>Partner</option>
+                                        <option value="Manager" <?= $selectedRole === 'Manager' ? 'selected' : '' ?>>Manager</option>
+                                        <option value="Sales Person" <?= $selectedRole === 'Sales Person' ? 'selected' : '' ?>>Sales Person</option>
+                                        <option value="Employee" <?= $selectedRole === 'Employee' ? 'selected' : '' ?>>Employee</option>
+                                        <option value="Others" <?= $selectedRole === 'Others' ? 'selected' : '' ?>>Others</option>
+                                    </select>
+                                </div>
+
+                                <!-- Email / Mobile section - Only for Owner -->
+                                <div id="owner-verification-section" class="mt-4 ms-sm-4" style="display: <?= (isset($companyDataEd['role']) && $companyDataEd['role'] === 'Owner') ? 'block' : 'none' ?>;">
+                                    <!-- Radio Buttons -->
+                                    <div class="private-check-wraper">
+                                    <label class="private-custom-checkbox me-3">
+                                        <input type="radio" name="verify-method" class="private-checkbox-input" value="email" checked />
+                                        <span class="private-checkbox-custom"></span>
+                                        <span class="private-custom-checkbox-text">Email</span>
+                                    </label>
+                                    <label class="private-custom-checkbox">
+                                        <input type="radio" name="verify-method" class="private-checkbox-input" value="mobile" />
+                                        <span class="private-checkbox-custom"></span>
+                                        <span class="private-custom-checkbox-text">Mobile</span>
+                                    </label>
+                                    </div>
+
+                                    <!-- Input Field -->
+                                    <div class="input-wrapper mt-3">
+                                        <input type="text" placeholder="Enter company email" id="verify-input" name="verification-input" class="form-input" />
+                                        
+                                    </div>
+
+                                    <p class="mb-0 small-text-form mt-3">
+                                    Help us verify you as a owner, via e-mail or mobile
+                                    </p>
+
+                                    <?php $hideName = $companyDataEd['hide_name'] ?? 0; ?>
+                                    <div class="form-check createform-check-two d-flex align-items-center mt-3">
+                                        <input class="form-check-input create-checkbox" 
+                                            type="checkbox" 
+                                            name="hide_name" 
+                                            value="1" 
+                                            id="flexCheckDefault"
+                                            <?= $hideName == 1 ? 'checked' : '' ?>>
+                                        <label class="form-check-label create-check-label" for="flexCheckDefault">
+                                            Hide my name as <?= $userDetails['name'] ?>
+                                        </label>
+                                    </div>
+
+                                    <p class="mb-0 small-text-form">Your personal name will not appear on posts</p>
+                                </div>
+                            </div>
+
+                            <!-- Buttons  -->
+                            <div class="not-find">
+                                <div class="upload-button-wrapper d-flex justify-content-center flex-column">
+                                    <button type="submit" name="<?= ($companyId == 0) ? 'addCompany' : 'updateCompany' ?>" class="upload-buttom-top"> <?= ($companyId == 0) ? 'Create' : 'Update' ?> Company <img src="assets/img/Arrow Forward.svg" alt="Arrow" /> </button>
+                                    <button type="button" class="upload-buttom-bottom" onclick="prevStep(1)">Back</button>
+                                    <button class="cancelbtn" type="button" onclick="if(confirm('Are you sure you want to discard ?')){ window.location.href = 'home.php'; }">Cancel</button>
+                                </div>
+                            </div>
+                        </section>
+                    </main>
+                </div>
+            </div>
+        </form>
+
+        <!-- Shared Modal for Products & Services -->
+        <div class="modal fade" id="selectItemsModal" tabindex="-1" aria-labelledby="selectItemsModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered select-service-dialog">
+                <div class="modal-content">
+                    <div class="modal-body select-service-modal-body">
+                        <h3 id="modalTypeTitle" class="mb-3 mt-2"></h3>
+                        <!-- search bar, no changes -->
+                        <div class="input-group search-wrapper flow-input my-3">
+                            <label class="input-group-icon-search" for="search-tags">
+                                <img src="assets/img/search-line.svg" alt="search">
+                            </label>
+                            <input type="search" class="form-control" placeholder="Search.." id="search-services-products">
+                        </div>
+
+                        <div class="select-service-accordion" id="dynamic-service-accordion">
+                            <!-- Inject accordion content here -->
+                        </div>
+                    </div>
+                    <!-- Save button in footer -->
+                    <div class="modal-footer border-0 pt-0">
+                        <button type="button" data-bs-dismiss="modal" class="saveBtn">
+                            <span class="saveBtnTxt">Save</span>
+                            <span class="saveBtnImg"><img src="assets/img/forward.png" class="img-fluid w-100" alt="" /></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <?php include('includes/footer-scripts.php') ?>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js?v=<?= time() ?>"></script>
+        <script src="assets/js/create-company.js?v=<?= time() ?>"></script>
+
+        <?php if($companyId > 0){ ?>
+        <script>
+
+            // Keywords initialization
+
+            const initialKeywords = "<?= !empty($companyDataEd['keywords']) ? htmlspecialchars($companyDataEd['keywords'], ENT_QUOTES, 'UTF-8') : ''; ?>";
+            const initialKeywordsArray = initialKeywords ? initialKeywords.split(',').map(tag => tag.trim()) : [];
+
+            // Loop through each keyword and add it using addTag()
+            initialKeywordsArray.forEach(tag => {
+                if (tag) addTag(tag);
+            });
+
+            // products and services initialization
+
+            let selectedServiceIdsEM = <?= json_encode(array_map('strval', $selectedServiceIds)) ?>;
+            let selectedProductIdsEm = <?= json_encode(array_map('strval', $selectedProductIds)) ?>;
+
+            let selectedServiceIdsEMHd = <?= json_encode(array_map('strval', $selectedServiceIdsHd)) ?>;
+            let selectedProductIdsEmHd = <?= json_encode(array_map('strval', $selectedProductIdsHd)) ?>;
+
+            console.log('Selected Service IDs:', selectedServiceIdsEM);
+            console.log('Selected Product IDs:', selectedProductIdsEm);
+            console.log('Selected Service IDs Hidden:', selectedServiceIdsEMHd);
+            console.log('Selected Product IDs Hidden:', selectedProductIdsEmHd);
+
+            document.addEventListener("DOMContentLoaded", function () {
+
+                selectedProductIds = selectedProductIdsEmHd;
+                selectedServiceIds = selectedServiceIdsEMHd;
+
+                // Wait until fetchItems has updated the DOM (for type 1)
+                observeAfterFetch('#dynamic-service-accordion', () => {
+                    // Step 1: Fetch services
+                    fetchItems("1", selectedServiceIdsEMHd);
+                }).then(() => {
+                    // Step 2: Fetch products after services are loaded into DOM
+                    return observeAfterFetch('#dynamic-service-accordion', () => {
+                        fetchItems("2", selectedProductIdsEmHd);
+                    });
+                }).catch(err => {
+                    console.error('Error while sequencing fetches:', err);
+                });
+            });
+
+            function observeAfterFetch(selector, triggerFetchFn) {
+                return new Promise((resolve, reject) => {
+                    const targetNode = document.querySelector(selector);
+
+                    if (!targetNode) {
+                        return reject(`Target selector ${selector} not found`);
+                    }
+
+                    const observer = new MutationObserver((mutationsList, observerInstance) => {
+                        if (mutationsList.length > 0) {
+                            observerInstance.disconnect();
+                            resolve();
+                        }
+                    });
+
+                    try {
+                        observer.observe(targetNode, {
+                            childList: true,
+                            subtree: true,
+                        });
+                    } catch (error) {
+                        reject(error);
+                    }
+
+                    // Trigger the fetch after observer is set
+                    triggerFetchFn();
+                });
+            }
+        </script>
+        <?php } ?>
+    </body>
+</html>

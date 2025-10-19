@@ -1,0 +1,245 @@
+<html>
+    <?php include('includes/head.php'); ?>
+    <body class="bg-gray-50 font-sans">
+        <div id="main-container" class="flex h-screen">
+            <?php include('includes/sidebar.php'); ?>
+            <main id="main-content" class="flex-1 overflow-auto">
+                <?php include('includes/nav-header.php'); ?>
+                <div id="communities-overview-content" class="p-8">
+                    <!-- Stats Cards -->
+                    <section id="community-stats" class="grid grid-cols-4 gap-6 mb-8">
+                        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-gray-500 text-sm font-medium">Total Communities</p>
+                                    <p class="text-3xl font-bold text-gray-900 mt-1"><?= displayWithFallback($commData['total_active_community']) ?></p>
+                                    <p class="text-blue-600 text-sm mt-2">Active communities</p>
+                                </div>
+                                <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+                                    <i class="text-purple-600" data-fa-i2svg="">
+                                        <svg class="svg-inline--fa fa-users" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="users" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" data-fa-i2svg="">
+                                            <path
+                                                fill="currentColor"
+                                                d="M144 0a80 80 0 1 1 0 160A80 80 0 1 1 144 0zM512 0a80 80 0 1 1 0 160A80 80 0 1 1 512 0zM0 298.7C0 239.8 47.8 192 106.7 192h42.7c15.9 0 31 3.5 44.6 9.7c-1.3 7.2-1.9 14.7-1.9 22.3c0 38.2 16.8 72.5 43.3 96c-.2 0-.4 0-.7 0H21.3C9.6 320 0 310.4 0 298.7zM405.3 320c-.2 0-.4 0-.7 0c26.6-23.5 43.3-57.8 43.3-96c0-7.6-.7-15-1.9-22.3c13.6-6.3 28.7-9.7 44.6-9.7h42.7C592.2 192 640 239.8 640 298.7c0 11.8-9.6 21.3-21.3 21.3H405.3zM224 224a96 96 0 1 1 192 0 96 96 0 1 1 -192 0zM128 485.3C128 411.7 187.7 352 261.3 352H378.7C452.3 352 512 411.7 512 485.3c0 14.7-11.9 26.7-26.7 26.7H154.7c-14.7 0-26.7-11.9-26.7-26.7z"
+                                            ></path>
+                                        </svg>
+                                    </i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-gray-500 text-sm font-medium">Total Members</p>
+                                    <p class="text-3xl font-bold text-gray-900 mt-1"><?= displayWithFallback($commData['total_community_member']) ?></p>
+                                    <p class="text-green-600 text-sm mt-2 flex items-center">
+                                        <i class="mr-1" data-fa-i2svg="">
+                                            <svg
+                                                class="svg-inline--fa fa-arrow-up"
+                                                aria-hidden="true"
+                                                focusable="false"
+                                                data-prefix="fas"
+                                                data-icon="arrow-up"
+                                                role="img"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                viewBox="0 0 384 512"
+                                                data-fa-i2svg=""
+                                            >
+                                                <path
+                                                    fill="currentColor"
+                                                    d="M214.6 41.4c-12.5-12.5-32.8-12.5-45.3 0l-160 160c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 141.2V448c0 17.7 14.3 32 32 32s32-14.3 32-32V141.2L329.4 246.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-160-160z"
+                                                ></path>
+                                            </svg>
+                                        </i>
+                                        +<?= displayWithFallback($commData['last_week_joined_member']) ?> this week
+                                    </p>
+                                </div>
+                                <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                                    <i class="text-green-600" data-fa-i2svg="">
+                                        <svg
+                                            class="svg-inline--fa fa-user-plus"
+                                            aria-hidden="true"
+                                            focusable="false"
+                                            data-prefix="fas"
+                                            data-icon="user-plus"
+                                            role="img"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            viewBox="0 0 640 512"
+                                            data-fa-i2svg=""
+                                        >
+                                            <path
+                                                fill="currentColor"
+                                                d="M96 128a128 128 0 1 1 256 0A128 128 0 1 1 96 128zM0 482.3C0 383.8 79.8 304 178.3 304h91.4C368.2 304 448 383.8 448 482.3c0 16.4-13.3 29.7-29.7 29.7H29.7C13.3 512 0 498.7 0 482.3zM504 312V248H440c-13.3 0-24-10.7-24-24s10.7-24 24-24h64V136c0-13.3 10.7-24 24-24s24 10.7 24 24v64h64c13.3 0 24 10.7 24 24s-10.7 24-24 24H552v64c0 13.3-10.7 24-24 24s-24-10.7-24-24z"
+                                            ></path>
+                                        </svg>
+                                    </i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-gray-500 text-sm font-medium">Total Ads Created</p>
+                                    <p class="text-3xl font-bold text-gray-900 mt-1"><?= displayWithFallback($commData['total_ads_created']) ?></p>
+                                    <p class="text-blue-600 text-sm mt-2">From community members</p>
+                                </div>
+                                <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                                    <i class="text-blue-600" data-fa-i2svg="">
+                                        <svg
+                                            class="svg-inline--fa fa-rectangle-ad"
+                                            aria-hidden="true"
+                                            focusable="false"
+                                            data-prefix="fas"
+                                            data-icon="rectangle-ad"
+                                            role="img"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            viewBox="0 0 576 512"
+                                            data-fa-i2svg=""
+                                        >
+                                            <path
+                                                fill="currentColor"
+                                                d="M64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H512c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zM229.5 173.3l72 144c5.9 11.9 1.1 26.3-10.7 32.2s-26.3 1.1-32.2-10.7L253.2 328H162.8l-5.4 10.7c-5.9 11.9-20.3 16.7-32.2 10.7s-16.7-20.3-10.7-32.2l72-144c4.1-8.1 12.4-13.3 21.5-13.3s17.4 5.1 21.5 13.3zM208 237.7L186.8 280h42.3L208 237.7zM392 256a24 24 0 1 0 0 48 24 24 0 1 0 0-48zm24-43.9V184c0-13.3 10.7-24 24-24s24 10.7 24 24v96 48c0 13.3-10.7 24-24 24c-6.6 0-12.6-2.7-17-7c-9.4 4.5-19.9 7-31 7c-39.8 0-72-32.2-72-72s32.2-72 72-72c8.4 0 16.5 1.4 24 4.1z"
+                                            ></path>
+                                        </svg>
+                                    </i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-gray-500 text-sm font-medium">Total Commission</p>
+                                    <p class="text-3xl font-bold text-gray-900 mt-1">$<?= displayWithFallback($commData['total_earning_community']) ?></p>
+                                    <p class="text-green-600 text-sm mt-2">From communities</p>
+                                </div>
+                                <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                                    <i class="text-green-600" data-fa-i2svg="">
+                                        <svg
+                                            class="svg-inline--fa fa-dollar-sign"
+                                            aria-hidden="true"
+                                            focusable="false"
+                                            data-prefix="fas"
+                                            data-icon="dollar-sign"
+                                            role="img"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            viewBox="0 0 320 512"
+                                            data-fa-i2svg=""
+                                        >
+                                            <path
+                                                fill="currentColor"
+                                                d="M160 0c17.7 0 32 14.3 32 32V67.7c1.6 .2 3.1 .4 4.7 .7c.4 .1 .7 .1 1.1 .2l48 8.8c17.4 3.2 28.9 19.9 25.7 37.2s-19.9 28.9-37.2 25.7l-47.5-8.7c-31.3-4.6-58.9-1.5-78.3 6.2s-27.2 18.3-29 28.1c-2 10.7-.5 16.7 1.2 20.4c1.8 3.9 5.5 8.3 12.8 13.2c16.3 10.7 41.3 17.7 73.7 26.3l2.9 .8c28.6 7.6 63.6 16.8 89.6 33.8c14.2 9.3 27.6 21.9 35.9 39.5c8.5 17.9 10.3 37.9 6.4 59.2c-6.9 38-33.1 63.4-65.6 76.7c-13.7 5.6-28.6 9.2-44.4 11V480c0 17.7-14.3 32-32 32s-32-14.3-32-32V445.1c-.4-.1-.9-.1-1.3-.2l-.2 0 0 0c-24.4-3.8-64.5-14.3-91.5-26.3c-16.1-7.2-23.4-26.1-16.2-42.2s26.1-23.4 42.2-16.2c20.9 9.3 55.3 18.5 75.2 21.6c31.9 4.7 58.2 2 76-5.3c16.9-6.9 24.6-16.9 26.8-28.9c1.9-10.6 .4-16.7-1.3-20.4c-1.9-4-5.6-8.4-13-13.3c-16.4-10.7-41.5-17.7-74-26.3l-2.8-.7 0 0C119.4 279.3 84.4 270 58.4 253c-14.2-9.3-27.5-22-35.8-39.6c-8.4-17.9-10.1-37.9-6.1-59.2C23.7 116 52.3 91.2 84.8 78.3c13.3-5.3 27.9-8.9 43.2-11V32c0-17.7 14.3-32 32-32z"
+                                            ></path>
+                                        </svg>
+                                    </i>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Communities Table -->
+                    <?php if($commData['total_active_community'] > 0){ ?>
+                    <section id="communities-table" class="bg-white rounded-xl shadow-sm border border-gray-100">
+                        <div class="p-6 border-b border-gray-200">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h3 class="text-lg font-semibold text-gray-900">My Communities</h3>
+                                    <p class="text-gray-600 text-sm">Manage and track your community performance</p>
+                                </div>
+                                <div class="flex items-center space-x-3">
+                                    <div class="relative">
+                                        <input type="text" placeholder="Search communities..." class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" id="searchComm" />
+                                        <i class="absolute left-3 top-3 text-gray-400">
+                                            <svg
+                                                class="svg-inline--fa fa-magnifying-glass"
+                                                aria-hidden="true"
+                                                focusable="false"
+                                                data-prefix="fas"
+                                                data-icon="magnifying-glass"
+                                                role="img"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                viewBox="0 0 512 512"
+                                            >
+                                                <path
+                                                    fill="currentColor"
+                                                    d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"
+                                                ></path>
+                                            </svg>
+                                        </i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="overflow-x-auto">
+                            <table class="w-full">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Community Name</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Location</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Privacy</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Members</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Ads</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Commission</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-200" id="community-links-list">
+                                    
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+                    <?php }else{ ?>
+                    <section id="no-communities-empty" class="bg-white rounded-xl shadow-sm border border-gray-100 p-12 mb-8">
+                        <div class="text-center max-w-md mx-auto">
+                            <div class="w-20 h-20 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                                <i class="fa-solid fa-users text-purple-600 text-2xl"></i>
+                            </div>
+                            <h3 class="text-xl font-semibold text-gray-900 mb-3">No communities yet</h3>
+                            <p class="text-gray-600 mb-6">Create your own community and invite others to post. You'll earn commission on all ads created by invited members.</p>
+                            <a href="create-community.php">
+                                <button class="bg-purple-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-purple-700 flex items-center space-x-2 mx-auto">
+                                    <i class="fa-solid fa-plus"></i>
+                                    <span>Create Your First Community</span>
+                                </button>
+                            </a>
+                        </div>
+                    </section>
+                    <?php } ?>
+                </div>
+            </main>
+        </div>
+    </body>
+    <?php include('includes/footer-scripts.php'); ?>
+    <script src="assets/js/communities.js?v=<?= time() ?>"></script>
+    <script>
+    let lData = {
+        link_type: '1',
+        type: '<?= $type; ?>',
+        status: '',
+        search: '', 
+        user_id: `<?= $userDetails['id'] ?>`,
+        link_id: 0,
+        container: '#community-links-list'
+    };
+    getSaleLinks(lData);
+    enableScrollPagination(lData,'#community-links-list');
+
+    // 🔍 Handle search
+    const searchInput = document.getElementById('searchComm');
+    let searchTimer;
+
+    searchInput.addEventListener('input', function() {
+        clearTimeout(searchTimer); // debounce typing
+        searchTimer = setTimeout(() => {
+            lData.search = this.value.trim();
+            lData.page = 1; // reset pagination when searching
+            document.querySelector(lData.container).innerHTML = ''; // clear old results
+            getSaleLinks(lData);
+        }, 400); // wait 400ms after typing
+    });
+    </script>
+</html>

@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+    <?php include('includes/head.php') ?>
+    <link rel="stylesheet" href="assets/plugins/datatable/css/dataTables.bootstrap5.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.7.1/css/buttons.dataTables.min.css" />
+    <style>
+        .select2-container {
+            z-index: 1050 !important; /* Should be higher than Bootstrap modal (1040) */
+        }
+        .select2-container--open {
+            z-index: 1060 !important; /* Slightly higher for the open dropdown */
+        }
+      </style>
+    <body>
+        <!-- wrapper start  -->
+        <div class="wrapper relative">
+            <?php include('includes/sidebar.php') ?>
+
+            <!-- header start  -->
+            <?php include('includes/nav-header.php') ?>
+            <!-- header end  -->
+
+            <!-- content area start  -->
+            <div class="listings-page-sec">
+                <main>
+                    <section class="userList">
+                        <div class="">
+                            <div class="row">
+                                <!-- top -->
+                                <div class="search-sec-cmn user-page d-flex align-items-center justify-content- mb-2">
+                                    <?php if (hasPermission('Listings', 'add')) { ?>
+                                    <div class="addUser">
+                                        <a href="#" class="btn-primary btn-small" title="Add <?= $title ?>" data-bs-toggle="modal" data-bs-target="#addModal"><i class="fa fa-plus-circle fa-2x"></i> </a>
+                                    </div>
+                                    <?php } ?>
+                                    <div class="search-form me-2">
+                                        <button class="btn p-0 outline-0" type="submit"><img src="assets/img/list/search.svg" alt="search icon" /></button>
+                                        <input type="search" class="form-control form-input border-0" id="searchLookingFor" placeholder="Search Looking For" />
+                                    </div>
+                                    <?php if (hasPermission('Listings', 'edit')) { ?>
+                                    <form id="uploadForm" action="" method="POST" enctype="multipart/form-data" class="addUser d-flex gap-3 align-items-center justify-content-between">
+                                        <?php if($listingType == 0){ ?>
+                                        <div class="upload-file-btn position-relative">
+                                            <input type="file" id="excelFileInput" name="excel" style="display: none;" accept=".xls,.xlsx,.csv">
+                                            <a href="#" class="btn  px-3 btn-up" id="uploadExcelBtn">
+                                                <span><img src="assets/img/pro-ser/upload.svg" alt="upload"></span>
+                                                <span>Upload Excel</span>
+                                            </a>
+                                        </div>
+                                        <a href="?id=<?= uniqid().mt_rand() ?>&inc=<?= md5(microtime()) ?>&tp=export" class="btn btn-ex px-3">
+                                            <span><img src="assets/img/pro-ser/export.svg" alt="export"></span>
+                                            <span>Export to Excel</span>
+                                        </a>
+                                        <a href="?type=nl" class="btn px-3 btn-primary">
+                                            <i class="fa fa-newspaper"></i>
+                                            <span>New Listing Data</span>
+                                        </a>
+                                        <?php }else{ ?>
+                                            <a href="convert-to-main-listing.php" class="btn px-3 btn-success">
+                                                <i class="fa fa-refresh"></i>
+                                                <span>Convert All to Main Listing</span>
+                                            </a>
+                                            <a href="listings.php" class="btn px-3 btn-danger">
+                                                <i class="fa fa-newspaper"></i>
+                                                <span>Main Listing Data</span>
+                                            </a>
+                                        <?php } ?>
+                                    </form>
+                                    <?php } ?>
+                                    <?php if (hasPermission('Listings', 'delete')) { ?>
+                                    <div class="addUser d-flex gap-3">
+                                        <a href="#" class="btn btn-cst px-3 bg-danger ms-2" style="display: none;" id="postDltButton" 
+                                        ><i class="fa fa-trash fa-2x"></i></a>
+                                    </div>
+                                    <?php } ?>
+                                </div>
+ 
+                                <!-- bottom -->
+                                <div class="col-12">
+                                    <div class="list-users table-responsive">
+                                        <!-- table -->
+                                        <input type="hidden" id="listingType" value="<?= $listingType ?>" />
+                                        <table class="table data-table-cmn" id="lookingForTable">
+                                            <thead>
+                                                <?php if($listingType == 0){ ?>
+                                                <tr class="table-header">
+                                                    <th scope="col" class="th-checkbox">
+                                                        <input type="checkbox" class="chk-box select-all" value="0"/>                                                    </th>
+                                                    </th>
+                                                    <th scope="col" class="th-no">
+                                                        <a href="#" class="userHeading"> No   </a>
+                                                    </th>
+                                                    <th scope="col" class="userHeading-size">
+                                                        <a href="#" class="userHeading"> Title   </a>
+                                                    </th>
+                                                    <th scope="col" class="userHeading-size">
+                                                        <a href="#" class="userHeading"> Description   </a>
+                                                    </th>
+                                                    <th scope="col" class="userHeading-size">
+                                                        <a href="#" class="userHeading"> Country Code   </a>
+                                                    </th>
+                                                    <th scope="col">
+                                                        <a href="#" class="userHeading"> Location   </a>
+                                                    </th>
+                                                    <th scope="col">
+                                                        <a href="#" class="userHeading"> Created By   </a>
+                                                    </th>
+                                                    <th scope="col">
+                                                        <a href="#" class="userHeading">
+                                                        Categorization 
+                                                        </a>
+                                                    </th>
+                                                    <th scope="col">
+                                                        <a href="#" class="userHeading"> Status   </a>
+                                                    </th>
+                                                    <th scope="col">
+                                                        <a href="#" class="userHeading"> Visible   </a>
+                                                    </th>
+                                                    <th scope="col">
+                                                        <a href="#" class="userHeading"> Created at   </a>
+                                                    </th>
+                                                    <th scope="col">
+                                                        <a href="#" class="userHeading"> Shares   </a>
+                                                    </th>
+                                                    <th scope="col">
+                                                        <div class="userHeading">ACTION</div>
+                                                    </th>
+                                                </tr>
+                                                <?php }else{ ?>
+                                                    <tr class="table-header">
+                                                        <th scope="col" class="th-no">
+                                                            <a href="#" class="userHeading"> No   </a>
+                                                        </th>
+                                                        <th scope="col" class="userHeading-size">
+                                                            <a href="#" class="userHeading"> Title   </a>
+                                                        </th>
+                                                        <th scope="col" class="userHeading-size">
+                                                            <a href="#" class="userHeading"> Description   </a>
+                                                        </th>
+                                                        <th scope="col">
+                                                            <a href="#" class="userHeading"> Category   </a>
+                                                        </th>
+                                                        <th scope="col">
+                                                            <a href="#" class="userHeading"> Ad Purpose</a>
+                                                        </th>
+                                                        <th scope="col">
+                                                            <a href="#" class="userHeading"> Created</a>
+                                                        </th>
+                                                        <th scope="col">
+                                                            <div class="userHeading">ACTION</div>
+                                                        </th>
+                                                    </tr>
+                                                <?php } ?>
+                                            </thead>
+                                            <tbody></tbody>
+                                        </table>
+                                        <div id="noDataMessage" class="no-data-container" style="display: none;">
+                                            <img src="<?= NO_DATA_IMG ?>" alt="No Data" />
+                                            <h3><?= NO_DATA_TITLE ?></h3>
+                                            <p><?= NO_DATA_DESC ?></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <div class="modal fade customModal" id="addModal" tabindex="-1" aria-labelledby="addUserLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h2 class="modal-title fs-5" id="addUserLabel">Add <?= $title ?></h2>
+                                </div>
+                                <div class="modal-body">
+                                    <form class="user-form p-0 d-flex flex-column gap-3" method="post" action="" data-parsley-validate enctype="multipart/form-data" onsubmit="return validateForm();">
+                                        
+                                        <div class="row">
+                                            <div class="col-md-12 img-upload-add-post">
+                                                <input type="file" name="image" accept="image/*" id="imageShow1" class="d-none" onchange="previewImage(event, 'previewImg', 'textHd1')" />
+                                                <label for="imageShow1">
+                                                    <span>
+                                                        <img id="previewImg" src="assets/img/user/plus.png" alt="Upload Image" />
+                                                    </span>
+                                                    <span id="textHd1">Upload Image</span>
+                                                </label>
+                                            </div>
+                                            <!-- <div class="col-md-4 img-upload-add-post">
+                                                <input type="file" name="image[]" accept="image/*" id="imageShow2" class="d-none" onchange="previewImage(event, 'previewImg1', 'textHd2')" />
+                                                <label for="imageShow2">
+                                                    <span>
+                                                        <img id="previewImg1" src="assets/img/user/plus.png" alt="Upload Image" />
+                                                    </span>
+                                                    <span id="textHd2">Upload Image</span>
+                                                </label>
+                                            </div>
+                                            <div class="col-md-4 img-upload-add-post">
+                                                <input type="file" name="image[]" accept="image/*" id="imageShow3" class="d-none" onchange="previewImage(event, 'previewImg2', 'textHd3')" />
+                                                <label for="imageShow3">
+                                                    <span>
+                                                        <img id="previewImg2" src="assets/img/user/plus.png" alt="Upload Image" />
+                                                    </span>
+                                                    <span id="textHd3">Upload Image</span>
+                                                </label>
+                                            </div> -->
+                                        </div>
+  
+                                        <div>
+                                          <label>Select User (If no user is selected, Posterz Admin will be assigned by default.)</label>
+                                          <select class="form-control w-100" name="user_id" id="users" aria-label="Default select example">
+                                            <option value="">Select User</option>
+                                            <?php foreach ($users as $ku=>$vu) { ?>
+                                                <option value="<?= $vu['id']; ?>"><?= $vu['name']; ?></option>
+                                            <?php } ?>
+                                          </select>
+                                        </div>
+  
+                                        <div>
+                                          <input type="text" name="title" id="TITLE" placeholder="Title"  class="form-control m-0" value="<?= @$apiDataU['title'] ?>" required />
+                                          <input type="hidden" name="cropped_image" id="croppedImage" value="">
+                                        </div>
+  
+                                        <div>
+                                          <textarea class="form-control" name="description" id="description" rows="3" placeholder="Description" required><?= @$apiDataU['description'] ?></textarea>
+                                        </div>
+        
+                                        <div>
+                                            <input type="text" name="address" id="address" placeholder="Address" oninput="initAutocomplete()" autocomplete="off" value="<?= @$apiDataU['address'] ?>" class="form-control m-0" required />
+                                            <input type="hidden" name="latitude" id="latitude" value="<?php echo @$apiDataU['latitude']; ?>">
+                                            <input type="hidden" name="longitude" id="longitude" value="<?php echo @$apiDataU['longitude']; ?>">
+                                            <input type="hidden" name="city" id="city" value="<?php echo @$apiDataU['city']; ?>">
+                                            <input type="hidden" name="state" id="state" value="<?php echo @$apiDataU['state']; ?>">
+                                        </div>
+
+                                        <div>
+                                            <select class="form-control" name="radius">
+                                                <option value="5" selected>5 Miles</option>
+                                                <option value="10">10 Miles</option>
+                                                <option value="15">15 Miles</option>
+                                                <option value="20">20 Miles</option>
+                                            </select>
+                                        </div>
+
+                                        <div>
+                                            <label>Select Community</label>
+                                            <select class="form-control w-100" name="community[]" id="communities" multiple aria-label="Default example">
+                                              <option value="">Select Community</option>
+                                              <?php foreach ($communities as $ku=>$vu) { ?>
+                                                  <option value="<?= $vu['name']; ?>"><?= $vu['name']; ?></option>
+                                              <?php } ?>
+                                            </select>
+                                            <input type="hidden" name="community_type" id="community_type" value="2">
+                                        </div>
+        
+                                        <div class="mt-2 gap-3 d-flex flex-row">
+                                            <button type="submit" name="addPost" class="btn btnSave">Save</button>
+                                            <a href="#" onclick="window.location.reload();"><button type="button" class="btn btnClose">Close</button></a>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+            </div>
+            <!-- content area end -->
+            <div class="modal fade" id="jsonModal" tabindex="-1" role="dialog" aria-labelledby="jsonModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="jsonModalLabel">Formatted JSON</h5>
+                    </div>
+                    <div class="modal-body">
+                        <textarea id="jsonModalContent" class="form-control" style="height: 350px; font-size: 13px; white-space: pre-wrap;"></textarea>
+                    </div>
+                    <input type="hidden" id="p_id">
+                    <div class="modal-footer jsonModalBtn">
+                        <button type="button" class="btn btn-primary" id="updateJsonBtn">Update JSON</button>
+                        <button type="button" class="btn btn-success" id="updateAndLiveBtn">Update and Live</button>
+                    </div>
+                  </div>
+                </div>
+            </div>              
+        </div> 
+        <!-- wrapper end  -->
+        <script src="assets/plugins/datatable/js/jquery.dataTables.min.js?v=<?= time() ?>"></script>
+        <?php include('includes/footer-scripts.php') ?>
+        <script src="assets/js/posts.js?v=<?= time() ?>"></script>
+        <?php if($err == 1){ ?>
+            <script>
+              const modal = new bootstrap.Modal(document.getElementById('addModal'));
+              modal.show();
+            </script>
+          <?php } ?>
+            <script>
+            function previewImage(event, imgId, textId) {
+                var img = event.target.files[0];
+
+                if (!pixelarity.open(img, false, function (res, faces) {
+                    console.log("Faces detected:", faces);
+
+                    // Set cropped image preview
+                    var previewImg = document.getElementById(imgId);
+                    previewImg.src = res;
+                    previewImg.style.height = "100px";
+                    previewImg.style.width = "100px";
+                    previewImg.style.objectFit = "cover";
+
+                    // Remove upload text
+                    document.getElementById(textId).innerHTML = '';
+                    document.getElementById('croppedImage').value = res;
+
+                    // Remove previous face rectangles
+                    document.querySelectorAll('.face').forEach(el => el.remove());
+
+                    // Draw face detection boxes (if any)
+                    faces.forEach(face => {
+                        let faceBox = document.createElement('div');
+                        faceBox.className = 'face';
+                        faceBox.style.position = 'absolute';
+                        //faceBox.style.border = '2px solid red';
+                        faceBox.style.height = face.height + "px";
+                        faceBox.style.width = face.width + "px";
+                        faceBox.style.top = (previewImg.getBoundingClientRect().top + face.y) + "px";
+                        faceBox.style.left = (previewImg.getBoundingClientRect().left + face.x) + "px";
+
+                        document.body.appendChild(faceBox);
+                    });
+
+                }, "jpg", 0.7, true)) {
+                    alert("Whoops! That is not an image!");
+                }
+            }
+  
+            $(document).ready(function () {
+                $('#users').select2({
+                    placeholder: "Select User",
+                    width: '100%',
+                    allowClear: true,
+                    minimumResultsForSearch: 0,
+                    dropdownParent: $('#addModal')
+                });
+
+                let $select = $('#communities');
+
+                // Initialize Select2
+                $select.select2({
+                    placeholder: "Select Community",
+                    width: '100%',
+                    allowClear: true,
+                    minimumResultsForSearch: 0,
+                });
+
+                // Insert "Select/Unselect All" at the top
+                $select.prepend('<option value="select_all">Select / Unselect All</option>');
+
+                // Handle "Select/Unselect All" logic
+                $select.on('change', function () {
+                    let selectedValues = $(this).val();
+
+                    if (selectedValues && selectedValues.includes('select_all')) {
+                        if (selectedValues.length === $select.find('option').length) {
+                            // If everything is selected, unselect all
+                            $(this).val([]).trigger('change.select2');
+                        } else {
+                            $('#community_type').val(0);
+                            // Otherwise, select all except "Select All"
+                            let allValues = $select.find('option:not(:first)').map(function () {
+                                return $(this).val();
+                            }).get();
+
+                            $(this).val(allValues).trigger('change.select2');
+                        }
+                    }
+                });
+            });
+
+            function validateForm() {
+                let address = document.getElementById("address").value;
+                let latitude = document.getElementById("latitude").value;
+                let longitude = document.getElementById("longitude").value;
+
+                // Prevent submission if lat/lng are missing and "Anywhere" is not checked
+                if ((!address || !latitude || !longitude)) {
+                    alert("Please enter valid address.");
+                    return false; // Prevent form submission
+                }
+                return true; // Allow form submission
+            }
+          </script>
+          <script>
+            function showJsonModal(id,jsonString,showBtn) {
+                const decoded = jsonString.replace(/\\n/g, '\n').replace(/\\"/g, '"');
+                document.getElementById('jsonModalContent').textContent = decoded;
+                document.getElementById('p_id').value = id;
+                if(!showBtn){
+                    $(".jsonModalBtn").hide();
+                    $("#jsonModalContent").attr("readonly", true);
+                }
+                $('#jsonModal').modal('show'); // Requires Bootstrap's JS
+            }
+
+            // Handling Update JSON
+            document.getElementById('updateJsonBtn').addEventListener('click', () => {
+                try {
+                    const userInput = document.getElementById('jsonModalContent').value;
+                    const id = document.getElementById('p_id').value;
+                    const parsedJson = JSON.parse(userInput); // Properly parse
+                    // console.log('Updated JSON:', parsedJson);
+                    // console.log('id:', id);
+                    // return false
+                    // Send the new value via AJAX
+                    $.ajax({
+                        url: 'ajax.php?action=updatePostJson',
+                        type: 'POST',
+                        data: { id: id, listing_json_data_v2: JSON.stringify(parsedJson)  },
+                         beforeSend: function () {
+                            openScreenLoader('Updating Process. Do not refresh this page...');
+                        },
+                        success: function (response) {
+                            location.reload();
+                        },
+                        error: function (xhr, status, error) {
+                             closeScreenLoader();
+                            console.log('Error: ' + error);
+                        },
+                        complete: function () {
+                            closeScreenLoader();
+                        }
+                    });
+                    // Save or process as needed
+                } catch (err) {
+                    alert('Invalid JSON format!');
+                    
+                }
+            });
+
+             // Handling  Update and Live JSON
+            document.getElementById('updateAndLiveBtn').addEventListener('click', () => {
+                try {
+                    const userInput = document.getElementById('jsonModalContent').value;
+                    const id = document.getElementById('p_id').value;
+                    const parsedJson = JSON.parse(userInput); // Properly parse
+                   
+                    // Send the new value via AJAX
+                    $.ajax({
+                        url: 'ajax.php?action=updatePostAndLiveJson',
+                        type: 'POST',
+                        data: { id: id, listing_json_data_v2: JSON.stringify(parsedJson)  },
+                         beforeSend: function () {
+                            openScreenLoader('Live Posting Process. Do not refresh this page...');
+                        },
+                        success: function (response) {
+                            location.reload();
+                        },
+                        error: function (xhr, status, error) {
+                             closeScreenLoader();
+                            console.log('Error: ' + error);
+                        },
+                        complete: function () {
+                            closeScreenLoader();
+                        }
+                    });
+                    // Save or process as needed
+                } catch (err) {
+                    alert('Invalid JSON format!');
+                    
+                }
+            });
+        </script>                      
+    </body>
+</html>

@@ -1,0 +1,1481 @@
+<?php 
+$redirectUrl = (!empty(@$_SESSION['hm_wb_logged_in'] && $_SESSION['hm_wb_logged_in'] === true)) ? 'home.php' : 'index.php';
+?>
+<!DOCTYPE html>
+<html lang="en">
+    <?php include('includes/head.php') ?>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css" rel="stylesheet">
+    <body>
+        <?php include('includes/nav-header.php') ?>
+
+        <?php
+        if($ads_Id > 0 || $post_Id > 0){
+            $userCompanies = array_filter($userCompanies, function($mem) use ($companyIds) {
+                return in_array($mem['id'], $companyIds);
+            });
+        }
+        
+        ?>
+
+        <header class="post-upload-header">
+            <div class="post-upload-ads">
+                <div class="header-left">
+                    <a href="home.php" class="back-arr">
+                        <img src="assets/img/left-arr.png" alt="" />
+                    </a>
+                </div>
+                <div class="steps">
+                    <div class="single-step step-active" id="step1-tab">
+                        <h3><span>1</span></h3>
+                        <p>Select Company</p>
+                    </div>
+                    <div class="single-step" id="step2-tab">
+                        <h3><span>2</span></h3>
+                        <p>Ad Details</p>
+                    </div>
+                    <div class="single-step" id="step3-tab">
+                        <h3><span>3</span></h3>
+                        <p>Call To Action</p>
+                    </div>
+                    <div class="single-step" id="step4-tab">
+                        <h3><span>4</span></h3>
+                        <p>Confirm & Pay</p>
+                    </div>
+                    <div class="step-bar"></div>
+                </div>
+            </div>
+        </header>
+        
+        <form class="postDetailsBody" method="post" enctype="multipart/form-data" onsubmit="return validateForm();">
+
+            <input type="hidden" id="defaultAllCommunityPrice" value="<?= $defaultAllCommunityPrice ?>" />
+            <input type="hidden" id="discountMyCommunity" value="<?= $discountMyCommunity ?>" />
+            <input type="hidden" id="numberOfFreeCommunity" value="<?= $numberOfFreeCommunity ?>" />
+            <input type="hidden" id="defaultCommunityPrice" value="<?= $defaultCommunityPrice ?>" />
+            <input type="hidden" id="totalMyCommunityPrice" value="<?= $totalMyCommunityPrice ?>" />
+
+            <!-- Step 1: Select Company -->
+            <div class="form-step" id="step1">
+                <div class="upload-container adjust-container-create-ad set-border-radius-half">
+                    <div class="upload-communities ">
+                        <div class="row flow-row">
+                            <div class="col-12">
+                                <div class="d-flex">
+                                    <h2 class="create-title create-title-space fw-bold">
+                                        <?= ($connectToExisting) ? 'Connect to Existing Company' : 'Select Company'; ?>
+                                    </h2>
+                                </div>
+                                <div class="row">
+                                    <!-- Date Input -->
+                                    <div class="col-12 d-md-block d-none">
+                                        <!-- <div class="boots-input-title">
+                                            <label for="detail_titles">Company</label>
+                                        </div> -->
+                                        <input type="hidden" name="connectToExisting" id="connectToExisting" value="<?= $connectToExisting ? 1 : 0; ?>">
+                                    </div>
+                                    <!-- Select Company -->
+                                    <div class="col-12 col-md-12 mt-2">
+                                        <div class="set-select2-create-ad-portion">
+                                            <select class="js-example-basic-single" name="company_id" id="company_id" required>
+                                                <option value="">Select Company</option>
+                                                <?php foreach ($userCompanies as $company): ?>
+                                                    <?php
+                                                        $companyName = htmlspecialchars($company['name']);
+                                                        $companyBranchesRn = json_encode($company['company_branches']);
+                                                        if (!empty($connectToExisting) && $connectToExisting == 1 && !empty($company['owner_name'])) {
+                                                            $companyName .= ' (Claimed By: ' . htmlspecialchars($company['owner_name']) . ')';
+                                                            $companyBranchesRn = json_encode([]);
+                                                        }
+                                                    ?>
+                                                    <option value="<?= htmlspecialchars($company['id']) ?>" data-name="<?= htmlspecialchars($company['name']) ?>"  data-owner-id="<?= htmlspecialchars($company['owner_id']) ?>" data-req-sent="<?= htmlspecialchars($company['i_requested_owner']) ?>" data-branches="<?= htmlspecialchars($companyBranchesRn) ?>">
+                                                        <?= $companyName ?>
+                                                    </option>
+                                                <?php endforeach; ?>
+                                            </select>
+                                            <p class="text-danger mt-3" id="msgExistingErr"></p>
+                                            <p class="text-info mt-3" id="msgExistingIn"></p>
+                                        </div>
+
+                                        <!-- Image / Video Ad -->
+                                        <div id="adTypeButtons" class="mt-4" style="display: none;">
+                                            <div class="upload-button-wrapper d-flex justify-content-center flex-column" id="adTypeWrapper">
+                                                <div class="d-flex justify-content-around">
+                                                    <label class="radio-button-option">
+                                                        <input type="radio" name="ad_type" value="video" class="ad-type-radio" />
+                                                        <span class="upload-buttom-top">Video Ads <img src="assets/img/Arrow Forward.svg" alt="Arrow"></span>
+                                                    </label>
+
+                                                    <label class="radio-button-option">
+                                                        <input type="radio" name="ad_type" value="image" class="ad-type-radio" />
+                                                        <span class="upload-buttom-top">Image Ads <img src="assets/img/Arrow Forward.svg" alt="Arrow"></span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-end upload-container set-bg-transparent mt-5">
+                    <?php if($connectToExisting){ ?>
+                        <button type="button" id="associationReq" class="upload-buttom-top setNextBtn set-btn-save-next" style="display: none">Submit Association Request <img src="assets/img/Arrow Forward.svg" alt="Arrow"></button>
+
+                        <button type="button" id="claimBusinessReq" class="upload-buttom-top setNextBtn set-btn-save-next" style="display: none" data-bs-toggle="offcanvas" data-bs-target="#createClaimOffcanvas" aria-controls="createClaimOffcanvas" class="delet-buttton-com invite-buttton-com claim-company" onclick="$('#post_id').val(0); $('#company_id').val($('.js-example-basic-single').val()); $('#ad_cc_type').val(3)">Claim This Company <img src="assets/img/Arrow Forward.svg" alt="Arrow"></button>
+                    <?php }else{ ?>
+                        <!-- <button type="button" onclick="nextStep(2)" class="upload-buttom-top setNextBtn set-btn-save-next">Save &amp; Next <img src="assets/img/Arrow Forward.svg" alt="Arrow"></button> -->
+                    <?php } ?>
+                </div>
+            </div>
+
+            <!-- Step 2: Ad Details -->
+            <div class="form-step" id="step2" style="display: none;">
+                <div class="upload-container adjust-container-create-ad set-border-radius-half">
+                    <!-- Image / Videos / Title / Company -->
+                    <div class="upload-communities">
+                        <!-- FOR IMAGES -->
+                        <div class="row secondary-images">
+                            <div class="col-12">
+                                <div class="d-flex justify-content-center mb-4">
+                                    <h2 class="create-title create-title-space fw-bold text-center" id="adTypeTitle">
+                                        Create Image Ad 
+                                    </h2>
+                                </div>
+                            </div>
+
+                            <div class="create-company-upload-grp-pic">
+                                <?php
+                                // Total image upload slots
+                                $totalSlots = 3;
+                                if($post_Id > 0){
+                                    $existingImages = $adsData[0]['post_images'] ?? [];
+                                }else{
+                                    $existingImages = $adsData[0]['sponser_ads_images'] ?? [];
+                                }
+                                for ($i = 0; $i < $totalSlots; $i++):
+                                    $inputId = 'imageUploadInput' . ($i + 4);
+                                    $previewId = 'previewImg' . ($i + 4);
+                                    $textId = 'textHd' . ($i + 4);
+                                    $hiddenField = 'listing_cropped_image' . ($i + 1);
+                                    $imageLabel = ($i === 0) ? 'Ad Image (Primary)' : 'Ad Image';
+                                    if($post_Id > 0){
+                                        $imageSrc = isset($existingImages[$i]['image']) ? MEDIA_BASE_URL . $existingImages[$i]['image'] : '';
+                                    }else{
+                                        $imageSrc = isset($existingImages[$i]['media']) ? MEDIA_BASE_URL . $existingImages[$i]['media'] : '';
+                                    }
+                                    $hasImage = !empty($imageSrc);
+                                ?>
+                                    <div class="comunity-image-upload-wrapper company-img-upload-2 ad-image-upload">
+                                        <label class="<?= ($ads_Id != 0 || $post_Id != 0) && $i === 0 && $hasImage ? 'd-none' : 'comunity-image-upload-label' ?>" for="<?= $inputId ?>">
+                                            <span class="uploadIconComunity">
+                                                <img src="assets/img/tabler_upload.png" class="img-fluid" alt="Upload Icon" />
+                                            </span>
+                                            <span class="uploadTextcomunity" id="<?= $textId ?>"><?= $imageLabel ?></span>
+                                        </label>
+                                        <input type="file" class="comunity-image-upload-input" id="<?= $inputId ?>" style="display: none"
+                                            onchange="previewImage(event, '<?= $previewId ?>', '<?= $textId ?>', '<?= $hiddenField ?>')" accept="image/*" />
+                                        <input type="hidden" name="<?= $hiddenField ?>" id="<?= $hiddenField ?>" value="" />
+                                        
+                                        <div class="comunity-image-upload-preview comunity-image-upload-preview-Ads" style="<?= $hasImage ? '' : 'display: none' ?>">
+                                            <?php if($hasImage): ?>
+                                                <?php if($post_Id > 0){ ?>
+                                                    <div class="remove-img"></div>
+                                                <?php } else { ?>
+                                                    <div class="remove-img" onclick="deleteMedia(<?= $existingImages[$i]['id'] ?>)">
+                                                        <img src="assets/img/cross1.png" class="img-fluid" alt="Remove" />
+                                                    </div>
+                                                <?php } ?>
+                                            <?php else: ?>
+                                            <div class="remove-img">
+                                                <img src="assets/img/cross1.png" class="img-fluid" alt="Remove" />
+                                            </div>
+                                            <?php endif; ?>
+                                            <img class="previewImage" id="<?= $previewId ?>" src="<?= $hasImage ? $imageSrc : '' ?>" class="img-fluid" alt="Preview Image" />
+                                        </div>
+                                    </div>
+                                <?php endfor; ?>
+                            </div>
+
+                            <!-- Preview Video -->
+                            <div class="comunity-image-upload-wrapper company-img-upload-2 ad-video-upload" style="display: none;">
+                                <label class="comunity-image-upload-label" for="imageUploadInput69">
+                                    <span class="uploadIconComunity" id="upIcon69">
+                                        <img src="assets/img/tabler_upload.png" class="img-fluid" alt="Upload Icon" />
+                                    </span>
+                                    <span class="uploadTextcomunity" id="textHd69">Ad Video</span>
+                                    <div class="comunity-image-upload-preview comunity-image-upload-preview-Ads" id="videoRm" style="display: none">
+                                        <div class="remove-img">
+                                            <img src="assets/img/cross1.png" class="img-fluid" alt="Remove" />
+                                        </div>
+                                        <video id="previewVideo" style="display: none;"></video>
+                                    </div>
+                                </label>
+                                <input type="file" name="image" class="comunity-image-upload-input" id="imageUploadInput69" style="display: none" onchange="previewMedia(event)" accept="video/*" />
+                            </div>
+                        </div>
+                        <div class="row flow-row">
+                            <div class="col-12">
+                                <div class="row">
+                                    <!-- Date Input -->
+                                    <div class="col-12 col-md-6 mt-3">
+                                        <div class="boots-input-title">
+                                            <label for="detail_titles">Title</label>
+                                        </div>
+                                        <div class="input-wrapper input-right">
+                                            <input type="text" placeholder="Title" name="title" id="title" class="form-input" required oninput="updateAdTitle(this)" >
+                                            <div class="global-search-dropdown-cmp" style="display: none;"></div>
+                                        </div>
+                                    </div>
+                                    <!-- Date Input -->
+                                    <div class="col-12 col-md-6 mt-3">
+                                        <div class="boots-input-title">
+                                            <label for="detail_titles">Company</label>
+                                        </div>
+                                        <div class="input-wrapper input-right">
+                                            <input type="text" placeholder="" value="" id="display-company-name" name="display-company-name" class="form-input" disabled>
+                                            <input type="hidden" id="display-company-name-hd" name="display-company-name-hd">
+                                            <div class="global-search-dropdown-cmp" style="display: none;"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ******************* -->
+                <!-- Start Date & End Date -->
+                <!-- ******************* -->
+                <div class="upload-container adjust-container-create-ad mt-4 set-border-radius-full">
+                    <div class="upload-communities">
+                        <div class="row communities-row">
+                            <div class="col-12">
+                                <div class="accordion details-accordion" id="boostAccordion">
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header">
+                                            <button class="accordion-button flow-title" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+                                                <div class="accordian-title-main">
+                                                    <span class="fw-bold">Start Date - End Date</span>
+                                                </div>
+                                            </button>
+                                        </h2>
+
+                                        <div id="collapseTwo" class="accordion-collapse collapse show" aria-labelledby="headingTwo" data-bs-parent="#boostAccordion">
+                                            <div class="accordion-body">
+                                                <!-- CONTENT -->
+                                                <div class="input-wrapper set-date-picker-end-start position-relative">
+                                                    <input type="text" name="datefilter" onfocus="this.setAttribute('autocomplete', 'off');" autocomplete="off" value="" class="w-100 set-zindex-1001 form-input" placeholder="Begin - End" />
+                                                    <input type="hidden" name="start_date" id="hiddenStartDate">
+                                                    <input type="hidden" name="end_date" id="hiddenEndDate">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 upload-container adjust-container-create-ad py-2">
+                                            <div id="costBreakdownBox" style="display: none;" class="text-end mx-3">
+                                                <div class="mt-2 text-muted" id="costBreakdown">-</div>
+                                                <div class="fw-bold">Current Campaign: <span id="totalCost" class="text-primary">$0.00</span></div>
+                                            </div>
+                                        </div>
+                                        <input type="hidden" id="sub_total" name="sub_total" value="0.00">
+                                        <input type="hidden" id="tax_amount" name="tax_amount" value="0.00">
+                                        <input type="hidden" id="total_amount" name="total_amount" value="0.00">
+                                        <input type="hidden" id="charged_breakdown" name="charged_breakdown" value="">
+                                        <input type="hidden" id="total_days" name="total_days" value="">
+                                        <input type="hidden" id="plan_id" name="plan_id" value="<?= $imagePlans[0]['id'] ?>">
+                                        <input type="hidden" id="payment" name="payment" value="0">
+                                        <input type="hidden" id="is_manual" name="is_manual" value="0">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Keywords -->
+                <div class="upload-container adjust-container-create-ad mt-4 set-border-radius-full">
+                    <div class="company-section-ads set-keyword-ad-box-main">
+                        <div class="communites-contentss-title-left">
+                            <span class="fw-bold">Keywords</span>
+                            <p>Match Company profile.</p>
+                        </div>
+
+                        <div class="input-group search-wrapper flow-input my-3 position-relative">
+                            <label class="input-group-icon-search" for="search-tags">
+                            <img src="assets/img/search-line.svg" alt="search">
+                            </label>
+                            <input type="search" class="form-control" id="search-tags" placeholder="Search Tags" aria-label="search">
+                            <div class="input-group-icon-add" id="add-tag-manually">
+                            <i class="fa fa-check mx-2 text-primary"></i>
+                            </div>
+                            
+                            <!-- Suggestions Dropdown -->
+                            <div id="keyword-suggestions-dropdown" class="position-absolute bg-white border rounded shadow-sm w-100" style="top: 100%; left: 0; z-index: 1000; display: none;"></div>
+                        </div>
+
+                        <p class="mb-0 small-text-form">Max 5 tags, matches with company profile.</p>
+
+                        <div class="communites-contentsx-tag communites-contentsx-tag-keywords mt-4"></div>
+                        <input type="hidden" name="keywords" id="hidden-keywords">
+                        <input type="hidden" name="all_keywords_from_services_products" id="hidden-all-keywords">
+                    </div>
+                </div>
+
+                <!-- Communities start -->
+                <div class="upload-container adjust-container-create-ad mt-4 set-border-radius-full">
+                    <section class="detailssTwo post-details px-3" id="communitiess">
+                        <div class="upload-container adjust-container-create-ad">
+                            <div class="details-communities">
+                                <div class="row communities-row">
+                                    <div class="col-12">
+                                        <div class="communites-contentss">
+                                            <div class="row justify-content-between align-items-start">
+                                                <div class="col-8">
+                                                    <div class="communites-contentss-title-left">
+                                                        <span class="fw-bold">Communities</span>
+                                                        <p>Only user from same community will see this post</p>
+                                                    </div>
+                                                </div>
+                                                <div class="col-4">
+                                                    <div class="communites-contentss-title-right text-end">
+                                                        <p>Selected: <span id="totalSelectedComm">0</span></p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="communites-contentsx">
+                                            <label class="communites-contentsx-item d-flex align-items-center justify-content-center">
+                                                <input type="radio" name="community_type" value="1" class="community-radio" hidden>
+                                                <span>My Community</span>
+                                            </label>
+                                    
+                                            <label class="communites-contentsx-item d-flex align-items-center justify-content-center">
+                                                <input type="radio" name="community_type" value="0" class="community-radio" hidden>
+                                                <span>All Communities</span>
+                                            </label>
+                                    
+                                            <label class="communites-contentsx-item d-flex align-items-center justify-content-center">
+                                                <input type="radio" name="community_type" value="2" class="community-radio" hidden>
+                                                <span>Choose Communities</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+                <!-- Select Location Where you want to post -->
+                <div class="upload-container adjust-container-create-ad mt-4 set-border-radius-full">
+                    <section class="detailssTwo post-details px-3" id="listingLoc" style="display: none;">
+                        <div class="upload-container adjust-container-create-ad">
+                            <div class="details-communities">
+                                <div class="row communities-row">
+                                    <div class="col-12">
+                                        <div class="communites-contentss">
+                                            <div class="row justify-content-between align-items-start">
+                                                <div class="col-8">
+                                                    <div class="communites-contentss-title-left">
+                                                        <span class="fw-bold">Ad Locations</span>
+                                                        <p>Please select where you want your ad to be visible</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <!-- Checkbox Container -->
+                                        <div id="locationCheckboxes"></div>
+                                    <div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+                <input type="hidden" id="selectedCommunitiesInput" name="selected_communities" value="<?= $selectedCommunity_Val ?>">
+                <input type="hidden" id="selectedLocationsInput" name="selected_locations" value="<?= $selectedLocation_Val ?>">
+                <?php if($hasLink): ?>
+                <input type="hidden" id="link_id" name="link_id" value="<?= $linkData_Meta['link_id']; ?>"/>
+                <?php endif; ?>
+
+                <div class="d-flex justify-content-end upload-container adjust-container-create-ad set-bg-transparent mt-5 mb-4">
+                    <button type="button" class="upload-buttom-bottom" onclick="prevStep(1)">Back</button>
+                    <button type="button" onclick="nextStep(3)" class="mx-3 upload-buttom-top setNextBtn set-btn-save-next">Save &amp; Next <img src="assets/img/Arrow Forward.svg" alt="Arrow"></button>
+                </div>
+            </div>
+
+            <!-- Step 3: Call To Action -->
+            <div class="form-step" id="step3" style="display: none;">
+                <section class="flow">
+                    <div class="preview-container">
+                        <div class="preview-boxtwo d-flex flex-lg-row flex-column">
+                            <div class="price-preview col-7 offset-3">
+                                <div class="priview-title-wrapper">
+                                    <h2 class="flow-location-title">Set Call to Action</h2>
+                                </div>
+                                <div class="price-priver-inner price-priver-inner-gap">
+                                    <div class="price-priver-inner-top">
+                                        <div class="price-priver-inner-top-text">
+                                            <h3>
+                                                When users clicks on ad they will be redirected to this link.
+                                            </h3>
+                                        </div>
+                                        <div class="price-senario-inner-top-input">
+                                            <ul class="price-senario-inner-top-input-list custom-radio-group">
+                                                <input type="hidden" name="button_type_val" id="button_type_val" value="none">
+                                                <!-- Send a message -->
+                                                <li class="d-flex justify-content-between align-items-center">
+                                                    <div class="form-check d-flex align-items-center" onclick="handleCTAChange('none')">
+                                                        <input class="form-check-input" type="radio" name="button_type" id="btn_send_msg" checked />
+                                                        <label class="form-check-label cst-radio-level" for="btn_send_msg">
+                                                            Send a message
+                                                            <div class="tt-wrapper" data-tt-pos="top">
+                                                                <img src="assets/img/fluent_info-32-regular.svg" alt="info" />
+                                                                <div class="tt-content">
+                                                                    Use this option to send a message via chat and Himish
+                                                                </div>
+                                                            </div>
+                                                        </label>
+                                                    </div>
+                                                    <div>
+                                                        <button class="ads-radio-bottom-btn-email radio-btn-clr-one">
+                                                            <span>Message</span>
+                                                        </button>
+                                                    </div>
+                                                </li>
+
+                                                <!-- Get more info -->
+                                                <li class="d-flex justify-content-between align-items-center flex-wrap">
+                                                    <div class="form-check d-flex align-items-center" onclick="handleCTAChange('link_info')">
+                                                        <input class="form-check-input" type="radio" name="button_type" id="btn_get_info" />
+                                                        <label class="form-check-label cst-radio-level" for="btn_get_info">
+                                                            Get more info
+                                                            <div class="tt-wrapper" data-tt-pos="top">
+                                                                <img src="assets/img/fluent_info-32-regular.svg" alt="info" />
+                                                                <div class="tt-content">
+                                                                    User will click this button to get the website or form
+                                                                </div>
+                                                            </div>
+                                                        </label>
+                                                    </div>
+                                                    <div>
+                                                        <button class="ads-radio-bottom-btn-email radio-btn-clr-one">
+                                                            <span>More Info</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="w-80 mt-2 cta-field" id="link_info" style="display: none;">
+                                                        <input type="url" class="form-control auto-prepend-https" name="info_link" id="info_link" placeholder="Enter link (e.g. https://example.com)" />
+                                                    </div>
+                                                </li>
+
+                                                <!-- Chat on WhatsApp -->
+                                                <li class="d-flex justify-content-between align-items-center flex-wrap">
+                                                    <div class="form-check d-flex align-items-center" onclick="handleCTAChange('whatsapp')">
+                                                        <input class="form-check-input" type="radio" name="button_type" id="btn_whatsapp" />
+                                                        <label class="form-check-label cst-radio-level" for="btn_whatsapp">
+                                                            Chat on WhatsApp
+                                                            <div class="tt-wrapper" data-tt-pos="top">
+                                                                <img src="assets/img/fluent_info-32-regular.svg" alt="info" />
+                                                                <div class="tt-content">
+                                                                    User will click to send you a message on Whatsapp
+                                                                </div>
+                                                            </div>
+                                                        </label>
+                                                    </div>
+                                                    <div>
+                                                        <button class="ads-radio-bottom-btn-email radio-btn-clr-two">
+                                                            <img src="assets/img/logos_whatsapp-icon.svg" alt="whatsapp" />
+                                                            <span>Chat</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="w-80 mt-2 cta-field" id="whatsapp" style="display: none;">
+                                                        <input type="tel" class="form-control mb-2" placeholder="Enter WhatsApp phone number" name="whatsapp_phone"  id="whatsapp_phone" oninput="this.value = formatPhoneNumberUSRC(this.value);" />
+                                                        <textarea class="form-control" placeholder="Enter WhatsApp message" name="whatsapp_message" id="whatsapp_message"></textarea>
+                                                    </div>
+                                                </li>
+
+                                                <!-- Get a quote -->
+                                                <li class="d-flex justify-content-between align-items-center flex-wrap">
+                                                    <div class="form-check d-flex align-items-center" onclick="handleCTAChange('quote')">
+                                                        <input class="form-check-input" type="radio" name="button_type" id="btn_quote" />
+                                                        <label class="form-check-label cst-radio-level" for="btn_quote">
+                                                            Get a quote
+                                                            <div class="tt-wrapper" data-tt-pos="top">
+                                                                <img src="assets/img/fluent_info-32-regular.svg" alt="info" />
+                                                                <div class="tt-content">
+                                                                    User will click to get a quote for the service via link
+                                                                </div>
+                                                            </div>
+                                                        </label>
+                                                    </div>
+                                                    <div>
+                                                        <button class="ads-radio-bottom-btn-email radio-btn-clr-three">
+                                                            <span>Get Quote</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="w-80 mt-2 cta-field auto-prepend-https" id="quote" style="display: none;">
+                                                        <input type="url" class="form-control auto-prepend-https" placeholder="Enter quote link" name="quote_link" id="quote_link" />
+                                                    </div>
+                                                </li>
+
+                                                <!-- Send us an email -->
+                                                <li class="d-flex justify-content-between align-items-center flex-wrap">
+                                                    <div class="form-check d-flex align-items-center" onclick="handleCTAChange('emailSec')">
+                                                        <input class="form-check-input" type="radio" name="button_type" id="btn_email" />
+                                                        <label class="form-check-label cst-radio-level" for="btn_email">
+                                                            Send us an email
+                                                            <div class="tt-wrapper" data-tt-pos="top">
+                                                                <img src="assets/img/fluent_info-32-regular.svg" alt="info" />
+                                                                <div class="tt-content">
+                                                                    User will click this button to communicate via email.
+                                                                </div>
+                                                            </div>
+                                                        </label>
+                                                    </div>
+                                                    <div>
+                                                        <button class="ads-radio-bottom-btn-email radio-btn-clr-one">
+                                                            <img src="assets/img/envalops.svg" alt="email" />
+                                                            <span>Email</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="w-80 mt-2 cta-field" id="emailSec" style="display: none;">
+                                                        <input type="email" class="form-control mb-2" placeholder="Enter email" name="email_sec" id="email_sec" />
+                                                        <input type="text" class="form-control mb-2" placeholder="Subject line" name="subject_sec" id="subject_sec" />
+                                                        <textarea class="form-control" placeholder="Enter message" name="message_sec" id="message_sec"></textarea>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="scenario-prsedbtn">
+                                        <div class="upload-button-wrapper d-flex justify-content-center flex-column">
+                                            <button type="button" class="upload-buttom-top sk-gradint-button-one setNextBtn" onclick="nextStep(4);">
+                                                Proceed to Payment
+                                                <img src="assets/img/Arrow Forward.svg" alt="Arrow" />
+                                            </button>
+                                            <button type="button" class="upload-buttom-bottom" onclick="prevStep(2)">Back</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Step 4: Payment -->
+            <div class="form-step" id="step4" style="display: none;">
+                <section class="flow" id="locations">
+                    <div class="preview-container set-main-payment-class-for-setting">
+                        <div class="">
+                            <div class="row">
+                                <div class="col-lg-5 mx-auto">
+                                    <button type="button" class="upload-buttom-bottom" onclick="prevStep(3)">Back</button>
+                                    <div class="ads-preview mx-xl-0 mx-auto">
+                                        <div class="priview-title-wrapper">
+                                            <h2 class="flow-location-title">Ad Preview</h2>
+                                        </div>
+                                        <div class="ads-preview-wrapper ads-paymet-wrapper">
+                                            <div class="ads-preview-top">
+                                                <div class="ads-preview-top-inner d-flex justify-content-between">
+                                                    <div>
+                                                        <div class="user-preview-images">
+                                                            <img src="assets/img/preview-avater.png" alt="profile" class="img-fluid" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="flex-grow-1 d-flex flex-column">
+                                                        <div class="d-flex justify-content-between">
+                                                            <div class="ads-preview-top-inner-left d-flex align-items-start">
+                                                                <div class="user-preview-payment-info">
+                                                                    <h3 id="company_name_prv">Mail On Broadway</h3>
+                                                                    <div class="user-preview-payment-info-image">
+                                                                        <img src="assets/img/location.svg" alt="location" class="img-fluid" />
+                                                                        <span id="location_name_prv">New York, NY</span> <span>1 hr</span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="ads-preview-top-inner-right">
+                                                                <ul class="ads-preview-top-icons d-flex justify-content-between align-items-start">
+                                                                    <li class="d-flex align-items-center justify-content-center flex-column">
+                                                                        <button type="button" href="javascript:void(0)" class="ads-preview-top-icon-button">
+                                                                            <img src="assets/img/lucide_view.svg" alt="lucide_view" />
+                                                                        </button>
+                                                                        <span class="preview-total-icons-numbers">0</span>
+                                                                    </li>
+                                                                    <li class="d-flex align-items-center justify-content-center flex-column">
+                                                                        <button type="button" href="javascript:void(0)" class="ads-preview-top-icon-button">
+                                                                            <img src="assets/img/iconamoon_like-light.svg" alt="iconamoon_like" />
+                                                                        </button>
+                                                                        <span class="preview-total-icons-numbers">0</span>
+                                                                    </li>
+                                                                    <li>
+                                                                        <button type="button" href="javascript:void(0)" class="ads-preview-top-icon-button">
+                                                                            <img src="assets/img/bx_dots-vertical-rounded.svg" alt="lucide_view" />
+                                                                        </button>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                        <div>
+                                                            <h2 class="ads-preview-title-text" id="ad_title_prv">Ad title here.</h2>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="sponsor-post-type">
+                                                    <span>Sponsored Post</span>
+                                                </div>
+                                            </div>
+                                            <div class="ads-preview-center edf<?= $post_Id ?>" id="adMediaPreviewWrapper">
+                                                <?php if ($post_Id > 0): ?>
+                                                    <img src="<?= MEDIA_BASE_URL . $adsData[0]['post_images'][0]['image'] ?>" alt="ad image" id="image_ad_prv_ps" class="img-fluid" />
+                                                <?php elseif ($ads_Id > 0): ?>
+                                                    <img src="<?= MEDIA_BASE_URL . $adsData[0]['sponser_ads_images'][0]['media'] ?>" alt="ad image" id="image_ad_prv_ad" class="img-fluid" />
+                                                <?php else: ?>
+                                                    <img src="assets/img/create-ads-preview.png" alt="ad image" id="image_ad_prv" class="img-fluid" />
+                                                <?php endif; ?>
+                                                <div class="sales-tags">
+                                                    <span>For Sale</span>
+                                                </div>
+                                            </div>
+                                            <div class="ads-preview-bottom">
+                                                <div class="ads-preview-top-inner d-flex" id="ad_tags_preview">
+                                                    
+                                                </div>
+                                                <div class="ads-preview-bottom-inner d-flex justify-content-between">
+                                                    <div class="ads-preview-bottom-inner-left d-flex align-items-center">
+                                                        <ul class="ads-preview-top-icons d-flex justify-content-between align-items-center mb-0">
+                                                            <li>
+                                                                <button type="button" href="javascript:void(0)" class="ads-preview-bottom-btn">
+                                                                    <img src="assets/img/heart.svg" alt="heart" />
+                                                                    <span class="preview-icons-numbers">0</span>
+                                                                </button>
+                                                            </li>
+                                                            <li>
+                                                                <button type="button" href="javascript:void(0)" class="ads-preview-bottom-btn">
+                                                                    <img src="assets/img/comment.svg" alt="comment" />
+                                                                    <span class="preview-icons-numbers">0</span>
+                                                                </button>
+                                                            </li>
+                                                            <li>
+                                                                <button type="button" href="javascript:void(0)" class="ads-preview-bottom-btn">
+                                                                    <img src="assets/img/share.svg" alt="share" />
+                                                                </button>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                    <div class="ads-preview-bottom-inner-right">
+                                                        <ul class="ads-preview-top-icons d-flex justify-content-between align-items-center mb-0">
+                                                            <li id="ad_button_prv">
+                                                                <button type="button" href="javascript:void(0)" class="ads-preview-bottom-btn-email">
+                                                                    <span >Message</span>
+                                                                </button>
+                                                            </li>
+                                                            <li>
+                                                                <button type="button" href="javascript:void(0)" class="ads-preview-top-icon-button">
+                                                                    <img src="assets/img/Bookmark.svg" alt="bookmark" />
+                                                                </button>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                                <div class="sponsor-post-type-bottom">
+                                                    <span>Approval pending</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-5 mx-auto">
+                                    <!-- PAYMENT SUMMARY -->
+                                    <div class="mx-auto" style="max-width: 480px;">
+                                        <div class="card card-elevated set-card-all-payment-community">
+                                            <div class="card-body p-4">
+                                                <!-- Header -->
+                                                <h1 class="set-f-24-800-bold mb-1">Payment</h1>
+                                                <p class="fs-16 text-muted mb-3">Ad and community pricing</p>
+
+                                                <div class="divider my-3"></div>
+
+                                                <!-- Top rows -->
+                                                <div class="row g-2 align-items-center fs-14">
+                                                    <div class="col">
+                                                        <span class="set-f-16-500-text">Total Ad Days</span>
+                                                    </div>
+                                                    <div class="col text-end">
+                                                        <span class="set-f-18-600-bold" id="total_days_prv">0</span>
+                                                    </div>
+                                                    <input type="hidden" id="paymentData" name="paymentData" value="" />
+                                                </div>
+
+                                                <!-- Collapsible community list -->
+                                                <div id="communitiesWrapper" class="" style="display:none;">
+                                                    <!-- Toggle row -->
+                                                    <div class="col-12">
+                                                        <button
+                                                            class="w-100 d-flex align-items-center justify-content-between btn btn-link text-decoration-none px-0 fs-14 toggle-btn collapsed set-btn-active-focus-all-setting"
+                                                            type="button"
+                                                            id="communitiesCollapseBtn"
+                                                            data-bs-toggle="collapse"
+                                                            data-bs-target="#communitiesCollapse"
+                                                            aria-expanded="false"
+                                                            aria-controls="communitiesCollapse"
+                                                        >
+                                                            <span class="d-flex align-items-center gap-2 text-body">
+                                                                <span class="set-f-16-500-text">Communities Selected</span>
+                                                                <svg class="chev" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                                                    <path fill-rule="evenodd"
+                                                                        d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 10.94l3.71-3.71a.75.75 0 1 1 1.08 1.04l-4.25 4.25a.75.75 0 0 1-1.06 0L5.21 8.27a.75.75 0 0 1 .02-1.06z"
+                                                                        clip-rule="evenodd" />
+                                                                </svg>
+                                                            </span>
+                                                            <span id="totalSelectedCommCount" class="set-f-18-600-bold">0</span>
+                                                        </button>
+                                                    </div>
+
+                                                    <!-- Expanded list -->
+                                                    <div id="communitiesCollapse" class="collapse">
+                                                        <div class="ps-3 set-border-start-2x mt-2">
+                                                            <ul id="expandedCommunityList" class="list-unstyled fs-14 text-body mb-2"></ul>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Summary (always visible) -->
+                                                    <div id="communitySummaryRows" class="mt-2 fs-14 text-body"></div>
+                                                </div>
+
+
+                                                <div class="divider my-3"></div>
+
+                                                <!-- Pricing breakdown -->
+                                                <div class="fs-16 text-body">
+                                                    <div class="d-flex justify-content-between mb-2">
+                                                        <span>Ad Price per day 
+                                                            <span class="fs-12 text-muted" id="adPriceBreakdown">(0 days @ $0.00)</span>
+                                                        </span>
+                                                        <span class="fw-semibold text-dark" id="adPriceTotal">$0.00</span>
+                                                    </div>
+
+                                                    <div class="d-flex justify-content-between mb-2" id="chooseCommWrp" style="display: none !important;">
+                                                        <span>Community Charge 
+                                                            <span class="fs-12 text-muted" id="communityPriceBreakdown">(0 days @ $0.00)</span>
+                                                        </span>
+                                                        <span class="fw-semibold text-dark" id="communityPriceTotal">$0.00</span>
+                                                    </div>
+
+
+
+                                                    <?php if($discountMyCommunity > 0){ ?>
+                                                    <div class="d-flex justify-content-between mb-2" id="myCommunityDiscountWrapper" style="display: none !important;">
+                                                        <span>My Community Discount 
+                                                            <span class="fs-12 text-muted text-danger" id="adPriceBreakdown33">(<?= $discountMyCommunity ?>%)</span>
+                                                        </span>
+                                                        <span class="fw-semibold text-danger" id="myCommDiscTotal">$0.00</span>
+                                                    </div>
+                                                    <?php } ?>
+
+                                                    <?php if($defaultAllCommunityPrice > 0){ ?>
+                                                    <div class="d-flex justify-content-between mb-2" id="defaultAllCommunityPriceWrapper" style="display: none !important;">
+                                                        <span>All Communities
+                                                        </span>
+                                                        <span class="fw-semibold text-dark" id="allCommTotal">$0.00</span>
+                                                    </div>
+                                                    <?php } ?>
+
+                                                    <div class="d-flex justify-content-between mb-2">
+                                                        <span>Subtotal</span>
+                                                        <span class="fw-semibold text-dark" id="pricingSubtotal">$0.00</span>
+                                                    </div>
+
+                                                    <div class="d-flex justify-content-between mb-2">
+                                                        <span>Sales Tax <span class="fs-12 text-muted" id="taxRateLabel">(0%)</span></span>
+                                                        <span class="fw-semibold text-dark" id="pricingTax">$0.00</span>
+                                                    </div>
+                                                </div>
+
+                                                <div class="set-hr-border-custom-dotted my-3"></div>
+
+                                                <!-- Total -->
+                                                <div class="d-flex justify-content-between align-items-baseline">
+                                                    <span class="set-f-18-700-bold">Total</span>
+                                                    <span class="fw-bold text-dark" style="font-size: 24px;" id="pricingTotal">$0.00</span>
+                                                </div>
+
+                                                <!-- Credits -->
+                                                <div class="mt-2">
+                                                    <div class="row">
+                                                        <div class="col-11 text-center">
+                                                            <span class="set-use-credit-font-16">Use Credits</span>
+                                                            <span class="f-18-purple-price-org" id="availableCredits">$0.00</span>
+                                                        </div>
+                                                        <div class="col-1 text-end">
+                                                            <div class="form-check form-switch m-0 ps-0">
+                                                                <input class="form-check-input" type="checkbox" id="use_credits" value="1" />
+                                                                <input type="hidden" name="credit" id="credit" value="0"/>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="set-f-12-near-black mt-1 text-center">
+                                                        when credit is used Pay only 
+                                                        <span class="f-green-16-bold-org" id="payAfterCredits">$0.00</span>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Buttons -->
+                                                <div class="d-grid gap-3 mt-4">
+                                                    <input type="hidden" name="ad_id" id="ad_id" value="<?= $ads_Id ?>" />
+                                                    <input type="hidden" name="post_id" id="bp_post_id" value="<?= $post_Id ?>" />
+                                                    <button type="submit" name="<?= ($ads_Id > 0) ? 'updateAd' : 'createAd' ?>" class="btn gradient-btn fs-16 fw-semibold py-3 rounded-4">
+                                                        Confirm &amp; Pay →
+                                                    </button>
+                                                    <?php if($ads_Id == 0){ ?>
+                                                    <button class="btn btn-outline-secondary fs-16 fw-medium py-3 rounded-4" type="submit" name="saveForLater">
+                                                        Save For Later
+                                                    </button>
+                                                    <?php } ?>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <p class="text-center text-muted fs-12 mt-2 mb-0">
+                                            Click “Communities selected” to expand/collapse
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </form>
+        <div class="modal fade" id="selecComunityDetailsModal" tabindex="-1" aria-labelledby="selecComunityDetailsModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <section class="select-community-container set-community-main-modal-create-ad">
+                            <div class="comunity-container">
+                                <div class="comunity-title">
+                                    <h2>Choose Communities</h2>
+                                </div>
+                                <!-- comunity select  -->
+                                <div class="comunity-select">
+                                    <div class="comunity-search">
+                                        <div class="comunity-search-input">
+                                            <input type="text" placeholder="Search Community" class="form-control" />
+                                            <img src="assets/img/searchform.png" alt="" />
+                                        </div>
+                                    </div>
+
+                                    <!-- Charges Summary -->
+                                    <div id="chargesSummaryCard" style="display:none;">
+                                        <div class="card-body">
+                                            <div id="chargesList" class="set-box-charge-summary-main"></div>
+                                        </div>
+                                    </div>
+
+                                    <div class="community-summary">
+                                        <div class="community-stats">
+                                            <div class="stat-item">
+                                                <p>Communities</p>
+                                                <h4><?= count($communities) ?></h4>
+                                            </div>
+                                            <div class="stat-item-2">
+                                                <p>Selected</p>
+                                                <h4>0</h4>
+                                            </div>
+                                        </div>
+                                        <div class="community-action-buttons">
+                                            <button class="btn-unselect-all">Select All</button>
+                                        </div>
+                                    </div>
+        
+                                    <?php if(count($communities)){ ?>
+                                        <!-- Community Boxes -->
+                                        <div class="comunity-boxes comunity-boxes-my thin-scrollbar cpScrlB">
+                                            <?php foreach ($communities as $community): ?>
+                                            <!-- Single Community Item -->
+                                            <div class="single-com-box new-single-com-box">
+                                                <label class="custom-checkbox w-100">
+                                                    <input
+                                                        type="checkbox"
+                                                        name="selected_community"
+                                                        class="checkbox-input community-radio-ch"
+                                                        value="<?= $community['id']; ?>"
+                                                        data-address="<?= $community['address']; ?>"
+                                                        data-latitude="<?= $community['latitude']; ?>"
+                                                        data-longitude="<?= $community['longitude']; ?>"
+                                                        data-country-code="<?= $community['country_code']; ?>"
+                                                        data-name="<?= $community['name']; ?>"
+                                                        data-description="<?= $community['description']; ?>"
+                                                        data-state="<?= $community['state']; ?>"
+                                                        data-city="<?= $community['city']; ?>"
+                                                        data-price="<?= $community['price'] > 0 ? $community['price'] : $defaultCommunityPrice; ?>"
+                                                    />
+                                                    <a class="com-img position-relative">
+                                                        <div class="w-100">
+                                                            <img src="<?php echo !empty($community['image']) ? MEDIA_BASE_URL.$community['image'] : generateBase64Image($community['name']); ?>" alt="" />
+                                                            <!-- Overlay -->
+                                                            <div class="overlay-comm <?= ($community['is_private'] && !$community['status']) ? '' : 'com-hidden' ?>"></div>
+                                                            <div class="overlay-text-comm <?= ($community['is_private'] && !$community['status']) ? '' : 'com-hidden' ?>">
+                                                                <img src="assets/img/game-icons_sands-of-time.svg" alt="" />
+                                                                <?php if ($community['is_private'] && !$community['is_approved']): ?>
+                                                                <p>Membership Approval Pending</p>
+                                                                <?php endif; ?>
+                                                                <?php if ($community['is_private'] && !$community['status']): ?>
+                                                                <p>Community waiting for approval by Himish</p>
+                                                                <?php endif; ?>
+                                                            </div>
+                                                        </div>
+                                                        <span class="position-absolute private-tag <?= $community['is_private'] ? '' : 'com-hidden' ?>">private</span>
+                                                    </a>
+                                                    <div class="com-body">
+                                                        <span class="com-title"><?= $community['name'] ?></span>
+                                                        <span class="com-text"><?= $community['description'] ?></span>
+                                                        <?php if(!empty($community['latitude']) && !empty($community['longitude'])){ ?>
+                                                        <span class="com-text">
+                                                            <i class="fa fa-map-pin"></i>
+                                                            <?= $community['city'].', '.$community['state'] ?>
+                                                        </span>
+                                                        <?php } ?>
+                                                        <!-- Lock -->
+                                                        <span class="user-comm-count-item-right <?= $community['is_private'] ? '' : 'com-hidden' ?>">
+                                                            <img src="assets/img/solar_lock-linear.svg" alt="" />
+                                                        </span>
+                                                    </div>
+                                                </label>
+                                            </div>
+                                            <?php endforeach; ?>
+                                        </div>
+                                        <?php }else{
+                                            echo renderNoDataCard('No Communities Joined!', '', 'You have not joined any communities yet.');
+                                        } ?>
+                                </div>
+                            </div>
+                            <div class="not-find cpScrlF d-flex justify-content-between align-items-center">
+                                <input type="hidden" id="selectedCommunitiesInput" name="selectedCommunities">
+                                
+                                <button type="button" class="saveBtn join-comm-fn mt-0" data-bs-dismiss="modal">
+                                    <span class="saveBtnTxt">Save</span>
+                                    <span class="saveBtnImg"><img src="assets/img/forward.png" class="img-fluid w-100" alt="" /></span>
+                                </button>
+                                
+                                <button type="button" class="skipBtn" data-bs-dismiss="modal">Cancel</button>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <?php include('includes/footer-scripts.php') ?>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js?v=<?= time() ?>"></script>
+
+        <?php if($hasLink == 1){ ?>
+        <!-- <script>
+            $(document).ready(function () {
+                let communityIdFromDeepLink = "<?= $linkData_Meta['community']['id'] ?>"; // Replace with actual ID from deep link
+
+                let $checkbox = $(".community-radio-ch[value='" + communityIdFromDeepLink + "']");
+
+                let selectionWillBe = $(".community-radio[value='2']");
+
+                if (selectionWillBe.length) {
+                    selectionWillBe.trigger("click");
+                }
+
+
+                if ($checkbox.length) {
+                    if (!$checkbox.is(":checked")) {
+                        $checkbox.prop("checked", true);
+                    }
+                    $checkbox.trigger("click");
+                }
+            });
+        </script> -->
+        <?php } ?>
+
+        <script>
+        function previewMedia(event) {
+            const fileInput = event.target;
+            const file = fileInput.files[0];
+
+            if (file) {
+                const previewContainer = document.getElementById('previewContainer');
+                const previewImg = document.getElementById('previewImg');
+                const previewVideo = document.getElementById('previewVideo');
+                const previewVideoCnt = document.getElementById('videoRm');
+
+                // ✅ Find label linked to this input
+                const label = document.querySelector(`label[for="${fileInput.id}"]`);
+
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+                    const fileType = file.type.split('/')[0]; // Get file type (image/video)
+
+                    if (fileType === 'image') {
+
+                        if (!pixelarity.open(file, false, function (res, faces) {
+                            console.log("Faces detected:", faces);
+
+                            // Set cropped image preview
+                            var previewImg = document.getElementById('previewImg');
+                            previewImg.src = res;
+                            previewImg.style.height = "100px";
+                            previewImg.style.width = "100px";
+                            previewImg.style.objectFit = "cover";
+
+                            // Hide video preview
+                            previewVideo.style.display = 'none';
+
+                            // Remove upload text
+                            document.getElementById('textHd').innerHTML = '';
+                            document.getElementById('croppedImage').value = res;
+
+                            // Remove previous face rectangles
+                            document.querySelectorAll('.face').forEach(el => el.remove());
+
+                            // Draw face detection boxes (if any)
+                            faces.forEach(face => {
+                                let faceBox = document.createElement('div');
+                                faceBox.className = 'face';
+                                faceBox.style.position = 'absolute';
+                                //faceBox.style.border = '2px solid red';
+                                faceBox.style.height = face.height + "px";
+                                faceBox.style.width = face.width + "px";
+                                faceBox.style.top = (previewImg.getBoundingClientRect().top + face.y) + "px";
+                                faceBox.style.left = (previewImg.getBoundingClientRect().left + face.x) + "px";
+
+                                document.body.appendChild(faceBox);
+                            });
+                        }, "jpg", 0.7, true)) {
+                            alert("Whoops! That is not an image!");
+                        }
+
+                        // ✅ Remove video-uploaded class if user picks image
+                        if (label) label.classList.remove("video-uploaded");
+
+                    } else if (fileType === 'video') {
+                        // Show video preview (first frame thumbnail)
+                        previewVideo.src = e.target.result;
+                        previewVideo.style.display = 'block';
+                        previewVideo.style.height = '145px';
+                        previewVideo.style.width = '248px';
+                        previewVideo.controls = true; // Add controls for video playback
+                        previewVideoCnt.style.display = 'block';
+                        previewVideoCnt.classList.add('justify-content-center', 'd-flex');
+
+                        // ✅ Add video-uploaded class to label
+                        if (label) label.classList.add("video-uploaded");
+
+                        // Hide image preview
+                        //previewImg.style.display = 'none';
+                    }
+
+                    $('#textHd').html('');
+                };
+
+                reader.readAsDataURL(file);
+            }
+        }
+
+        </script>
+
+        <script>
+            <?php if(!$connectToExisting): ?>
+            $(document).ready(function () {
+                const $select = $('.js-example-basic-single');
+
+                if ($select.find('option').length === 2) {
+                    // Select the only available company option
+                    $select.val($select.find('option:eq(1)').val()).trigger('change.select2');
+
+                    const val = $select.find('option:eq(1)').val();
+                    const selectedOption = $select.find('option:selected');
+                    const companyName = selectedOption.data('name') || "";
+
+                    $("#display-company-name").val(val ? companyName : "");
+                    $("#display-company-name-hd").val(val ? companyName : "");
+                    $('#adTypeButtons').toggle(!!val);
+                }
+            });
+            <?php endif; ?>
+
+            <?php if($post_Id > 0): ?>
+            $(document).ready(function () {
+                const $select = $('.js-example-basic-single');
+
+                if ($select.find('option').length === 2) {
+                    // Select the only available company option
+                    $select.val($select.find('option:eq(1)').val()).trigger('change.select2');
+
+                    const val = $select.find('option:eq(1)').val();
+                    const selectedOption = $select.find('option:selected');
+                    const companyName = selectedOption.data('name') || "";
+
+                    $("#display-company-name").val(val ? companyName : "");
+                    $("#display-company-name-hd").val(val ? companyName : "");
+                    $('#adTypeButtons').toggle(!!val);
+                }
+            });
+            <?php endif; ?>
+        </script>
+
+        <?php if ($ads_Id > 0 || $post_Id > 0): ?>
+            <script>
+                window.adEditType = "<?= $defaultType ?>";
+            </script>
+        <?php endif; ?>
+
+        <script>
+
+        const pricingImage = {};
+        const pricingVideo = {};
+
+        <?php foreach ($imagePlans as $plan): ?>
+            pricingImage["<?php echo $plan['code']; ?>"] = {
+                days: <?php echo ($plan['code'] === 'month' ? 30 : ($plan['code'] === 'week' ? 7 : 1)); ?>,
+                price: <?php echo $plan['price']; ?>
+            };
+        <?php endforeach; ?>
+
+        <?php foreach ($videoPlans as $plan): ?>
+            pricingVideo["<?php echo $plan['code']; ?>"] = {
+                days: <?php echo ($plan['code'] === 'month' ? 30 : ($plan['code'] === 'week' ? 7 : 1)); ?>,
+                price: <?php echo $plan['price']; ?>
+            };
+        <?php endforeach; ?>
+
+
+        // Default initial pricing
+        let pricing = pricingImage;
+
+        // Image / Video Upload Functionality
+        $(document).ready(function () {
+            $('input[name="ad_type"]').on('change', function () {
+                const selectedType = $(this).val();
+                const fileInput = $('#imageUploadInput69');
+
+                // You can add your custom logic here
+                if (selectedType === 'video') {
+                    $('#adTypeTitle').text('Create Video Ad');
+                    // Show video-related options
+                    $('.ad-video-upload').show();
+                    $('.ad-image-upload').hide();
+                    fileInput.attr('accept', 'video/*');
+                    pricing = pricingVideo;
+                } else if (selectedType === 'image') {
+                    $('#adTypeTitle').text('Create Image Ad');
+                    // Show image-related options
+                    $('.ad-video-upload').hide();
+                    $('.ad-image-upload').show();
+                    pricing = pricingImage;
+                }
+
+                nextStep(2);
+            });
+
+            if (typeof window.adEditType !== 'undefined') {
+                const type = window.adEditType.toLowerCase();
+
+                // Select the appropriate radio button
+                $('input[name="ad_type"][value="' + type + '"]').prop('checked', true).trigger('change');
+
+                nextStep(2);
+            }
+        });
+
+        const taxRate = <?php echo $imagePlans[0]['tax']; ?>;
+        const userCredits = <?php echo $userDetails['wallet']; ?>;
+
+        $("#taxRateLabel").html('('+taxRate+'%)');
+
+        <?php foreach ($plans as $plan): ?>
+            pricing["<?php echo $plan['code']; ?>"] = {
+                days: <?php echo ($plan['code'] === 'month' ? 30 : ($plan['code'] === 'week' ? 7 : 1)); ?>,
+                price: <?php echo $plan['price']; ?>
+            };
+        <?php endforeach; ?>
+
+        function calculateAdCost(startDate, endDate, communityCost = 0) {
+
+            let isDebug = false;
+
+            // --- Calculate total days ---
+            const diffTime = endDate - startDate;
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+            // --- Get selected community type ---
+            const selectedCommTypeVal = $(".community-radio:checked").val();
+
+            if (isDebug) console.log("Selected Community Type:", selectedCommTypeVal, "Community Cost:", communityCost);
+
+            let remainingDays = diffDays;
+            let subtotalAds = 0;
+            let breakdown = [];
+
+            // --- Ad Pricing by month, week, day ---
+            const pricingUnits = [
+                { name: 'Month', ...pricing.month },
+                { name: 'Week', ...pricing.week },
+                { name: 'Day', ...pricing.day }
+            ];
+
+            pricingUnits.forEach(unit => {
+                const count = Math.floor(remainingDays / unit.days);
+                if (count > 0) {
+                    subtotalAds += count * unit.price;
+                    breakdown.push(`${count} ${unit.name}${count > 1 ? 's' : ''}`);
+                    remainingDays %= unit.days;
+                }
+            });
+
+            // --- Community Cost Calculation ---
+            let totalCommunityCost = communityCost * diffDays;
+            let avgCommunityPricePerDay = diffDays > 0 ? totalCommunityCost / diffDays : 0;
+
+            // --- Subtotal including community cost ---
+            let subtotal = subtotalAds + totalCommunityCost;
+
+            // --- Handle Community Discounts / Visibility ---
+            let disFnlAmount = 0;
+            const setDisplay = (selector, value) => $(selector).css("cssText", `display: ${value} !important;`);
+
+            if (selectedCommTypeVal === '1') { // My Community Discount
+
+                if(totalCommunityCost > 0){
+                    setDisplay("#chooseCommWrp", "none");
+                    setDisplay("#defaultAllCommunityPriceWrapper", "none");
+
+                    const discountValueMyComm = parseFloat($("#discountMyCommunity").val()) || 0;
+                    disFnlAmount = totalCommunityCost * (discountValueMyComm / 100);
+                    subtotal -= disFnlAmount;
+
+                    if (disFnlAmount > 0) {
+                        $("#myCommDiscTotal").html(`-$${disFnlAmount.toFixed(2)}`);
+                        $("#myCommunityDiscountWrapper").show();
+                    }
+                }
+            } else if (selectedCommTypeVal === '0') { // All Communities
+                setDisplay("#chooseCommWrp", "none");
+                setDisplay("#myCommunityDiscountWrapper", "none");
+
+                const allCommCost = parseFloat($("#defaultAllCommunityPrice").val()) || 0;
+                if (allCommCost > 0) {
+                    $("#allCommTotal").html(`$${allCommCost.toFixed(2)}`);
+                }
+            }
+
+            // --- Tax Calculation ---
+            const taxAmount = subtotal * (taxRate / 100);
+            const totalBeforeCredit = subtotal + taxAmount;
+
+            // --- Credits ---
+            let creditUsed = 0;
+            let finalTotal = totalBeforeCredit;
+            if ($('#use_credits').is(':checked')) {
+                creditUsed = Math.min(userCredits, totalBeforeCredit);
+                finalTotal -= creditUsed;
+            }
+
+            // --- Update UI Elements ---
+            const updateText = (selector, value) => $(selector).text(value);
+            const updateVal = (selector, value) => $(selector).val(value);
+
+            updateText("#subTotalAmount", `$${subtotal.toFixed(2)}`);
+            updateText("#taxAmount", `$${taxAmount.toFixed(2)}`);
+            updateText("#tax_amount_summary", `$${taxAmount.toFixed(2)}`);
+            updateText("#totalCost", `$${subtotalAds.toFixed(2)}`);
+            updateText("#costBreakdown", breakdown.join(', '));
+            updateText("#ad_duration_summary", breakdown.join(', '));
+
+            updateVal("#sub_total", subtotal.toFixed(2));
+            updateVal("#tax_amount", taxAmount.toFixed(2));
+            updateVal("#total_amount", finalTotal.toFixed(2));
+            updateVal("#charged_breakdown", breakdown.join(', '));
+            updateVal("#total_days", diffDays);
+            $("#total_days_prv").html(diffDays);
+            updateVal("#credit", creditUsed.toFixed(2));
+
+            $("#costBreakdownBox").show();
+
+            updateText("#adPriceBreakdown", `(${diffDays} days @ $${(subtotalAds / diffDays).toFixed(2)})`);
+            updateText("#adPriceTotal", `$${subtotalAds.toFixed(2)}`);
+
+            // if (selectedCommTypeVal === '1' || selectedCommTypeVal === '2') {
+                updateText("#communityPriceBreakdown", `(${diffDays} days @ $${avgCommunityPricePerDay.toFixed(2)})`);
+                updateText("#communityPriceTotal", `$${totalCommunityCost.toFixed(2)}`);
+                $("#chooseCommWrp").show();
+            // }
+
+            updateText("#pricingSubtotal", `$${subtotal.toFixed(2)}`);
+            updateText("#pricingTax", `$${taxAmount.toFixed(2)}`);
+            updateText("#availableCredits", `$${userCredits.toFixed(2)}`);
+            updateText("#payAfterCredits", `$${finalTotal.toFixed(2)}`);
+            updateText("#pricingTotal", `$${totalBeforeCredit.toFixed(2)}`);
+
+            if (isDebug) console.log({
+                subtotalAds,
+                totalCommunityCost,
+                avgCommunityPricePerDay,
+                subtotal,
+                taxAmount,
+                totalBeforeCredit,
+                creditUsed,
+                finalTotal,
+                disFnlAmount
+            });
+
+            // --- Build Payment JSON for PHP ---
+            const paymentData = {
+                adPricing: {
+                    subtotalAds: subtotalAds.toFixed(2),
+                    breakdown: breakdown,
+                    totalDays: diffDays
+                },
+                community: {
+                    type: selectedCommTypeVal,
+                    totalCost: totalCommunityCost.toFixed(2),
+                    avgPerDay: avgCommunityPricePerDay.toFixed(2),
+                    discount: disFnlAmount.toFixed(2)
+                },
+                tax: {
+                    rate: taxRate,
+                    amount: taxAmount.toFixed(2)
+                },
+                credits: {
+                    used: creditUsed.toFixed(2),
+                    available: userCredits.toFixed(2)
+                },
+                totals: {
+                    subtotal: subtotal.toFixed(2),
+                    totalBeforeCredit: totalBeforeCredit.toFixed(2),
+                    finalTotal: finalTotal.toFixed(2)
+                },
+                selectedCommunities: $("#expandedCommunityList li").map(function() {
+                    return $(this).find("span:first").text();
+                }).get()
+            };
+
+            // --- Store JSON in hidden input for PHP processing ---
+            $("#paymentData").val(JSON.stringify(paymentData));
+        }
+
+        $(document).ready(function () {
+            $("#use_credits").on('change', function () {
+                const start = parseStartDate($("#hiddenStartDate").val());
+                const end = parseEndDate($("#hiddenEndDate").val());
+
+                if (!isNaN(start.getTime()) && !isNaN(end.getTime())) {
+                    calculateAdCost(start, end, window.currentCommunityCost);
+                }
+            });
+        });
+
+        function parseStartDate(dateStr) {
+            const [month, day, year] = dateStr.split('/');
+            const date = new Date(`${year}-${month}-${day}`);
+            date.setHours(0, 0, 0, 0); // 00:00:00
+            return date;
+        }
+
+        function parseEndDate(dateStr) {
+            const [month, day, year] = dateStr.split('/');
+            const date = new Date(`${year}-${month}-${day}`);
+            date.setHours(23, 59, 59, 999); // 23:59:59
+            return date;
+        }
+        </script>
+
+        <script>
+        $(function () {
+            const dateInput = $('input[name="datefilter"]');
+
+            dateInput.daterangepicker({
+                autoUpdateInput: false,
+                locale: { cancelLabel: "Clear" },
+                drops: "up", // Open picker on top
+                minDate: moment() // Disable past dates
+            });
+
+            dateInput.on("apply.daterangepicker", function (ev, picker) {
+                ev.preventDefault();
+                ev.stopPropagation();
+
+                // Prevent any scroll jump
+                document.activeElement.blur();
+
+                const start = picker.startDate.format("MM/DD/YYYY");
+                const end = picker.endDate.format("MM/DD/YYYY");
+
+                $(this).val(`${start} - ${end}`);
+
+                // Set hidden fields for start and end dates
+                $('#hiddenStartDate').val(start);
+                $('#hiddenEndDate').val(end);
+
+                calculateAdCost(picker.startDate.toDate(), picker.endDate.toDate(), window.currentCommunityCost);
+            });
+
+            dateInput.on("cancel.daterangepicker", function (ev) {
+                ev.preventDefault();
+                ev.stopPropagation(); // ✅ Prevent modal scroll jump
+                $(this).val("");
+                $("#totalCost").text("$0.00");
+                $("#costBreakdown").text("");
+            });
+        });
+        </script>
+
+        <script>
+            // Ensure locationsArray exists before appending
+            window.allCommunityLocations = window.allCommunityLocations || [];
+            window.myCommunityLocations = window.myCommunityLocations || [];
+            window.myCommunityPricing = window.myCommunityPricing || [];
+
+            // Check if allCommunityLocations is not empty and append to window.locationsArray
+            <?php if (!empty($allCommunityLocations)): ?>
+                const phpAllCommunityLocations = <?php echo json_encode($allCommunityLocations, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>;
+                window.allCommunityLocations = window.allCommunityLocations.concat(phpAllCommunityLocations);
+            <?php endif; ?>
+
+            // Check if myCommunityLocations is not empty and append to window.locationsArray
+            <?php if (!empty($myCommunityLocations)): ?>
+                const phpMyCommunityLocations = <?php echo json_encode($myCommunityLocations, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>;
+                window.myCommunityLocations = window.myCommunityLocations.concat(phpMyCommunityLocations);
+            <?php endif; ?>
+        
+            // Check if myCommunityLocations is not empty and append to window.locationsArray
+            <?php if (!empty($myCommunities)): ?>
+                const myCommunityPricing = <?php echo json_encode($myCommunities, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>;
+                window.myCommunityPricing = window.myCommunityPricing.concat(myCommunityPricing);
+            <?php endif; ?>
+        </script>
+
+        <script src="assets/js/home.js?v=<?= time() ?>"></script>
+        
+        <script>
+            getUserLocation(false);
+        </script>
+        <script src="assets/js/create-ad.js?v=<?= time() ?>"></script>
+        <script>
+        $(document).ready(function () {
+            const ad_id = <?= (int)$ads_Id ?>;
+            const post_id = <?= (int)$post_Id ?>;
+
+            if (ad_id > 0 || post_id > 0) {
+                // Basic fields
+                $("#title").val("<?= $adsData[0]['title'] ?>");
+
+                // ✅ Load tags from PHP into JS
+                const editTagsFromServer = <?= json_encode(explode(',', $adsData[0]['service'])) ?>;
+                if (typeof window.addTag === 'function' && typeof window.renderTags === 'function') {
+                    editTagsFromServer.forEach(tag => window.addTag(tag.trim()));
+                }
+            }
+        });
+        </script>
+    </body>
+</html>

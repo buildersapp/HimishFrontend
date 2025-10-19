@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+    <?php include('includes/head.php') ?>
+    <body>
+        <section class="registration sec d-flex align-items-center justify-content-center">
+            <div class="container">
+                <div>
+                    <div class="form-wraper">
+                        <div class="logo-wraper">
+                            <img src="assets/img/logo.png" class="w-100 img-fluid" alt="Logo" />
+                        </div>
+                        <div class="registration-content">
+                            <h1>Welcome to Himish! 👋🏻</h1>
+                            <p>Please sign-in to your account and start the adventure</p>
+                        </div>
+                        <form id="loginUser" method="post" data-parsley-validate>
+                            <div>
+                                <input 
+                                    type="email" 
+                                    name="email" 
+                                    placeholder="Email" 
+                                    class="form-control" 
+                                    id="email" 
+                                    required 
+                                    autocomplete="off" 
+                                />
+                            </div>
+                            <div class="password-wraper position-relative">
+                                <input 
+                                    type="password" 
+                                    name="password" 
+                                    placeholder="Password" 
+                                    class="form-control" 
+                                    id="password" 
+                                    autocomplete="off" 
+                                    required 
+                                />
+                                <i id="togglePassword" class="fas fa-eye position-absolute" style="top: 50%; right: 10px; transform: translateY(-50%); cursor: pointer;"></i>
+                            </div>
+                            <input type="hidden" name="timezone" id="timezone" />
+                            <div class="check-wraper">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="rememberMe" />
+                                    <label class="form-check-label" for="rememberMe">
+                                        Remember Me
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="submit-btn">
+                                <button type="submit" id="loginButton">Login</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <script>
+            // Password visibility toggle
+            document.getElementById('togglePassword').addEventListener('click', function () {
+                const passwordInput = document.getElementById('password');
+                const toggleIcon = this;
+                if (passwordInput.type === 'password') {
+                    passwordInput.type = 'text';
+                    toggleIcon.classList.remove('fa-eye');
+                    toggleIcon.classList.add('fa-eye-slash');
+                } else {
+                    passwordInput.type = 'password';
+                    toggleIcon.classList.remove('fa-eye-slash');
+                    toggleIcon.classList.add('fa-eye');
+                }
+            });
+        </script>
+        <!-- Include Font Awesome -->
+        <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    </body>
+    <?php include('includes/footer-scripts.php') ?>
+    <script>
+        var userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        $("#timezone").val(userTimezone);
+    </script>
+</html>

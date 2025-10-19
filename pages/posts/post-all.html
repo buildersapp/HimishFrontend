@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+    <?php include('includes/head.php') ?>
+    <body>
+        <?php include('includes/nav-header.php') ?>
+        <form class="postDetailsBody" method="post" enctype="multipart/form-data" action="post-all.php">
+            <div id="formLoader" style="display: none; position: fixed;
+                top: 0; left: 0;
+                width: 100%; height: 100%;
+                background: rgba(0,0,0,0.6);
+                z-index: 99999;
+                justify-content: center;
+                align-items: center;
+                color: #fff;
+                font-size: 20px;
+            ">
+                <div class="loader">
+                    <p style="margin-top:10px;">Submitting your post… Please give us a moment.</p>
+                </div>
+            </div>
+            <!-- Step 1: Upload -->
+            <div class="form-step" id="step1">
+                <div class="postUpload-container set-bg-transparent-org">
+                    <button class="header-flow-left-inner-button" onclick="
+                        if (window.history.length > 1) {
+                            window.history.back();
+                        } else {
+                            window.location.href = 'home.php';
+                        }
+                    ">
+                        <img src="assets/img/left-arrow.svg" alt="left-arrow" />
+                    </button>
+                </div>
+                <div id="globalDropZone" style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 9999; display: none;"></div>
+                <div class="postUpload-container">
+                    <div class="postUpload-title">
+                        <h2>Upload Image</h2>
+                        <p>Upload primary post image to scan and capture the post details.</p>
+                    </div>
+                    <div class="comunity-image-upload-wrapper">
+                        <label for="imageUploadInput" class="comunity-image-upload-label">
+                            <span class="uploadIconComunity set-w-img-auto">
+                                <img src="assets/images/bezier.png" class="img-fluid" alt="Upload Icon"/>
+                            </span>
+                            <span class="uploadTextcomunity">Upload Image</span>
+                        </label>
+                        <input type="file" name="image" id="imageUploadInput" style="display: none;" accept="image/*" onchange="previewImage(event, 'previewImg', 'textHd1')" />
+                        <input type="hidden" name="cropped_image" id="croppedImage" />
+                        <input type="hidden" name="listing_data" id="listing_data" />
+                        <input type="hidden" name="post_data" id="post_data" />
+                    </div>
+                </div>
+            </div>
+        </form>
+        <?php include('includes/footer-scripts.php') ?>
+        <script>
+            localStorage.setItem("scanPostAllUrl", "https://www.citilytics.net/ads_himish/post_listing/");
+        </script>
+        <script src="assets/js/post-all.js?v=<?= time() ?>"></script>
+    </body>
+</html>

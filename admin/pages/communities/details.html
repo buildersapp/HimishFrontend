@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+    <?php include('includes/head.php') ?>
+    <link rel="stylesheet" href="assets/plugins/datatable/css/dataTables.bootstrap5.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.7.1/css/buttons.dataTables.min.css" />
+     <style>
+          .select2-container {
+        width: 100% !important;
+        z-index: 9999999 !important;
+    }
+
+    /* Set height for Select2 input box */
+    .select2-container .select2-selection--single {
+        height: 40px;  /* Adjust height of the select input box */
+    }
+
+    .select2-container--default .select2-selection--single .select2-selection__rendered {
+        line-height: 40px !important;
+    }
+
+    .select2-container--default .select2-selection--single .select2-selection__arrow {
+        top: 7px !important;
+    }
+
+    /* Set max-height for the dropdown list */
+    .select2-container--default .select2-results__options {
+        max-height: 200px;  /* Adjust the dropdown height */
+        overflow-y: auto;   /* Enable scrolling if content exceeds height */
+    }
+        </style>
+    <body>
+        <!-- wrapper start  -->
+        <div class="wrapper relative">
+            <?php include('includes/sidebar.php') ?>
+
+            <!-- header start  -->
+            <?php include('includes/nav-header.php') ?>
+            <!-- header end  -->
+
+            <!-- content area start  -->
+            <div class="community-details-page-sec">
+                <main class="user-main">
+                    <div class="user-row">
+                        <!-- avatar card  -->
+                        <div class="user-left">
+                            <?php
+                            $imgData = "";
+                                if(empty($final['image'])){
+                                    $imgData = '<img class="img-placeholder" src="assets/img/fav-icon.png" alt="" />'; }else{ $imgData = '<img class="img-fluid" src="'. MEDIA_BASE_URL .''.$final['image'].'" alt="" />'; } ?>
+                            <div class="avatar-img set-img-card-user-community">
+                                <?= $imgData; ?>
+                            </div>
+
+                            <?php
+                            $userStatus = "";
+                                if($final['status'] == 1){
+                                    $userStatus = '<div class="content userActive" status="0" id="'.$final['id'].'" onclick="changeCommunityStatus(this)" data-bs-toggle="tooltip" data-bs-placement="top" title="click to deactivate">
+                            Active
+                        </div>
+                        '; }else{ $userStatus = '
+                        <div class="content userInactive" status="1" id="'.$final['id'].'" onclick="changeCommunityStatus(this)" data-bs-toggle="tooltip" data-bs-placement="top" title="click to activate">Inactive</div>
+                        '; } ?>
+
+                        <div class="avatar-content">
+                            <h1 class="text-uppercase"><?= $final['name'] ?></h1>
+                            <?= $userStatus ?>
+                        </div>
+                        <!-- <div class="avatar-icon-box-wraper">
+                            <div class="avatar-icon-box">
+                                <div class="avatat-icon-img">
+                                    <img src="assets/img/user/camera.png" alt="" />
+                                </div>
+                                <div class="avatat-icon-content">
+                                    <h2><?= formatNumberUS($final['total_posts']) ?></h2>
+                                    <p>Total Posts</p>
+                                </div>
+                            </div>
+                            <div class="avatar-icon-box">
+                                <div class="avatat-icon-img">
+                                    <h3>Ad</h3>
+                                </div>
+                                <div class="avatat-icon-content">
+                                    <h2><?= formatNumberUS($final['total_ads']) ?></h2>
+                                    <p>Total Ads</p>
+                                </div>
+                            </div>
+                        </div> -->
+                    </div>
+                    <div class="user-right">
+                        <!-- Tab header -->
+                        <div class="tab-header flex-xl-wrap flex-wrap gap-4 justify-content-xl-between justify-content-center">
+                            <!-- Tab list -->
+                            <ul class="tablist" style="display: none;">
+                                <li id="communityDetailsTab" class="active-tablist" data-tab="community-details">
+                                    Community Details
+                                </li>
+                                <li id="communityMembersTab" data-tab="community-members">Members</li>
+                            </ul>
+                            <div class="d-flex gap-3 align-items-center">
+                                <!-- Edit button -->
+                                <div class="edit-btn d-flex align-content-center align-items-center gap-3 flex-md-nowrap flex-wrap justify-content-md-end justify-content-center" id="editCommunityBtn">
+                                    <button>
+                                        <span class="button-icon"><img src="assets/img/user/edit.png" class="w-100" alt="" /></span>
+                                        <span>Edit</span>
+                                    </button>
+                                </div>
+                                <div class="edit-btn d-flex align-content-center align-items-center gap-3 flex-md-nowrap flex-wrap justify-content-md-end justify-content-center" >
+                                        <button type="button">
+                                            <span>Add Users</span>
+                                        </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Tab content (initially, only one should be visible) -->
+                        <div id="community-details" class="tab-content">
+                            <form class="user-form" method="post" action="" enctype="multipart/form-data" id="communityEditForm" data-parsley-validate>
+                                
+                                <div class="row" id="user-form-row">
+                                    <div class="col-md-3">
+                                        <div class="img-upload">
+                                            <input type="file" name="image" id="imgUploadUser" class="d-none" accept="image/*" />
+                                            <label for="imgUploadUser" class="set-w-full-upload">
+                                                <span><img src="assets/img/user/plus.png" alt="" id="imgPreview" /></span>
+                                                <span>Upload Image</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <div class="row">
+                                            <div class="col-md-6 mt-3">
+                                                <div>
+                                                    <label for="name">Name:</label>
+                                                    <input type="text" name="name" id="name" class="form-control" value="<?= $final['name'] ?>" readonly />
+                                                </div>
+                                            </div>
+                                            <!-- <div class="col-md-6">
+                                                <div>
+                                                    <label for="email">Type:</label>
+                                                    <select class="form-select " name="is_private" aria-label="Default select example" aria-readonly="true">
+                                                        <option value="0" <?= $final['is_private']==0 ? 'selected' : '' ?>>Public</option>
+                                                        <option value="1" <?= $final['is_private']==1 ? 'selected' : '' ?>>Private</option>
+                                                    </select>
+                                                </div>
+                                            </div> -->
+                                            <div class="col-md-6 mt-3">
+                                                <div>
+                                                    <label class="form-label">Type:</label>
+                                                    <div class="d-flex align-items-center gap-5">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input set-input-size-radio" 
+                                                                type="radio" 
+                                                                name="is_private" 
+                                                                id="public" 
+                                                                value="0" 
+                                                                <?= (!isset($final['is_private']) || $final['is_private'] == 0) ? 'checked' : '' ?>>
+                                                            <label class="form-check-label" for="public">
+                                                                Public
+                                                            </label>
+                                                        </div>
+
+                                                        <div class="form-check">
+                                                            <input class="form-check-input set-input-size-radio" 
+                                                                type="radio" 
+                                                                name="is_private" 
+                                                                id="private" 
+                                                                value="1" 
+                                                                <?= (isset($final['is_private']) && $final['is_private'] == 1) ? 'checked' : '' ?>>
+                                                            <label class="form-check-label" for="private">
+                                                                Private
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-3 mt-3">
+                                                <div>
+                                                    <label for="email">Profile Type:</label>
+                                                    <select class="form-select" name="gender" aria-label="Default select example" aria-readonly="true">
+                                                    <?php foreach ($profileGroups as $gender): ?>
+                                                        <option value="<?= htmlspecialchars($gender['id']) ?>" 
+                                                            <?= (isset($final['gender']) && $final['gender'] === $gender['id']) ? 'selected' : '' ?>>
+                                                            <?= htmlspecialchars($gender['name']) ?>
+                                                        </option>
+                                                    <?php endforeach; ?>
+                                                </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3 mt-3">
+                                                <div>
+                                                    <label for="name">Created By:</label>
+                                                    <input type="text" name="created_by" id="created_by" class="form-control" value="Joseph Gottlieb" readonly />
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3 mt-3">
+                                                <div>
+                                                    <label for="acc">Created</label>
+                                                    <input type="text" name="acc" id="acc" value="<?= formatToUSDate($final['created_at']) ?>" class="form-control" readonly disabled />
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3 mt-3">
+                                                <div>
+                                                    <label for="acc">Community Price</label>
+                                                    <input type="number" step="0.001" name="price" id="price" value="<?= $final['price'] ?>" class="form-control"  />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    
+                                    
+                                    <div class="col-md-12">
+                                        <div>
+                                            <label for="handle">Description</label>
+                                            <textarea class="form-control" id="exampleFormControlTextarea1" name="description" rows="3" placeholder="Enter description..." required><?= $final['description'] ?></textarea>
+                                        </div>
+                                    </div>
+
+                                    <div class=" mt-3">
+                                        <input type="text" name="address" id="address" placeholder="Address" oninput="initAutocomplete()" autocomplete="off" class="form-control m-0" value="<?= $final['address'] ?>" />
+                                        <input type="hidden" name="latitude" id="latitude">
+                                        <input type="hidden" name="longitude" id="longitude">
+                                        <input type="hidden" name="city" id="city">
+                                        <input type="hidden" name="state" id="state">
+                                    </div>
+
+                                    
+                                </div>
+                                <div class="edit-btn d-flex align-content-center align-items-center gap-3 flex-md-nowrap flex-wrap justify-content-md-end justify-content-center mt-4" id="updateCommunityBtn" style="display: none !important;">
+                                    <button type="submit" name="updateCommunity">
+                                        <span>Update</span>
+                                    </button>
+                                    <button type="button" onclick="location.reload();">
+                                        <span>Cancel</span>
+                                    </button>
+                                </div>
+                            </form>
+
+                            <div id="community-members" class="">
+                                <div class="table-responsive table-space mt-4">
+                                    <table class="table w-100" id="communityMembersTable" data-community-id="<?= base64_encode($final['id']) ?>">
+                                        <thead>
+                                            <tr class="table-header">
+                                                <th scope="col" class="userHeading-size">
+                                                    <a href="#" class="userHeading"> USER </a>
+                                                </th>
+                                                <!--  -->
+                                                <th scope="col">
+                                                    <a href="#" class="userHeading"> TYPE </a>
+                                                </th>
+                                                <th scope="col">
+                                                    <a href="#" class="userHeading"> STATUS </a>
+                                                </th>
+                                                <th scope="col">
+                                                    <a href="#" class="userHeading"> JOINED </a>
+                                                </th>
+                                                <th scope="col">
+                                                    <a href="#" class="userHeading"> ACTION </a>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                    <div id="noDataMessageUC" class="no-data-container" style="display: none;">
+                                        <img src="<?= NO_DATA_IMG ?>" alt="No Data" />
+                                        <h3><?= NO_DATA_TITLE ?></h3>
+                                        <p><?= NO_DATA_DESC ?></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+            </div>
+
+             <!-- content area end -->
+            <div class="modal fade customModal" id="addCommunityUser" tabindex="-1" aria-labelledby="creditModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h2 class="modal-title fs-5" id="creditModalLabel">Add Community Users</h2>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form class="user-form p-0 d-flex flex-column gap-3" action="" method="post" data-parsley-validate="">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                            <div>
+                                                <select class="form-select" id="community" multiple="multiple"
+                                                        name="user[]" aria-label="Default select example">
+                                                        <?php foreach ($users as $kc=>$vcc) {
+                                                            if($vcc['isCommunityJoin'] ==0){
+                                                        ?>
+                                                        <option value="<?= $vcc['id'];?>">
+                                                            <?=$vcc['name']; ?>
+                                                        </option>
+                                                        <?php } } ?>
+                                                    </select> 
+                                            </div>
+                                    </div>
+                                </div>
+                            
+                            
+                                <div class="mt-2 gap-3 d-flex flex-row">
+                                    <button type="submit" class="btn btnSave" name="addCommunityUsers">Save</button>
+                                    <button type="button" class="btn btnClose" data-bs-dismiss="modal">Close</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- content area end -->
+        </div>
+        <!-- wrapper end  -->
+        <script src="assets/plugins/datatable/js/jquery.dataTables.min.js?v=<?= time() ?>"></script>
+        <?php include('includes/footer-scripts.php') ?>
+        <script>
+            $(document).ready(function () {
+                $('#community').select2({placeholder: "Select community", // Placeholder text
+                        allowClear: true,
+                        search:true
+                });
+            });
+            document.addEventListener('DOMContentLoaded', function () {
+                // Get the current URL parameters
+                const urlParams = new URLSearchParams(window.location.search);
+                const activeTab = urlParams.get('tab'); // Get the 'tab' parameter from the URL
+                const redirect = urlParams.get('redirect'); // Get the 'redirect' parameter from the URL
+
+                // Set default active tab if no parameter is provided (e.g., 'user-details')
+                const defaultTab = activeTab || 'community-details';
+
+                // Get all the tab list items and tab content sections
+                const tabListItems = document.querySelectorAll('.tablist li');
+                const tabContents = document.querySelectorAll('.tab-content');
+
+                // Loop through all the tab list items and tab content sections
+                tabListItems.forEach((tab) => {
+                    // Remove 'active-tablist' class from all tabs
+                    tab.classList.remove('active-tablist');
+
+                    // Check if the tab matches the active tab from the URL or default tab
+                    if (tab.dataset.tab === defaultTab) {
+                        tab.classList.add('active-tablist'); // Add 'active-tablist' class to the active tab
+                    }
+
+                    // If 'redirect' is wallet, make the 'Wallet' tab enabled
+                    if (redirect === 'members' && tab.dataset.tab === 'community-members') {
+                        tab.classList.add('active-tablist'); // Make 'Wallet' tab active
+                    }
+                });
+
+                tabContents.forEach((content) => {
+                    // Hide all the tab contents
+                    content.classList.add('hidden');
+
+                    // Show the content of the active tab or redirect tab
+                    if (redirect === 'members' && content.id === 'community-members') {
+                        content.classList.remove('hidden'); // Display the Wallet content
+                        $('#communityMembersTab').trigger('click');
+                    }else{
+                        $('#communityDetailsTab').trigger('click');
+                    }
+                });
+            });
+        </script>
+    </body>
+</html>

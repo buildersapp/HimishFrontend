@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+    <?php include('includes/head.php') ?>
+    <body>
+        <section class="registration-section">
+            <div class="registration-header">
+                <a href="index.php"><img src="assets/img/logo.png" class="registration-logo" alt="App Logo"></a>
+                <div class="back-arr">
+                    <a href="index.php"><img src="assets/img/left-arr.png" alt=""></a>
+                </div>
+            </div>
+            <div class="container">
+                <div class="registration-content">
+                    <div class="registration-info-section">
+                        <div class="registration-illustration">
+                            <img src="assets/img/register.png" class="img-fluid" alt="Register Illustration">
+                        </div>
+                        <div class="registration-info-text">
+                            <h2 class="registration-info-title">Promote Anything, Reach Everyone — Effortlessly with Himish</h2>
+                            <p class="registration-info-description">
+                                Himish is an innovative platform designed to help businesses and individuals promote their services, products, and events with ease. Whether you want to advertise a sale, post a job opening, list a rental,
+                                or promote an event, Himish connects your content with the right audience effortlessly.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="registration-form-section">
+                        <div class="registration-form-title">
+                            <h3>Contact Us</h3>
+                            <div class="postAs-bar"></div>
+                        </div>
+                
+                        <form action="" method="post" class="registration-form" data-parsley-validate>
+                            <!-- Title -->
+                            <div class="input-wrapper">
+                                <input type="text" name="name" placeholder="Full Name" id="name" class="form-input" required>
+                                <label for="title-input" class="input-icon">
+                                    <i class="fa fa-user-circle text-secondary"></i>
+                                </label>
+                                <label for="title-input" class="postdetails-form-bar">
+                                </label>
+                            </div>
+                            <!-- Email -->
+                            <div class="input-wrapper">
+                                <input type="email" name="email" placeholder="Email" id="email" class="form-input" autocomplete="off" required>
+                                <label for="email-input" class="input-icon">
+                                    <i class="fa fa-envelope text-secondary"></i>
+                                </label>
+                                <label for="email-input" class="postdetails-form-bar">
+                                </label>
+                            </div>
+                            <!-- Subject -->
+                            <div class="input-wrapper">
+                                <input type="text" placeholder="Subject" id="subject" class="form-input" name="subject" autocomplete="off" required>
+                                <label for="email-input" class="input-icon">
+                                    <i class="fa fa-book text-secondary"></i>
+                                </label>
+                                <label for="email-input" class="postdetails-form-bar">
+                                </label>
+                            </div>
+                            <!-- Message -->
+                            <div class="input-wrapper">
+                                <textarea class="form-input" name="message" placeholder="Message.." id="message" rows="5" required></textarea>
+                                <label for="email-input" class="input-icon">
+                                    <i class="fa fa-message text-secondary"></i>
+                                </label>
+                                <label for="email-input" class="postdetails-form-bar">
+                                </label>
+                            </div>
+                            <!-- submit  -->
+                            <div>
+                                <button class="register-submit" type="submit" id="registerButton" name="contactUs">
+                                    <span class="saveBtnTxt">Submit</span>
+                                    <span class="saveBtnImg"><img src="assets/img/forward.png" class="img-fluid w-100" alt=""></span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!-- registration shape  -->
+             <div class="registration-shape">
+                <img src="assets/img/register-shape.png" class="img-fluid" alt="">
+             </div>
+        </section>
+        <!-- Include Font Awesome -->
+        <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    </body>
+    <?php include('includes/footer-scripts.php') ?>
+</html>

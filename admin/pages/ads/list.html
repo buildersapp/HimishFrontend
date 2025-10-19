@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+    <?php include('includes/head.php') ?>
+    <link rel="stylesheet" href="assets/plugins/datatable/css/dataTables.bootstrap5.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.7.1/css/buttons.dataTables.min.css" />
+    <style>
+    .select2-container {
+       z-index: 99999 !important;
+    }
+
+      .select2-dropdown {
+          z-index: 1051 !important; /* Must be higher than modal (1050) */
+      }
+    </style>
+    <body>
+        <!-- wrapper start  -->
+        <div class="wrapper relative">
+            <?php include('includes/sidebar.php') ?>
+
+            <!-- header start  -->
+            <?php include('includes/nav-header.php') ?>
+            <!-- header end  -->
+<!-- content area start  -->
+<div class="ads-page-sec">
+  <main>
+    <section class="userList">
+      <div class="">
+        <div class="row">
+          <!-- top -->
+          <div class="col-12 mb-4">
+            <div class="search-sec-cmn user-page d-flex align-items-center justify-content- mb-2">
+              <?php if (hasPermission('Ads', 'add')) { ?>
+              <div class="addUser">
+                <a href="#" class="btn-primary btn-small" title="Add <?= $title ?>" data-bs-toggle="modal" data-bs-target="#addAdModal"><i class="fa fa-plus-circle fa-2x"></i> </a>
+              </div>
+              <?php } ?>
+              <div class="search-form me-2">
+                <button class="btn p-0 outline-0" type="submit"><img src="assets/img/list/search.svg"
+                    alt="search icon" /></button>
+                <input type="search" id="adsSearch" class="form-control form-input border-0" placeholder="Search Ads" />
+              </div>
+              <div class="addUser d-flex gap-3">
+                <?php if (hasPermission('Ads', 'delete')) { ?>
+                <a href="#" class="btn btn-cst px-3 bg-danger " style="display: none;" id="adsDeleteButton" >Delete</a>
+                <?php } ?>
+              </div>
+            </div>
+          </div>
+          <!-- middle -->
+
+          <!-- bottom -->
+          <div class="col-12">
+            <div class="list-users">
+              <!-- table -->
+              <div class="table-responsive">
+                <table class="table" id="adsTable">
+                  <thead>
+                    <tr class="table-header">
+                      <th scope="col" class="th-checkbox">
+                        <input type="checkbox" class="chk-box select-all" value="0"/>                                                    </th>
+                      </th>
+                    
+                      <th scope="col" class="userHeading-size">
+                        <a href="#" class="userHeading">
+                          Visible
+                        </a>
+                      </th>
+                      <th scope="col" class="userHeading-size">
+                        <a href="#" class="userHeading">
+                          Company
+                        </a>
+                      </th>
+                      <th scope="col">
+                        <a href="#" class="userHeading">
+                          ADMIN 
+                        </a>
+                      </th>
+                      <th scope="col">
+                        <a href="#" class="userHeading">
+                          Title 
+                        </a>
+                      </th>
+                    
+
+                      <th scope="col">
+                        <a href="#" class="userHeading">
+                          Start Date 
+                        </a>
+                      </th>
+                      <th scope="col">
+                        <a href="#" class="userHeading">
+                          Status 
+                        </a>
+                      </th>
+
+                      <th scope="col">
+                        <a href="#" class="userHeading">
+                          Created at 
+                        </a>
+                      </th>
+
+                      <th scope="col">
+                        <a href="#" class="userHeading">
+                          EXPIRES 
+                        </a>
+                      </th>
+
+                      <th scope="col">
+                        <a href="#" class="userHeading">
+                          Payment 
+                        </a>
+                      </th>
+                      <th scope="col">
+                        <div class="userHeading">ACTION</div>
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                  
+                  </tbody>
+                </table>
+                <div id="noDataMessage" class="no-data-container" style="display: none;">
+                  <img src="<?= NO_DATA_IMG ?>" alt="No Data" />
+                  <h3><?= NO_DATA_TITLE ?></h3>
+                  <p><?= NO_DATA_DESC ?></p>
+              </div>
+              </div>
+              <!-- pagination -->
+              <!-- <div class="pagination d-flex flex-column flex-md-row justify-content-end align-items-center">
+                <div class="d-flex align-items-center gap-2">
+                  <h4>Rows per page:</h4>
+                  <select name="" id="" class="pagiSelect">
+                    <option value="10">10</option>
+                    <option value="20">20</option>
+                    <option value="30">30</option>
+                  </select>
+                </div>
+                <div class="d-flex align-items-center page-no">
+                  <span>1-5</span>
+                  <span>of</span>
+                  <span>13</span>
+                </div>
+                <div>
+                  <a href="#" class="btn btn-pagiBtn"><img src="assets/img/list/arrow-left.svg" alt="" /></a>
+                  <a href="#" class="btn btn-pagiBtn"><img src="assets/img/list/arrow-right.svg" alt="" /></a>
+                </div>
+              </div> -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="modal fade customModal" id="addAdModal" tabindex="-1" aria-labelledby="addUserLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h2 class="modal-title fs-5" id="addUserLabel">Add <?= $title ?></h2>
+              </div>
+              <div class="modal-body">
+                  <form class="user-form p-0 d-flex flex-column gap-3" method="post" action="" data-parsley-validate enctype="multipart/form-data">
+                      
+                      <div class="row">
+                          <div class="col-md-12 img-upload-add-post">
+                              <input type="file" name="image" accept="image/*,video/*" id="imageShow1" required class="d-none" onchange="previewMedia(event)" />
+                              <label for="imageShow1">
+                                  <span>
+                                      <img id="previewImg" src="assets/img/user/plus.png" alt="Upload Image" />
+                                      <video id="previewVideo" style="display: none;"></video>
+                                  </span>
+                                  <span id="textHd1">Upload Image / Video</span>
+                              </label>
+                          </div>
+                         
+                      </div>
+
+                      <!-- <div>
+                        <label>Select User (If no user is selected, Posterz Admin will be assigned by default.)</label>
+                        <select class="form-control w-100" name="user_id" id="users" aria-label="Default select example">
+                          <option value="">Select User</option>
+                          <?php foreach ($users as $ku=>$vu) { ?>
+                              <option value="<?= $vu['id']; ?>"><?= $vu['name']; ?></option>
+                          <?php } ?>
+                        </select>
+                      </div> -->
+
+                      <div>
+                        <label>Select Company </label>
+                        <select class="form-control w-100" name="company_id" id="company" aria-label="Default select example">
+                          <option value="">Select Company</option>
+                          <?php foreach ($company as $ku=>$vu) { ?>
+                              <option value="<?= $vu['id']; ?>"><?= $vu['name']; ?></option>
+                          <?php } ?>
+                        </select>
+                      </div>
+
+                      <div>
+                        <label>Title </label>
+                        <input type="text" name="title" id="TITLE" placeholder="Title"  class="form-control m-0" value="<?= @$apiDataU['title'] ?>" required />
+                      </div>
+
+                      <div>
+                        <label>Start Date </label>
+                        <input type="date" class="form-control" name="start_date" id="date"  placeholder="date" value="<?= @$apiDataU['start_date'] ?>" required>
+                      </div>
+                      <div>
+                        <label>End Date </label>
+                        <input type="date" class="form-control" name="end_date" id="end_date" value="<?= @$apiDataU['end_date'] ?>" placeholder="date" required>
+                      </div>
+
+                      
+
+                      <div>
+                        <label>Address</label>
+                          <input type="text" name="address" id="address" placeholder="Address" oninput="initAutocomplete()" autocomplete="off" value="<?= @$apiDataU['address'] ?>" class="form-control m-0" />
+                          <input type="hidden" name="latitude" id="latitude" value="<?php echo @$apiDataU['latitude']; ?>">
+                          <input type="hidden" name="longitude" id="longitude" value="<?php echo @$apiDataU['longitude']; ?>">
+                      </div>
+
+                      <div>
+                          <label>Select Community</label>
+                          <select class="form-control w-100" name="community[]" id="communities" multiple aria-label="Default example">
+                            <option value="">Select Community</option>
+                            <?php foreach ($communities as $ku=>$vu) { ?>
+                                <option value="<?= $vu['name']; ?>"><?= $vu['name']; ?></option>
+                            <?php } ?>
+                          </select>
+                          <input type="hidden" name="community_type" id="community_type" value="2">
+                      </div>
+
+
+                      <div>
+                        <label for="title">AD Type (Service / Product):</label>
+                        <select id="post_type" class="form-select" name="post_type">
+                            <option value="">Select Ad Type</option>
+                            <option value="1">Services</option>
+                            <option value="2">Products</option>
+                        </select>
+                    </div>
+
+                    <div>
+                      <label for="title">Select Category</label>
+                      <select id="post_category_master" class="form-select" name="post_category_master">
+                          <option value="">Select Category</option>                                           
+                      </select>
+                  </div>
+
+                  <div>
+                    <label for="title">Ad Keywords:</label>
+                    <textarea rows="2" cols="2"  name="service" id="service" placeholder="Post keywords here..."
+                    class="form-control"></textarea>
+                </div>
+
+                      <div class="mt-2 gap-3 d-flex flex-row">
+                          <button type="submit" name="addAd" class="btn btnSave">Save</button>
+                          <a href="#" onclick="window.location.reload();"><button type="button" class="btn btnClose">Close</button></a>
+                      </div>
+                  </form>
+              </div>
+          </div>
+      </div>
+  </div>
+  </main>
+</div>
+<!-- content area end -->
+            
+        </div>
+        <!-- wrapper end  -->
+        <script src="assets/plugins/datatable/js/jquery.dataTables.min.js?v=<?= time() ?>"></script>
+        <?php include('includes/footer-scripts.php') ?>
+        <script src="assets/js/ads.js?v=<?= time() ?>"></script>
+        <?php if(@$err == 1){ ?>
+          <script>
+            const modal = new bootstrap.Modal(document.getElementById('addAdModal'));
+            modal.show();
+            
+          </script>
+        <?php } ?>
+          <script>
+            // dates
+          document.addEventListener("DOMContentLoaded", function () {
+                  var startDateInput = document.getElementById("date");
+                  var endDateInput = document.getElementById("end_date");
+
+                  let today = new Date().toISOString().split('T')[0];
+                  startDateInput.setAttribute("min", today); // Disable past dates
+
+                  startDateInput.addEventListener("change", function () {
+                      let selectedDate = new Date(startDateInput.value);
+                      selectedDate.setDate(selectedDate.getDate() + 1); // Set to next day
+                      let minEndDate = selectedDate.toISOString().split('T')[0];
+
+                      endDateInput.value = ""; // Clear previous selection
+                      endDateInput.setAttribute("min", minEndDate); // Update min date for end date
+                  });
+              });
+
+              function previewMedia(event) {
+            const fileInput = event.target;
+            const file = fileInput.files[0];
+
+            // Hide both previews initially
+            const previewImg = document.getElementById('previewImg');
+            const previewVideo = document.getElementById('previewVideo');
+            previewImg.style.display = 'none';
+            previewVideo.style.display = 'none';
+
+            if (file) {
+                const reader = new FileReader();
+                const fileType = file.type;
+
+                reader.onload = function (e) {
+                    if (fileType.startsWith('image/')) {
+                        previewImg.src = e.target.result;
+                        previewImg.style.display = 'block';
+                        previewImg.style.height = '140px';
+                        previewImg.style.width = '140px';
+                        previewImg.style.objectFit = 'cover';
+                    } else if (fileType.startsWith('video/')) {
+                        previewVideo.src = e.target.result;
+                        previewVideo.style.display = 'block';
+                        previewVideo.style.height = '140px';
+                        previewVideo.style.width = '140px';
+                        previewVideo.controls = true;
+                    }
+                };
+
+                reader.readAsDataURL(file);
+            }
+
+            $('#textHd').html('');
+        }
+
+              function previewImage(event, imgId, textId) {
+                  var img = event.target.files[0];
+
+                  if (!pixelarity.open(img, false, function (res, faces) {
+                      console.log("Faces detected:", faces);
+
+                      // Set cropped image preview
+                      var previewImg = document.getElementById(imgId);
+                      previewImg.src = res;
+                      previewImg.style.height = "100px";
+                      previewImg.style.width = "100px";
+                      previewImg.style.objectFit = "cover";
+
+                      // Remove upload text
+                      document.getElementById(textId).innerHTML = '';
+
+                      // Remove previous face rectangles
+                      document.querySelectorAll('.face').forEach(el => el.remove());
+
+                      // Draw face detection boxes (if any)
+                      faces.forEach(face => {
+                          let faceBox = document.createElement('div');
+                          faceBox.className = 'face';
+                          faceBox.style.position = 'absolute';
+                          //faceBox.style.border = '2px solid red';
+                          faceBox.style.height = face.height + "px";
+                          faceBox.style.width = face.width + "px";
+                          faceBox.style.top = (previewImg.getBoundingClientRect().top + face.y) + "px";
+                          faceBox.style.left = (previewImg.getBoundingClientRect().left + face.x) + "px";
+
+                          document.body.appendChild(faceBox);
+                      });
+
+                  }, "jpg", 0.7, true)) {
+                      alert("Whoops! That is not an image!");
+                  }
+              }
+
+          $(document).ready(function () {
+
+            $('#users').select2({
+              placeholder: "Select User",
+              width: '100%',
+              allowClear: true,
+              minimumResultsForSearch: 0,
+              dropdownParent: $('#addAdModal') // Ensures dropdown stays inside modal
+            });
+            $('#company').select2({
+              placeholder: "Select Company",
+              width: '100%',
+              allowClear: true,
+              minimumResultsForSearch: 0,
+              dropdownParent: $('#addAdModal') // Ensures dropdown stays inside modal
+            });
+        
+           
+
+              let $select = $('#communities');
+
+              // Initialize Select2
+              $select.select2({
+                  placeholder: "Select Community",
+                  width: '100%',
+                  allowClear: true,
+                  minimumResultsForSearch: 0
+              }).on('select2:open', function () {
+                  setTimeout(() => {
+                      $('.select2-search__field').focus(); // Focus search field
+                  }, 100);
+              });
+
+              // Insert "Select/Unselect All" at the top
+              $select.prepend('<option value="select_all">Select / Unselect All</option>');
+
+              // Handle "Select/Unselect All" logic
+              $select.on('change', function () {
+                  let selectedValues = $(this).val();
+
+                  if (selectedValues && selectedValues.includes('select_all')) {
+                      if (selectedValues.length === $select.find('option').length) {
+                          // If everything is selected, unselect all
+                          $(this).val([]).trigger('change.select2');
+                      } else {
+                          $('#community_type').val(0);
+                          // Otherwise, select all except "Select All"
+                          let allValues = $select.find('option:not(:first)').map(function () {
+                              return $(this).val();
+                          }).get();
+
+                          $(this).val(allValues).trigger('change.select2');
+                      }
+                  }
+              });
+          });
+
+
+           // get product / service based on type
+           $('#post_type').change(function() {
+                    var selectedType = $(this).val();
+
+                    // Send the new value via AJAX
+                    $.ajax({
+                        url: 'ajax.php?action=get_master_sub_cat__by_type',
+                        type: 'POST',
+                        data: { type: selectedType },
+                        success: function(response) {
+                            var categories = JSON.parse(response);
+                            
+                            $('#post_category_master').empty();
+                            $('#category').empty();
+
+                            // Append keywords to the existing value of service
+                            const existingService = "";
+                            $('#service').val(existingService);
+                            //$('#service').empty();
+
+                            $('#post_category_master').append('<option value="">Select Category</option>');
+
+                            categories.forEach(function(category) {
+                                var option = $('<option></option>')
+                                    .val(category.id)
+                                    .data('tab_label_option_posts', category.tabLabelOptionPosts)
+                                    .data('keywords', category.keywords1);
+
+                                // Create the category names string, ensuring that the last name does not have a trailing '>'
+                                var categoryNames = category.names.slice(0, -1).join(' > ') + (category.names.length > 0 ? ' > ' + category.names[category.names.length - 1] : '');
+
+                                option.html('<small class="grey">' + categoryNames + '</small><p class="bold"> > ' + category.names[category.names.length - 1] + '</p>');
+
+                                $('#post_category_master').append(option);
+                            });
+                        },
+                        error: function(xhr, status, error) {
+                            console.log('Error: ' + error);
+                        }
+                    });
+              });
+
+              $('#post_category_master').change(function () {
+                    // Get the selected option
+                    const selectedOption = $(this).find(':selected');
+                    const keywords = selectedOption.data('keywords');
+                    const $tabDropdown = $('#category');
+                    
+                    // Append keywords to the existing value of service
+                    const appendedService =  (keywords ? ', ' + keywords : '');
+                    $('#service').val(keywords);
+              })
+        </script>
+    </body>
+</html>

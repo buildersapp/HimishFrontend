@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+    <?php include('includes/head.php') ?>
+    <link rel="stylesheet" href="assets/plugins/datatable/css/dataTables.bootstrap5.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.7.1/css/buttons.dataTables.min.css" />
+    <style>
+    /* Always keep CKEditor link panel above Bootstrap/other modals */
+.ck-balloon-panel {
+    z-index: 200000 !important; /* higher than modal + backdrop */
+}
+
+/* Sometimes Bootstrap modals create new stacking contexts.
+   Force balloon panel to allow pointer events */
+.ck-balloon-panel,
+.ck-balloon-panel * {
+    pointer-events: auto !important;
+}
+    </style>
+    <body>
+        <!-- wrapper start  -->
+        <div class="wrapper relative">
+            <?php include('includes/sidebar.php') ?>
+
+            <!-- header start  -->
+            <?php include('includes/nav-header.php') ?>
+            <!-- header end  -->
+
+            <!-- content area start  -->
+            <div class="user-detail-page-sec notification-detail-page">
+                <main class="user-main">
+                    <div class="user-row">
+                        <!-- avatar card  -->
+                        <div class="user-right">
+                            <!-- Tab header -->
+                            <!-- <div class="tab-header btngroup-header">
+                                
+                                <div class="d-inline-flex flex-wrap gap-3">
+                                    <?php for($i=0;$i<count($final);$i++){ ?>
+                                    <button id="<?= $final[$i]['title'] ?>Tab" class="btn btn-default active notiTabs gap-3" data-tab="<?= $final[$i]['title'] ?>" data-uid="<?= base64_encode($final[$i]['id']) ?>">
+                                        <?= $final[$i]['title'] ?>
+                                    </button>
+                                    <?php } ?>
+                                </div>
+                            </div> -->
+                            <!-- Tab Content -->
+                            <div class="tab-scontent">
+                                <!-- top -->
+                                <div class="search-sec-cmn user-page d-flex align-items-center justify-content-between mb-4">
+                                   <div class="search-form me-2">
+                                       <button class="btn p-0 outline-0" type="submit"><img src="assets/img/list/search.svg" alt="search icon" /></button>
+                                       <input type="search" class="form-control form-input border-0" id="searchNotification" placeholder="Search..." />
+                                   </div>
+                                   
+                               </div>
+                                <div class="table-responsive table-space mt-4">
+                                    <table class="table w-100" id="notiModuleTable" data-id="<?= base64_encode($defaultId) ?>">
+                                        <thead>
+                                            <tr class="table-header">
+                                                <th scope="col" class="userHeading-size">
+                                                    <a href="#" class="userHeading"> TITLE </a>
+                                                </th>
+                                                <th scope="col" class="userHeading-size">
+                                                    <a href="#" class="userHeading"> CODE </a>
+                                                </th>
+                                                <th scope="col" class="userHeading-size">
+                                                    <a href="#" class="userHeading"> NAME </a>
+                                                </th>
+                                                <th scope="col" class="userHeading-size">
+                                                    <a href="#" class="userHeading"> TIMER </a>
+                                                </th>
+                                                <!-- <img src="assets/img/list/sort.svg" alt="sort" /> -->
+                                                <th scope="col">
+                                                    <a href="#" class="userHeading"> PUSH MESSAGE / SMS </a>
+                                                </th>
+                                                <th scope="col">
+                                                    <a href="#" class="userHeading"> NOTIFICATION MESSAGE </a>
+                                                </th>
+                                                <th scope="col">
+                                                    <a href="#" class="userHeading"> EMAIL TEXT </a>
+                                                </th>
+                                                <th scope="col">
+                                                    <div class="userHeading">ACTION</div>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                    <div id="noDataMessageUC" class="no-data-container" style="display: none;">
+                                        <img src="<?= NO_DATA_IMG ?>" alt="No Data" />
+                                        <h3><?= NO_DATA_TITLE ?></h3>
+                                        <p><?= NO_DATA_DESC ?></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+            </div>
+            <!-- content area end -->
+            <div class="modal fade customModal" id="editNModal" tabindex="-1" aria-labelledby="editNModalLb" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h2 class="modal-title fs-5" id="addPlanLabel">Edit Notification Template</h2>
+                        </div>
+                        <div class="modal-body">
+                            <form class="user-form p-0 d-flex flex-column gap-3" method="post" action="" data-parsley-validate enctype="multipart/form-data">
+                                <input type="hidden" name="Id" id="Id" value="" />
+                                
+                                <div>
+                                    <label for="code">Code</label>
+                                    <div class="d-flex align-items-center">
+                                        <textarea class="form-control" name="code" rows="1" id="code" disabled readonly></textarea>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label for="code">Name</label>
+                                    <div class="d-flex align-items-center">
+                                        <input type="text" class="form-control" name="name" id="name" >
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <label for="title">Title</label>
+                                    <div class="d-flex align-items-center">
+                                        <textarea class="form-control" name="title" rows="2" id="title"></textarea>
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <label for="after_expire_time">Timer (in hours)</label>
+                                    <input type="number" min="0" class="form-control" name="after_expire_time" id="after_expire_time"></input>
+                                </div>
+                            
+                                <div>
+                                    <label for="notification_message">Local Notification Message</label>
+                                    <div class="d-flex align-items-center">
+                                        <input type="checkbox" id="checkbox_notification_message" name="noti_enable"  onchange="toggleTextarea('checkbox_notification_message', 'notification_message')" value="0" />
+                                        <textarea class="form-control" name="notification_message" rows="4" id="notification_message" ></textarea>
+                                    </div>
+                                </div>
+                            
+                                <div>
+                                    <label for="push_message">Push Notification Message</label>
+                                    <div class="d-flex align-items-center">
+                                        <input type="checkbox" id="checkbox_push_message" name="push_enable"  onchange="toggleTextarea('checkbox_push_message', 'push_message')" value="0" />
+                                        <textarea class="form-control" name="push_message"  id="push_message" ></textarea>
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <label for="email_text">Email Message</label>
+                                    <div class="d-flex align-items-center">
+                                        <input type="checkbox" id="checkbox_email_text" name="email_enable"  onchange="toggleTextarea('checkbox_email_text', 'email_text')" value="0"/>
+                                        <textarea class="form-control" name="email_text"  id="email_text" ></textarea>
+                                    </div>
+                                </div>
+                            
+                                <div class="mt-2 gap-3 d-flex flex-row">
+                                    <button type="submit" name="submitNM" class="btn btnSave">Submit</button>
+                                    <a href="notification-templates.php"><button type="button" class="btn btnClose" data-bs-dismiss="modal">Close</button></a>
+                                </div>
+                            </form>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- wrapper end  -->
+        <script src="assets/plugins/datatable/js/jquery.dataTables.min.js?v=<?= time() ?>"></script>
+        <script src="https://cdn.ckeditor.com/ckeditor5/40.0.0/classic/ckeditor.js?v=<?= time() ?>"></script>
+        <?php include('includes/footer-scripts.php') ?>
+        <script>
+        let emailEditorInstance;
+
+        loadNotiTable('<?= base64_encode($defaultId) ?>');
+        $('.notiTabs:first').removeClass('btn-default').addClass('btn-primary');
+
+        function toggleTextarea(checkboxId, textareaId) {
+            const checkbox = document.getElementById(checkboxId);
+            const textarea = document.getElementById(textareaId);
+
+            // Toggle textarea disabled state
+            textarea.disabled = !checkbox.checked;
+
+            if (checkbox.checked && textareaId === 'email_text') {
+                if (emailEditorInstance) {
+                    emailEditorInstance.destroy().then(() => {
+                        initEditor();
+                    });
+                } else {
+                    initEditor();
+                }
+            } else {
+                if (emailEditorInstance) {
+                    emailEditorInstance.destroy().then(() => {
+                        emailEditorInstance = null;
+                    });
+                }
+            }
+
+            // Update checkbox value
+            checkbox.value = checkbox.checked ? "1" : "0";
+        }
+
+        function initEditor() {
+            ClassicEditor
+                .create(document.querySelector('#email_text'), {
+                    toolbar: [
+                        'bold', 'italic', 'underline', 'strikethrough',
+                        '|', 'numberedList', 'bulletedList', 'outdent', 'indent',
+                        '|', 'fontSize', 'fontColor', 'fontBackgroundColor',
+                        '|', 'link', 'undo', 'redo'
+                    ],
+                    height: 200
+                })
+                .then(editor => {
+                    emailEditorInstance = editor;
+                })
+                .catch(error => {
+                    console.error('CKEditor 5 initialization error:', error);
+                });
+        }
+        </script>
+        <script>
+            (function () {
+                const modalEl = document.getElementById('editNModal');
+
+                modalEl.addEventListener('shown.bs.modal', () => {
+                
+                const allowCkFocus = (e) => {
+                    if (e.target.closest('.ck') || e.target.closest('.ck-body') || e.target.closest('.ck-balloon-panel')) {
+                    e.stopPropagation(); 
+                    }
+                };
+                document.addEventListener('focusin', allowCkFocus, true);
+
+                modalEl.addEventListener('hidden.bs.modal', () => {
+                    document.removeEventListener('focusin', allowCkFocus, true);
+                }, { once: true });
+                });
+            })();
+        </script>
+    </body>
+</html>

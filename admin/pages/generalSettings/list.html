@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+    <?php include('includes/head.php') ?>
+    <link rel="stylesheet" href="assets/plugins/datatable/css/dataTables.bootstrap5.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.7.1/css/buttons.dataTables.min.css" />
+    <style>
+    .fixed-center-buttons {
+        position: fixed;
+        bottom: 10px;
+        right: 10px;
+        transform: translate(-50%, -50%);
+        z-index: 9999;
+        background: rgb(184, 191, 194);
+        padding: 1rem 2rem;
+        border-radius: 10px;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    }
+    </style>
+    <body>
+        <!-- wrapper start  -->
+        <div class="wrapper relative">
+            <?php include('includes/sidebar.php') ?>
+
+            <!-- header start  -->
+            <?php include('includes/nav-header.php') ?>
+            <!-- header end  -->
+
+            <!-- content area start  -->
+            <div class="master-detail-page-sec general-page-sec">
+                <main class="user-main">
+                    <div class="user-rigt cmn-card my-0">
+                        <div class="text-end mb-2 edit-btn">
+                            <button id="restartButton" class="btn btn-info ms-auto">Restart Server</button>
+                        </div>
+                        <!-- Tab content (initially, only one should be visible) -->
+                        <div id="user-details" class="tab-content">
+                           
+                            <form class="user-form p-0" method="post" action="" enctype="multipart/form-data" id="userEditForm" data-parsley-validate>
+                                <div class="row align-items-center" id="user-form-row">
+                                    <div class="col-md-2 col-6">
+                                        <div>
+                                            <input type="hidden" name="id" value="<?= $final['id'] ?>" />
+                                            <label for="name">Contact Email:</label>
+                                            <textarea name="contact_us_mail" id="contact_us_mail" rows="1" class="form-control" required><?= $final['contact_us_mail'] ?></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 col-6">
+                                        <div>
+                                            <label for="smtp_email">SMTP Email</label>
+                                            <textarea name="smtp_email" id="smtp_email" rows="1" class="form-control" required><?= $final['smtp_email'] ?></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 col-6">
+                                        <div>
+                                            <label for="smtp_password">SMTP Password</label>
+                                            <textarea name="smtp_password" id="smtp_password" rows="1" class="form-control" required><?= $final['smtp_password'] ?></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-1 col-6">
+                                        <div>
+                                            <label for="referal_credit">Referral Credit($)</label>
+                                            <textarea name="referal_credit" id="referal_credit" rows="1" class="form-control" required><?= $final['referal_credit'] ?></textarea>
+                                        </div>
+                                    </div>
+
+                                    <!-- TRIGGER STRIPE MODE -->
+                                    <div class="col-md-2 col-6 mt-2"></div>
+                                    <div class="col-md-3 col-6 mt-2">
+                                        <?php if(isset($final['show_post_in_search'])){ ?>
+                                        <div class="form-check d-flex align-items-center">
+                                            <input type="checkbox" name="show_post_in_search" id="show_post_in_search" class="form-check-input" value="1" <?= $final['show_post_in_search'] ? 'checked' : '' ?>>
+                                            <label class="form-check-label" for="show_post_in_search" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="If checked then posts will show in search">Show Posts in Global Search</label>
+                                        </div>
+                                        <?php } ?>
+                                        <div class="form-check d-flex align-items-center">
+                                            <input type="checkbox" name="is_stripe_live" id="is_stripe_live" class="form-check-input" value="1" <?= $final['is_stripe_live'] ? 'checked' : '' ?>>
+                                            <label class="form-check-label" for="is_stripe_live" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="If checked then live mode is enabled">Is Stripe Live</label>
+                                        </div>
+                                        <div class="form-check d-flex align-items-center">
+                                            <input type="checkbox" name="show_listing_images" id="show_listing_images" class="form-check-input" value="1" <?= $final['show_listing_images'] ? 'checked' : '' ?>>
+                                            <label class="form-check-label" for="show_listing_images" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="If checked then images will be shown in listing">Show Listing Images</label>
+                                        </div>
+                                        <div class="form-check d-flex align-items-center">
+                                            <input type="checkbox" name="post_owner_email_trigger_mode" id="post_owner_email_trigger_mode" class="form-check-input" value="1" <?= $final['post_owner_email_trigger_mode'] ? 'checked' : '' ?>>
+                                            <label class="form-check-label" for="post_owner_email_trigger_mode" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="If checked, live mode is enabled Owners will receive Notifications">Owners Notification is Live</label>
+                                        </div>
+                                    </div>
+
+
+                                    <!-- TRIGGER POST EMAIL TO OWNERS -->
+
+
+                                    
+                                    
+                                    <div class="col-md-2 col-6 mb-3">
+                                        <label for="post_owner_trigger_test_emails" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="For initial contact with Company Owners (comma-separated)">Test Email (s)</label>
+                                        <textarea name="post_owner_trigger_test_emails" id="post_owner_trigger_test_emails" rows="1" class="form-control" required><?= $final['post_owner_trigger_test_emails'] ?></textarea>
+                                    </div>
+                                    
+                                    <div class="col-md-2 col-6 mb-3">
+                                        <label for="post_owner_trigger_test_phones" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="For inital contact with Company Owners (comma-separated)">Test Phone Numbers</label>
+                                        <textarea name="post_owner_trigger_test_phones" id="post_owner_trigger_test_phones" rows="1" class="form-control" required><?= $final['post_owner_trigger_test_phones'] ?></textarea>
+                                    </div>
+
+
+                                    <div class="col-md-2 col-6 mb-3">
+                                        <div>
+                                            <label for="nfc_card_price">NFC Card Price($)</label>
+                                            <textarea name="nfc_card_price" id="nfc_card_price" rows="1" class="form-control" required><?= $final['nfc_card_price'] ?></textarea>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-md-2 col-6 mb-3">
+                                        <div>
+                                            <label for="nfc_card_tax">NFC Card Tax ($)</label>
+                                            <textarea name="nfc_card_tax" id="nfc_card_tax" rows="1" class="form-control" required><?= $final['nfc_card_tax'] ?></textarea>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-2 col-4 mb-3">
+                                        <div>
+                                            <label for="sales_commision" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Commision in  Percentage">Sales Person Commision</label>
+                                            <input type="number" min="1" max="90" name="sales_commision" 
+                                            step="0.001"id="sales_commision" class="form-control" value="<?= $final['sales_commision'] ?>" required>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-2 col-4 mb-3">
+                                        <div>
+                                            <label for="free_community" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Number of free community"># Free Community</label>
+                                            <input type="number" min="1" max="90" name="free_community" 
+                                            step="0.001"id="free_community" class="form-control" value="<?= $final['free_community'] ?>" required>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-2 col-4 mb-3">
+                                        <div>
+                                            <label for="discount_community" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Discount For My Community 
+                                            (%)">Discount For My Community (%)</label>
+                                            <input type="number" min="1" max="90" name="discount_community" 
+                                            step="0.001"id="discount_community" class="form-control" value="<?= $final['discount_community'] ?>" required>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4 col-4 mb-3">
+                                        <div>
+                                            <label for="all_community_selection_price" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Default Community Price">All Community Price</label>
+                                            <input type="number"  name="all_community_selection_price" 
+                                            step="0.001"id="all_community_selection_price" class="form-control" value="<?= $final['all_community_selection_price'] ?>" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 col-4 mb-3">
+                                        <div>
+                                            <label for="default_community_price" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Default Community Price">Default Community Price</label>
+                                            <input type="number"  name="default_community_price" 
+                                            step="0.001"id="default_community_price" class="form-control" value="<?= $final['default_community_price'] ?>" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 col-4 mb-3">
+                                        <div>
+                                            <label for="ww_community_price" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="World Wide Community Price ">WW Community Price</label>
+                                            <input type="number" min="1" max="90" name="ww_community_price" 
+                                            step="0.001"id="ww_community_price" class="form-control" value="<?= $final['ww_community_price'] ?>" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <h6 class="fw-bold">Featured Deal</h6>
+                                    </div>
+                                    <div class="col-md-1 col-4">
+                                        <div>
+                                            <label for="fd_cost">Price ($)</label>
+                                            <input type="number" name="fd_cost" id="fd_cost" class="form-control" required value="<?= $final['fd_cost'] ?>">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-md-1 col-4">
+                                        <div>
+                                            <label for="fd_shown_after_x_feeds" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Will Appear After X Feeds / rows on (Home Page)">Visible After X Feeds</label>
+                                            <input type="number" name="fd_shown_after_x_feeds" id="fd_shown_after_x_feeds" class="form-control" required value="<?= $final['fd_shown_after_x_feeds'] ?>">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-md-1 col-4">
+                                        <div>
+                                            <label for="fd_live_for_days" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Visible for X Hours (Home Page)">Live For</label>
+                                            <input type="number" name="fd_live_for_days" id="fd_live_for_days" class="form-control" required value="<?= $final['fd_live_for_days'] ?>">
+                                        </div>
+                                    </div>
+                            
+                                    <div class="col-md-1 col-4 mb-3">
+                                        <div>
+                                            <label for="nfc_card_taxfff" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Maximum Fixed Amount Discount">Sales Person max Discount</label>
+                                            <input type="number" min="1" max="50" name="sales_max_fixed_discount" id="sales_max_fixed_discount" class="form-control" value="<?= $final['sales_max_fixed_discount'] ?>" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 col-4 mb-3">
+                                        <div>
+                                            <label for="nfc_card_taxppp" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Maximum Fixed Percentage Discount">Sales Person Max Percentage Discount</label>
+                                            <input type="number" min="1" max="90" name="sales_max_percentage_discount" id="sales_max_percentage_discount" class="form-control" value="<?= $final['sales_max_percentage_discount'] ?>" required>
+                                        </div>
+                                    </div>
+                                  
+                            
+                                    <div class="col-md-1 col-4">
+                                        <div>
+                                            <label for="nfc_card_tax" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Post Will No Longer Appear in the Feed After X Hours of Posting">Post Expires</label>
+                                            <input type="number" min="1" name="post_expire" id="post_expire" class="form-control" value="<?= $final['post_expire'] ?>" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-1 col-4">
+                                        <div>
+                                            <label for="nfc_card_tax" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Listing Will No Longer Appear in the Feed After X Hours of Posting">Listing Expires</label>
+                                            <input type="number" min="1" name="ad_expire" id="ad_expire" class="form-control" value="<?= $final['ad_expire'] ?>" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-1 col-4 mb-3">
+                                        <div>
+                                            <label for="nfc_card_tax" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Deal Will No Longer Apper in the Feed After X Hours of Posting">Deals Expires</label>
+                                            <input type="number" min="1" name="deals_expire" id="deals_expire" class="form-control" value="<?= $final['deals_expire'] ?>" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-1 col-4 mb-3">
+                                        <div>
+                                            <label for="nfc_card_tax" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Deal Share Will No Longer Apper in the Feed After X Hours of Posting">Deals Share Expires</label>
+                                            <input type="number" min="1" name="deal_share_expire" id="deal_share_expire" class="form-control" value="<?= $final['deal_share_expire'] ?>" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 mt-2">
+                                        <h6 class="fw-bold">Post Image Matching Percentage</h6>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div>
+                                            <label for="nfc_card_tax">Post Image Matching Percentage</label>
+                                            <input type="number" min="1" name="post_image_match_percentage" id="post_image_match_percentage" class="form-control" value="<?= $final['post_image_match_percentage'] ?>" required>
+                                        </div>
+                                    </div>
+                            
+                                
+                                    <div class="col-md-2">
+                                        <div>
+                                            <label for="marketing_url">Marketing Url (direct post added using this url)</label>
+                                            <textarea name="marketing_url" id="marketing_url" rows="1" class="form-control" required><?= $final['marketing_url'] ?></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div>
+                                            <label for="marketing_url" style="color: blue;">Python Api Url Primary (Scan Image)</label>
+                                            <input type="text" name="python_api" id="marketing_url" class="form-control" value="<?= $final['python_api'] ?>" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div>
+                                            <label for="marketing_url" style="color: orange;">Python Api Url Secondary (Scan Image)</label>
+                                            <input type="text" name="python_api_2" id="python_api_2" class="form-control" value="<?= $final['python_api_2'] ?>" required>
+                                        </div>
+                                    </div>
+                                    
+                                        <div class="col-md-3 mb-3">
+                                            <div>
+                                                <label for="test_prompt">GPT Company,Phone, Prompt</label>
+                                                <textarea name="test_prompt" id="test_prompt" class="form-control" rows="3" required><?= $final['test_prompt'] ?></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3 mb-3">
+                                            <div>
+                                                <label for="live_prompt">GPT Pills Prompt</label>
+                                                <textarea name="live_prompt" id="live_prompt" class="form-control" rows="3"><?= $final['live_prompt'] ?></textarea>
+                                            </div>
+                                        </div>
+                                    
+                                        <div class="col-md-4 mb-3">
+                                            <div>
+                                                <label for="test_prompt">Invite to Company Recommend</label>
+                                                <textarea name="invite_to_company_recommend" id="invite_to_company_recommend" class="form-control" rows="3" required><?= $final['invite_to_company_recommend'] ?></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <div>
+                                                <label for="invite_to_community">Invite to Community</label>
+                                                <textarea name="invite_to_community" id="invite_to_community" class="form-control" rows="3"><?= $final['invite_to_community'] ?></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <div>
+                                                <label for="invite_to_app">Invite to App</label>
+                                                <textarea name="invite_to_app" id="invite_to_app" class="form-control" rows="3"><?= $final['invite_to_app'] ?></textarea>
+                                            </div>
+                                        </div>
+                                    
+
+                                    <div class="col-md-12 mb-3">
+                                        <div>
+                                            <label for="privacy">Privacy</label>
+                                            <div class="d-flex align-items-center">
+                                                <textarea class="form-control" name="privacy"  id="privacy" ><?= $final['privacy'] ?></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 mb-3">
+                                        <div>
+                                            <label for="privacy">Terms</label>
+                                            <div class="d-flex align-items-center">
+                                                <textarea class="form-control" name="terms"  id="terms" ><?= $final['terms'] ?></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="edit-btn fixed-center-buttons d-flex align-content-center align-items-center gap-3 flex-md-nowrap flex-wrap justify-content-md-end justify-content-center mt-5 mt-lg-0" id="updateCategoryBtn">
+                                    <button type="submit" name="updateSettings">
+                                        <span>CLICK HERE TO UPDATE</span>
+                                    </button>
+                                </div>                                
+                            </form>
+                        </div>
+                    </div>
+                </main>
+            </div>
+            <!-- content area end -->
+        </div>
+        <!-- wrapper end  -->
+        <script src="assets/plugins/datatable/js/jquery.dataTables.min.js?v=<?= time() ?>"></script>
+        <script src="https://cdn.ckeditor.com/ckeditor5/40.0.0/classic/ckeditor.js?v=<?= time() ?>"></script>
+        <?php include('includes/footer-scripts.php') ?>
+        <script src="assets/js/companyDetails.js?v=<?= time() ?>"></script>
+        <script>
+            $('#restartButton').click(function() {
+                    // Send the new value via AJAX
+                    $.ajax({
+                        url: 'ajax.php?action=restartServer',
+                        type: 'POST',
+                        data: { },
+                        beforeSend: function () {
+                            openScreenLoader('Do not refresh this page...');
+                        },
+                        complete : function(data){
+                            closeScreenLoader();
+                        },
+                        success: function(response) {
+                            console.log(response)
+                        //    window.location.reload()
+                        },
+                        error: function(xhr, status, error) {
+                            closeScreenLoader();
+                            console.log('Error: ' + error);
+                        }
+                    });
+              });
+            </script>
+            <script>
+                ClassicEditor
+                .create(document.querySelector('#privacy'))
+                .catch(error => {
+                    console.error('Error initializing CKEditor 5:', error);
+                });
+                ClassicEditor
+                .create(document.querySelector('#terms'))
+                .catch(error => {
+                    console.error('Error initializing CKEditor 5:', error);
+                });
+            </script>
+    </body>
+</html>

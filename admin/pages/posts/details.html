@@ -1,0 +1,1247 @@
+<!DOCTYPE html>
+<html lang="en">
+<?php include('includes/head.php') ?>
+</style>
+<link rel="stylesheet" href="assets/plugins/datatable/css/dataTables.bootstrap5.min.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.7.1/css/buttons.dataTables.min.css">
+<style>
+    /* Set height for Select2 input box */
+    /* .select2-container .select2-selection--single {
+        height: 40px;
+        /* Adjust height of the select input box */
+    /* } */ */
+
+    /* .select2-container--default .select2-selection--single .select2-selection__rendered {
+        line-height: 40px !important;
+    } */
+
+    /* .select2-container--default .select2-selection--single .select2-selection__arrow {
+        top: 7px !important;
+    } */
+
+    /* Set max-height for the dropdown list */
+    /* .select2-container--default .select2-results__options {
+        max-height: 200px;
+        /* Adjust the dropdown height */
+        /* overflow-y: auto; */
+        /* Enable scrolling if content exceeds height */
+    /* } */ */
+</style>
+<style>
+    .fixed-center-buttons {
+        position: fixed;
+        bottom: 10px;
+        right: 10px;
+        transform: translate(-50%, -50%);
+        z-index: 9999;
+        background: rgb(184, 191, 194);
+        padding: 1rem 2rem;
+        border-radius: 10px;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    }
+    /* Set height for Select2 input box */
+    .select2-container {
+        width: 100% !important;
+    }
+
+    /* Set height for Select2 input box */
+    .select2-container .select2-selection--single {
+        height: 40px;  /* Adjust height of the select input box */
+    }
+
+    .select2-container--default .select2-selection--single .select2-selection__rendered {
+        line-height: 40px !important;
+    }
+
+    .select2-container--default .select2-selection--single .select2-selection__arrow {
+        top: 7px !important;
+    }
+
+    /* Set max-height for the dropdown list */
+    .select2-container--default .select2-results__options {
+        max-height: 200px;  /* Adjust the dropdown height */
+        overflow-y: auto;   /* Enable scrolling if content exceeds height */
+    }
+</style>
+
+<body>
+    <!-- wrapper start  -->
+    <div class="wrapper relative">
+        <?php include('includes/sidebar.php') ?>
+
+        <!-- header start  -->
+        <?php include('includes/nav-header.php') ?>
+        <!-- header end  -->
+
+        <!-- content area start  -->
+        <div class="post-detail-page-sec">
+            <main class="user-main">
+                <div class="user-row">
+                    <!-- avatar card  -->
+                    <div class="w-24">
+                        <div class="user-left w-100">
+                            <div class="avatar-img">
+                                <!-- <img src="assets/img/Logo2.png" class="img-fluid" alt="Avatar" /> -->
+                                <img src="<?php echo ($final['company_image']) ?  MEDIA_BASE_URL.$final['company_image'] : 'assets/img/Logo2.png';?>"
+                                    class="img-fluid rounded-pz" alt="Avatar" />
+
+                            </div>
+                            <div class="avatar-content">
+                                <h1 class="pb-0">
+                                    <?=@$final['company_name']?>
+                                </h1>
+                                <a href="" class="text-black">@
+                                    <?=@$final['handle_name']?>
+                                </a>
+                            </div>
+                            <div class="avatar-icon-box-wraper">
+                                <div class="avatar-icon-box">
+                                    <div class="avatat-icon-img">
+                                        <img src="assets/img/user/camera.png" alt="" />
+                                    </div>
+                                    <div class="avatat-icon-content">
+                                        <h2>
+                                            <?= @$final['companyProfile']['total_post'];?>
+                                        </h2>
+                                        <p>Total Posts</p>
+                                    </div>
+                                </div>
+                                <div class="avatar-icon-box">
+                                    <div class="avatat-icon-img">
+                                        <h3>Ad</h3>
+                                    </div>
+                                    <div class="avatat-icon-content">
+                                        <h2>
+                                            <?= @$final['companyProfile']['total_ads'];?>
+                                        </h2>
+                                        <p>Total Ads</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pt-3 cmn-img-bottom">
+                            <img src="<?php echo (count($final['post_images']) > 0) ?  MEDIA_BASE_URL.$final['post_images'][0]['image'] : 'assets/img/poster.png';?>"
+                                alt="poster" class="img-fluid w-100">
+                        </div>
+                    </div>
+                    <div class="user-right">
+                        <!-- Tab header -->
+                        <div
+                            class="tab-header flex-xl-nowrap flex-wrap gap-4 justify-content-xl-between justify-content-center">
+                            <!-- Tab list -->
+                            <ul class="tablist">
+                                <li class="active-tablist" id="post-details-tb" data-tab="post-details">
+                                    Post Details
+                                </li>
+                                <li data-tab="categories" id="categoriesTb">Categories</li>
+                                <li data-tab="locations" id="locationsTb">Post & Company Locations</li>
+                                <li data-tab="Videos">Status</li>
+                            </ul>
+                        </div>
+
+                        <!-- Tab content (initially, only one should be visible) -->
+                        <div id="post-details" class="tab-content">
+                            <!-- <div class="pt-4">
+                        <img src="assets/img/banner-poster.png" alt="img" class="img-fluid">
+                        </div> -->
+                            <form class="user-form postDetails ps-0 pb-0 mt-4" method="post" id="myPostForm">
+                                <div class="postDetailContainer">
+                                  <div class="row">
+                                    <div class="col-md-3">
+                                        <!-- Banner Image: start  -->
+                                        <div class="bannerImage mb-4">
+                                            <p>Update Image</p>
+                                            <div class="bannerImageItem row text-center">
+        
+                                                <div class="">
+                                                    <div class="img-upload set-w-auto-100">
+                                                        <input type="file" name="image" accept="image/*" id="imageShow"
+                                                            class="d-none" onchange="previewImage(event)" />
+                                                        <label for="imageShow">
+                                                            <span>
+                                                                <img id="previewImg" src="assets/img/user/plus.png"
+                                                                    alt="Upload Image" />
+                                                            </span>
+                                                            <span id="textHd">Upload Image</span>
+                                                        </label>
+                                                    </div>
+        
+                                                </div>
+        
+        
+        
+                                            </div>
+
+                                            <form method="post">
+                                                 <label for="Company">Enter category json</label>
+                                                <textarea required class="form-control" rows="4" cols="4" name="catJson"></textarea>
+                                                <input type="submit" class="btn btn-info" name="cateJsonButton" value="UpdateCat">
+                                            </form>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-9" id="user-form-row">
+                                        <div class="row g-2 mb-1">
+                                            <div class="col-md-3">
+                                                <div>
+                                                    <label for="Company">Posted By:</label>
+                                                    <select class="form-select" name="user_id"
+                                                        aria-label="Default select example">
+                                                        <?php foreach ($users as $ku=>$vu) { ?>
+                                                        <option value="<?= $vu['id'];?>" <?=($final['user_id']==$vu['id'])
+                                                            ? 'selected' :''?>>
+                                                            <?=$vu['name']; ?>
+                                                        </option>
+                                                        <?php } ?>
+        
+                                                    </select>
+                                                </div>
+                                            </div>
+        
+        
+                                            <div class="col-md-5">
+                                                <div>
+                                                    <label for="Company">Company Name:</label>
+                                                    <select class="form-select" name="company_id"
+                                                        aria-label="Default select example">
+                                                        <?php foreach ($company as $kk => $vv) { ?>
+                                                        <option value="<?= $vv['id']; ?>" <?=($final['company_id']==$vv['id'])
+                                                            ? 'selected' : '' ; ?>>
+                                                            <?= $vv['name']; ?>
+                                                        </option>
+                                                        <?php } ?>
+                                                    </select>
+                                                </div>
+                                            </div>
+        
+                                            <div class="col-md-2">
+                                                <div>
+                                                    <label for="Active">Status:</label>
+                                                    <select class="form-select" name="status"
+                                                        aria-label="Default select example">
+                                                        <option value="1" <?php echo ($final['status']==1) ? 'selected' : '' ;?>
+                                                            >Active</option>
+                                                        <option value="0" <?php echo ($final['status']==0) ? 'selected' : '' ;?>
+                                                            >Deactive</option>
+                                                        <option value="2" <?php echo ($final['status']==2) ? 'selected' : '' ;?>
+                                                            >Draft</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+        
+                                            <div class="col-md-2">
+                                                <div>
+                                                    <label for="Active">Boosted:</label>
+                                                    <select class="form-select" aria-label="Default select example"
+                                                        name="boostPost">
+                                                        <option value="1" <?php echo ($final['boost_expire'] !=0) ? 'selected'
+                                                            : '' ;?>>Yes</option>
+                                                        <option value="0" <?php echo ($final['boost_expire']==0) ? 'selected'
+                                                            : '' ;?>>No</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row g-2 mb-1">
+                                            <input type="hidden" name="type" id="type" value="<?php echo $final['type']; ?>" />
+                                            <div class="col-md-6">
+                                                <div>
+                                                    <label for="title">Title:</label>
+                                                    <input type="text" name="title" id="title"
+                                                        value="<?php echo $final['title']; ?>" placeholder="Post title here..."
+                                                        class="form-control">
+                                                </div>
+                                            </div>
+        
+                                            <!-- <div class="col-md-3">
+                                                <div>
+                                                    <label for="title">Service / Product:</label>
+                                                    <select id="post_type" class="form-select" name="post_type">
+                                                        <option value="" <?=($defaultType=='' ) ? 'selected' : '' ?>>Select Type</option>
+                                                        <option value="1" <?=($defaultType=='1' ) ? 'selected' : '' ?>>Services</option>
+                                                        <option value="2" <?=($defaultType=='2' ) ? 'selected' : '' ?>>Products</option>
+                                                    </select>
+                                                </div>
+                                            </div> -->
+
+                                            <div class="col-md-3">
+                                                <div>
+                                                    <label for="title">Tab Label</label>
+                                                    <select id="category" class="form-select" name="category">
+                                                        <?php 
+                                                    foreach ($defaultTabLabels as $kt => $vt) { 
+                                                        ?>
+                                                        <option value="<?= htmlspecialchars($vt, ENT_QUOTES, 'UTF-8'); ?>"
+                                                            <?=($final['category']==htmlspecialchars($vt, ENT_QUOTES, 'UTF-8' ))
+                                                            ? 'selected' : '' ; ?>>
+                                                            <?= htmlspecialchars($vt, ENT_QUOTES, 'UTF-8'); ?>
+                                                        </option>
+                                                        <?php } ?>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row g-2 mb-1">   
+                                            <div class="col-md-12">
+                                                <div>
+                                                    <label for="title">Description:</label>
+                                                    <textarea rows="1" cols="4" name="info" placeholder="Post info here..."
+                                                        class="form-control"><?php echo $final['info']; ?></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row g-2 mb-1">  
+                                            <div class="col-md-6">
+                                                <div>
+                                                    <label for="title">GPT Keywords:</label>
+                                                    <textarea rows="2" cols="2" name="keywords" id="keywordsA"
+                                                        placeholder="Post keywords here..." class="form-control"
+                                                        disabled><?php echo $final['keywords']; ?></textarea>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div>
+                                                    <label for="title">User Selected Keywords:</label>
+                                                    <textarea rows="2" cols="2" name="service" id="service"
+                                                        placeholder="Post keywords here..."
+                                                        class="form-control"><?php echo $final['service']; ?></textarea>
+                                                </div>
+                                                <!-- <button type="button" class="btn btn-primary btn-small mt-3 mb-3" onclick="categorizeKeywords();">Categorize Keywords</button> -->
+                                            </div>
+                                        </div>
+                                        <div class="row g-2 mb-1">  
+                                            <!-- <div class="col-md-12">
+                                                    <label for="title" class="mb-2">Select Category</label>
+                                                    <a href="add-update-master-category.php?post_id=<?= base64_encode($final['id']) ?>"
+                                                        class="float-right category-anchor-right" target="_blank">Click here if you can't find your
+                                                        category</a>
+                                                    <select id="post_category_master" class="form-select"
+                                                        name="post_category_master">
+                                                        <option value="">Select Category</option>
+                                                        <?php foreach ($masterCatSub as $kt => $vt) { ?>
+                                                        <option value="<?= $vt['id'] ?>"
+                                                            data-tab_label_option_posts="<?= htmlspecialchars($vt['tabLabelOptionPosts'], ENT_QUOTES, 'UTF-8'); ?>"
+                                                            data-keywords="<?= htmlspecialchars($vt['keywords1'], ENT_QUOTES, 'UTF-8'); ?>"
+                                                            <?=($defaultCategory==$vt['id']) ? 'selected' : '' ; ?>
+                                                            >
+                                                            <small class="grey">
+                                                                <?= implode(' > ', array_slice($vt['names'], 0, -1)) ?>
+                                                                <?php if (!empty($vt['names'])): ?>
+                                                                <p class="bold"> >
+                                                                    <?= end($vt['names']); ?>
+                                                                </p>
+                                                                <?php endif; ?>
+                                                            </small>
+                                                        </option>
+                                                        <?php } ?>
+                                                    </select>
+                                            </div> -->
+                                        </div>
+                                        <!-- <div class="row g-2 mb-1">  
+                                            <div class="col-md-4">
+                                                <div>
+                                                    <label for="title">Address:</label>
+                                                    <input type="text" name="address" id="address" oninput="initAutocomplete()"
+                                                        value="<?php echo $final['address']; ?>"
+                                                        placeholder="Address" class="form-control">
+                                                    <input type="hidden" name="latitude" id="latitude"
+                                                        value="<?php echo $final['latitude']; ?>">
+                                                    <input type="hidden" name="longitude" id="longitude"
+                                                        value="<?php echo $final['longitude']; ?>">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div>
+                                                    <label for="title">Email:</label>
+                                                    <input type="text" name="email" id="email"
+                                                        value="<?php echo $final['email']; ?>" placeholder="Email"
+                                                        class="form-control">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div>
+                                                    <label for="title">Phone:</label>
+                                                    <input type="text" name="phone" id="phone"
+                                                        value="<?php echo $final['phone']; ?>" placeholder="Phone"
+                                                        class="form-control">
+                                                </div>
+                                            </div>
+                                        </div> -->
+                                        <div>
+                                            <label for="group" class="mt-2 mb-2 d-block">Group</label>
+                                            <select id="profile_group" name="profile_group" class="form-control">
+                                                <?php foreach ($profileGroups as $gender): ?>
+                                                    <option value="<?= htmlspecialchars($gender['id']) ?>" 
+                                                        <?= (isset($final['gender']) && $final['gender'] === $gender['id']) ? 'selected' : '' ?>>
+                                                        <?= htmlspecialchars($gender['name']) ?>
+                                                    </option>
+                                                <?php endforeach; ?>
+                                            </select>
+                                        </div>
+                                        <div class="row g-2 mb-1">  
+                                            <div class="col-md-12">
+                                                <div class="post-community1">
+                                                    <label class="mb-2 d-block">Community Type:</label>
+                                            
+                                                    <div class="form-check form-check-inline set-radio-box-btn-all">
+                                                        <input class="form-check-input" type="radio" name="community_type" id="all_community" value="0"
+                                                            <?= ($final['community_type'] == 0) ? 'checked' : ''; ?>>
+                                                        <label class="form-check-label" for="all_community">All Community</label>
+                                                    </div>
+                                            
+                                                    <div class="form-check form-check-inline set-radio-box-btn-all">
+                                                        <input class="form-check-input" type="radio" name="community_type" id="my_community" value="1"
+                                                            <?= ($final['community_type'] == 1) ? 'checked' : ''; ?>>
+                                                        <label class="form-check-label" for="my_community">My Community</label>
+                                                    </div>
+                                            
+                                                    <div class="form-check form-check-inline set-radio-box-btn-all">
+                                                        <input class="form-check-input" type="radio" name="community_type" id="choose_community" value="2"
+                                                            <?= ($final['community_type'] == 2) ? 'checked' : ''; ?>>
+                                                        <label class="form-check-label" for="choose_community">Choose Community</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="col-md-12" id="communitySelectBox" style="<?= ($final['community_type'] == 2) ? '' : 'display:none;'; ?>">
+                                                <div class="post-community1">
+                                                    <label for="Company" class="mb-2">Community:</label>
+                                                    <select class="form-select" id="community" multiple="multiple"
+                                                        name="community[]" aria-label="Default select example">
+                                                        <?php foreach ($community as $kc => $vcc) {
+                                                            $selected = in_array($vcc['name'], $community_array) ? 'selected' : '';
+                                                        ?>
+                                                            <option value="<?= $vcc['name']; ?>" <?= $selected; ?> data-id="<?= $vcc['id']; ?>">
+                                                                <?= $vcc['name']; ?>
+                                                            </option>
+                                                        <?php } ?>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            
+                                            <input type="hidden" name="post_id" value="<?= $final['id'];?>">
+                                        </div>
+
+                                        <div class="row g-2 mb-1">  
+                                            <div class="col-md-12">
+                                                <div class="post-community1">
+                                                    <label class="mb-2 d-block">Post User Type:</label>
+                                            
+                                                    <div class="form-check form-check-inline set-radio-box-btn-all">
+                                                        <input class="form-check-input" type="radio" name="user_type" id="all_community" value="0"
+                                                            <?= ($final['user_type'] == 0) ? 'checked' : ''; ?>>
+                                                        <label class="form-check-label" for="user_type">User Name</label>
+                                                    </div>
+                                            
+                                                    <div class="form-check form-check-inline set-radio-box-btn-all">
+                                                        <input class="form-check-input" type="radio" name="user_type" id="user_type" value="1"
+                                                            <?= ($final['user_type'] == 1) ? 'checked' : ''; ?>>
+                                                        <label class="form-check-label" for="user_type">Anonymous</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="col-md-12" id="communitySelectBox" style="<?= ($final['community_type'] == 2) ? '' : 'display:none;'; ?>">
+                                                <div class="post-community1">
+                                                    <label for="Company" class="mb-2">Community:</label>
+                                                    <select class="form-select" id="community" multiple="multiple"
+                                                        name="community[]" aria-label="Default select example">
+                                                        <?php foreach ($community as $kc => $vcc) {
+                                                            $selected = in_array($vcc['name'], $community_array) ? 'selected' : '';
+                                                        ?>
+                                                            <option value="<?= $vcc['name']; ?>" <?= $selected; ?> data-id="<?= $vcc['id']; ?>">
+                                                                <?= $vcc['name']; ?>
+                                                            </option>
+                                                        <?php } ?>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="row g-2 mb-1">
+                                            <div class="col-md-4">
+                                                <?php 
+                                            $datetime = (new DateTime($final['created_at']))->format('Y-m-d\TH:i');
+        
+                                            ?>
+                                                <div>
+                                                    <label for="date">Created Date:</label>
+                                                    <input type="datetime-local" name="created_at" id="datetime"
+                                                        value="<?= $datetime;?>" class="form-control">
+        
+                                                </div>
+                                            </div>
+        
+                                            <div class="col-md-4">
+                                                <div>
+                                                    <?php
+                                            $expire_timestamp = $final['expire_date'];
+                                            $expire_date = 0;
+                                            if($expire_timestamp > 0) {
+                                                $expire_date = date('Y-m-d\TH:i', $expire_timestamp);
+                                            }
+                                            
+                                            ?>
+                                                    <label for="date">Expiration Date:</label>
+                                                    <input type="datetime-local" name="expire_date" id="datetime"
+                                                        value="<?=$expire_date;?>" class="form-control">
+        
+        
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">  
+                                            <div class="col-12 mt-4">
+                                                <div class="fixed-center-buttons d-flex flex-wrap gap-3">
+                                                    <button type="button" class="btn btnSave btnSavePost">Save Post Details</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                  </div>  
+                                </div>
+                            </form>
+                            <hr/>
+                            <br/>
+                            <!-- Post Reports Table -->
+                            <div class="table-responsive table- mt-4">
+                                <h5 class="mb-4">Post Reports</h5>
+                                <?php if (count($decodedResponseRP['body']) > 0): ?>
+                                    <table class="table table-bordered table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>User</th>
+                                                <th>Type</th>
+                                                <th>Message</th>
+                                                <th>Created</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php foreach ($decodedResponseRP['body'] as $category): ?>
+                                                <tr>
+                                                    <td>
+                                                        <a href="view-user.php?id=<?= base64_encode($category['user']['id']) ?>" target="_blank"><?= $category['user']['name'] ?></a>
+                                                    </td>
+
+                                                    <td>
+                                                        <?= $category['type'] ?>
+                                                    </td>
+
+                                                    <td>
+                                                        <?= $category['message'] ?>
+                                                    </td>
+
+                                                    <td>
+                                                        <?= formatToUSDate($category['created_at'],1) ?>
+                                                    </td>
+                                                </tr>
+                                            <?php endforeach; ?>
+                                        </tbody>
+                                    </table>
+                                <?php else: ?>
+                                    <p>No reports.</p>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                        <!-- post_categories -->
+                        <div id="categories" class="tab-content hidden">
+                            <!-- Inline Form for Adding Category -->
+                            <div class="card row mb-4 mt-3">
+                                <div class="d-flex justify-content-xl-between">
+                                    <h6 class="mt-3">Add Category</h6>
+                                    <a href="add-update-master-category.php?post_id=<?= base64_encode($final['id']) ?>"
+                                    class="float-right category-anchor-right mt-3" target="_blank"><h6 class=" fs-13">Click here if you can't find your
+                                    category</h6></a>
+                                </div>
+                                <div class="col-md-12 mt-3">
+                                    <form method="post" class="row d-flex py-3 px-4">
+                                        <div class="col-md-2">
+                                            <select id="post_type" class="form-select" name="post_type">
+                                                <option value="">Type</option>
+                                                <option value="1" <?= $defaultType == '1' ? 
+                                                'selected' : '' ?>>Services</option>
+                                                <option value="2"<?= $defaultType == '2' ? 
+                                                'selected' : '' ?>>Products</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <select id="post_category_master" class="form-sele2ct" name="post_category_master">
+                                                <option value="">Select Category</option>
+                                                <?php foreach ($masterCatSub as $kt => $vt) { ?>
+                                                    <option value="<?= $vt['id'] ?>"
+                                                        data-tab_label_option_posts="<?= htmlspecialchars($vt['tabLabelOptionPosts'], ENT_QUOTES, 'UTF-8'); ?>"
+                                                        data-keywords="<?= htmlspecialchars($vt['keywords1'], ENT_QUOTES, 'UTF-8'); ?>"
+                                                        <?=($defaultCategory==$vt['id']) ? 'selected' : '' ; ?>
+                                                        >
+                                                        <small class="grey">
+                                                            <?= implode(' > ', array_slice($vt['names'], 0, -1)) ?>
+                                                            <?php if (!empty($vt['names'])): ?>
+                                                            <p class="bold"> >
+                                                                <?= end($vt['names']); ?>
+                                                            </p>
+                                                            <?php endif; ?>
+                                                        </small>
+                                                    </option>
+                                                    <?php } ?>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-2 d-flex align-items-end">
+                                            <button type="submit" name="addCat" class="btn btn-primary w-100">Add</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        
+                            <!-- Categories Table -->
+                            <div class="table-responsive table-space mt-4">
+                                <h5 class="mb-4">Categories</h5>
+                                <?php if (count($final['post_categories']) > 0): ?>
+                                    <table class="table table-bordered table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>Type</th>
+                                                <th>Master Category</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php foreach ($final['post_categories'] as $category): ?>
+                                                <tr>
+                                                    <form method="POST">
+                                                        <!-- Type (Service or Product) -->
+                                                        <td>
+                                                            <?= $category['parentCategory']['type'] == 1 ? 'Service' : 'Product'; ?>
+                                                        </td>
+                                                        
+                                                        <!-- Dropdown for Master Category Sub -->
+                                                        <input type="hidden" name="request_id_c" value="<?= $category['id'] ?>" />
+                                                        <td>
+                                                            <select class="form-select post_category_master" name="post_category_master_c">
+                                                                <?php foreach ($category['masterCatSub'] as $kt => $vt): ?>
+                                                                    <option 
+                                                                        value="<?= $vt['id']; ?>"  
+                                                                        data-tab_label_option_posts="<?= htmlspecialchars($vt['tabLabelOptionPosts'], ENT_QUOTES, 'UTF-8'); ?>"
+                                                                        data-keywords="<?= htmlspecialchars($vt['keywords1'], ENT_QUOTES, 'UTF-8'); ?>"
+                                                                        <?= ($category['parentCategory']['id'] == $vt['id']) ? 'selected' : ''; ?>
+                                                                    >
+                                                                        <small class="grey">
+                                                                            <?= implode(' > ', array_slice($vt['names'], 0, -1)); ?> >
+                                                                            <?php if (!empty($vt['names'])): ?>
+                                                                                <p class="fw-bold"><?= end($vt['names']); ?></p>
+                                                                            <?php endif; ?>
+                                                                        </small>
+                                                                    </option>
+                                                                <?php endforeach; ?>
+                                                            </select>
+                                                        </td>
+                                                        
+                                                        <!-- Action Buttons -->
+                                                        <td class="text-center">
+                                                            <input type="hidden" name="category_id" value="<?= $category['parentCategory']['id']; ?>">
+                                                            <div class="d-flex justify-content-center">
+                                                                <button type="submit" class="btn btn-info btn-sm me-2" name="updateCat">
+                                                                    <i class="fas fa-save"></i> Update
+                                                                </button>
+                                                                <a onclick="return confirm('Are you sure you want to delete this item?');" href="?request_id=<?= $category['id'] ?>&del=1&id=<?= base64_encode($id) ?>" class="btn btn-danger text-white">
+                                                                    <i class="fas fa-trash"></i> Delete
+                                                                </a>
+                                                            </div>
+                                                        </td>
+                                                    </form>
+                                                </tr>
+                                            <?php endforeach; ?>
+                                        </tbody>
+                                    </table>
+                                <?php else: ?>
+                                    <p>No categories available.</p>
+                                <?php endif; ?>
+                            </div>
+
+                            <div class="fixed-center-buttons d-flex flex-wrap gap-3">
+                                <button type="button" class="btn btnSave btnSavePost">Save Post Details</button>
+                            </div>
+                        </div>
+                        <!-- locations -->
+                        <div id="locations" class="tab-content hidden">
+                            <!-- Inline Form for Adding Category -->
+                            <!-- <div class="card row mb-4 mt-3">
+                                <div class="d-flex justify-content-xl-between">
+                                    <h6 class="mt-3">Add Location</h6>
+                                </div>
+                                <div class="col-md-12 mt-3">
+                                    <form method="post" class="row d-flex py-3 px-4">
+                                        <div class="col-md-6">
+                                            <div>
+                                                <input type="text" name="address_2" id="address_2" placeholder="Address" oninput="initAutocompleteMulti()" autocomplete="off" class="form-control m-0" required />
+                                                <input type="hidden" name="latitude_2" id="latitude_2">
+                                                <input type="hidden" name="longitude_2" id="longitude_2">
+                                                <input type="hidden" name="city_2" id="city_2">
+                                                <input type="hidden" name="state_2" id="state_2">
+                                                <input type="hidden" name="country_code_2" id="country_code_2">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2 d-flex align-items-end">
+                                            <button type="submit" name="addCat" class="btn btn-primary w-100">Add</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div> -->
+                        
+                            <!-- Locations Table -->
+                            <div class="table-responsive table-space">
+                                <h5>Post Locations</h5>
+                                 <hr />
+                                <!-- Add New Loc Row -->
+                                <table class="table table-bordered table-striped">
+                                    <tr>
+                                        <form method="POST">
+                                            <td class="col-md-4">
+                                                <input type="text" id="address_new2" name="address" class="form-control address-autocomplete" placeholder="Enter address" autocomplete="off" />
+                                            </td>
+                                            <td class="col-md-2">
+                                                <input type="text" id="state_new2" name="state" class="form-control" placeholder="State" />
+                                            </td>
+                                            <td class="col-md-3">
+                                                <input type="text" id="city_new2" name="city" class="form-control" placeholder="City" />
+                                            </td>
+                                            <td class="col-md-3">
+                                                <input type="text" id="country_code_new2" name="country_code" class="form-control" placeholder="Country Code" />
+                                            </td>
+                                            <td class="text-center">
+                                                <input type="hidden" name="type" value="1">
+                                                <input type="hidden" id="longitude_new2" name="longitude" class="form-control" placeholder="Longitude" />
+                                                <input type="hidden" id="latitude_new2" name="latitude" class="form-control" placeholder="Latitude" />
+                                                <button type="submit" name="addPostLoc" class="btn btn-success btn-sm">
+                                                    <i class="fas fa-plus-circle"></i> Add Location
+                                                </button>
+                                            </td>
+                                        </form>
+                                    </tr>
+                                </table>
+
+                                <hr />
+                                <?php if (count($final['post_locations']) > 0): ?>
+                                    <table class="table table-bordered table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>Address</th>
+                                                <th>State</th>
+                                                <th>City</th>
+                                                <th>Latitude</th>
+                                                <th>Longitude</th>
+                                                <th>Country Code</th>
+                                                <th class="text-center">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php foreach ($final['post_locations'] as $index => $location): ?>
+                                            <tr>
+                                                <form method="POST">
+                                                    <!-- Address with Autocomplete -->
+                                                    <td class="col-md-4">
+                                                        <input type="text" id="address_<?= $index ?>" name="address" value="<?= htmlspecialchars($location['address']) ?>" class="form-control address-autocomplete" autocomplete="off" />
+                                                    </td>
+                                                    <td class="col-md-1">
+                                                        <input type="text" id="state_<?= $index ?>" name="state" value="<?= htmlspecialchars($location['state']) ?>" class="form-control" />
+                                                    </td>
+                                                    <td class="col-md-3">
+                                                        <input type="text" id="city_<?= $index ?>" name="city" value="<?= htmlspecialchars($location['city']) ?>" class="form-control" />
+                                                    </td>
+                                                    <td class="col-md-1">
+                                                        <input type="text" id="latitude_<?= $index ?>" name="latitude" value="<?= htmlspecialchars($location['latitude']) ?>" class="form-control" />
+                                                    </td>
+                                                    <td class="col-md-1">
+                                                        <input type="text" id="longitude_<?= $index ?>" name="longitude" value="<?= htmlspecialchars($location['longitude']) ?>" class="form-control" />
+                                                    </td>
+                                                    <td class="col-md-1">
+                                                        <input type="text" id="country_code_<?= $index ?>" name="country_code" value="<?= htmlspecialchars($location['country_code']) ?>" class="form-control" />
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <input type="hidden" name="location_id" value="<?= $location['id']; ?>">
+                                                        <button type="submit" class="btn btn-info btn-sm" name="updateLoc">
+                                                            <i class="fas fa-save"></i> Update
+                                                        </button>
+                                                    </td>
+                                                </form>
+                                            </tr>
+                                            <?php endforeach; ?>
+                                        </tbody>
+                                    </table>
+                                <?php else: ?>
+                                    <p>No Post locations available.</p>
+                                <?php endif; ?>
+
+                                <h5>Company Branches</h5>
+                                <hr />
+                                <!-- Add New Branch Row -->
+                                    <table class="table table-bordered table-striped">
+                                        <tr>
+                                            <form method="POST">
+                                                <td class="col-md-4">
+                                                    <input type="text" id="address_new" name="address" class="form-control address-autocomplete" placeholder="Enter address" autocomplete="off" />
+                                                </td>
+                                                <td class="col-md-2">
+                                                    <input type="text" id="state_new" name="state" class="form-control" placeholder="State" />
+                                                </td>
+                                                <td class="col-md-3">
+                                                    <input type="text" id="city_new" name="city" class="form-control" placeholder="City" />
+                                                </td>
+                                              
+                                                <td class="col-md-3">
+                                                    <input type="text" id="country_code_new" name="country_code" class="form-control" placeholder="Country Code" />
+                                                </td>
+                                                <td class="text-center">
+                                                    <input type="hidden" name="type" value="1">
+                                                    <input type="hidden" id="longitude_new" name="longitude" class="form-control" placeholder="Longitude" />
+                                                    <input type="hidden" id="latitude_new" name="latitude" class="form-control" placeholder="Latitude" />
+
+                                                    <button type="submit" name="addBranch" class="btn btn-success btn-sm">
+                                                        <i class="fas fa-plus-circle"></i> Add Branch
+                                                    </button>
+                                                </td>
+                                            </form>
+                                        </tr>
+                                    </table>
+
+
+                                <hr />
+                                <?php if (!empty($final['company_data']['company_branches'])): ?>
+                                    <table class="table table-bordered table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>Address</th>
+                                                <th>State</th>
+                                                <th>City</th>
+                                                <th>Latitude</th>
+                                                <th>Longitude</th>
+                                                <th>Country Code</th>
+                                                <th class="text-center">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php foreach ($final['company_data']['company_branches'] as $index => $branch): ?>
+                                                <?php $uniqueIndex = $index + 99; ?>
+                                                <tr class="tidmis_<?= $branch['id'] ?>">
+                                                    <form method="POST">
+
+                                                        <td class="col-md-4">
+                                                        <input type="text" id="address_<?= $uniqueIndex ?>" name="address" value="<?= htmlspecialchars($branch['address']) ?>" class="form-control address-autocomplete" autocomplete="off" />
+                                                    </td>
+                                                    <td class="col-md-1">
+                                                        <input type="text" id="state_<?= $uniqueIndex ?>" name="state" value="<?= htmlspecialchars($branch['state']) ?>" class="form-control" />
+                                                    </td>
+                                                    <td class="col-md-3">
+                                                        <input type="text" id="city_<?= $uniqueIndex ?>" name="city" value="<?= htmlspecialchars($branch['city']) ?>" class="form-control" />
+                                                    </td>
+                                                    <td class="col-md-1">
+                                                        <input type="text" id="latitude_<?= $uniqueIndex ?>" name="latitude" value="<?= htmlspecialchars($branch['latitude']) ?>" class="form-control" />
+                                                    </td>
+                                                    <td class="col-md-1">
+                                                        <input type="text" id="longitude_<?= $uniqueIndex ?>" name="longitude" value="<?= htmlspecialchars($branch['longitude']) ?>" class="form-control" />
+                                                    </td>
+                                                    <td class="col-md-1">
+                                                        <input type="text" id="country_code_<?= $uniqueIndex ?>" name="country_code" value="<?= htmlspecialchars($branch['country_code']) ?>" class="form-control" />
+                                                    </td>
+
+                                                        <td class="text-center">
+                                                            <input type="hidden" name="type" value="0">
+                                                            <input type="hidden" name="branch_id" value="<?= $branch['id'] ?>">
+                                                            <button type="submit" name="updateBranch" class="btn btn-info btn-sm">
+                                                                <i class="fas fa-save"></i> Update
+                                                            </button>
+                                                        </td>
+                                                    </form>
+                                                </tr>
+                                            <?php endforeach; ?>
+                                        </tbody>
+                                    </table>
+                                <?php else: ?>
+                                    <p>No Company Branches available.</p>
+                                <?php endif; ?>
+
+                                <br>
+
+                                <h5>Company Service Locations</h5>
+                                <hr />
+                                <?php if (!empty($final['company_data']['company_service_areas'])): ?>
+                                    <table class="table table-bordered table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>Address</th>
+                                                <th>State</th>
+                                                <th>City</th>
+                                                <th>Latitude</th>
+                                                <th>Longitude</th>
+                                                <th>Miles</th>
+                                                <th class="text-center">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php foreach ($final['company_data']['company_service_areas'] as $index => $service): ?>
+                                                <?php $uniqueIndex = $index + 1099; ?>
+                                                <tr>
+                                                    <form method="POST">
+
+                                                        <td class="col-md-4">
+                                                        <input type="text" id="address_<?= $uniqueIndex ?>" name="address" value="<?= htmlspecialchars($service['address']) ?>" class="form-control address-autocomplete" autocomplete="off" />
+                                                    </td>
+                                                    <td class="col-md-1">
+                                                        <input type="text" id="state_<?= $uniqueIndex ?>" name="state" value="<?= htmlspecialchars($service['state']) ?>" class="form-control" />
+                                                    </td>
+                                                    <td class="col-md-3">
+                                                        <input type="text" id="city_<?= $uniqueIndex ?>" name="city" value="<?= htmlspecialchars($service['city']) ?>" class="form-control" />
+                                                    </td>
+                                                    <td class="col-md-1">
+                                                        <input type="text" id="latitude_<?= $uniqueIndex ?>" name="latitude" value="<?= htmlspecialchars($service['latitude']) ?>" class="form-control" />
+                                                    </td>
+                                                    <td class="col-md-1">
+                                                        <input type="text" id="longitude_<?= $uniqueIndex ?>" name="longitude" value="<?= htmlspecialchars($service['longitude']) ?>" class="form-control" />
+                                                    </td>
+                                                    <td class="col-md-1">
+                                                        <select id="radius_<?= $uniqueIndex ?>" name="miles" class="form-control">
+                                                            <?php
+                                                                $radiusOptions = [5, 10, 15, 20, 25];
+                                                                foreach ($radiusOptions as $radius) {
+                                                                    $selected = ($service['miles'] == $radius) ? 'selected' : '';
+                                                                    echo "<option value=\"$radius\" $selected>{$radius} miles</option>";
+                                                                }
+                                                            ?>
+                                                        </select>
+                                                    </td>
+
+                                                        <td class="text-center">
+                                                            <input type="hidden" id="country_code_<?= $uniqueIndex ?>" name="country_code" value="<?= htmlspecialchars($service['country_code']) ?>">
+
+                                                            <input type="hidden" name="service_id" value="<?= $service['id'] ?>">
+                                                            <input type="hidden" name="type" value="1">
+                                                            <button type="submit" name="updateServiceLoc" class="btn btn-info btn-sm">
+                                                                <i class="fas fa-save"></i> Update
+                                                            </button>
+                                                        </td>
+                                                    </form>
+                                                </tr>
+                                            <?php endforeach; ?>
+                                        </tbody>
+                                    </table>
+                                <?php else: ?>
+                                    <p>No Company Service Locations available.</p>
+                                <?php endif; ?>
+
+                            </div>
+
+                            <div class="fixed-center-buttons d-flex flex-wrap gap-3">
+                                <button type="button" class="btn btnSave btnSavePost">Save Post Details</button>
+                            </div>
+                        </div>
+                        <!-- status -->
+                        <div id="Videos" class="tab-content hidden">
+                            <div class="row mt-4 gap-lg-0 gap-4">
+                                <?php if(count($final['statuses']) > 0) { 
+                            foreach($final['statuses'] as $k => $v) {
+                            
+                            ?>
+                                <div class="col-lg-3">
+                                    <div class="ratio ratio-1x1">
+                                        <?php if($v['media_type'] ==1) { ?>
+                                        <video autoplay muted loop>
+                                            <source src="<?php echo MEDIA_BASE_URL.$v['media'];?>" type="video/mp4">
+                                            Your browser does not support the video tag.
+                                        </video>
+                                        <?php  } else { ?>
+                                        <img src="<?php echo MEDIA_BASE_URL.$v['media'];?>" class="img-fluid"
+                                            alt="Avatar" />
+                                        <?php } ?>
+                                    </div>
+                                </div>
+                                <?php } } ?>
+
+
+                                <div class="col-lg-3">
+                                    <div class="img-upload w-100 h-100 set-w-auto-100">
+                                        <input type="file" id="imgUpload" rel="<?php echo $final['id']?>" class="d-none"
+                                            accept="image/*,video/*">
+                                        <label for="imgUpload" class="m-0 h-100 w-100"><span><img
+                                                    src="assets/img/user/plus.png" alt=""></span>
+                                            <span>Add Videos/Image</span></label>
+                                    </div>
+                                </div>
+
+                                <!-- <div class="col-lg-3 mt-2">
+                            <div class="addMore pb-0">
+                            <button class="btn p-0">Add Videos</button>
+                            </div>
+                        </div> -->
+                                <!-- <div class="col-12 mt-4">
+                            <div class="d-flex flex-wrap gap-3">
+                            <button class="btn btnSave" id="uploadBtn">Save</button>
+                            <button class="btn btnClose">Cancel</button>
+                            </div>
+                        </div> -->
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+        <!-- content area end -->
+    </div>
+    <!-- wrapper end  -->
+    <div class="modal fade categorizeM" id="categorizeM" tabindex="-1" aria-labelledby="addUserLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title fs-5" id="categorizeM">Categorize Keywords</h2>
+                </div>
+                <div class="modal-body">
+                    <form class="user-form p-0 d-flex flex-column gap-3" method="post" action="" data-parsley-validate
+                        enctype="multipart/form-data">
+                        <table class="table table-bordered" id="keywordsTable">
+                            <thead>
+                                <tr>
+                                    <th>Keywords</th>
+                                    <th>Category</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Rows will be appended dynamically -->
+                            </tbody>
+                        </table>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="assets/plugins/datatable/js/jquery.dataTables.min.js?v=<?= time() ?>"></script>
+    <script src="assets/plugins/select2/select2-custom.js?v=<?= time() ?>"></script>
+    <?php include('includes/footer-scripts.php') ?>
+    <script src="assets/js/postDetails.js?v=<?= time() ?>"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const urlParams = new URLSearchParams(window.location.search);
+            const activeTab = urlParams.get('tab');      // e.g., ?tab=post-details
+            const redirect = urlParams.get('redirect');  // e.g., ?redirect=categories
+        
+            const defaultTab = redirect || activeTab || 'post-details';
+
+            console.log(defaultTab);
+        
+            const tabListItems = document.querySelectorAll('.tablist li');
+            const tabContents = document.querySelectorAll('.tab-content');
+        
+            tabListItems.forEach((tab) => {
+                tab.classList.remove('active-tablist');
+        
+                if (tab.dataset.tab === defaultTab) {
+                    tab.classList.add('active-tablist'); // activate tab
+                }
+            });
+        
+            tabContents.forEach((content) => {
+                content.classList.add('hidden');
+        
+                if (content.id === defaultTab) {
+                    content.classList.remove('hidden'); // show related content
+                }
+            });
+        
+            // Trigger any specific tab click if needed
+            if (defaultTab === 'categories') {
+                $('#categoriesTb').trigger('click');
+            } else if (defaultTab === 'post-details') {
+                $('#post-details-tb').trigger('click');
+            }
+        });
+    </script>        
+    <script>
+        // Assuming this variable comes from server-side (like PHP)
+        var scrollpos = '<?php echo isset($_GET["scrollpos"]) ? $_GET["scrollpos"] : ""; ?>';
+    
+        if (scrollpos === 'bottom') {
+            window.onload = function() {
+                window.scrollTo({
+                    top: document.body.scrollHeight,
+                    behavior: 'smooth'
+                });
+            };
+        }
+    </script>    
+    <script>
+        function previewImage(event) {
+            const fileInput = event.target;
+            const file = fileInput.files[0];
+            if (file) {
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+                    const previewImg = document.getElementById('previewImg');
+                    previewImg.src = e.target.result; // Set the image source to the file's data URL
+                    previewImg.style.height = '140px'; // Set the height to 140px
+                    previewImg.style.width = '140px'; // Set the height to 140px
+                    previewImg.style.objectFit = 'cover'; // Optional: To maintain aspect ratio
+                };
+
+                reader.readAsDataURL(file);
+            }
+            $('#textHd').html('')
+        }
+
+        $(document).ready(function () {
+
+            $('#post_category_master').select2();
+
+            $('#post_category_master').change(function () {
+                // Get the selected option
+                const selectedOption = $(this).find(':selected');
+                const tabLabelOptions = selectedOption.data('tab_label_option_posts');
+                const keywords = selectedOption.data('keywords');
+                const $tabDropdown = $('#category');
+
+                // Append keywords to the existing value of service
+                const existingService = "<?php echo $final['service']; ?>";
+                const appendedService = existingService + (keywords ? ', ' + keywords : '');
+                $('#service').val(keywords);
+
+                // Clear existing options
+                $tabDropdown.html('<option value="">Select an Option</option>');
+
+                // Populate new options if data is available
+                if (tabLabelOptions) {
+                    const optionsArray = tabLabelOptions.split(','); // Split into individual options
+                    $.each(optionsArray, function (index, value) {
+                        const trimmedValue = $.trim(value);
+                        $tabDropdown.append(`<option value="${trimmedValue}">${trimmedValue}</option>`);
+                    });
+                }
+            });
+
+            // get product / service based on type
+            $('#post_type').change(function () {
+                var selectedType = $(this).val();
+
+                // Send the new value via AJAX
+                $.ajax({
+                    url: 'ajax.php?action=get_master_sub_cat__by_type',
+                    type: 'POST',
+                    data: { type: selectedType },
+                    success: function (response) {
+                        var categories = JSON.parse(response);
+
+                        $('#post_category_master').empty();
+                        $('#category').empty();
+
+                        // Append keywords to the existing value of service
+                        const existingService = "<?php echo $final['service']; ?>";
+                        $('#service').val(existingService);
+                        //$('#service').empty();
+
+                        $('#post_category_master').append('<option value="">Select Category</option>');
+
+                        categories.forEach(function (category) {
+                            var option = $('<option></option>')
+                                .val(category.id)
+                                .data('tab_label_option_posts', category.tabLabelOptionPosts)
+                                .data('keywords', category.keywords1);
+
+                            // Create the category names string, ensuring that the last name does not have a trailing '>'
+                            var categoryNames = category.names.slice(0, -1).join(' > ') + (category.names.length > 0 ? ' > ' + category.names[category.names.length - 1] : '');
+
+                            option.html('<small class="grey">' + categoryNames + '</small><p class="bold"> > ' + category.names[category.names.length - 1] + '</p>');
+
+                            $('#post_category_master').append(option);
+                        });
+                    },
+                    error: function (xhr, status, error) {
+                        console.log('Error: ' + error);
+                    }
+                });
+            });
+        });
+
+        function categorizeKeywords() {
+            var keyWords = $("#service").val();
+            if (!keyWords.trim()) {
+                alert("Please enter keywords.");
+                return;
+            }
+
+            // Split keywords and clear existing rows
+            var keywordsArray = keyWords.split(',').map(keyword => keyword.trim());
+            var tableBody = $("#keywordsTable tbody");
+            tableBody.empty();
+
+            // Populate table with keywords
+            keywordsArray.forEach((keyword, index) => {
+                var row = `
+                        <tr>
+                            <td>${keyword}</td>
+                            <td>
+                                <select class="form-control category-select">
+                                    `+ $("#post_category_master").html() + `
+                                </select>
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-success save-btn" data-keyword="${keyword}">Save</button>
+                            </td>
+                        </tr>`;
+                tableBody.append(row);
+            });
+
+            //$('.category-select').select2();
+
+            // Show the modal
+            $('#categorizeM').modal('show');
+        }
+
+        // Event delegation to handle dynamically added save buttons
+        $(document).on('click', '.save-btn', function () {
+            var keyword = $(this).data('keyword');
+            var category = $(this).closest('tr').find('.category-select').val();
+            var btn = $(this);
+            if (!category) {
+                alert("Please select a category for " + keyword);
+                return;
+            }
+
+            // Send the new value via AJAX
+            $.ajax({
+                url: 'ajax.php?action=update_post_keywords',
+                type: 'POST',
+                data: { keyword: keyword, category: category },
+                success: function (response) {
+                    response = JSON.parse(response);
+                    console.log(response);
+                    if (response.success) {
+                        btn.text('Saved');
+                        btn.attr('disabled', true);
+                    } else {
+                        alert('Error: ' + response.message);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.log('Error: ' + error);
+                }
+            });
+        });
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const radios = document.querySelectorAll("input[name='community_type']");
+            const communityBox = document.getElementById("communitySelectBox");
+
+            radios.forEach(radio => {
+                radio.addEventListener("change", function () {
+                    if (this.value == "2") {
+                        communityBox.style.display = "block";
+                    } else {
+                        communityBox.style.display = "none";
+                    }
+                });
+            });
+        });
+    </script>
+
+    
+</body>
+
+</html>

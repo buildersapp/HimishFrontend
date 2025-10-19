@@ -1,0 +1,175 @@
+<html>
+    <?php include('includes/head.php'); ?>
+    <body class="bg-gray-50 font-sans">
+        <div id="main-container" class="flex h-screen">
+            <?php include('includes/sidebar.php'); ?>
+            <main id="main-content" class="flex-1 overflow-auto">
+                <?php include('includes/nav-header.php'); ?>
+                <div id="communities-overview-content" class="p-8">
+                    <!-- Stats Cards -->
+                    <section id="posts-stats" class="grid grid-cols-1 md:grid-cols-5 gap-6 mb-8">
+                        <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-sm font-medium text-gray-600">Total Posts</p>
+                                    <p class="text-2xl font-bold text-gray-900"><?= displayWithFallback($dashboardData['user']['total_post_links']) ?></p>
+                                </div>
+                                <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                                    <i class="fa-solid fa-file-text text-blue-600"></i>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-sm font-medium text-gray-600">Active Posts</p>
+                                    <p class="text-2xl font-bold text-gray-900"><?= displayWithFallback($dashboardData['user']['total_post_active_links']) ?></p>
+                                </div>
+                                <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                                    <i class="fa-solid fa-eye text-green-600"></i>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-sm font-medium text-gray-600">Total Clicks</p>
+                                    <p class="text-2xl font-bold text-gray-900"><?= displayWithFallback($dashboardData['user']['total_post_click_count']) ?></p>
+                                </div>
+                                <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+                                    <i class="fa-solid fa-mouse-pointer text-purple-600"></i>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-sm font-medium text-gray-600">Conversions</p>
+                                    <p class="text-2xl font-bold text-gray-900"><?= displayWithFallback($dashboardData['user']['total_post_conversions']) ?></p>
+                                </div>
+                                <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
+                                    <i class="fa-solid fa-chart-line text-orange-600"></i>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-sm font-medium text-gray-600"> Commission</p>
+                                    <p class="text-2xl font-bold text-gray-900">$<?= displayWithFallback($dashboardData['user']['total_earning_posts']) ?></p>
+                                </div>
+                                <div class="w-12 h-12 bg-pink-100 rounded-lg flex items-center justify-center">
+                                    <i class="fa-solid fa-dollar text-pink-600"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Posts Table -->
+                    <?php if($userDetails['total_posts_sales'] > 0){ ?>
+                    <section id="posts-table" class="bg-white rounded-xl shadow-sm border border-gray-100">
+                        <div class="p-6 border-b border-gray-200">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h3 class="text-lg font-semibold text-gray-900">My Posts</h3>
+                                    <p class="text-gray-600 text-sm">Manage and track your posts performance</p>
+                                </div>
+                                <div class="flex items-center space-x-3">
+                                    <div class="relative">
+                                        <input type="text" placeholder="Search posts..." class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" id="searchPts" />
+                                        <i class="absolute left-3 top-3 text-gray-400">
+                                            <svg
+                                                class="svg-inline--fa fa-magnifying-glass"
+                                                aria-hidden="true"
+                                                focusable="false"
+                                                data-prefix="fas"
+                                                data-icon="magnifying-glass"
+                                                role="img"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                viewBox="0 0 512 512"
+                                            >
+                                                <path
+                                                    fill="currentColor"
+                                                    d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"
+                                                ></path>
+                                            </svg>
+                                        </i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="overflow-x-auto">
+                            <table class="w-full">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Post Title</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Community</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Created</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Clicks</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Conversions</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-200" id="post-links-list">
+                                    
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+                    <?php }else{ ?>
+                    <section id="no-links-empty" class="bg-white rounded-xl shadow-sm border border-gray-100 p-12 mb-8">
+                        <div class="text-center max-w-md mx-auto">
+                            <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                                <i class="fa-solid fa-link text-blue-600 text-2xl"></i>
+                            </div>
+                            <h3 class="text-xl font-semibold text-gray-900 mb-3">No links yet</h3>
+                            <p class="text-gray-600 mb-6">Start by creating your first post and generate a referral link to begin earning commissions.</p>
+                            <a href="create-post.php">
+                                <button class="bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 flex items-center space-x-2 mx-auto">
+                                    <i class="fa-solid fa-plus"></i>
+                                    <span>Create Your First Post</span>
+                                </button>
+                            </a>
+                        </div>
+                    </section>
+                    <?php } ?>
+                </div>
+            </main>
+        </div>
+    </body>
+    <?php include('includes/footer-scripts.php'); ?>
+    <script src="assets/js/posts.js?v=<?= time() ?>"></script>
+    <script>
+    let lData = {
+        link_type: '0',
+        type: '<?= $type; ?>',
+        status: '',
+        search: '', 
+        user_id: `<?= $userDetails['id'] ?>`,
+        link_id: 0,
+        container: '#post-links-list'
+    };
+    getSaleLinks(lData);
+    enableScrollPagination(lData,'#post-links-list');
+
+    // 🔍 Handle search
+    const searchInput = document.getElementById('searchPts');
+    let searchTimer;
+
+    searchInput.addEventListener('input', function() {
+        clearTimeout(searchTimer); // debounce typing
+        searchTimer = setTimeout(() => {
+            lData.search = this.value.trim();
+            lData.page = 1; // reset pagination when searching
+            document.querySelector(lData.container).innerHTML = ''; // clear old results
+            getSaleLinks(lData);
+        }, 400); // wait 400ms after typing
+    });
+    </script>
+</html>

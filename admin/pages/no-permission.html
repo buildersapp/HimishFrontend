@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+    <?php include('includes/head.php') ?>
+    <body>
+        <!-- wrapper start  -->
+        <div class="wrapper relative">
+            <?php include('includes/sidebar.php') ?>
+
+            <!-- header start  -->
+            <?php include('includes/nav-header.php') ?>
+            <!-- header end  -->
+
+            <!-- content area start  -->
+            <div class="user-page-sec d-flex align-items-center justify-content-center mt-5">
+                <div class="text-center">
+                    <div class="card shadow-lg border-0 rounded-4 p-4">
+                        <div class="card-body">
+                            <h1 class="display-4 text-danger"><i class="bi bi-shield-lock-fill"></i></h1>
+                            <h2 class="mb-3">Access Denied</h2>
+                            <p class="text-muted mb-4">
+                                You don’t have permission to view this page.<br />
+                                Please contact your administrator if you think this is a mistake.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <?php include('includes/footer-scripts.php') ?>
+    </body>
+</html>

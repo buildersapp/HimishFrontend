@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<?php include('includes/head.php') ?>
+</style>
+<link rel="stylesheet" href="assets/plugins/datatable/css/dataTables.bootstrap5.min.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.7.1/css/buttons.dataTables.min.css">
+
+<body>
+    <!-- wrapper start  -->
+    <div class="wrapper relative">
+        <?php include('includes/sidebar.php') ?>
+
+        <!-- header start  -->
+        <?php include('includes/nav-header.php') ?>
+        <!-- header end  -->
+
+        <!-- content area start  -->
+        <div class="">
+            <main>
+                <section class="userList">
+                    <div class="">
+                        <div class="row">
+                            <!-- top -->
+                                <div class="search-sec-cmn company-page d-flex align-items-center justify-content-between mb-2">
+                                    <div class="search-form me-2">
+                                        <button class="btn p-0 outline-0" type="submit"><img
+                                                src="assets/img/list/search.svg" alt="search icon" /></button>
+                                        <input type="search" id="searchCompany" class="form-control form-input border-0"
+                                            placeholder="Search Companies" />
+                                    </div>
+                                    <?php if (hasPermission('Companies', 'add')) { ?>
+                                    <div class="addUser">
+                                        <a href="#" class="btn btn-cst" data-bs-toggle="modal" data-bs-target="#addCompanyModal">Add New Company</a>
+                                    </div>
+                                    <?php } ?>
+                                </div>
+                            <!-- middle -->
+                            <div class="col-12">
+                                <div class="filter">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <h2>Filters 
+                                            <?php if (hasPermission('Companies', 'edit')) { ?>
+                                            <a href="#" class="btn btn-info " style="display: none;" id="mergeCompany" 
+                                                >Merge</a>
+                                            <?php } ?>
+                                            
+                                            </h2>
+                                            
+                                        </div>
+                                        <div class="col-12">
+                                            <div class="row from-row">
+                                                <div class="col-md-3 col-12 mb-3 mb-md-0">
+                                                    <select class="form-select w-100" id="userSelect" aria-label="Default select example">
+                                                        <option value="">Select User</option>
+                                                        <?php foreach ($users as $ku=>$vu) { ?>
+                                                            <option class="dropdown-item" value="<?= $vu['id'];?>"><?=$vu['name']; ?></option>
+                                                    <?php } ?>
+                            
+                                                    </select>
+                                                </div>
+
+                                                <div class="col-md-3 col-12 mb-3 mb-md-0">
+                                                    <input class="form-control" type="text" id="address" oninput="initAutocomplete()"  placeholder="Enter address ...">
+                                                </div>
+
+                                                <div class="col-md-3 col-12 mb-3 mb-md-0">
+                                                    <select class="form-select" id="selectStatus" aria-label="Default select example">
+                                                        <option value=" ">Select Status</option>
+                                                        <option value="1">Active</option>
+                                                        <option value="0">Deactive</option>
+                                                    </select>
+                                                </div>
+
+                                                <div class="col-md-3 col-12 d-flex justify-content-start">
+                                                    <a href="#" class="btn btn-txt" id="filterS">Apply</a>
+                                                    <a href="#" class="btn btn-txt" onclick="location.reload();">Clear</a>
+                                                    <?php if (hasPermission('Companies', 'delete')) { ?>
+                                                    <a href="#" class="btn btn-cst px-3 bg-danger " style="display: none;" id="compnyDltButton" 
+                                                    >Delete</a>
+                                                    <?php } ?>
+                                                   
+                                                </div>
+                                    
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- bottom -->
+
+                            <div class="col-12">
+                                <div class="list-users table-responsive">
+                                    <!-- table -->
+                                    <table class="table data-table-cmn" id="companyTableN">
+                                        <thead>
+                                            <tr class="table-header">
+                                                <th  class="th-checkbox">
+                                                    <input type="checkbox" class="chk-box select-all" value="0"/>
+                                                </th>
+
+                                                <th scope="col" class="userHeading-size">
+                                                    <a href="#" class="userHeading"> COMPANY </a>
+                                                </th>
+                                                <th scope="col" class="userHeading-size">
+                                                    <a href="#" class="userHeading"> DBA </a>
+                                                </th>
+                                                <th scope="col">
+                                                    <a href="#" class="userHeading">  ADMIN </a>
+                                                </th>
+                                                <th scope="col">
+                                                    <a href="#" class="userHeading"> EMAIL </a>
+                                                </th>
+                                                <th scope="col">
+                                                    <a href="#" class="userHeading"> VISIBLE </a>
+                                                </th>
+                                               
+                                                <th scope="col">
+                                                    <a href="#" class="userHeading">  Posts </a>
+                                                </th>
+                                                <th scope="col">
+                                                    <a href="#" class="userHeading">  Ads </a>
+                                                </th>
+                                                <th scope="col">
+                                                    <a href="#" class="userHeading"> STATUS </a>
+                                                </th>
+                                                <th scope="col">
+                                                    <a href="#" class="userHeading"> LAST POSTED </a>
+                                                </th>
+                                                <th scope="col">
+                                                    <a href="#" class="userHeading"> Categorization </a>
+                                                </th>
+                                                <th scope="col">
+                                                    <a href="#" class="userHeading"> CREATED </a>
+                                                </th>
+                                                <th scope="col">
+                                                    <a href="#" class="userHeading"> Shares   </a>
+                                                </th>
+                                                <th scope="col">
+                                                    <div class="userHeading">ACTION</div>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                    <div id="noDataMessage" class="no-data-container" style="display: none;">
+                                        <img src="<?= NO_DATA_IMG ?>" alt="No Data">
+                                        <h3>
+                                            <?= NO_DATA_TITLE ?>
+                                        </h3>
+                                        <p>
+                                            <?= NO_DATA_DESC ?>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    <!-- add cmpn -->
+                        <div class="modal fade customModal" id="addCompanyModal" tabindex="-1" aria-labelledby="addUserLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h2 class="modal-title fs-5" id="addCompanyLabel">Add New Company</h2>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form class="user-form p-0 d-flex flex-column gap-3" method="post" action="" data-parsley-validate enctype="multipart/form-data">
+            
+                                            <div>
+                                                <input type="text" name="name" id="NAME" placeholder="Company Name"  class="form-control m-0"  required />
+                                            </div>
+                                            <div>
+                                                <input type="text" name="short_name" id="short_name" placeholder="Company DBA"  class="form-control m-0"  required />
+                                            </div>
+            
+                                            <div>
+                                                <input type="email" name="email" id="EMAIL" placeholder="Company Email" class="form-control m-0"  required />
+                                            </div>
+                                            <div>
+                                                <textarea rows="2" cols="4"  name="info" id="info" placeholder="Company Info" class="form-control m-0"></textarea>
+                                            </div>
+                                            
+            
+                                            <div>
+                                                <select class="form-select" name="user_id" aria-label="Default select example" required>
+                                                    <option value="">Select User</option>
+                                                    <?php foreach ($users as $ku=>$vu) { ?>
+                                                        <option value="<?= $vu['id'];?>"><?=$vu['name']; ?></option>
+                                                    <?php } ?>
+                    
+                                                </select> 
+                                            </div>
+            
+                                            <div>
+                                                <select class="form-control m-0" name="role" required>
+                                                    <option value="">Select Association With Company</option>
+                                                    <option value="Owner">Owner</option>
+                                                    <option value="Partner">Partner</option>
+                                                    <option value="Manager">Manager</option>
+                                                    <option value="Sales Person">Sales Person</option>
+                                                    <option value="Employee">Employee</option>
+                                                    <option value="Others">Others</option>
+                                                </select>
+                                            </div>
+                                            <div>
+                                                <select class="form-control m-0" name="business_type" required>
+                                                    <option value="">Select Business Type</option>
+                                                    <option value="Wholesale">Wholesale</option>
+                                                    <option value="Retail">Retail</option>
+                                                    <option value="Manufacturer"> Manufacturer</option>
+                                                    <option value="Service Provider">Service Provider</option>
+                                                </select>
+                                            </div>
+
+                                            <div>
+                                                <input type="text" name="keywords" id="keywords" placeholder="Company keywords" class="form-control m-0"   />
+                                            </div>
+        
+                                            <div>
+                                                <input type="text" name="location" oninput="initAutocomplete()" id="address" placeholder="location"  class="form-control m-0" />
+                                                <input type="hidden" name="latitude" id="latitude" value="0">
+                                                <input type="hidden" name="longitude" id="longitude" value="0">
+                                            </div>
+            
+                                        
+            
+            
+                                            <div class="mt-2 gap-3 d-flex flex-row">
+                                                <button type="submit" name="addCompany" class="btn btnSave">Save</button>
+                                                <a href="companies.php"><button type="button" class="btn btnClose">Close</button></a>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    <!-- caregorize -->
+                        <div class="modal fade categorizeM" id="categorizeM" tabindex="-1" aria-labelledby="addUserLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h2 class="modal-title fs-5" id="categorizeM">Categorize Keywords</h2>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form class="user-form p-0 d-flex flex-column gap-3" method="post" action="" data-parsley-validate enctype="multipart/form-data">
+            
+                                            <div>
+                                                <label for="email">User Keywords:</label>
+                                                <textarea rows="2" cols="4"  id="selectedKeywords" placeholder="User has not added any keyword." class="form-control m-0" disabled></textarea>
+                                            </div>
+
+                                            <div class="col-md-12">
+                                                <div>
+                                                    <label for="title">Company Type (Service / Product):</label>
+                                                    <select id="post_type" class="form-select" name="post_type">
+                                                        <option value="">Select Company Type</option>
+                                                        <option value="1">Services</option>
+                                                        <option value="2">Products</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            
+            
+                                            <div class="col-md-12">
+                                                <div>
+                                                    <label for="title">Select Category</label>
+                                                    <select id="post_category_master" class="form-select" name="post_category_master">
+                                                        <option value="">Select Category</option>
+                                                        
+                                                    </select>
+                                                </div>
+                                            </div>
+            
+                                            <div>
+                                                <label for="email">Category Keywords:</label>
+                                                <textarea rows="2" cols="4"  name="keywords2" id="service" placeholder="Keywords" class="form-control m-0"></textarea>
+                                            </div>
+
+                                            <input type="hidden" name="company_id" value="" id="c_id">
+
+                                            <div class="mt-2 gap-3 d-flex flex-row">
+                                                <button type="submit" name="categorize" class="btn btnSave">Update</button>
+                                                <a href="companies.php"><button type="button" class="btn btnClose">Close</button></a>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Merge -->
+                        <div class="modal fade mergeC" id="mergeCompanyModal" tabindex="-1" aria-labelledby="addUserLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h2 class="modal-title fs-5" id="categorizeM">Merge Companies</h2>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form class="user-form p-0 d-flex flex-column gap-3" method="post" action="" data-parsley-validate enctype="multipart/form-data">
+            
+                                            <div id="apendD">
+                                                
+                                            </div>
+
+                                            <input type="hidden" name="selectIds"  id="cc_id">
+
+                                            <div class="mt-2 gap-3 d-flex flex-row">
+                                                <button type="submit" name="masterClick" class="btn btnSave">Merge</button>
+                                                <a href="companies.php"><button type="button" class="btn btnClose">Close</button></a>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </div>
+        <!-- content area end -->
+    </div>
+    <!-- wrapper end  -->
+    <script src="assets/plugins/datatable/js/jquery.dataTables.min.js?v=<?= time() ?>"></script>
+    <?php include('includes/footer-scripts.php') ?>
+    <script src="assets/js/companies.js?v=<?= time() ?>"></script>
+    <?php if($err == 1){ ?>
+        <script>
+            const modal = new bootstrap.Modal(document.getElementById('addCompanyModal'));
+            modal.show();
+        
+        </script>
+        <?php } ?>
+        <script>
+            $(document).on('click','.showPP',function(){
+                var keywords = $(this).attr('data-set');
+                var c_id = $(this).attr('rel');
+                $('#selectedKeywords').text(keywords)
+                $('#c_id').val(c_id)
+                const modal = new bootstrap.Modal(document.getElementById('categorizeM'));
+            modal.show();
+        
+            })
+
+            $(document).ready(function () {
+
+                $('#post_category_master').change(function () {
+                    // Get the selected option
+                    const selectedOption = $(this).find(':selected');
+                    const tabLabelOptions = selectedOption.data('tab_label_option_posts');
+                    const keywords = selectedOption.data('keywords');
+                    const $tabDropdown = $('#category');
+                    $('#service').val(keywords);
+
+                    // Clear existing options
+                    $tabDropdown.html('<option value="">Select an Option</option>');
+
+                    // Populate new options if data is available
+                    if (tabLabelOptions) {
+                        const optionsArray = tabLabelOptions.split(','); // Split into individual options
+                        $.each(optionsArray, function (index, value) {
+                            const trimmedValue = $.trim(value);
+                            $tabDropdown.append(`<option value="${trimmedValue}">${trimmedValue}</option>`);
+                        });
+                    }
+                });
+
+                // get product / service based on type
+                $('#post_type').change(function() {
+                    var selectedType = $(this).val();
+
+                    // Send the new value via AJAX
+                    $.ajax({
+                        url: 'ajax.php?action=get_master_sub_cat__by_type',
+                        type: 'POST',
+                        data: { type: selectedType },
+                        success: function(response) {
+                            var categories = JSON.parse(response);
+
+                            //console.log(categories);
+                            
+                            $('#post_category_master').empty();
+                            $('#category').empty();
+
+                            $('#post_category_master').append('<option value="">Select Category</option>');
+
+                            categories.forEach(function(category) {
+                                var option = $('<option></option>')
+                                    .val(category.id)
+                                    .data('tab_label_option_posts', category.tabLabelOptionCompany)
+                                    .data('keywords', category.keywords2)
+                                    .html('<p class="bold">' + category.names[category.names.length - 1] + ' > </p>' + 
+                                        '<small class="grey">' + category.names.slice(0, -1).join(' > ') + '</small>');
+
+                                $('#post_category_master').append(option);
+                            });
+                        },
+                        error: function(xhr, status, error) {
+                            console.log('Error: ' + error);
+                        }
+                    });
+                });
+            });
+
+
+
+            </script>
+
+</body>
+
+</html>

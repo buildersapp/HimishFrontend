@@ -1,0 +1,35 @@
+@charset "UTF-8";
+
+a { text-decoration: none; }
+
+button { cursor: pointer; }
+
+.percent { width: 85.71429%; }
+
+.panel-primary { border-color: #009dda; }
+
+input { padding: 6px 12px; }
+
+/*keep footer always on bottom end*/
+
+.handle-counter { overflow: hidden; }
+
+.handle-counter .counter-minus,  .handle-counter .counter-plus,  .handle-counter input {
+  text-align: center;
+}
+
+.handle-counter .counter-minus,  .handle-counter .counter-plus { text-align: center; }
+
+.handle-counter input {
+  width: 50px;
+  border-width: 1px;
+  border-left: none;
+  border-right: none;
+}
+
+.btn.ct {
+  padding: 3px 9px;
+  margin: 3px;
+  border: 1px solid transparent;
+  color: #fff;
+}

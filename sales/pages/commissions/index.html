@@ -1,0 +1,90 @@
+<html>
+    <?php include('includes/head.php'); ?>
+    <body class="bg-gray-50 font-sans">
+        <div id="main-container" class="flex h-screen">
+            <?php include('includes/sidebar.php'); ?>
+            <main id="main-content" class="flex-1 overflow-auto">
+                <?php include('includes/nav-header.php'); ?>
+                <div id="commission-content" class="p-8">
+                    <!-- Tabs -->
+                    <section id="commission-tabs" class="mb-6">
+                        <div class="border-b border-gray-200">
+                            <nav class="-mb-px flex space-x-8">
+                                <!-- By Post Referral Tab -->
+                                <a href="?type=0" 
+                                class="py-2 px-1 border-b-2 font-medium text-sm 
+                                <?= $type == 0 ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300' ?>">
+                                    By Post Referral
+                                </a>
+
+                                <!-- By Community Tab -->
+                                <a href="?type=1" 
+                                class="py-2 px-1 border-b-2 font-medium text-sm 
+                                <?= $type == 1 ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300' ?>">
+                                    By Community
+                                </a>
+                            </nav>
+                        </div>
+                    </section>
+
+                    <!-- Post Referral Tab Content -->
+                    <section id="post-referral-content" class="bg-white rounded-xl shadow-sm border border-gray-100">
+                        <?php if($type == 0): ?>
+                        <div class="p-6 border-b border-gray-200">
+                            <h3 class="text-lg font-semibold text-gray-900">Post Referral Commissions</h3>
+                            <p class="text-gray-600 text-sm">Track earnings from individual post links</p>
+                        </div>
+                        <?php else: ?>
+                        <div class="p-6 border-b border-gray-200">
+                            <h3 class="text-lg font-semibold text-gray-900">Community Commissions</h3>
+                            <p class="text-gray-600 text-sm">Track earnings from community invites and member activities</p>
+                        </div>
+                        <?php endif; ?>
+                        
+                        <div class="overflow-x-auto">
+                            <table class="w-full">
+                                <?php if($type == 0): ?>
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Link Name</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Community</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Sent Date</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Opened</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Converted</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Commission</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                                    </tr>
+                                </thead>
+                                <?php else: ?>
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Community Name</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Users Joined</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Total Ads</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Paid Ads</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Commission Rate</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Total Earned</th>
+                                    </tr>
+                                </thead>
+                                <?php endif; ?>
+                                <tbody class="divide-y divide-gray-200" id="commissions-trck-list">
+                                    <!-- Dynamic rows will be appended here via JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+                </div>
+            </main>
+        </div>
+    </body>
+    <?php include('includes/footer-scripts.php'); ?>
+    <script>
+    let lData = {
+        type: '<?= $type; ?>',
+        search: '', 
+        container: '#commissions-trck-list'
+    };
+    getCommissions(lData);
+    enableScrollPagination(lData,'#commissions-trck-list');
+    </script>
+</html>

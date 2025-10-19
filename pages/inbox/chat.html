@@ -1,0 +1,1041 @@
+<!DOCTYPE html>
+<html lang="en">
+    <?php include('includes/head.php') ?>
+    <script src="https://cdn.socket.io/4.5.0/socket.io.min.js?v=<?= time() ?>"></script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/emoji-picker-element@1/index.js?v=<?= time() ?>"></script>
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+        .chatss-left {
+            max-height: 80vh; /* adjust based on your layout */
+            overflow-y: auto;
+            padding-right: 10px; /* optional, to avoid scroll bar overlap */
+        }
+    
+        .loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 9999;
+            display: flex ;
+            justify-content: center ;
+            align-items: center ;
+            background-color: rgba(255, 255, 255, 0.8); /* Optional overlay */
+        }
+       
+        .spinner {
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #3498db;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+        }
+    
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+    
+    <body>
+         <!-- loading -->
+         <div class="loader" style="display: block;">
+            <div class="spinner"></div>
+        </div>
+        <?php include('includes/nav-header.php') ?>
+        <!-- main start -->
+        <main>
+            <section class="header-profile-sponsor">
+               
+              <div class="container">
+                <emoji-picker
+                id="emoji-picker"
+                style="position: absolute; display: none; z-index: 9999;"
+                ></emoji-picker>
+                <div class="row header-flow-row align-items-center">
+                  <div class="col ps-0 ps-xl-auto">
+                    <div class="header-flow-left ps-3">
+                      <div class="header-flow-left-inner">
+                        <a href="#" onclick="window.history.back()">
+                        <button class="header-flow-left-inner-button">
+                          <img src="assets/img/left-arrow.svg" alt="left-arrow">
+                        </button>
+                        </a>
+                        <span class="me-auto d-xl-block d-none" id="ck">Chats </span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col d-xl-block d-none"></div>
+                </div>
+              </div>
+            </section>
+            <section class="dashboardx">
+              <div class="container">
+                <div class="row">
+                  <div class="col-12 col-lg-4">
+                    <div class="chatss-left">
+                      <!-- single chat profile -->
+                    
+                    </div>
+                  </div>
+                  <div class="col-12 col-lg-8">
+                    <div class="chatss-right set-chat-box-inbox">
+                      <div class="chatss-right-top" id="userNameC">
+                        
+                      </div>
+                      <div class="chatss-right-bottom  messages">
+                       <img src="./assets/img/login.png" style="width:400px;margin: 0 0 0 100px ">
+                       
+                      </div>
+                      <div class="chatss-right-input parent-chatss-right-input" style="display: none;" id="chatButton">
+                        <div class="input-right location-wraper new-location-wraper">
+                          <div class="input-wrapper input-wrapper-chat ">
+                            <input type="text" id="write_msg" class="form-input form-input-chat write_msg" placeholder="Write message">
+                            <label for="chat-input" class="input-icon">
+                              <i class="fa fa-smile text-default" id="emoji-trigger"></i>
+                            </label>
+                            <input type="file" id="file-upload" class="hidden-file-input-ss" accept="image/*">
+                            <label for="chat-input" class="input-icon-chat">
+                              <i class="fa fa-paperclip"></i>
+                            </label>
+                          </div>
+                          <div class="addPhone-button-wrapper new-addPhone-button-wrapper">
+                            <div class="voice-container">
+                              <!-- Send msg Button -->
+                              <button type="button" id="send-msg">
+                                <img src="assets/images/direct-right.png" alt="img">
+                              </button>
+                              <!-- Voice Button -->
+                              <button type="button" id="voice-recorder">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28" fill="none">
+                                  <path d="M14 16.334C13.0278 16.334 12.2014 15.9937 11.5209 15.3132C10.8403 14.6326 10.5 13.8062 10.5 12.834V5.83398C10.5 4.86176 10.8403 4.03537 11.5209 3.35482C12.2014 2.67426 13.0278 2.33398 14 2.33398C14.9723 2.33398 15.7986 2.67426 16.4792 3.35482C17.1598 4.03537 17.5 4.86176 17.5 5.83398V12.834C17.5 13.8062 17.1598 14.6326 16.4792 15.3132C15.7986 15.9937 14.9723 16.334 14 16.334ZM12.8334 24.5007V20.9132C10.8112 20.6409 9.13893 19.7368 7.81671 18.2007C6.49448 16.6645 5.83337 14.8757 5.83337 12.834H8.16671C8.16671 14.4479 8.73565 15.8238 9.87354 16.9617C11.0114 18.0995 12.3869 18.6681 14 18.6673C15.6131 18.6665 16.989 18.0976 18.1277 16.9605C19.2664 15.8234 19.8349 14.4479 19.8334 12.834H22.1667C22.1667 14.8757 21.5056 16.6645 20.1834 18.2007C18.8611 19.7368 17.1889 20.6409 15.1667 20.9132V24.5007H12.8334Z" fill="white"></path>
+                                </svg>
+                              </button>
+      
+                              <!-- Dropdown (Initially Hidden) -->
+                              <div class="voice-dropdown" id="voice-dropdown">
+                                <div class="d-flex justify-content-between align-items-center voice-dropdown-top"><p>Recording Started</p> <button class="close-voice"><img src="assets/img/clsoe-x-close.png" alt=""></button></div>
+                                <div class="voice-dropdown-image">
+                                  <div><img src="assets/img/voice-recoard.png" alt="">
+                                  </div>
+                                  <div id="status">
+                                      <p><span>01:15</span> Recording...</p>
+                                  </div>
+                                </div>
+                                <div class="voice-dropdown-body" id="transcriptText">
+                                  <p></p>
+                                </div>
+                                <div class="voice-dropdown-buttons">
+                                  <button id="send-voice-note">Send Voice Note</button>
+                                <button id="send-text-only">Send Text Only</button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </main>
+    </body>
+    <script>
+        document
+          .querySelector(".input-icon-chat")
+          .addEventListener("click", function () {
+            document.getElementById("file-upload").click(); // Open file dialog
+          });
+      </script>
+ <script>
+  const voiceButton = document.getElementById("voice-recorder");
+  const dropdown = document.getElementById("voice-dropdown");
+  const closeVoiceButton = document.querySelector(".close-voice");
+  const transcriptEl = document.getElementById("transcriptText");
+  const statusEl = document.getElementById("status");
+  const send_voice_note = document.getElementById("send-voice-note");
+  const send_text_only = document.getElementById("send-text-only");
+
+  let recognition = null;
+  let isListening = false;
+  let mediaRecorder = null;
+  let audioChunks = [];
+
+  // Initialize speech recognition
+  const createRecognition = () => {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      alert("Speech Recognition not supported in this browser.");
+      return null;
+    }
+
+    const recog = new SpeechRecognition();
+    recog.lang = "en-US";
+    recog.continuous = true;
+
+    recog.onstart = () => {
+      statusEl.textContent = "Status: Listening...";
+      isListening = true;
+    };
+
+    recog.onresult = (event) => {
+      const transcript = event.results[event.results.length - 1][0].transcript;
+      transcriptEl.textContent += transcript + " ";
+      console.log("Transcript:", transcript);
+    };
+
+    recog.onerror = (err) => {
+      statusEl.textContent = "Status: Error - " + err.error;
+      console.error("Recognition error:", err);
+      isListening = false;
+    };
+
+    recog.onend = () => {
+      isListening = false;
+      statusEl.textContent = "Status: Voice stopped";
+    };
+
+    return recog;
+  };
+
+  // Voice button toggle
+  voiceButton.addEventListener("click", async function () {
+    dropdown.classList.toggle("show");
+
+    if (isListening && recognition) {
+      recognition.stop();
+      if (mediaRecorder && mediaRecorder.state === "recording") {
+        mediaRecorder.stop();
+      }
+      return;
+    }
+
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      statusEl.textContent = "Status: Microphone access granted";
+
+      // Start audio recording
+      mediaRecorder = new MediaRecorder(stream);
+      audioChunks = [];
+
+      mediaRecorder.ondataavailable = event => {
+        console.log("Audio chunk available:", event.data);
+        audioChunks.push(event.data);
+      };
+
+      mediaRecorder.onstop = () => {
+        console.log("Audio recording stopped");
+
+        const audioBlob = new Blob(audioChunks, { type: "audio/mp4" });
+
+        if (audioChunks.length === 0 || audioBlob.size === 0) {
+          console.warn("No audio recorded.");
+          return;
+        }
+
+        sendVoiceNote(audioBlob);
+      };
+
+      mediaRecorder.start();
+
+      // Start speech recognition
+      recognition = createRecognition();
+      if (recognition) {
+        try {
+          recognition.start();
+        } catch (error) {
+          console.error("Recognition start error:", error);
+          statusEl.textContent = "Status: Speech recognition failed to start";
+        }
+      }
+    } catch (err) {
+      statusEl.textContent = "Status: Microphone access denied";
+      console.error("Mic access error:", err);
+    }
+  });
+
+  // Close dropdown and stop voice manually
+  closeVoiceButton.addEventListener("click", function () {
+    if (recognition && isListening) {
+      recognition.stop();
+    }
+    if (mediaRecorder && mediaRecorder.state === "recording") {
+      mediaRecorder.stop();
+    }
+    dropdown.classList.remove("show");
+    statusEl.textContent = "Status: Voice stopped manually";
+  });
+
+  // Close dropdown if click outside
+  document.addEventListener("click", function (event) {
+    const isClickInside = dropdown.contains(event.target) || voiceButton.contains(event.target);
+    if (!isClickInside) {
+      transcriptEl.textContent = '';
+      if (recognition && isListening) {
+        recognition.stop();
+      }
+      if (mediaRecorder && mediaRecorder.state === "recording") {
+        mediaRecorder.stop();
+      }
+      dropdown.classList.remove("show");
+      statusEl.textContent = "Status: Voice closed";
+    }
+  });
+
+  // send text message only
+  send_text_only.addEventListener("click", function () {
+    const textToSend = transcriptEl.textContent.trim();
+    if (textToSend) {
+      const activeChat = document.querySelector(".single-chat-profile-actives");
+      if (activeChat) {
+        const data = {
+          user_id: adminId,
+          user2_id: activeChat.dataset.user2Id,
+          resource_id: activeChat.dataset.resourceId,
+          resource_type: activeChat.dataset.resourceType,
+          message: textToSend,
+          constantId: activeChat.dataset.chatId,
+        };
+
+        sendMessage(data);
+        dropdown.classList.remove("show");
+        transcriptEl.textContent = '';
+        console.log("Sending text:", textToSend);
+      }
+    } else {
+      console.log("Transcript is empty.");
+    }
+  });
+
+  // send voice note (stop recording to trigger onstop handler)
+  send_voice_note.addEventListener("click", function () {
+    if (mediaRecorder && mediaRecorder.state === "recording") {
+      mediaRecorder.stop();
+    } else {
+      console.warn("No recording in progress.");
+    }
+  });
+
+  // send voice note blob
+  async function sendVoiceNote(audioBlob) {
+    const formData = new FormData();
+    formData.append("image", audioBlob, "voice-note.mp4");
+
+    console.log("Sending voice note...");
+    showLoader();
+    const __uploadImage = await uploadImage(formData);
+    console.log(__uploadImage,"=========media")
+    hideLoader();
+
+    if (__uploadImage.body) {
+      const activeChat = document.querySelector(".single-chat-profile-actives");
+      if (activeChat) {
+        const data = {
+          user_id: adminId,
+          user2_id: activeChat.dataset.user2Id,
+          resource_id: activeChat.dataset.resourceId,
+          resource_type: activeChat.dataset.resourceType,
+          media: __uploadImage.body.image,
+          message_type: 3,
+          constantId: activeChat.dataset.chatId,
+        };
+        sendMessage(data);
+        dropdown.classList.remove("show");
+        transcriptEl.textContent = '';
+      }
+    }
+  }
+</script>
+`
+
+      
+    <script>
+
+function getDisplayDate(dateStr) {
+    const msgDate = new Date(dateStr);
+    const today = new Date();
+    
+    const isToday = msgDate.toDateString() === today.toDateString();
+
+    const yesterday = new Date();
+    yesterday.setDate(today.getDate() - 1);
+    const isYesterday = msgDate.toDateString() === yesterday.toDateString();
+
+    if (isToday) return "Today";
+    if (isYesterday) return "Yesterday";
+
+    // Format: Feb 02 or Feb 02, 24
+    const options = {
+        month: "short",
+        day: "2-digit",
+        year: msgDate.getFullYear() !== today.getFullYear() ? "2-digit" : undefined
+    };
+    return msgDate.toLocaleDateString("en-US", options);
+}
+
+function companyCard(data) {
+  const logo = data.logo ? MEDIA_BASE_URL + data.logo : randomUrl+'&name='+data.name;
+  const images = data.company_cover_images && data.company_cover_images.length > 0 ? data.company_cover_images : [];
+  const rating = data.company_rating || 0.0;
+  const locations = data.company_branches || [];
+  const mainLocation = locations[0] || "Not specified";
+  const otherLocations = locations.slice(1);
+
+  const filteredImages = images.filter(img => img.img_type == 1);
+  if (filteredImages.length > 0){
+    var carouselIndicators = filteredImages.map((_, index) =>
+        `<button type="button" data-bs-target="#companyCarouselIndicators" data-bs-slide-to="${index}" class="${index === 0 ? 'active' : ''}" aria-label="Slide ${index + 1}" ${index === 0 ? 'aria-current="true"' : ''}></button>`
+        ).join('');
+
+    var carouselInner = filteredImages.map((img, index) =>
+    `<div class="carousel-item ${index === 0 ? 'active' : ''}">
+        <img src="${MEDIA_BASE_URL + img.image}" class="img-fluid" alt="Company Image ${index + 1}">
+    </div>`
+    ).join('');
+}else{
+   var  carouselIndicators = ``
+    var carouselInner=  `<div class="carousel-item active">
+        <img src="${randomUrl+'&name='+data.name+'&size=300'}&background=f1f5f9&color=000&size=300" class="img-fluid" alt="Company Image 0">
+    </div>`
+}
+
+  const otherLocationsList = otherLocations.map(loc => `<li>${loc}</li>`).join('');
+  var __category ='<div class="company-category"> <h4>Not Categorized</h4></div>'
+     if(data.company_categories.length > 0){
+        __category=`<div class="company-category">
+            <h4>${data.company_categories[0].parentCategory?.parentCategory.name || "Category"}</h4>
+            <p>${data.company_categories[0].parentCategory.name || "Sub Category"}</p>
+            <img src="./assets/img/arr-com.png" alt="">
+          </div>`
+     }
+    const  ribbon = (data.tab_label_option) ? `<p class="company-ribbon">${data.tab_label_option || ''}</p>`:''
+    const recommendIcon =(data.i_recommend) ? `./assets/img/like-fill.png` :`./assets/img/like.png`
+    const bookmarkIcon=(data.i_fav) ? `./assets/img/bookmarkfill.png` :`./assets/img/bookmarkBlack.png`
+
+  return `
+    <div class="company-item new-company-item-ss">
+      <div class="company-carousel">
+        <div id="companyCarouselIndicators" class="carousel slide" data-bs-ride="carousel">
+          <div class="carousel-indicators">${carouselIndicators}</div>
+          <div class="carousel-inner">${carouselInner}</div>
+        </div>
+      </div>
+
+      <div class="company-details">
+        <div class="company-logo">
+          <img src="${logo}" alt="Company Logo" class="img-fluid">
+        </div>
+        <div class="company-info">
+          <h3 class="company-title">
+            <a href="company-details.php?id=${btoa(data.id.toString())}">${data.name || "Unnamed Company"}</a>
+            
+          </h3>
+
+          <div class="company-rating">
+            <p>${rating.toFixed(1)}</p>
+            <img src="./assets/img/star.png" alt="Rating Stars">
+          </div>
+
+          <div class="company-location">
+            <img src="./assets/img/sale-loc.png" alt="Location Icon">
+            <span class="loc-name">${mainLocation.address}</span>
+            ${otherLocations.length > 0 ? `
+              <span class="other-loc" data-bs-toggle="dropdown" aria-expanded="true">+${otherLocations.length} Locations</span>
+              <ul class="dropdown-menu" aria-labelledby="postActionsFilter">${otherLocationsList}</ul>
+            ` : ""}
+          </div>
+          
+          ${__category}
+
+          <div class="company-stats">
+            <div class="company-posts">
+              <p>Posts</p>
+              <h3>${data.total_posts || 0}</h3>
+            </div>
+            <div class="company-posts">
+              <p>Connections</p>
+              <h3>${data.total_followers || 0}</h3>
+            </div>
+            <div class="company-posts">
+              <p>Showcase</p>
+              <h3>${data.showcases || 0}</h3>
+            </div>
+           
+          </div>
+        </div>
+
+        <div class="company-share-icons">
+          <button class="share-item share-like">
+            <img src="${recommendIcon}" alt="Like Icon">
+            <span class="like-count">${data.total_recommend || 0}</span>
+          </button>
+          <button class="share-item share-button">
+            <img src="./assets/img/share.png" alt="Share Icon">
+          </button>
+          <button class="share-item share-bookmark">
+            <img src="./assets/img/bookmarkBlack.png" alt="Bookmark Icon">
+          </button>
+        </div>
+      </div>
+
+     ${ribbon}
+    </div>
+  `;
+}
+
+
+function lookingCard(data) {
+  if(data === null || data === undefined) {
+    return `<div class="alert alert-danger">This data has been deleted or removed.</div>`;
+  }
+  const user = data.user || {};
+  const username = user.name || 'Unknown';
+  const userImg = user.image || 'Unknown';
+  const userImage = user.image
+    ? `<img src="${MEDIA_BASE_URL + '' +userImg}" class="img-fluid" alt="${username}-avatar">`
+    : `<img src="${randomUrl+'&name='+user.name}" class="img-fluid" alt="${username}">`;
+
+  const city = data.city || '';
+  const state = data.state || '';
+
+  const postImages = data.post_images || [];
+  const carouselIndicators = postImages
+    .map((_, index) =>
+      `<button type="button" data-bs-target="#carousel${data.id}" data-bs-slide-to="${index}" class="${index === 0 ? 'active' : ''}" aria-label="Slide ${index + 1}"></button>`
+    )
+    .join('');
+
+  const carouselItems = postImages
+    .map((img, index) => {
+      return `<div class="carousel-item ${index === 0 ? 'active' : ''}">
+                <img src="${MEDIA_BASE_URL + img.image}" class="img-fluid" alt="...">
+              </div>`;
+    })
+    .join('');
+
+    const likeIcon =(data.is_like==1) ? `./assets/img/lovefill.png` : `./assets/img/love.png`
+
+  return `<div class="sale-single-card sale-single-card-nes mb-5">
+    <div class="sale-list">
+      <div class="sale-content">
+        <div class="sale-author">
+          <div class="sale-author-img">
+            ${userImage}
+          </div>
+          <div class="sale-author-info">
+            <h3>
+              <a href="#">${username}</a>
+            </h3>
+            <div class="author-loc">
+              <img src="./assets/img/sale-loc.png" alt="">
+              <span>${city}, ${state}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="sale-details">
+          <h2>${data.title || 'No Title'} <span>${formatRelativeTime(data.created_at)}</span></h2>
+          <p>${data.info || ''} </p>
+        </div>
+
+        <div class="sale-tags">
+          ${data.service
+            ?.split(',')
+            .map(tag => `<a href="#">${tag.trim()}</a>`)
+            .join('') || ''}
+        </div>
+
+        <div class="sale-interactions d-none d-md-flex">
+          <a class="single-sale-interaction toggle-comments" data-target="commentsSection${data.id}">
+            <img src="./assets/img/commentfill.png" alt="">
+            <span>${data.total_comments}</span>
+          </a>
+          <a href="#" class="single-sale-interaction">
+            <img src="./assets/img/lovefill.png" alt="">
+            <span>${data.total_likes}</span>
+          </a>
+          <a href="#" class="single-sale-interaction">
+            <img src="./assets/img/viewfill.png" alt="">
+            <span>${data.total_spotted}</span>
+          </a>
+          <a href="#" class="single-sale-interaction" data-bs-toggle="modal" data-bs-target="#shareModal">
+            <img src="./assets/img/send.png" alt="">
+            <span>${data.total_share}</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="sale-img-carousel">
+        <div id="carousel${data.id}" class="carousel slide" data-bs-ride="carousel">
+          <div class="carousel-indicators">
+            ${carouselIndicators}
+          </div>
+          <div class="carousel-inner">
+            ${carouselItems}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function formatRelativeTime(createdAt) {
+  const now = new Date();
+  const created = new Date(createdAt);
+  const diffInSeconds = Math.floor((now - created) / 1000);
+
+  if (diffInSeconds < 60) return `${diffInSeconds}s`;
+  const diffInMinutes = Math.floor(diffInSeconds / 60);
+  if (diffInMinutes < 60) return `${diffInMinutes}m`;
+  const diffInHours = Math.floor(diffInMinutes / 60);
+  if (diffInHours < 24) return `${diffInHours}h`;
+  const diffInDays = Math.floor(diffInHours / 24);
+  if (diffInDays < 7) return `${diffInDays}d`;
+  const diffInWeeks = Math.floor(diffInDays / 7);
+  if (diffInWeeks < 4) return `${diffInWeeks}w`;
+  const diffInMonths = Math.floor(diffInDays / 30);
+  if (diffInMonths < 12) return `${diffInMonths}mo`;
+  const diffInYears = Math.floor(diffInDays / 365);
+  return `${diffInYears}y`;
+}
+
+async function uploadImage(formData){
+    try {
+        const response = await fetch(BASE_URL+"/apis/upload-media", {
+            method: "POST",
+            headers: {
+                "security_key": "UG9zdGVyeiBBcHAgQ3JlYXRlIEJ5IENoYW5kYW4"
+                // Don't set Content-Type manually when using FormData
+            },
+            body: formData,
+        });
+
+        const result = await response.json();
+        return result
+        console.log("Uploaded successfully:", result);
+    } catch (error) {
+        return false
+        console.error("Upload failed:", error);
+    }
+}
+
+const scrollToBottom = () => {
+    const msgHistory = document.querySelector(".messages");
+    if (msgHistory) {
+        msgHistory.scrollTop = msgHistory.scrollHeight;
+    }
+
+    // Also scroll the whole page body down
+    window.scrollTo({
+        top: document.body.scrollHeight,
+        behavior: 'smooth' // optional for smooth scrolling
+    });
+};
+
+const focusMessageInput = () => {
+                const messageInput = document.querySelector(".write_msg");
+                if (messageInput) {
+                    messageInput.focus();
+                }
+            };
+
+
+
+
+    localStorage.setItem("activeChatId", 0);
+       let isFirstLoad = true;
+       let totalChat = 0;
+       let lastMessageId = null;
+       let randomUrl=`https://ui-avatars.com/api/?background=f1f5f9&color=000`
+
+        const BASE_URL = "<?= BASE_URL_NORMAL ?>";
+        const MEDIA_BASE_URL = "<?= MEDIA_BASE_URL ?>";
+        const NO_DATA_IMG = "./assets/img/user-icon.png";
+        const company_image = "./assets/img/profile-chat-01.png";
+
+        const showLoader = () => {
+            document.querySelector(".loader").style.display = "flex";
+        };
+
+        const hideLoader = () => {
+            document.querySelector(".loader").style.display = "none";
+        };
+
+        const socket = io(BASE_URL);
+        const adminId = <?= $login_id ?>;
+
+        const connectUser = (userId) => {
+            socket.emit("connectUser", { user_id: userId });
+            socket.on("connectUserListener", (response) => {
+                console.log("User Connected:", response);
+            });
+        };
+
+        // ✅ Register the listener once
+
+        socket.on("inboxListener", (inbox) => {
+         //console.log(inbox, "=======inbox");
+            hideLoader();
+            isFirstLoad = false;
+            const savedActiveChatId = localStorage.getItem("activeChatId");
+            const inboxChat = document.querySelector(".chatss-left");
+            inboxChat.innerHTML = "";
+            inbox.forEach((chat, index) => {
+                const activeChat = document.querySelector(".chatss-left.active_chat");
+                const isActive = savedActiveChatId 
+                    ? savedActiveChatId === chat.id.toString() 
+                    : index === 0; // Default to 0th index if no saved chat
+                const badge = chat.unread_count > 0 
+                    ? `<span class="single-chat-profile-notifiy">${chat.unread_count}</span>` 
+                    : "";
+                    let name;
+                    switch (chat.resource_type) {
+                        case 0: // normal
+                       
+                            name = chat.user?.name;
+                            break;
+                        case 1: // post
+                            name = chat.user?.name +' > '+chat.data?.company_name;
+                            break;
+                        case 2: // looking
+                            name = chat.user?.name +' > '+chat.data.title;
+                            break;
+                        case 3: // company
+                            name = chat.data?.name;
+                            break;
+                        default:
+                            name = "Unknown";
+                    }
+
+                    const image =
+                            (chat.resource_type === 0 || chat.resource_type === 2)
+                            ? (chat.user?.image ? MEDIA_BASE_URL  + chat.user.image : randomUrl+'&rounded=true&name='+name)
+                            : (chat.data?.logo ? MEDIA_BASE_URL  + chat.data.logo : randomUrl+'&name='+name);
+
+                const chatHtml = `<a href="javascript:void(0)" class="single-chat-profile${isActive ? "-actives" : ""}" data-chat-id="${chat.id}" 
+                        data-user2-id="${(chat.user_id == adminId) ? chat.user2_id :chat.user_id}" 
+                        data-resource-id="${chat.resource_id}" 
+                        data-resource-type="${chat.resource_type}" data-user-name="${name}">
+                        <div class="d-flex gap-2 align-items-center">
+                          <div class="single-chat-profile-img">
+                            <img src="${image}" style="width:50px" alt="" onerror="this.onerror=null; this.src='${NO_DATA_IMG}';" class="${(chat.data && Object.keys(chat.data).length > 0) ? '' : 'rounded-pz'}">
+                          </div>
+                          <div class="single-chat-profile-content">
+                            <h4>${name}</h4>
+                            <p>
+                              ${(chat.chat.message_type ==0) ? chat.chat.message.substring(0, 30) :'file'}
+                            </p>
+                          </div>
+                        </div>
+                        
+                        <div class="single-chat-profile-info">
+                          <span class="single-chat-profile-time">${formatRelativeTime(chat.updated_at)}</span>
+                          ${badge}
+                        </div>
+                      </a>`;
+   
+                inboxChat.innerHTML += chatHtml;
+            });
+
+            if (inbox.length) {
+                totalChat =inbox.length
+                document.getElementById('ck').innerHTML ='Chats '+totalChat;
+                const activeChat = document.querySelector(".chatss-left.single-chat-profile-actives");
+                const firstChat = activeChat || document.querySelector(".chatss-left");
+                if (firstChat) {
+                    const constantId = firstChat.dataset.chatId;
+                    const user2Id = firstChat.dataset.user2Id;
+                    const resourceId = firstChat.dataset.resourceId;
+                    const resourceType = firstChat.dataset.resourceType;
+                    const name = firstChat.dataset.userName
+
+                    localStorage.setItem("activeChatId", constantId);
+                    // loadMessages(user2Id, resourceId, resourceType, constantId);
+                }
+            }
+
+        document.querySelectorAll(".single-chat-profile, .single-chat-profile-actives").forEach((chatItem) => {
+        chatItem.addEventListener("click", () => {
+            // Remove 'single-chat-profile-actives' from all
+            document.querySelectorAll(".single-chat-profile-actives").forEach((el) => {
+                el.classList.remove("single-chat-profile-actives");
+                el.classList.add("single-chat-profile");
+            });
+
+            // Add 'single-chat-profile-actives' to the clicked one
+            chatItem.classList.remove("single-chat-profile");
+            chatItem.classList.add("single-chat-profile-actives");
+            document.getElementById('chatButton').style.display='block'
+            const constantId = chatItem.dataset.chatId;
+            const user2Id = chatItem.dataset.user2Id;
+            const resourceId = chatItem.dataset.resourceId;
+            const resourceType = chatItem.dataset.resourceType;
+            const name = chatItem.dataset.userName
+            localStorage.setItem("activeChatId", constantId);
+            loadMessages(user2Id, resourceId, resourceType, constantId,name);
+        });
+    });
+});
+// Load Message When Click ON Inbox
+    const loadMessages = (user2Id, resourceId, resourceType, constantId,name) => {
+                socket.emit("getMessage", {
+                    user_id: adminId,
+                    user2_id: user2Id,
+                    resource_id: resourceId,
+                    resource_type: resourceType,
+                });
+
+                socket.on("getMessageListener", (messages) => {
+                    const msgHistory = document.querySelector(".messages");
+                    var card =`<h2 >${name}</h2>`;
+                    if(messages.resource_type == 1 || messages.resource_type ==3){
+                        card = companyCard(messages.data);
+                    }else if(messages.resource_type==2){
+                        card = lookingCard(messages.data);
+                    }
+                     document.getElementById('userNameC').innerHTML=card;
+                    msgHistory.innerHTML = ""; // Clear previous messages
+                    let lastPrintedDate = "";
+//console.log(messages,"========messages")
+                if(messages.chat){
+                    messages.chat.forEach((msg) => {
+                        const msgDateLabel = getDisplayDate(msg.created_at);
+                        let dateHeaderHtml = "";
+                        if (lastPrintedDate !== msgDateLabel) {
+                            dateHeaderHtml = `<span class="chatss-right-bottom-dates">${msgDateLabel}</span>`;
+                            lastPrintedDate = msgDateLabel;
+                        }
+                        //console.log(msg,"===========msg")
+                        let name;
+                        let image;
+                        name = msg.user.name
+                        image = msg.user?.image ? MEDIA_BASE_URL  +msg.user.image :''
+                        var ___message  =`<h4>@${name}</h4>
+                                    <p>${msg.message}</p>`
+                        if(msg.message_type==1){
+                            ___message =`<h4>@${name}</h4>
+                                    <p>${(msg.message) ? msg.message :'' }</p><div class="chatss-right-bottom-users-extra">
+                                    <a href="${MEDIA_BASE_URL + msg.media}" target="_blank" rel="noopener noreferrer"> <img src="${MEDIA_BASE_URL + msg.media}" alt="" style="width:200px"></a>
+                                </div>`
+                        }else if(msg.message_type==2){
+                            const extension = msg.media.split('.').pop().toLowerCase();
+
+                            ___message =`<h4>@${name}</h4>
+                                    <p>${(msg.message) ? msg.message :'' }</p><div class="chatss-right-bottom-users-extra">
+                                   <video width="200" controls>
+                                        <source src="${MEDIA_BASE_URL + msg.media}" type="video/${extension}">
+                                        Your browser does not support the video tag.
+                                    </video>
+                                </div>`
+                        }
+                        else if(msg.message_type==3){
+                            const extension = msg.media.split('.').pop().toLowerCase();
+
+                            ___message =`<h4>@${name}</h4>
+                                    <p>${(msg.message) ? msg.message :'' }</p><div class="chatss-right-bottom-users-extra">
+                                 <audio controls>
+                                    <source src="${MEDIA_BASE_URL + msg.media}" type="audio/${extension}">
+                                    Your browser does not support the audio element.
+                                </audio>
+                                </div>`
+                        }
+                        else if(msg.message_type==4){
+                            const extension = msg.media.split('.').pop().toLowerCase();
+
+                                let icon = '';
+
+                                if (['pdf'].includes(extension)) {
+                                    icon = './assets/img/pdf.png';
+                                } else if (['doc', 'docx'].includes(extension)) {
+                                    icon = './assets/img/doc.png';
+                                }
+                            ___message =`<h4>@${name}</h4>
+                                    <p>${(msg.message) ? msg.message :'' }</p><div class="chatss-right-bottom-users-extra">
+                                   <a href="${MEDIA_BASE_URL + msg.media}" target="_blank" rel="noopener noreferrer"> <img src="${icon}" alt="${extension.toUpperCase()}" style="width:40px;" /></a>
+                                </div>`
+                        }
+                        const messageClass = msg.user_id === adminId ? "chat-user-color" : "client-user-color";
+                        const messageHtml = `${dateHeaderHtml}
+                            <div class="chatss-right-bottom-users ${messageClass}">
+                                
+                                <div class="chatss-right-bottom-users-text">
+                                    ${___message}
+                                    <!-- extra -->
+                                    <div></div>
+                                </div>
+                                <div class="chatss-right-bottom-users-img">
+                                    <img src="${image}" style="width:50px" onerror="this.onerror=null; this.src='${NO_DATA_IMG}';" alt="" class="${(msg.data && Object.keys(msg.data).length > 0) ? '' : 'rounded-pz'}">
+                                </div>
+                                <div class="chatss-right-bottom-users-infoss-top">
+                                    <span>${new Date(msg.created_at).toLocaleString()}</span>
+                                </div>
+                                <div class="chatss-right-bottom-users-infoss-bottom">
+                                    <div>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                        <path opacity="0.5" d="M2.6665 8.6L4.76184 11L9.99984 5" stroke="#4A17CB" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                                        <path d="M13.333 5.04297L7.61901 11.043L7.33301 10.6676" stroke="#4A17CB" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                                    </svg>
+                                    </div>
+                                </div>
+                            </div>`;
+                        msgHistory.innerHTML += messageHtml;
+                    });
+                }
+
+                  
+
+                    const newLastMessageId = (messages.chat) ? messages.chat[messages.chat.length - 1]?.id : 0;
+
+                    if (isFirstLoad || newLastMessageId !== lastMessageId) {
+                        scrollToBottom();
+                         focusMessageInput();
+                        lastMessageId = newLastMessageId;
+                    }
+
+                    if (isFirstLoad) {
+                        isFirstLoad = false;
+                    }
+
+                    // Emit readMessage when messages are loaded
+                    // readMessage(adminId, user2Id, constantId);
+                });
+            };
+
+    const loadInbox = (userId) => {
+      
+        socket.emit("inbox", { user_id: userId });
+    };
+    const sendMessage = (data) => {
+        socket.emit("sendMessage", data);
+        socket.on("sendMessageListener", (response) => {
+            loadMessages(data.user2_id, data.resource_id, data.resource_type, data.constantId);
+            loadInbox(adminId);
+        });
+    };
+
+    document.addEventListener("DOMContentLoaded", () => {
+        showLoader();
+        connectUser(adminId);
+        loadInbox(adminId);
+        const messageInput = document.querySelector(".write_msg");
+        const sendMsgButton = document.getElementById("send-msg");
+
+        const sendMessageHandler = () => {
+                    const activeChat = document.querySelector(".single-chat-profile-actives");
+                    //console.log(activeChat,"======activeChat")
+                    if (activeChat) {
+                        const data = {
+                            user_id: adminId,
+                            user2_id: activeChat.dataset.user2Id,
+                            resource_id: activeChat.dataset.resourceId,
+                            resource_type: activeChat.dataset.resourceType,
+                            message: messageInput.value,
+                            constantId: activeChat.dataset.chatId,
+                        };
+
+                        if(messageInput.value){
+                            sendMessage(data);
+                        }
+                    }
+                    messageInput.value = ""; // Clear message input
+                };
+
+                messageInput.addEventListener("keydown", (e) => {
+                    if (e.key === "Enter") {
+                        sendMessageHandler();
+                    }
+                });
+
+                // Event listener for Send button click
+                sendMsgButton.addEventListener("click", () => {
+                    sendMessageHandler();
+                });
+
+                // upload media
+                document.getElementById("file-upload").addEventListener("change", async function (event) {
+                    const file = event.target.files[0];
+                    if (!file) return;
+                    const formData = new FormData();
+                    formData.append("image", file);
+                    showLoader()
+                    var __uploadImage = await uploadImage(formData);
+                    hideLoader();
+                    if(__uploadImage.body){
+                        const activeChat = document.querySelector(".single-chat-profile-actives");
+                        //console.log(activeChat,"======activeChat")
+                        if (activeChat) {
+                            const data = {
+                                user_id: adminId,
+                                user2_id: activeChat.dataset.user2Id,
+                                resource_id: activeChat.dataset.resourceId,
+                                resource_type: activeChat.dataset.resourceType,
+                                media: __uploadImage.body.image,
+                                message_type: 1,
+                                constantId: activeChat.dataset.chatId,
+                            };
+                            sendMessage(data);
+                        }
+                    }
+
+                });
+
+    });
+
+           
+        </script>
+        <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const input = document.querySelector('#write_msg');
+        const trigger = document.querySelector('#emoji-trigger');
+        const picker = document.querySelector('#emoji-picker');
+
+        // Position the emoji picker relative to the trigger
+        const positionPicker = () => {
+            const rect = trigger.getBoundingClientRect();
+            const pickerHeight = 350; // approximate picker height
+            picker.style.top = `${rect.top + window.scrollY - pickerHeight}px`;
+            picker.style.left = `${rect.left + window.scrollX}px`;
+        };
+
+        // Toggle the visibility of the emoji picker
+        trigger.addEventListener('click', () => {
+        if (picker.style.display === 'none') {
+            positionPicker();
+            picker.style.display = 'block';
+        } else {
+            picker.style.display = 'none';
+        }
+        });
+
+        // Insert selected emoji into the input field
+        picker.addEventListener('emoji-click', event => {
+        const emoji = event.detail.unicode;
+        const start = input.selectionStart;
+        const end = input.selectionEnd;
+        const text = input.value;
+        input.value = text.substring(0, start) + emoji + text.substring(end);
+        input.focus();
+        input.selectionStart = input.selectionEnd = start + emoji.length;
+        picker.style.display = 'none';
+        });
+
+        // Hide the emoji picker when clicking outside
+        document.addEventListener('click', (event) => {
+        if (!picker.contains(event.target) && !trigger.contains(event.target)) {
+            picker.style.display = 'none';
+        }
+        });
+    });
+    </script>
+        <?php include('includes/footer-scripts.php') ?>
+    </html>

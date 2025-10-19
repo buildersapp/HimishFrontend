@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+    <?php include('includes/head.php') ?>
+    <link rel="stylesheet" href="assets/plugins/datatable/css/dataTables.bootstrap5.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.7.1/css/buttons.dataTables.min.css" />
+    <style>
+        .list-group-item a {
+            text-decoration: none;
+            color: #007bff;
+        }
+
+        .list-group-item a:hover {
+            text-decoration: underline;
+            color: #0056b3;
+        }
+    </style>
+    <body>
+        <!-- wrapper start  -->
+        <div class="wrapper relative">
+            <?php include('includes/sidebar.php') ?>
+
+            <!-- header start  -->
+            <?php include('includes/nav-header.php') ?>
+            <!-- header end  -->
+
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="pt-3 cmn-img-bottom">
+                        <img src="<?php echo (count($final['post_images']) > 0) ?  MEDIA_BASE_URL.$final['post_images'][0]['image'] : 'assets/img/user/poster.png';?>" alt="poster" class="img-fluid w-100">
+                    </div>
+                </div>
+                <div class="col-md-9">
+
+                    <!-- content area start  -->
+                    <div class="master-detail-page-sec">
+                        <main class="user-main">
+                            <div class="user-rigt cmn-card my-0">
+                                <!-- Tab list -->
+                                <ul class="tablist mb-3">
+                                    <p class="tablist text-primary">Add New Category</p>
+                                </ul>
+                                <div class="tab-header flex-xl-wrap flex-wrap gap-4 justify-content-xl-between">
+                                    <div class="row" id="user-form-row mb-4">
+                                        <div class="col-md-5">
+                                            <select id="ctype" class="form-select" name="type" required>
+                                                <option value="1" selected>Services</option>
+                                                <option value="2">Products</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div>
+                                                <input type="text" name="search" class="form-control" id="search" placeholder="Type at least 3 letters to search..." />
+                                            </div>
+                                        </div>
+                                        <div class="col-md-5 mt-1"></div>
+                                        <div class="col-md-4 mt-1">
+                                            <div id="category-list" class="list-group"></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Tab content (initially, only one should be visible) -->
+                                <div id="user-details" class="tab-content mt-3">
+                                    <form class="user-form p-0" method="post" action="" enctype="multipart/form-data" id="userEditFormA" data-parsley-validate>
+                                        <div class="row" id="user-form-row mb-4">
+                                            <input type="hidden" name="categoryId" value="0" />
+                                            <div id="child-categories d-flex mb-3">
+                                                <!-- Child Category 1 -->
+                                                <div class="child-category row" id="child-1">
+                                                    <div class="col-md-3">
+                                                        <label for="child1_name">Industry</label>
+                                                        <input type="text" class="form-control" id="child1_name" name="child[]"
+                                                        value="<?= $industry ?>" required>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <label for="child2_name">Category</label>
+                                                        <input type="text" class="form-control" id="child2_name"
+                                                        value="<?= $category ?>" name="child[]" required>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <label for="child3_name">Sub Category</label>
+                                                        <input type="text" class="form-control"
+                                                        value="<?= $subcategory ?>" id="child3_name" name="child[]" required>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <label for="child4_name">Sub Sub Category</label>
+                                                        <input type="text" class="form-control" id="child4_name" value="<?= $subsubcategory ?>" name="child[]" required>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="row mt-2">
+                                                <div class="col-md-2">
+                                                    <label class="mt-3">Posts & Ads (K)</label>
+                                                </div>
+                                                <div class="col-md-10">
+                                                    <textarea class="form-control" id="keywords1" name="keywords1" rows="2" required><?= $newPostData['keywords1'] ?></textarea>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="row mt-2">
+                                                <div class="col-md-2">
+                                                    <label class="mt-2">Company (K)</label>
+                                                </div>
+                                                <div class="col-md-10">
+                                                    <textarea class="form-control" id="keywords2" name="keywords2" rows="2" required><?= $newPostData['keywords2'] ?></textarea>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="row mt-2">
+                                                <div class="col-md-2">
+                                                    <label class="mt-2">Looking For (K)</label>
+                                                </div>
+                                                <div class="col-md-10">
+                                                    <textarea class="form-control" id="keywords3" name="keywords3" rows="2" required><?= $newPostData['keywords3'] ?></textarea>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="row mt-2">
+                                                <div class="col-md-2">
+                                                    <label class="mt-2">Deals (K)</label>
+                                                </div>
+                                                <div class="col-md-10">
+                                                    <textarea class="form-control" id="keywords4" name="keywords4" rows="2" required><?= $newPostData['keywords4'] ?></textarea>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="row mt-2">
+                                                <div class="col-md-2">
+                                                    <label class="mt-2">Comments (K)</label>
+                                                </div>
+                                                <div class="col-md-10">
+                                                    <textarea class="form-control" id="keywords5" name="keywords5" rows="2" required><?= $newPostData['keywords5'] ?></textarea>
+                                                </div>
+                                            </div>
+                                            
+                                            <!-- Tab Label Options -->
+                                            <div class="col-md-4 mt-2">
+                                                <div class="col-md-6">
+                                                    <label for="tab_label_option_posts">Posts (T)</label>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <textarea class="form-control" id="tab_label_option_posts" name="tab_label_option_posts" rows="2" required><?= $newPostData['tab_label_option_posts'] ?></textarea>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-4 mt-2">
+                                                <div class="col-md-6">
+                                                    <label for="tab_label_option_company">Company (T)</label>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <textarea class="form-control" id="tab_label_option_company" name="tab_label_option_company" rows="2" required><?= $newPostData['tab_label_option_company'] ?></textarea>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-4 mt-2">
+                                                <div class="col-md-6">
+                                                    <label for="tab_label_option_looking_for">Looking For (T)</label>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <textarea class="form-control" id="tab_label_option_looking_for" name="tab_label_option_looking_for" rows="2" required><?= $newPostData['tab_label_option_looking_for'] ?></textarea>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    
+                                        <div class="mt-5 edit-btn d-flex align-content-center align-items-center gap-3 flex-md-nowrap flex-wrap justify-content-md-end justify-content-center" id="updateCategoryBtn">
+                                            <button type="submit" name="cateSbt">
+                                                <span>Update</span>
+                                            </button>
+                                            <button type="button" onclick="location.reload();">
+                                                <span>Cancel</span>
+                                            </button>
+                                        </div>
+                                    </form>                                    
+                                </div>
+                            </div>
+                        </main>
+                    </div>
+                    <!-- content area end -->
+                </div>
+            </div>
+
+            <!-- Modal -->
+            <div class="modal fade" id="categoryModal" tabindex="-1" aria-labelledby="categoryModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="categoryModalLabel"></h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form method="post" class="mt-2" id="categoryModalForm" data-parsley-validate=""></form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- wrapper end  -->
+        <script src="assets/plugins/datatable/js/jquery.dataTables.min.js?v=<?= time() ?>"></script>
+        <script src="assets/plugins/select2/select2-custom.js?v=<?= time() ?>"></script>
+        <?php include('includes/footer-scripts.php') ?>
+        <script>
+
+            $(document).ready(function () {
+
+                // get product / service based on search
+                $('#search').on('keyup',function() {
+                    var searchQuery = $(this).val();
+                    var categoryType = $("#ctype").val();
+                    if(searchQuery.length > 2){
+                        // Send the new value via AJAX
+                        $.ajax({
+                            url: 'ajax.php?action=get_master_sub_cat__by_search',
+                            type: 'POST',
+                            data: { search: searchQuery, categoryType: categoryType },
+                            success: function(response) {
+                                var categories = JSON.parse(response);
+
+                                // Process categories to build the hierarchy
+                                var formattedCategories = categories.map(category => {
+                                    let hierarchy = [];
+                                    let currentCategory = category;
+
+                                    // Build the hierarchy for each category
+                                    while (currentCategory) {
+                                        if (currentCategory.name) {
+                                            hierarchy.push({
+                                                id: currentCategory.id,
+                                                name: currentCategory.name,
+                                                type: currentCategory.type, // Include the type for each category
+                                            });
+                                        }
+                                        currentCategory = currentCategory.parentCategory;
+                                    }
+
+                                    return hierarchy.reverse(); // Reverse the order to start from the root
+                                });
+
+                                // Render category list
+                                const categoryList = formattedCategories.map(hierarchy => {
+                                    const isLastCategoryDisabled = hierarchy.length === 4;
+
+                                    return `
+                                        <div class="list-group-item">
+                                            ${hierarchy.map((cat, index) => `
+                                                ${index !== hierarchy.length - 1 || !isLastCategoryDisabled ? 
+                                                    `<a href="#" class="category-link" data-id="${cat.id}" data-child="${4-(index+1)}" data-name="${cat.name}">
+                                                        ${cat.name}
+                                                    </a>` : 
+                                                    `<span>${cat.name}</span>`
+                                                }
+                                                ${cat !== hierarchy[hierarchy.length - 1] ? ' > ' : ''}
+                                            `).join('')}
+                                        </div>
+                                    `;
+                                }).join('');
+                                $('#category-list').html(categoryList);
+
+                                $('.category-link').on('click', function(e) {
+                                    e.preventDefault();
+                                    const categoryId = $(this).data('id');
+                                    const categoryType = $("ctype").val();
+                                    const categoryName = $(this).data('name');
+                                    const numChildFields = $(this).data('child'); // Get the count of child fields (text fields)
+
+                                    // Set the modal title and category information
+                                    $('#categoryModalLabel').text(`Category: ${categoryName}`);
+                                    $('#categoryId').text(categoryId);
+                                    $('#categoryName').text(categoryName);
+
+                                    // Clear previous form fields
+                                    $('#categoryModalForm').html('');
+
+                                    // Create the specified number of text fields based on numChildFields
+                                    if (numChildFields > 0) {
+                                        for (let i = 1; i <= numChildFields; i++) {
+                                            const fieldId = `child[]`;
+                                            const fieldLabel = `Child Name ${i}`;
+
+                                            // Generate text input field HTML with placeholders inside col-md-6
+                                            const formFieldHtml = `
+                                                <div class="col-md-6 mt-2 mb-2">
+                                                    <input type="hidden" name="categoryId" value="${categoryId}" />
+                                                    <input type="hidden" name="type" value="${categoryType}" />
+                                                    <div class="form-group">
+                                                        <label for="${fieldId}">${fieldLabel}</label>
+                                                        <input type="text" class="form-control" id="${fieldId}" name="${fieldId}" value="" placeholder="Enter ${fieldLabel}" required>
+                                                    </div>
+                                                </div>
+                                            `;
+
+                                            // Append the field to the form
+                                            $('#categoryModalForm').append(formFieldHtml);
+                                        }
+                                    }
+
+                                    // Append additional fixed fields with blank values (for new form) and placeholders inside col-md-6
+                                    const additionalFields = `
+                                        <div class="row">
+                                            <div class="col-md-6 mt-2 mb-2">
+                                                <div>
+                                                    <label for="keywords1">Posts & Ads (K)</label>
+                                                    <textarea name="keywords1" id="keywords1" class="form-control" placeholder="Enter Posts & Ads (K)" required></textarea>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 mt-2 mb-2">
+                                                <div>
+                                                    <label for="keywords2">Company (K)</label>
+                                                    <textarea name="keywords2" id="keywords2" class="form-control" placeholder="Enter Company (K)" required></textarea>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 mt-2 mb-2">
+                                                <div>
+                                                    <label for="keywords3">Looking For (K)</label>
+                                                    <textarea name="keywords3" id="keywords3" class="form-control" placeholder="Enter Looking For (K)" required></textarea>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 mt-2 mb-2">
+                                                <div>
+                                                    <label for="keywords4">Deals (K)</label>
+                                                    <textarea name="keywords4" id="keywords4" class="form-control" placeholder="Enter Deals (K)" required></textarea>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 mt-2 mb-2">
+                                                <div>
+                                                    <label for="keywords5">Comments (K)</label>
+                                                    <textarea name="keywords5" id="keywords5" class="form-control" placeholder="Enter Comments (K)" required></textarea>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 mt-2 mb-2">
+                                                <div>
+                                                    <label for="tab_label_option_posts">Posts (T)</label>
+                                                    <textarea name="tab_label_option_posts" id="tab_label_option_posts" class="form-control" placeholder="Enter Posts (T)"></textarea>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 mt-2 mb-2">
+                                                <div>
+                                                    <label for="tab_label_option_company">Company (T)</label>
+                                                    <textarea name="tab_label_option_company" id="tab_label_option_company" class="form-control" placeholder="Enter Company (T)"></textarea>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 mt-2 mb-2">
+                                                <div>
+                                                    <label for="tab_label_option_looking_for">Looking For (T)</label>
+                                                    <textarea name="tab_label_option_looking_for" id="tab_label_option_looking_for" class="form-control" placeholder="Enter Looking For (T)"></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    `;
+
+                                    // Append the additional fields
+                                    $('#categoryModalForm').append(additionalFields);
+
+                                    // Append submit button
+                                    const submitButton = `
+                                        <div class="form-group text-center mt-3">
+                                            <button type="submit" name="cateSbt" class="btn btn-primary">Submit</button>
+                                        </div>
+                                    `;
+
+                                    // Append the submit button to the form
+                                    $('#categoryModalForm').append(submitButton);
+
+                                    // Show the modal
+                                    $('#categoryModal').modal('show');
+                                });
+                            },
+                            error: function(xhr, status, error) {
+                                console.log('Error: ' + error);
+                            }
+                        });
+                    }else{
+                        $('#category-list').html("");
+                    }
+                });
+            });
+        </script>
+    </body>
+</html>

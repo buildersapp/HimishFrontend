@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+    <?php include('includes/head.php') ?>
+    <body>
+        <?php include('includes/nav-header.php') ?>
+        <main>
+            <section class="header-profile-sponsor">
+                <div class="container">
+                    <div class="row header-flow-row align-items-center">
+                        <div class="col ps-0 ps-xl-auto">
+                            <div class="header-flow-left ps-3">
+                                <div class="header-flow-left-inner">
+                                    <button class="header-flow-left-inner-button" onclick="
+                                        if (window.history.length > 1) {
+                                            window.history.back();
+                                        } else {
+                                            window.location.href = 'home.php';
+                                        }
+                                    ">
+                                        <img src="assets/img/left-arrow.svg" alt="left-arrow" />
+                                    </button>
+                                    <span class="mx-auto d-xl-none d-block"><?= $userD['name'] ?></span>
+                                    <span class="me-auto d-xl-block d-none"><?= $userD['name'] ?></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col d-xl-block d-none"></div>
+                    </div>
+                </div>
+            </section>
+            <section class="dashboardx">
+                <div class="container">
+                    <div class="row">
+                        <div class="col">
+                            <div class="dashboard-cover"></div>
+                        </div>
+                    </div>
+                    <div class="row dashboardx-tabs align-items-center">
+                        <?php
+                        $imgData = "";
+                        if(empty($userD['image'])){
+                            $imgData = '<img class="img-placeholder" src="'.generateBase64Image($userD['name']).'" alt="" class="img-fluid" />';
+                        }else{
+                            $imgData = '<img src="'. MEDIA_BASE_URL .''.$userD['image'].'" alt="" class="img-rounded" />';
+                        }
+                        ?>
+                        <div class="col-lg-3">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <div class="profile-img profile-img-new-ud z-10">
+                                    <?= $imgData ?>
+                                </div>
+                            </div>
+                            <?php if(!$isSelf){ ?>
+                            <div class="edit-btns-groups d-flex align-items-center justify-content-between">
+                                <a href="single-chat.php?id=<?= base64_encode($userD['id']) ?>&type=<?= base64_encode(0) ?>"><button class="edit-btns-news-border"><img src="assets/img/chats-smalls.svg" alt="" /><span>Chat</span></button></a>
+                            </div>
+                            <?php } ?>
+                        </div>
+                        <div class="col-lg-9">
+                            <!-- tab button  -->
+                            <ul class="nav nav-pillsx ms-0" id="pills-tab" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-linkx <?= $tp=='posts' ? 'active' : '' ?>" id="ud-myposts-tab" data-bs-toggle="pill" data-bs-target="#ud-myposts" type="button" role="tab" aria-controls="ud-myposts" aria-selected="true">
+                                        Posts
+                                    </button>
+                                </li>
+                                <?php if($isSelf){ ?>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-linkx <?= $tp=='saved' ? 'active' : '' ?>" id="ud-saved-tab" data-bs-toggle="pill" data-bs-target="#ud-saved" type="button" role="tab" aria-controls="ud-saved" aria-selected="true">
+                                        Saved
+                                    </button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-linkx <?= $tp=='draft' ? 'active' : '' ?>" id="ud-draft-tab" data-bs-toggle="pill" data-bs-target="#ud-draft" type="button" role="tab" aria-controls="ud-draft" aria-selected="true">
+                                        Drafts
+                                    </button>
+                                </li>
+                                <?php } ?>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-linkx" id="ud-recommends-tab" data-bs-toggle="pill" data-bs-target="#ud-recommends" type="button" role="tab" aria-controls="ud-recommends" aria-selected="false">
+                                        Recommends
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="row" id="dashboard-row">
+                        <!-- user profile  -->
+                        <div class="col-lg-3">
+                            <div class="sideBar-wrapers hide-scrollbar">
+                                <div class="user-profile">
+                                    <!-- profile card  -->
+                                    <div class="profile-card profile-cardx">
+                                        <!-- profile details -->
+                                        <h2><?= $userD['name'] ?></h2>
+                                        <p>@<?= $userD['handle_name'] ?></p>
+                                    </div>
+                                    <div class="profile-divider"></div>
+                                    <div class="profile-stats-community">
+                                        <div class="profile-stats-names d-flex align-items-center">
+                                            <h3 class="profile-stats-names-h3">Community</h3>
+                                            <?php 
+                                                $communities = !empty($userD['community']) ? explode(',', $userD['community']) : []; 
+                                            ?>
+                                            <span><?= count($communities) ?></span>
+                                        </div>
+                                        <div class="refferance-tagss">
+                                            <?php if (!empty($communities)): ?>
+                                                <?php foreach ($communities as $community): ?>
+                                                    <button class="mt-3 ml-2"><?= htmlspecialchars(trim($community)) ?></button>
+                                                <?php endforeach; ?>
+                                            <?php else: ?>
+                                                <p>No communities joined</p>
+                                            <?php endif; ?>
+                                        </div>
+                                    </div>                                    
+                                </div>
+                            </div>
+                        </div>
+                        <!-- content tab  -->
+                        <div class="col-lg-9">
+                            <div class="main-content sideBar-wraper hide-scrollbar main-content-new">
+                                <div class="posts-feedx">
+                                    <!-- tab content  -->
+                                    <div class="tab-content" id="pills-tabContent">
+                                        <!-- My post tab content  -->
+                                        <div class="tab-pane fade <?= $tp=='posts' ? 'show active' : '' ?>" id="ud-myposts" role="tabpanel" aria-labelledby="ud-myposts-tab">
+                                            <div class="post-cards---">
+                                                <div>
+                                                    <!-- post list  -->
+                                                    <div class="post-card-litss d-flex align-items-center">
+                                                        <button class="<?= ($tp=='posts' && $type=='0') ? 'post-card-litss-buttons-active' : 'post-card-litss-buttons' ?>" id="ud-posts-1">
+                                                            Posts (<?= $userD['total_posts'] ?>)
+                                                        </button>
+                                                        <button class="<?= ($tp=='posts' && $type=='ads') ? 'post-card-litss-buttons-active' : 'post-card-litss-buttons' ?>" id="ud-posts-ads">
+                                                            Ads (<?= $userD['total_ads'] ?>)
+                                                        </button>
+                                                        <button class="<?= ($tp=='posts' && $type=='1') ? 'post-card-litss-buttons-active' : 'post-card-litss-buttons' ?>" id="ud-posts-looking-for">
+                                                            Listing (<?= $userD['total_looking'] ?>)
+                                                        </button>
+                                                        <button class="<?= ($tp=='posts' && $type=='2') ? 'post-card-litss-buttons-active' : 'post-card-litss-buttons' ?>" id="ud-posts-deals">
+                                                            Deals (<?= $userD['total_deals'] ?>)
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <div class="post-cards row" id="posts-container"></div>
+                                            </div>
+                                        </div>
+                                        <!-- My saved tab content  -->
+                                        <div class="tab-pane fade  <?= $tp=='saved' ? 'show active' : '' ?>" id="ud-saved" role="tabpanel" aria-labelledby="ud-saved-tab">
+                                            <div class="post-cards--- set-post-card-inner-deals">
+                                                <div>
+                                                    <!-- saved list  -->
+                                                    <div class="post-card-litss d-flex align-items-center">
+                                                        <button class="<?= ($tp=='saved' && $type=='0') ? 'post-card-litss-buttons-active' : 'post-card-litss-buttons' ?>" id="ud-saved-posts">
+                                                            Posts (<?= $userD['saved_post'] ?>)
+                                                        </button>
+                                                        <button class="<?= ($tp=='saved' && $type=='ads') ? 'post-card-litss-buttons-active' : 'post-card-litss-buttons' ?>" id="ud-saved-ads">
+                                                            Ads (<?= $userD['saved_ad'] ?>)
+                                                        </button>
+                                                        <button class="<?= ($tp=='saved' && $type=='companies') ? 'post-card-litss-buttons-active' : 'post-card-litss-buttons' ?>" id="ud-saved-companies">
+                                                            Companies (<?= $userD['saved_company'] ?>)
+                                                        </button>
+                                                        <button class="<?= ($tp=='saved' && $type=='1') ? 'post-card-litss-buttons-active' : 'post-card-litss-buttons' ?>" id="ud-saved-looking-for">
+                                                            Listing (<?= $userD['saved_looking'] ?>)
+                                                        </button>
+                                                        <button class="<?= ($tp=='saved' && $type=='2') ? 'post-card-litss-buttons-active' : 'post-card-litss-buttons' ?>" id="ud-saved-deals">
+                                                            Deals (<?= $userD['saved_deals'] ?>)
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <div class="post-cards" id="posts-saved-container"></div>
+                                            </div>
+                                        </div>
+                                        <!-- My draft tab content  -->
+                                        <div class="tab-pane fade <?= $tp=='draft' ? 'show active' : '' ?>" id="ud-draft" role="tabpanel" aria-labelledby="ud-draft-tab">
+                                            <div class="post-cards---">
+                                                <div>
+                                                    <!-- post list  -->
+                                                    <div class="post-card-litss d-flex align-items-center">
+                                                        <button class="<?= ($tp=='draft' && $type=='0') ? 'post-card-litss-buttons-active' : 'post-card-litss-buttons' ?>" id="ud-draft-posts">
+                                                            Posts (<?= $userD['draft_post'] ?>)
+                                                        </button>
+                                                        <button class="<?= ($tp=='draft' && $type=='ads') ? 'post-card-litss-buttons-active' : 'post-card-litss-buttons' ?>" id="ud-draft-ads">
+                                                            Ads (<?= $userD['draft_ads'] ?>)
+                                                        </button>
+                                                        <button class="<?= ($tp=='draft' && $type=='1') ? 'post-card-litss-buttons-active' : 'post-card-litss-buttons' ?>" id="ud-draft-looking-for">
+                                                            Listing (<?= $userD['draft_LF'] ?>)
+                                                        </button>
+                                                        <button class="<?= ($tp=='draft' && $type=='2') ? 'post-card-litss-buttons-active' : 'post-card-litss-buttons' ?>" id="ud-draft-deals">
+                                                            Deals (<?= $userD['draft_deals'] ?>)
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <div class="post-cards" id="posts-draft-container"></div>
+                                            </div>
+                                        </div>
+                                        <!-- recommends tab content  -->
+                                        <div class="tab-pane fade" id="ud-recommends" role="tabpanel" aria-labelledby="ud-recommends-tab">
+                                            <?php if (!empty($recommends)): ?>
+                                                <div>
+                                                    <!-- post list  -->
+                                                    <div class="post-card-litss d-flex align-items-center">
+                                                        <p>Recommended by Me: <?= count($recommends) ?></p>
+                                                    </div>
+                                                </div>
+                                                <?php foreach ($recommends as $recommend): ?>
+                                                    <div class="post-cards pt-3 post-cards-new">
+                                                        <div class="post-card-recommend d-flex align-items-center gap-3">
+                                                            <div class="podcard-cions">
+                                                                <img src="<?= !empty($recommend['company']['logo']) ? MEDIA_BASE_URL.$recommend['company']['logo'] : 'assets/img/favicon.png' ?>" width="30" alt="" />
+                                                            </div>
+                                                            <div>
+                                                                <div class="podcard-header d-flex align-items-center">
+                                                                    <h4><?= htmlspecialchars($recommend['company']['name'] ?? $recommend['company']['name'] ?? 'Unknown') ?></h4>
+                                                                    <?php if($recommend['company']['is_verified']){ ?>
+                                                                    <img src="assets/img/checkwhiteblue.png" width="10" alt="">
+                                                                    <?php } ?>
+                                                                </div>
+                                                                <div class="podcard-footer d-flex align-items-center">
+                                                                    <p><?= time_ago($recommend['created_at']) ?></p>
+                                                                    <img src="assets/img/connect-right.png" width="10" alt="" />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                <?php endforeach; ?>
+                                            <?php else: ?>
+                                                <p>No recommendations available</p>
+                                            <?php endif; ?>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+        <?php include('includes/footer-scripts.php') ?>
+        <script src="assets/js/user-details.js?v=<?= time() ?>"></script>
+        <script src="assets/js/scrollPost.js?v=<?= time() ?>"></script>
+        <script>
+        let postsData = {
+            status: '<?= $defaultStatus ?>',
+            type: '<?= $type ?>',
+            search: '', 
+            user_id: '<?= $userId ?>',
+            currentListingCategory: 'all',
+            post_id: 0,
+            sort: '',
+            container : '<?= $defaultContainer ?>',
+        };
+
+        let favPostsData = {
+            type: '<?= $type ?>',
+            user_id: '<?= $userId ?>',
+        };
+
+        // Initial Fetch on Page Load
+        $(document).ready(function () {
+            <?php if($tp == "posts" || $tp == "draft"){ ?>
+                <?php if($tp == "posts" && $type == "ads"){ ?>
+                    getAds({
+                        type: '4',
+                        user_id: <?= $userDetails['id'] ?>,
+                        container: '<?= $defaultContainer ?>',
+                    });
+                <?php }else{ ?>
+                    getPosts(postsData);
+                    enableScrollPagination(postsData,'<?= $defaultContainer ?>');
+                <?php } ?>
+            <?php }else if($tp == "saved"){ ?>
+                <?php if($type == 'companies'){ ?>
+                    getFavCompanies(favPostsData);
+                <?php }else if ($type == "1"){ ?>
+                    getFavListings(favPostsData);
+                <?php }else{ ?>
+                    getFavPosts(favPostsData);
+            <?php } } ?>
+        });
+        </script>
+    </body>
+</html>

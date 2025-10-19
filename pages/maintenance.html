@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Himish – Get Early Access</title>
+  <link rel="icon" type="text/css" href="assets/images/fav-icon.png">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+    :root {
+      --background: #f2f8ff;
+      --card-bg: #ffffff;
+      --primary: #f89b2d;
+      --primary-hover: #ffaa3b;
+      --text-dark: #1f2937;
+      --text-muted: #6b7280;
+      --border: #d1d5db;
+    }
+
+    * { box-sizing: border-box; }
+    /* body {
+      margin: 0;
+      font-family: 'Montserrat', sans-serif;
+      background-color: var(--background);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 40px 20px;
+      min-height: 100vh;
+    } */
+
+    .card {
+      background-color: var(--card-bg);
+      padding: 40px;
+      border-radius: 16px;
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.05);
+      max-width: 660px;
+      width: 100%;
+    }
+
+    .logo { display: flex; justify-content: center; margin-bottom: 25px; }
+    .logo img { height: 40px; }
+
+    .tagline { text-align: center; font-size: 15px; color: var(--text-muted); margin-bottom: 30px; }
+
+    .segments { display: flex; justify-content: space-between; margin-bottom: 25px; gap: 10px;position: relative; }
+    .segments .parsley-errors-list {
+      position: absolute;
+      bottom: -22px;
+    }
+    .segment {
+      flex: 1; border: 1px solid var(--border); border-radius: 8px;
+      padding: 10px; text-align: center; cursor: pointer; background: #f9fafb;
+      font-size: 14px; transition: all 0.2s ease;
+    }
+    .segment input { display: none; }
+    .segment.selected { background-color: #e0edff; border-color: var(--primary); font-weight: bold; }
+    .segment small { color: #979797; }
+
+    .set-row { display: flex; flex-wrap: wrap; gap: 16px; }
+    .set-row > div { flex: 1 1 45%; }
+
+    button {
+      width: 50%; padding: 14px; background-color: var(--primary); color: white;
+      font-size: 16px; font-weight: 600; border: none; border-radius: 8px; cursor: pointer;
+      transition: background-color 0.2s ease, transform 0.2s ease; margin-top: 12px;
+    }
+    button:hover { background-color: var(--primary-hover); transform: scale(1.01); }
+
+    .hidden { display: none; }
+    .set-text-center { text-align: center; }
+
+    @media (max-width: 576px) {
+      .set-row {  gap: 0px;}
+      .set-row > div { flex: 1 1 100%; }
+      .card { padding: 25px 12px; }
+      h1 { font-size: 20px; }
+      .tagline { font-size: 13px; margin-bottom: 22px; }
+      .segment { font-size: 13px; border-radius: 7px; padding: 7px; }
+      input[type="text"], input[type="email"], input[type="tel"] {
+        font-size: 13px; padding: 10px; margin-bottom: 12px;
+      }
+      button { padding: 12px; margin-top: 6px; }
+    }
+
+    #company {
+        text-transform: capitalize;
+    }
+  </style>
+</head>
+<?php include('includes/head.php') ?>
+<body>
+
+
+          <!-- ************************************ -->
+          <!-- MAIN FORM -->
+          <!-- ************************************ -->
+          <section class="set-main-single-sec set-container-1440">
+            <?php 
+            $loginImage = !empty($final['early_access_page']['image']) 
+                ? MEDIA_BASE_URL.$final['early_access_page']['image'] 
+                : 'assets/images/login.png'; 
+            ?>
+            <div class="set-left-area" style="background-image: url('<?= $loginImage ?>');">
+                <div class="set-box-why-choose mb-48">
+                    <h1 class="f-32-w m-0">
+                        <?= !empty($final['early_access_page']['title']) ? $final['early_access_page']['title'] : 'Why Choose HIMISH?' ?>
+                    </h1>
+                    <p class="f-24-w mt-24 mb-0">
+                        <?= !empty($final['early_access_page']['description']) ? $final['early_access_page']['description'] : 'It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.' ?>
+                    </p>
+                </div>
+            </div>
+            <!-- ************************************ -->
+            <!-- RIGHT SIDE FORM -->
+            <!-- ************************************ -->
+            <div class="set-right-area py-5 px-3 px-lg-4">
+              <form id="earlyAccessForm" action="ajax.php?action=early_access_form" method="POST" class="mt-24 set-main-form">
+                    <!-- STEP 1 -->
+                    <div id="step1" class="step-content">
+                        <div class="set-logo-main">
+                            <a href="index.html"><img src="assets/images/logo.png" alt="logo" class="img-fluid"></a>
+                        </div>
+                        <h2 class="f-28-b mb-1 mt-32"><?= !empty($final['early_access_page']['right_title']) ? $final['early_access_page']['right_title'] : 'Join the community!' ?></h2>
+                        <p class="f-14-g m-0"><?= !empty($final['early_access_page']['right_description']) ? $final['early_access_page']['right_description'] : 'Hello there, login to continue' ?></p>
+                        <div class="row align-items-center mt-16">
+                            <div class="col-lg-12">
+                                <div class="mt-16 segments">
+                                    <select class="form-select set-select-all" name="audience_type" required>
+                                        <option>Choose Type</option>
+                                        <option value="Company">A company (Gain Exposure)</option>
+                                        <option value="User">A user (Just Curious)</option>
+                                        <option value="Both">A bit of (Both)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <!-- SUBMIT -->
+                            <div class="col-lg-12">
+                                <div class="mt-60">
+                                    <button type="button" class="set-btn-primary d-block" id="nextStepBtn">Next</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- STEP 2 -->
+                    <div id="step2" class="step-content d-none">
+                        <div class="set-logo-main">
+                            <a href="index.html"><img src="assets/images/logo.png" alt="logo" class="img-fluid"></a>
+                        </div>
+                        <h2 class="f-28-b mb-1 mt-32">First Come, First Thrilled</h2>
+                        <p class="f-18-g m-0">Early access. Early features. Early thrills. Be among the select few to get in before we go live.</p>
+
+                          <div id="companyField" class="mt-16">
+                            <label for="company" class="f-16-gb d-inline-block mb-12">Company Name</label>
+                            <input type="text" id="company" name="company" placeholder="e.g. Tzvi’s Hardware or N/A" class="set-input-all">
+                          </div>
+
+                          <div class="set-row">
+                            <div class="mt-16">
+                              <label for="phone" class="f-16-gb d-inline-block mb-12">Mobile Phone</label>
+                              <input type="tel" id="phone" name="phone"
+                                    placeholder="(718) 555-1234"
+                                    required
+                                    oninput="this.value = formatPhoneNumberUSRC(this.value);" class="set-input-all">
+                            </div>
+                            <div class="mt-16">
+                              <label for="email" class="f-16-gb d-inline-block mb-12">Email Address</label>
+                              <input type="email" id="email" name="email"
+                                    placeholder="you@example.com"
+                                    required
+                                    data-parsley-type="email"
+                                    data-parsley-trigger="keyup" class="set-input-all">
+                            </div>
+                          </div>
+
+                          <div class="set-text-center mt-24">
+                            <button type="submit" class="set-btn-primary d-block">Get Early Access</button>
+                          </div>
+                        
+                    </div>
+              </form>
+            </div>
+          </section>
+
+
+  <!-- <div class="card">
+    <div class="logo">
+      <a href="#"><img src="https://himish.com/assets/img/logo.png" alt="Himish Logo"></a>
+    </div>
+
+    <h1>First Come, First Thrilled</h1>
+    <p class="tagline">Early access. Early features. Early thrills. Be among the select few to get in before we go live.</p>
+
+    <form id="earlyAccessForm" action="ajax.php?action=early_access_form" method="POST">
+      <div class="segments">
+        <label class="segment" data-value="company">
+          <input type="radio" name="audience_type" value="Company" required>
+          <div><strong>A company</strong><br><small>Gain Exposure</small></div>
+        </label>
+        <label class="segment" data-value="user">
+          <input type="radio" name="audience_type" value="User">
+          <div><strong>A user</strong><br><small>Just Curious</small></div>
+        </label>
+        <label class="segment" data-value="both">
+          <input type="radio" name="audience_type" value="Both">
+          <div><strong>A bit of</strong><br><small>Both</small></div>
+        </label>
+      </div>
+
+      <div id="companyField">
+        <label for="company">Company Name</label>
+        <input type="text" id="company" name="company" placeholder="e.g. Tzvi’s Hardware or N/A">
+      </div>
+
+      <div class="row">
+        <div>
+          <label for="phone">Mobile Phone</label>
+          <input type="tel" id="phone" name="phone"
+                 placeholder="(718) 555-1234"
+                 required
+                 oninput="this.value = formatPhoneNumberUSRC(this.value);">
+        </div>
+        <div>
+          <label for="email">Email Address</label>
+          <input type="email" id="email" name="email"
+                 placeholder="you@example.com"
+                 required
+                 data-parsley-type="email"
+                 data-parsley-trigger="keyup">
+        </div>
+      </div>
+
+      <div class="set-text-center">
+        <button type="submit">Get Early Access</button>
+      </div>
+    </form>
+  </div> -->
+
+  <!-- jQuery + Parsley -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js?v=<?= time() ?>"></script>
+  <script src="https://cdn.jsdelivr.net/npm/parsleyjs@2.9.2/dist/parsley.min.js?v=<?= time() ?>"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/parsleyjs/src/parsley.css">
+
+  <script>
+    // Function to format phone number
+  function formatPhoneNumberUSRC(value) {
+    const cleaned = value.replace(/\D/g, "").substring(0, 10); // Only digits, max 10
+    const match = cleaned.match(/^(\d{3})(\d{3})(\d{0,4})$/);
+    if (match) {
+      return `(${match[1]}) ${match[2]}-${match[3]}`;
+    }
+    return cleaned;
+  }
+
+  $(document).ready(function () {
+    $('#earlyAccessForm').parsley();
+
+    // Step navigation
+    $("#nextStepBtn").on("click", function () {
+      let audienceType = $("select[name='audience_type']").val();
+
+      if (!audienceType || audienceType === "Choose Type") {
+        alert("⚠️ Please select an option before continuing.");
+        return;
+      }
+
+      // Show/hide company field depending on choice
+      if (audienceType === "User") {
+        $("#companyField").addClass("d-none");
+        $("#company").val("").removeAttr("required").removeAttr("data-parsley-required");
+      } else {
+        $("#companyField").removeClass("d-none");
+        $("#company").attr("required", true).attr("data-parsley-required", "true");
+      }
+
+      // Move to step 2
+      $("#step1").addClass("d-none");
+      $("#step2").removeClass("d-none");
+    });
+
+    // AJAX submit
+    $('#earlyAccessForm').on('submit', function (e) {
+      e.preventDefault();
+
+      if ($(this).parsley().isValid()) {
+        $.ajax({
+          url: $(this).attr('action'),
+          type: 'POST',
+          data: $(this).serialize(),
+          dataType: 'json',
+          beforeSend: function () {
+            $("button[type=submit]").prop("disabled", true).text("Submitting...");
+          },
+          success: function (response) {
+            if (response.success) {
+              window.location.href = 'thank-you.php';
+            } else {
+              alert("⚠️ Error: " + response.message);
+            }
+          },
+          error: function () {
+            alert("❌ Something went wrong. Please try again later.");
+          },
+          complete: function () {
+            $("button[type=submit]").prop("disabled", false).text("Get Early Access");
+          }
+        });
+      }
+    });
+  });
+
+  </script>
+  <script>
+    // document.getElementById("nextStepBtn").addEventListener("click", function () {
+    //   document.getElementById("step1").classList.add("d-none");
+    //   document.getElementById("step2").classList.remove("d-none");
+    // });
+  </script>
+</body>
+</html>

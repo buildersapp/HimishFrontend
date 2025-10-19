@@ -1,0 +1,102 @@
+body {
+    font-family: 'Inter', sans-serif !important;
+}
+
+/* Preserve Font Awesome icons */
+.fa, .fas, .far, .fal, .fab {
+    font-family: "Font Awesome 6 Free", "Font Awesome 6 Brands" !important;
+}
+
+.highlighted-section {
+    outline: 2px solid #3F20FB;
+    background-color: rgba(63, 32, 251, 0.1);
+  }
+
+  .edit-button {
+    position: absolute;
+    z-index: 1000;
+  }
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
+
+  html, body {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+/* General Error Styling */
+li.parsley-required,
+li.parsley-type,
+li.parsley-pattern,
+li.parsley-minlength,
+li.parsley-maxlength,
+li.parsley-min,
+li.parsley-max,
+li.parsley-range,
+li.parsley-check,
+li.parsley-equalto,
+li.parsley-notequalto,
+li.parsley-oneof,
+li.parsley-email,
+li.parsley-url,
+li.parsley-length,
+li.parsley-mincheck,
+li.parsley-maxcheck,
+li.parsley-excluded {
+    color: #bc2f2f; /* Red for all errors */
+    font-size: 0.875rem; /* Optional: make slightly smaller */
+    margin-top: 4px;
+    list-style: none;
+}
+
+/* Optional: Different shades for specific types (if you want to distinguish) */
+li.parsley-required {
+    color: #d32f2f; /* Strong red for required */
+}
+
+li.parsley-type,
+li.parsley-pattern {
+    color: #e53935; /* Slightly lighter red for type mismatches */
+}
+
+li.parsley-minlength,
+li.parsley-maxlength,
+li.parsley-length {
+    color: #f44336; /* Moderate red for length errors */
+}
+
+li.parsley-min,
+li.parsley-max,
+li.parsley-range {
+    color: #c62828; /* Deep red for number range errors */
+}
+
+li.parsley-check,
+li.parsley-mincheck,
+li.parsley-maxcheck {
+    color: #d84315; /* Orange-red for checkbox errors */
+}
+
+li.parsley-equalto,
+li.parsley-notequalto {
+    color: #ad1457; /* Purple-red for equality checks */
+}
+
+li.parsley-oneof {
+    color: #6a1b9a; /* Purple for one-of selections */
+}
+
+li.parsley-email,
+li.parsley-url {
+    color: #8e24aa; /* Violet for formatting errors */
+}
+
+li.parsley-excluded {
+    color: #757575; /* Grey for excluded fields */
+}
+
+.curpointer {
+    cursor: pointer !important;
+}

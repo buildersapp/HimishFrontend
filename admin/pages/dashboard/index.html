@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+    <?php include('includes/head.php') ?>
+    <body>
+        <!-- wrapper start  -->
+        <div class="wrapper relative">
+            <?php include('includes/sidebar.php') ?>
+
+            <!-- header start  -->
+            <?php include('includes/nav-header.php') ?>
+            <!-- header end  -->
+
+            <!-- content area start  -->
+            <div class="">
+                <main class="dashboard-main">
+                    <!-- icon card section  -->
+                    <section class="iconboxes">
+                        <div class="row" id="icon-wraper">
+                            <!-- single item -->
+                            <div class="col-md-6 col-xxl-3">
+                                <a href="users.php">
+                                    <div class="user-box single-icon-box">
+                                        <div>
+                                            <h3>Users</h3>
+                                            <h2>
+                                                <?= formatNumberUS($final['total_users']) ?> 
+                                                <span>
+                                                    <?php if ($final['user_last_week_analytics'] >= 0): ?>
+                                                        <i style="color: green;">&#9650; <?= abs($final['user_last_week_analytics']) ?>%</i>
+                                                    <?php else: ?>
+                                                        <i style="color: red;">&#9660; <?= abs($final['user_last_week_analytics']) ?>%</i>
+                                                    <?php endif; ?>
+                                                </span>
+                                            </h2>
+                                            <p>From Last week analytics</p>
+                                        </div>
+                                        <div class="icon-img">
+                                            <img src="assets/./img/dashboard/user.png" alt="" />
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                            <!-- single item -->
+                            <div class="col-md-6 col-xxl-3">
+                                <a href="posts.php">
+                                    <div class="Posts-box single-icon-box">
+                                        <div>
+                                            <h3>Posts</h3>
+                                            <h2>
+                                                <?= formatNumberUS($final['total_posts']) ?> 
+                                                <span>
+                                                    <?php if ($final['post_last_week_analytics'] >= 0): ?>
+                                                        <i style="color: green;">&#9650; <?= abs($final['post_last_week_analytics']) ?>%</i>
+                                                    <?php else: ?>
+                                                        <i style="color: red;">&#9660; <?= abs($final['post_last_week_analytics']) ?>%</i>
+                                                    <?php endif; ?>
+                                                </span>
+                                            </h2>
+                                            <p>From Last week analytics</p>
+                                        </div>
+                                        <div class="icon-img">
+                                            <img src="assets/./img/dashboard/camera.png" alt="" />
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                            <!-- single item -->
+                            <div class="col-md-6 col-xxl-3">
+                                <a href="listings.php">
+                                    <div class="Services-box single-icon-box">
+                                        <div>
+                                            <h3>Services</h3>
+                                            <h2>
+                                                <?= formatNumberUS($final['total_service']) ?> 
+                                                <span>
+                                                    <?php if ($final['service_last_week_analytics'] >= 0): ?>
+                                                        <i style="color: green;">&#9650; <?= abs($final['service_last_week_analytics']) ?>%</i>
+                                                    <?php else: ?>
+                                                        <i style="color: red;">&#9660; <?= abs($final['service_last_week_analytics']) ?>%</i>
+                                                    <?php endif; ?>
+                                                </span>
+                                            </h2>
+                                            <p>From Last week analytics</p>
+                                        </div>
+                                        <div class="icon-img">
+                                            <img src="assets/./img/dashboard/service.png" alt="" />
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                            <!-- single item -->
+                            <div class="col-md-6 col-xxl-3">
+                                <a href="companies.php">
+                                    <div class="Products-box single-icon-box">
+                                        <div>
+                                            <h3>Companies</h3>
+                                            <h2>
+                                                <?= formatNumberUS($final['total_companies']) ?> 
+                                                <span>
+                                                    <?php if ($final['company_last_week_analytics'] >= 0): ?>
+                                                        <i style="color: green;">&#9650; <?= abs($final['company_last_week_analytics']) ?>%</i>
+                                                    <?php else: ?>
+                                                        <i style="color: red;">&#9660; <?= abs($final['company_last_week_analytics']) ?>%</i>
+                                                    <?php endif; ?>
+                                                </span>
+                                            </h2>
+                                            <p>From Last week analytics</p>
+                                        </div>
+                                        <div class="icon-img">
+                                            <img src="assets/./img/dashboard/product.png" alt="" />
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </section>
+                    <!-- total sale section  -->
+                    <section class="totalsale">
+                        <div class="row" id="totalsale-row">
+                            <!-- single item  -->
+                            <div class="col-md-6">
+                                <a href="transactions.php">
+                                    <div class="totalsale-single">
+                                        <?php
+                                        // Assuming $final is an array containing 'total_earning' and 'earning_last_week_analytics'
+                                        $total_earning = abs($final['total_earning']);
+                                        $earning_last_week_analytics = $final['earning_last_analytics'];
+
+                                        // Calculate the percentage change based on last week's earnings
+                                        if ($earning_last_week_analytics == 0) {
+                                            if ($total_earning > 0) {
+                                                // If last week's earnings were 0, and this week's earnings are positive, it's a 100% increase
+                                                $percentage_change = 100;
+                                                $percentage_symbol = '<i style="color: green;">&#9650; 100%</i>';
+                                            } else {
+                                                // Both this week and last week are zero
+                                                $percentage_symbol = '<i style="color: gray;">No change</i>';
+                                            }
+                                        } else {
+                                            // Calculate the percentage change if last week's earnings were not zero
+                                            $percentage_change = (($total_earning - $earning_last_week_analytics) / abs($earning_last_week_analytics)) * 100;
+
+                                            // Format the percentage change to two decimal places
+                                            $formatted_percentage = round($percentage_change, 2);
+
+                                            // Display the change with an arrow and color based on whether it's positive or negative
+                                            if ($percentage_change >= 0) {
+                                                $percentage_symbol = '<i style="color: green;">&#9650; ' . $formatted_percentage . '%</i>';
+                                            } else {
+                                                $percentage_symbol = '<i style="color: red;">&#9660; ' . $formatted_percentage . '%</i>';
+                                            }
+                                        }
+                                        ?>
+                                        <div class="total-left">
+                                            <h3>Total Sales</h3>
+                                            <p>Your Total Sales in Focus</p>
+                                            <div class="d-flex align-items-center">
+                                                <h2>$<?= formatNumberUS($final['total_earning']) ?></h2>&nbsp;
+                                                <?= $percentage_symbol ?>
+                                            </div>
+                                        </div>
+                                        <div class="total-right">
+                                            <div class="total-right-wraper">
+                                                <img src="assets/./img/dashboard/total.png" class="img-fluid w-100" alt="Total" />
+                                                <!-- <div class="total-img-inner">
+                                                    <h4>28%</h4>
+                                                    <p>1 Quater</p>
+                                                </div> -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-md-6">
+                                <a href="users.php">
+                                    <div class="totalsale-single">
+                                        <div class="total-left">
+                                            <h3>New Visitors</h3>
+                                            <p> current week</p>
+                                            <div class="d-flex align-items-center">
+                                                <h2><?= abs($final['total_users']) ?></h2>&nbsp;
+                                                <?php if ($final['user_last_week_analytics'] >= 0): ?>
+                                                    <i style="color: green;">&#9650; <?= abs($final['user_last_week_analytics']) ?>%</i>
+                                                <?php else: ?>
+                                                    <i style="color: red;">&#9660; <?= abs($final['user_last_week_analytics']) ?>%</i>
+                                                <?php endif; ?>
+                                            </div>
+                                        </div>
+                                        <div class="total-right">
+                                            <div class="visitor-img-wraper">
+                                                <img src="assets/./img/dashboard/visitor.jpg" class="img-fluid w-100" alt="Visitor" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </section>
+                    <!-- post every monnth  -->
+                    <section class="postEveymonth">
+                        <div class="row" id="postEveymonth-row">
+                            <!-- post every month left  -->
+                            <div class="col-xxl-6">
+                                <div class="postEveymonth-left">
+                                    <h3>Posts Everymonth</h3>
+                                    <p>Total number of deliveries <?= formatNumberUS($final['total_posts']) ?></p>
+                                    <canvas id="postsChart"></canvas>
+                                </div>
+                            </div>
+                            <div class="col-xxl-6">
+                                <div class="postEveymonth-right">
+                                    <!-- total post row -->
+                                    <div class="row" id="totalPost-row">
+
+                                        <div class="col-md-6">
+                                            <a href="ads.php">
+                                                <div class="totalPost-single">
+                                                    <div class="totalpost-left total-left">
+                                                        <h3>Total Ads</h3>
+                                                        <div class="d-flex align-items-center pt-3 pb-2">
+                                                            <h2><?= formatNumberUS($final['total_ads']) ?></h2>
+                                                        </div>
+                                                        <h5><?php if ($final['ad_last_week_analytics'] >= 0): ?>
+                                                            <i style="color: green;">&#9650; <?= abs($final['ad_last_week_analytics']) ?>%</i>
+                                                        <?php else: ?>
+                                                            <i style="color: red;">&#9660; <?= abs($final['ad_last_week_analytics']) ?>%</i>
+                                                        <?php endif; ?> Last Week</h5>
+                                                    </div>
+                                                    <div class="totalpost-right">
+                                                        <img src="assets/./img/dashboard/men.png" class="w-100 h-100" alt="" />
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <a href="posts.php">
+                                                <div class="totalPost-single">
+                                                    <div class="totalpost-left total-left">
+                                                        <h3>Total Posts</h3>
+                                                        <div class="d-flex align-items-center pt-3 pb-2">
+                                                            <h2><?= formatNumberUS($final['total_posts']) ?></h2>
+                                                        </div>
+                                                        <h5><?php if ($final['post_last_week_analytics'] >= 0): ?>
+                                                            <i style="color: green;">&#9650; <?= abs($final['post_last_week_analytics']) ?>%</i>
+                                                        <?php else: ?>
+                                                            <i style="color: red;">&#9660; <?= abs($final['post_last_week_analytics']) ?>%</i>
+                                                        <?php endif; ?> Last Week</h5>
+                                                    </div>
+                                                    <div class="totalpost-right">
+                                                        <img src="assets/./img/dashboard/women.png" class="w-100 h-100" alt="" />
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <a href="deals.php">
+                                                <div class="totalPost-single">
+                                                    <div class="totalpost-left total-left">
+                                                        <h3>Total Deals</h3>
+                                                        <div class="d-flex align-items-center pt-3 pb-2">
+                                                            <h2><?= formatNumberUS($final['total_deals']) ?></h2>
+                                                        </div>
+                                                        <h5><?php if ($final['deals_last_week_analytics'] >= 0): ?>
+                                                            <i style="color: green;">&#9650; <?= abs($final['deals_last_week_analytics']) ?>%</i>
+                                                        <?php else: ?>
+                                                            <i style="color: red;">&#9660; <?= abs($final['deals_last_week_analytics']) ?>%</i>
+                                                        <?php endif; ?> Last Week</h5>
+                                                    </div>
+                                                    <div class="totalpost-right">
+                                                        <img src="assets/./img/dashboard/men.png" class="w-100 h-100" alt="" />
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </main>
+            </div>
+            <!-- content area end -->
+        </div>
+        <!-- wrapper end  -->
+        <?php include('includes/footer-scripts.php') ?>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js?v=<?= time() ?>"></script>
+        <script>
+            // Monthly data passed from PHP
+            const monthlyData = <?= json_encode($final['monthly_data']); ?>;
+    
+            // Months for the X-axis
+            const months = [
+                "Jan", "Feb", "Mar", "Apr", "May", "Jun", 
+                "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+            ];
+    
+            // Chart.js configuration
+            const ctx = document.getElementById('postsChart').getContext('2d');
+            const postsChart = new Chart(ctx, {
+                type: 'bar', // Type of chart (bar, line, pie, etc.)
+                data: {
+                    labels: months, // X-axis labels
+                    datasets: [{
+                        label: "Number of Posts",
+                        data: monthlyData, // Y-axis data
+                        backgroundColor: [
+                            '#4caf50', '#ff9800', '#2196f3', '#f44336',
+                            '#9c27b0', '#00bcd4', '#8bc34a', '#ffc107',
+                            '#03a9f4', '#e91e63', '#673ab7', '#009688'
+                        ],
+                        borderColor: '#000',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top'
+                        },
+                        tooltip: {
+                            enabled: true
+                        }
+                    },
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Months'
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Number of Posts'
+                            },
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        </script>
+    </body>
+</html>

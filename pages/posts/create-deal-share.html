@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+    <?php include('includes/head.php') ?>
+    <body>
+        <?php include('includes/nav-header.php') ?>
+        <!-- title start -->
+        <h4 class="text-center title-2x-bg">
+            Create Deal Share
+        </h4>
+        <form class="postDetailsBody" method="post" enctype="multipart/form-data" data-parsley-validate onsubmit="return validateForm();">
+            <div class="postUpload-container">
+                <div class="postUpload-title">
+                    <h2>Upload Photo or Video</h2>
+                </div>
+                <div class="comunity-image-upload-wrapper mt-5">
+                    <label for="imageShow" class="comunity-image-upload-label">
+                        <span class="uploadIconComunity">
+                            <img src="assets/img/tabler_upload.png" id="previewImg" class="img-fluid" alt="Upload Icon" />
+                            <video id="previewVideo" style="display: none;" controls></video>
+                        </span>
+                        <span class="uploadTextcomunity" id="textHd">Upload Image or Video</span>
+                    </label>
+                    <input type="file" name="image" id="imageShow" class="comunity-image-upload-input" style="display: none;" onchange="previewMedia(event)" accept="image/*, video/*" />
+                    <div class="comunity-image-upload-preview" style="display: none;">
+                        <div class="remove-img">
+                            <img src="assets/img/cross1.png" class="img-fluid" alt="Remove" />
+                        </div>
+                        <img id="previewImage" src="" class="img-fluid" alt="Preview Image" />
+                    </div>
+                </div>
+            </div>
+            <div class="postUpload-container mt-3">
+                <div action="" class="form-container">
+                    <!-- Title -->
+                    <div class="post-something-form-group">
+                        <label for="title-input" class="post-something-form-label input-left">Caption</label>
+                        <div class="input-wrapper input-right">
+                            <input type="text" placeholder="Caption" id="title-input" class="form-input" name="title" required value="<?= @$apiDataU['title'] ?>" />
+                            <label for="title-input" class="input-icon">
+                                <img src="assets/img/deal-form.png" alt="Title Icon" />
+                            </label>
+                            <label for="title-input" class="postdetails-form-bar"> </label>
+                        </div>
+                    </div>
+                    <!-- Add Location -->
+                    <div class="post-something-form-group location-group">
+                        <div class="input-left">
+                            <label for="location-input" class="post-something-form-label">Add Location</label>
+                        </div>
+                        <div class="input-right location-wraper">
+                            <div class="input-wrapper">
+                                <input type="text" placeholder="Enter Location" id="address" class="form-input" name="address" value="<?= @$apiDataU['address'] ?>" oninput="initAutocomplete()" autocomplete="off" />
+                                <label for="location-input" class="input-icon">
+                                    <img src="assets/img/locationform.png" alt="Location Icon" />
+                                </label>
+                                <label for="location-input" class="postdetails-form-bar"> </label>
+                            </div>
+                            <div class="separator">
+                                <span>or</span>
+                            </div>
+                            <!-- NationWide and WorldWide buttons -->
+                            <div class="anywhere-button-wrapper">
+                                <button type="button" class="anywhere-button mb-2" onclick="selectLocType(1)" id="worldBtn">WorldWide</button>
+                                <button type="button" class="anywhere-button mb-2" onclick="selectLocType(2)" id="nationBtn">NationWide</button>
+                            </div>
+
+                            <input type="hidden" name="latitude" id="latitude" value="<?php echo @$apiDataU['latitude']; ?>">
+                            <input type="hidden" name="longitude" id="longitude" value="<?php echo @$apiDataU['longitude']; ?>">
+                            <input type="hidden" name="city" id="city" value="<?php echo @$apiDataU['city']; ?>">
+                            <input type="hidden" name="state" id="state" value="<?php echo @$apiDataU['state']; ?>">
+                            <input type="hidden" name="country_code" id="country_code" />
+                            <input type="hidden" name="loc_type" id="loc_type" value="0">
+                            <input type="hidden" name="cropped_image" id="croppedImage" value="">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="not-find">
+                <button class="saveBtn svs-btns" name="addPost">
+                    <span class="saveBtnTxt">Save</span>
+                    <span class="saveBtnImg"><img src="assets/img/forward.png" class="img-fluid w-100" alt="" /></span>
+                </button>
+                <button type="button" class="cancelbtn" data-bs-toggle="modal" data-bs-target="#draftModal" onclick="window.history.back();">Cancel</button>
+            </div>
+        </form>        
+        <?php include('includes/footer-scripts.php') ?>
+        <script src="assets/js/deals.js?v=<?= time() ?>"></script>
+    </body>
+</html>

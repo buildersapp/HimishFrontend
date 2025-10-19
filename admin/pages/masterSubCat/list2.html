@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+    <?php include('includes/head.php') ?>
+    <style>
+    .mstRw > td {
+        word-wrap: break-word !important;
+    }
+    </style>
+    <link rel="stylesheet" href="assets/plugins/datatable/css/dataTables.bootstrap5.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.7.1/css/buttons.dataTables.min.css">
+    <body>
+        <!-- wrapper start  -->
+        <div class="wrapper relative">
+            <?php include('includes/sidebar.php') ?>
+
+            <!-- header start  -->
+            <?php include('includes/nav-header.php') ?>
+            <!-- header end  -->
+
+            <!-- content area start  -->
+            <div class="Master-page-sec">
+                <main>
+                    <section class="userList">
+                        <div class="">
+                            <div class="row">
+                                <!-- top -->
+                                <div class="search-sec-cmn d-flex align-items-center justify-content-between mb-1">
+                                    <select id="dataTypeSelector" class="form-control" style="width: 200px;">
+                                        <option value="3">All</option>
+                                        <option value="1">Services</option>
+                                        <option value="2">Products</option>
+                                    </select>
+                                    <div class="search-form me-2">
+                                        <button class="btn p-0 outline-0" type="submit"><img src="assets/img/list/search.svg" alt="search icon" /></button>
+                                        <input type="search" class="form-control form-input border-0" id="searchMaster" placeholder="Search Categories" />
+                                    </div>   
+                                    <?php if (hasPermission('Master', 'edit')) { ?>
+                                    <form id="uploadForm" action="" method="POST" enctype="multipart/form-data" class="addUser d-flex gap-3 align-items-center justify-content-between">
+                                        <div class="upload-file-btn position-relative">
+                                            <input type="file" id="excelFileInput" name="excel" style="display: none;" accept=".xls,.xlsx">
+                                            <a href="#" class="btn  px-3 btn-up" id="uploadExcelBtn">
+                                                <span><img src="assets/img/pro-ser/upload.svg" alt="upload"></span>
+                                                <span>Upload Excel</span>
+                                            </a>
+                                        </div>
+                                        <a href="?id=<?= uniqid().mt_rand() ?>&inc=<?= md5(microtime()) ?>&tp=export" class="btn btn-ex px-3">
+                                            <span><img src="assets/img/pro-ser/export.svg" alt="export"></span>
+                                            <span>Export to Excel</span>
+                                        </a>
+                                        <!-- Action button -->
+                                        <button type="button" class="btn btn-danger px-3" id="mergeBtn" style="display: none;">
+                                            Merge
+                                        </button>
+                                    </form>
+                                    <?php } ?>
+                                </div>
+
+                                <!-- bottom -->
+                                <div class="col-12 mt-3 mb-3">
+                                    <div class="col-12 d-flex justify-content-between align-items-center">
+                                        <h4 class="">Listing <?= ($type == 1) ? 'Services' : (($type == 2) ? 'Products' : 'All') ?></h4>
+                                        <small class="text-danger">Industry > Category > Sub Category > Sub Sub Category</small>
+                                        <small class="text-info text-end"><i class="fa fa-star text-warning"></i> indicates that the item is visible in filters on the mobile app</small>
+                                    </div>
+                                    <div class="list-users table-responsive mt-3">
+                                        <!-- table -->
+                                        <table class="table data-table-cmn" id="masterTable2">
+                                            <thead>
+                                                <tr class="table-header">
+                                                    <th scope="col">#</th>
+                                                    <th scope="col" class="userHeading-size">
+                                                        <a href="#" class="userHeading"> TYPE </a>
+                                                    </th>
+                                                    <th scope="col" class="userHeading-size">
+                                                        <a href="#" class="userHeading"> NAME </a>
+                                                    </th>
+                                                    <th scope="col">
+                                                        <a href="#" class="userHeading"> POSTS & ADS (K) </a>
+                                                    </th>
+                                                    <th scope="col">
+                                                        <a href="#" class="userHeading"> COMPANY (K) </a>
+                                                    </th>
+                                                    <th scope="col">
+                                                        <a href="#" class="userHeading"> LOOKING FOR (K) </a>
+                                                    </th>
+                                                    <th scope="col">
+                                                        <a href="#" class="userHeading"> DEALS (K) </a>
+                                                    </th>
+                                                    <th scope="col">
+                                                        <a href="#" class="userHeading"> COMMENTS (K) </a>
+                                                    </th>
+                                                    <th scope="col">
+                                                        <a href="#" class="userHeading"> POSTS (T) </a>
+                                                    </th>
+                                                    <th scope="col">
+                                                        <a href="#" class="userHeading"> COMPANY (T) </a>
+                                                    </th>
+                                                    <th scope="col">
+                                                        <a href="#" class="userHeading"> LOOKING FOR (T) </a>
+                                                    </th>
+                                                    <th scope="col">
+                                                        <a href="#" class="userHeading"> LAST UPDATED </a>
+                                                    </th>
+                                                    <th scope="col">
+                                                        <div class="userHeading">ACTION</div>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            <?php if (!empty($masterSubCats)) : ?>
+                                                <?php foreach ($masterSubCats as $key => $row) : ?>
+                                                    <?php
+                                                        $rowNumber = sprintf('%02d', $key + 1);
+
+                                                        $showStar = "";
+                                                        if (!empty($row['show_in_filter'])) {
+                                                            $showStar = '<i class="fa fa-star text-warning"></i>';
+                                                        }
+                                                    ?>
+                                                    <tr class="mstRw" id="row-<?= $row['id'] ?>">
+                                                        <td><input type="checkbox" class="rowCheckbox" value="<?= $row['id'] ?>"></td>
+                                                        <td><?= $row['type'] ?></td>
+                                                        <td class="text-primary mk-mstr-ct-str" data-show-in-filters="<?= !empty($row['show_in_filter']) ? 1 : 0 ?>" data-id="<?= $row['id'] ?>">
+                                                            <div class="content me rmsai">
+                                                                <p class="fw-900 content"> <?= $showStar ?> <?= $row['names'][0] ?> > </p>
+                                                                <small class="grey"> <?= implode(' > ', array_slice($row['names'], 1, 3)) ?> </small>
+                                                            </div>
+                                                        </td>
+                                                        <td><div class="userNo content"><?= $row['keywords1'] ?: 'N/A' ?></div></td>
+                                                        <td><div class="userNo content"><?= $row['keywords2'] ?: 'N/A' ?></div></td>
+                                                        <td><div class="userNo content"><?= $row['keywords3'] ?: 'N/A' ?></div></td>
+                                                        <td><div class="userNo content"><?= $row['keywords4'] ?: 'N/A' ?></div></td>
+                                                        <td><div class="userNo content"><?= $row['keywords5'] ?: 'N/A' ?></div></td>
+                                                        <td><div class="userNo content"><?= $row['tabLabelOptionPosts'] ?: 'N/A' ?></div></td>
+                                                        <td><div class="userNo content"><?= $row['tabLabelOptionCompany'] ?: 'N/A' ?></div></td>
+                                                        <td><div class="userNo content"><?= $row['tabLabelOptionLookingFor'] ?: 'N/A' ?></div></td>
+                                                        <td><div class="userNo content" data-order="<?= strtotime($row['created_at']) ?>"><?= (new DateTime($row['created_at'], new DateTimeZone("UTC")))->format("m/d/Y H:i A"); ?></div></td>
+                                                        <td>
+                                                            <?php if (hasPermission('Master', 'edit')) { ?>
+                                                            <button type="button" class="btn btn-crud" data-action="edit" data-table="master_cat_sub" data-edit-link="edit-categories.php?id=" data-id="<?= base64_encode($row['id']) ?>" data-pop-up="" data-bs-toggle="tooltip" data-bs-placement="top" onclick="handleActionButtons(this)" aria-label="edit" data-bs-original-title="edit">
+                                                                <i class="fa fa-pencil" aria-hidden="true"></i>
+                                                            </button>
+                                                            <?php } ?>
+                                                        </td>
+                                                    </tr>
+                                                <?php endforeach; ?>
+                                            <?php else: ?>
+                                                <tr>
+                                                    <td colspan="11" class="text-center">No records found</td>
+                                                </tr>
+                                            <?php endif; ?>
+                                            </tbody>
+                                        </table>
+                                        <div id="noDataMessage" class="no-data-container" style="display: none;">
+                                            <img src="<?= NO_DATA_IMG ?>" alt="No Data">
+                                            <h3><?= NO_DATA_TITLE ?></h3>
+                                            <p><?= NO_DATA_DESC ?></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Modal -->
+                        <div class="modal fade" id="selectedIdsModal" tabindex="-1" aria-labelledby="selectedIdsLabel" aria-hidden="true">
+                            <form id="categoryMerger" method="post" data-parsley-validate>
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="selectedIdsLabel">Merge Master List</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <label for="mergeSelect" class="form-label">Choose master ID:</label>
+                                            <select id="mergeSelect" name="master_id" class="form-select" required></select>
+                                            <div id="otherIdsList" class="mt-2 mb-2"></div>
+                                            <input type="hidden" name="other_ids" id="otherIdsInput">
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="submit" name="mergeMaster" class="btn btn-primary">Merge</button>
+                                            <button type="button" class="btn btn-secondary" onclick="location.reload();">Close</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </section>
+                </main>
+            </div>
+            <!-- content area end -->
+        </div>
+        <!-- wrapper end  -->
+        <script src="assets/plugins/datatable/js/jquery.dataTables.min.js?v=<?= time() ?>"></script>
+        <?php include('includes/footer-scripts.php') ?>
+        <script>
+        $(document).ready(function () {
+            // Track selected IDs across pages
+            var selectedIds = {};
+
+            var masterTable2 = $("#masterTable2").DataTable({
+                dom: '<"top">rt<"bottom"lp><"clear">',
+                pageLength: 500,
+                lengthMenu: [[10, 25, 50, 100, 500], [10, 25, 50, 100, 500]],
+                language: {
+                    searchPlaceholder: 'Enter your search term...',
+                    emptyTable: 'No records available'
+                },
+                serverSide: false,
+                processing: false,
+                drawCallback: function () {
+                    $('html, body').animate({ scrollTop: 0 }, 'fast');
+
+                    // Highlight search term
+                    var searchTerm = $("#searchMaster").val();
+                    if (searchTerm) {
+                        var regex = new RegExp('(' + searchTerm + ')', 'gi');
+                        $('#masterTable2 tbody td').each(function () {
+                            var cell = $(this);
+                            var text = cell.text().trim();
+                            if (text) {
+                                cell.html(text.replace(regex, '<span class="highlight">$1</span>'));
+                            }
+                        });
+                    }
+
+                    // Restore checkbox states
+                    $('#masterTable2 .rowCheckbox').each(function () {
+                        var id = $(this).val();
+                        $(this).prop('checked', selectedIds[id] === true);
+                    });
+
+                    // Update "Select All"
+                    updateSelectAll();
+                },
+                rowCallback: function (row, data, index) {
+                    if (index % 2 === 0) {
+                        $(row).addClass('first-row');
+                    } else {
+                        $(row).addClass('second-row');
+                    }
+                }
+            });
+
+            // Custom search input
+            $('#searchMaster').on('input', function () {
+                masterTable2.search(this.value).draw();
+            });
+
+            $("#mergeBtn").hide();
+
+            // Handle row checkbox change
+            $(document).on('change', '.rowCheckbox', function () {
+                var id = $(this).val();
+                if ($(this).prop('checked')) {
+                    selectedIds[id] = true;
+                } else {
+                    delete selectedIds[id];
+                }
+                updateSelectAll();
+            });
+
+            // Handle select all
+            $('#selectAll').on('change', function () {
+                var isChecked = $(this).prop('checked');
+                $('#masterTable2 .rowCheckbox').prop('checked', isChecked).trigger('change');
+            });
+
+            function updateSelectAll() {
+                var allBoxes = $('#masterTable2 .rowCheckbox').length;
+                var checkedBoxes = $('#masterTable2 .rowCheckbox:checked').length;
+                if(checkedBoxes > 1){
+                    $("#mergeBtn").show();
+                }else{
+                    $("#mergeBtn").hide();
+                }
+                $('#selectAll').prop('checked', allBoxes > 0 && allBoxes === checkedBoxes);
+            }
+
+            // Show selected rows in dropdown
+            $('#mergeBtn').on('click', function () {
+                var ids = Object.keys(selectedIds);
+
+                var $dropdown = $('#mergeSelect');
+                var $othersList = $('#otherIdsList'); // container for showing other IDs
+                $dropdown.empty(); 
+                $othersList.empty();
+
+                if (ids.length === 0) {
+                    $dropdown.append('<option disabled>No rows selected</option>');
+                } else {
+                    ids.forEach(function (id) {
+                        var $row = $('#row-' + id);
+                        var $content = $row.find('.mk-mstr-ct-str .content').clone();
+
+                        var text = $content.find('p').text().trim() + " " + $content.find('small').text().trim();
+                        $dropdown.append('<option value="' + id + '">' + text + '</option>');
+                    });
+
+                    // Default master
+                    var masterId = ids[0];
+                    $dropdown.val(masterId);
+
+                    // Fill hidden input + show others in red
+                    function updateOthers(selectedMaster) {
+                        var otherIds = ids.filter(i => i !== selectedMaster);
+                        $('#otherIdsInput').val(otherIds.join(','));
+
+                        $othersList.empty();
+                        if (otherIds.length > 0) {
+                            $othersList.append('<p class="text-danger fw-bold mb-1">The following Categories will be deleted:</p>');
+                            otherIds.forEach(function (oid) {
+                                var $row = $('#row-' + oid);
+                                var $content = $row.find('.mk-mstr-ct-str .content').clone();
+                                var text = $content.find('p').text().trim() + " " + $content.find('small').text().trim();
+
+                                $othersList.append('<div class="text-danger">❌ ' + text + '</div>');
+                            });
+                        }
+                    }
+
+                    // Initial update
+                    updateOthers(masterId);
+
+                    // On change update
+                    $dropdown.off('change').on('change', function () {
+                        updateOthers($(this).val());
+                    });
+                }
+
+                $('#selectedIdsModal').modal('show');
+            });
+
+            $('#categoryMerger').on('submit', function (e) {
+                if (!confirm('⚠️ Are you sure you want to merge? This will delete the other IDs.')) {
+                    e.preventDefault();
+                    return false;
+                }
+            });
+
+        });
+
+        document.getElementById("dataTypeSelector").addEventListener("change", function () {
+            let selectedValue = this.value;
+
+            // Get current URL without query params
+            let url = new URL(window.location.href);
+
+            // Set or update 'type' param
+            url.searchParams.set("type", selectedValue);
+
+            // Reload with updated query param
+            window.location.href = url.toString();
+        });
+
+        // ✅ On page load -> mark selected
+        (function setSelectedFromURL() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const type = urlParams.get('type');
+            if (type) {
+            document.getElementById('dataTypeSelector').value = type;
+            }
+        })();
+
+        /**
+         * Make Category Star / un Star.
+        */
+        $(document).on("click", ".mk-mstr-ct-str", function () {
+            var button = $(this);
+            var id = button.data("id");
+            var show_in_filter = parseInt(button.data("show-in-filters"), 10);
+            var newValue = (show_in_filter === 1 ? 0 : 1);
+            $.ajax({
+                url: 'ajax.php?action=make_category_star_unstar',
+                type: 'POST',
+                data: { id: id, show_in_filter: newValue },
+                success: function (response) {
+                    try {
+                        var jsonResponse = JSON.parse(response);
+                        if (jsonResponse.success) {
+                            $.toastr.success(jsonResponse.message, {position: 'top-center',time: 5000});
+
+                            // Update the data attribute
+                            button.data("show-in-filters", newValue);
+
+                            // Find the inner .rmsai inside this td
+                            var contentDiv = button.find(".rmsai");
+
+                            if (newValue === 1) {
+                                // Append star if not already there
+                                if (contentDiv.find("i.fa-star").length === 0) {
+                                    contentDiv.find('p').prepend(' <i class="fa fa-star text-warning"></i>');
+                                }
+                            } else {
+                                // Remove star if it exists
+                                contentDiv.find("i.fa-star").remove();
+                            }
+                        }else{
+                            $.toastr.error(jsonResponse.message, {position: 'top-center',time: 5000});
+                        }
+                    } catch (e) {
+                        console.error("Invalid JSON response:", response);
+                    }
+                },
+                error: function () {
+                    console.log("Failed to delete ad comment.");
+                }
+            });
+        });
+        </script>
+    </body>
+</html>

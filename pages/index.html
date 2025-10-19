@@ -1,0 +1,126 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Himish - Discover & Connect with Local Businesses</title>
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Himish is a platform where users can post feeds, view nearby businesses, claim their business listings, and connect with other companies and users. Users can also post buy/sell/share listings and discover nearby deals and products.">
+    <meta name="keywords" content="Himish, business connections, local businesses, buy and sell, nearby deals, claim business, product discovery, local feed, community connections">
+    <meta name="author" content="Himish">
+    <meta name="robots" content="index, follow">
+    <meta name="language" content="en">
+    
+    <!-- Open Graph Meta Tags (For Social Media Sharing) -->
+    <meta property="og:title" content="<?= $title ?>" />
+    <meta property="og:description" content="Himish is a platform where users can post feeds, claim businesses, create connections with companies and other users, and post buy/sell/share listings to find nearby deals." />
+    <meta property="og:image" content="assets/img/logo.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:url" content="<?= $_SERVER['REQUEST_URI'] ?>" />
+    <meta property="og:type" content="website" />
+
+    <!-- Additional Open Graph Meta Tags for Facebook -->
+    <meta property="og:image:secure_url" content="assets/img/logo.png" />
+    <meta property="og:image:alt" content="Himish" /> <!-- Alt text for the image -->
+
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="<?= $title ?>">
+    <meta name="twitter:description" content="Himish is a platform where users can post feeds, claim businesses, create connections with companies and other users, and post buy/sell/share listings to find nearby deals.">
+    <meta name="twitter:image" content="assets/img/logo.png">
+
+    <!-- Favicon -->
+    <link rel="icon" href="assets/img/favicon.ico" type="image/x-icon" />
+    <link rel="icon" href="assets/img/favicon.ico" type="image/png" />
+    
+    <style>
+        body { font-family: 'Poppins', sans-serif; margin: 0; padding: 0; background-color: white; color: #333; overflow-x: hidden; }
+        header { display: flex; justify-content: space-between; align-items: center; padding: 20px 40px; background: white; position: sticky; top: 0; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); z-index: 1000; transition: all 0.3s ease-in-out; }
+        .logo { font-size: 28px; font-weight: bold; color: purple; letter-spacing: 1px; }
+        .nav-right { display: flex; align-items: center; gap: 20px; }
+        .nav-buttons { display: flex; gap: 15px; }
+        .btn { padding: 14px 26px; border: none; cursor: pointer; font-size: 16px; font-weight: bold; border-radius: 8px; transition: transform 0.2s, background 0.3s; }
+        .btn-primary { background: purple; color: white; box-shadow: 0 4px 10px rgba(128, 0, 128, 0.3); }
+        .btn-secondary { background: lightblue; color: white; box-shadow: 0 4px 10px rgba(173, 216, 230, 0.3); }
+        .btn:hover { transform: scale(1.08); opacity: 0.9; }
+        .login-links a { text-decoration: none; color: purple; font-size: 16px; font-weight: bold; transition: color 0.3s, transform 0.2s; }
+        .login-links a:hover { color: darkpurple; transform: scale(1.05); }
+        .hero { text-align: center; padding: 150px 20px; background: linear-gradient(to right, #f8f9fa, #e3e7ff); transition: all 0.3s ease-in-out; border-bottom-left-radius: 100px; }
+        .hero h1 { font-size: 48px; font-weight: bold; margin-bottom: 15px; animation: fadeInUp 1s ease-in-out; }
+        .hero p { font-size: 22px; color: #555; animation: fadeInUp 1.2s ease-in-out; }
+        .hero button { margin: 20px 10px; animation: fadeInUp 1.4s ease-in-out; }
+        .how-it-works { text-align: center; padding: 100px 20px; background: white; }
+        .how-it-works h2 { font-size: 36px; margin-bottom: 30px; color: purple; }
+        .how-it-works p { font-size: 20px; margin: 15px 0; opacity: 0; transform: translateY(20px); transition: all 0.5s ease-in-out; font-weight: 500; }
+        .footer { text-align: center; padding: 30px; background: white; border-top: 2px solid #ddd; font-size: 16px; font-weight: bold; }
+        .footer a { margin: 0 12px; color: purple; text-decoration: none; transition: color 0.3s; }
+        .footer a:hover { color: darkpurple; }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @media (max-width: 768px) {
+            .nav-buttons { flex-direction: column; gap: 5px; }
+        }
+        .fade-in { opacity: 1 !important; transform: translateY(0) !important; }
+    </style>
+    <!-- RESPONSIVE STYLESHEET -->
+    <link rel="stylesheet" href="assets/css/responsive.css" />
+</head>
+<body>
+<header style="display: flex; justify-content: space-between; align-items: center; padding: 10px 20px;">
+    <div class="logo">
+        <a href="index.php">
+            <img src="assets/img/logo.png" alt="Himish Logo" style="height: 40px;" />
+        </a>
+    </div>
+    <div class="nav-right" style="display: flex; gap: 20px; align-items: center;">
+        <!-- <div class="nav-buttons">
+            <a href="login.php"><button class="btn btn-primary">Create Your Profile</button></a>
+            <a href="login.php"><button class="btn btn-secondary">Claim Your Business</button></a>
+        </div> -->
+        <div class="login-links">
+            <a href="login.php">User Login</a>&emsp;
+            <a href="admin">Admin Login</a>
+        </div>
+    </div>
+</header>
+    
+    <section class="hero">
+        <h1>Discover & Connect with Local Businesses</h1>
+        <p>Himish helps you find, claim, and promote businesses in your area. Whether you're a business owner or a customer, get started today.</p>
+        <a href="login.php"><button class="btn btn-primary">Create Your Profile</button></a>
+        <a href="login.php"><button class="btn btn-secondary">Claim Your Business</button></a>
+    </section>
+    
+    <section class="how-it-works">
+        <h2>How It Works</h2>
+        <p id="step1"><strong>1.</strong> Find a Business</p>
+        <p id="step2"><strong>2.</strong> Claim or Create a Profile</p>
+        <p id="step3"><strong>3.</strong> Connect & Grow</p>
+    </section>
+    
+    <footer class="footer">
+        <a href="privacy.php">Privacy Policy</a>
+        <a href="terms.php">Terms of Service</a>
+        <a href="contact-us.php">Contact Us</a>
+        <!-- <div>
+            <a href="#">Instagram</a> | <a href="#">LinkedIn</a> | <a href="#">Twitter</a>
+        </div> -->
+    </footer>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            setTimeout(() => { document.getElementById("step1").classList.add("fade-in"); }, 500);
+            setTimeout(() => { document.getElementById("step2").classList.add("fade-in"); }, 1000);
+            setTimeout(() => { document.getElementById("step3").classList.add("fade-in"); }, 1500);
+        });
+
+        localStorage.removeItem('locationManuallySet');
+        localStorage.removeItem('gu_change_location');
+    </script>
+</body>
+</html>

@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+    <?php include('includes/head.php') ?>
+    <body>
+
+        <!-- ************************************ -->
+        <!-- MAIN FORM -->
+        <!-- ************************************ -->
+        <section class="set-main-single-sec set-container-1440">
+            <!-- ************************************ -->
+            <!-- LEFT SIDE FORM -->
+            <!-- ************************************ -->
+            <div class="set-left-area">
+                <div class="set-box-why-choose mb-48">
+                    <h1 class="f-32-w m-0">Why Choose HIMISH?</h1>
+                    <p class="f-24-w mt-24 mb-0">It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English.</p>
+                </div>
+            </div>
+            <!-- ************************************ -->
+            <!-- RIGHT SIDE FORM -->
+            <!-- ************************************ -->
+            <div class="set-right-area py-5 px-3 px-lg-4">
+                <form action="" id="emailVerification" class="set-main-form" data-parsley-validate>
+
+                    <!-- STEP 1 -->
+                    <div id="step1" class="step-content">
+                        <div class="set-logo-main">
+                            <a href="index.html"><img src="assets/images/logo.png" alt="logo" class="img-fluid"></a>
+                        </div>
+                        <h2 class="f-28-b mb-1 mt-32">Choose Your Profile</h2>
+                        <p class="f-14-g m-0">Select a door to begin your journey</p>
+                        <div class="row align-items-center mt-16">
+                            <div class="col-lg-12">
+                                <div class="mt-16">
+                                    <select class="form-select set-select-all" aria-label="Default select example" name="profile_type">
+                                        <option selected>Choose Profile Type</option>
+                                        <?php foreach($profileGroups as $type): ?>
+                                            <option value="<?= htmlspecialchars($type['id']) ?>"><?= htmlspecialchars($type['name']) ?></option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
+                            </div>
+                            <!-- SUBMIT -->
+                            <div class="col-lg-12">
+                                <div class="mt-60">
+                                    <button type="button" class="set-btn-primary d-block" id="nextStepBtn">Next</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- STEP 2 -->
+                    <div id="step2" class="step-content d-none">
+                        <div class="set-logo-main">
+                            <a href="index.html"><img src="assets/images/logo.png" alt="logo" class="img-fluid"></a>
+                        </div>
+                        <h2 class="f-28-b mb-1 mt-32">Join the community!</h2>
+                        <p class="f-18-g m-0">Hello there, login to continue</p>
+                        <div class="row align-items-center mt-16">
+                            <div class="col-lg-6">
+                                <div class="mt-16">
+                                    <label class="f-16-gb d-inline-block mb-12">Full Name</label>
+                                    <input type="text" id="name" placeholder="Enter your name" class="set-input-all" required />
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="mt-16">
+                                    <label class="f-16-gb d-inline-block mb-12">Email</label>
+                                    <input 
+                                        type="email" 
+                                        name="email" 
+                                        id="email" 
+                                        placeholder="Enter your email" 
+                                        class="set-input-all" 
+                                        value="<?= isset($_SESSION['hm_at_email']) ? htmlspecialchars($_SESSION['hm_at_email']) : '' ?>" 
+                                        autocomplete="off" 
+                                        required 
+                                    />
+                                </div>
+                            </div>
+                            <div class="col-lg-12">
+                                <div class="mt-16">
+                                    <label class="f-16-gb d-inline-block mb-12">Password</label>
+                                    <div class="position-relative">
+                                        <input type="password" name="password" class="set-input-all" placeholder="Password" id="password" autocomplete="off" required />
+                                        <i class="toggle-password fa fa-fw fa-eye-slash"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-12">
+                                <div class="mt-16">
+                                    <label class="f-16-gb d-inline-block mb-12">Confirm Password</label>
+                                    <div class="position-relative">
+                                        <input type="password" name="confirm_password" placeholder="Password" class="set-input-all"  id="confirmPassword" data-parsley-equalto="#password" required />
+                                        <i class="toggle-password fa fa-fw fa-eye-slash"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-12">
+                                <div class="mt-16">
+                                    <label class="f-16-gb d-inline-block mb-12">Phone Number</label>
+                                    <input type="text" name="first_name" placeholder="Enter Phone Number" id="referral_code" class="set-input-all">
+                                </div>
+                            </div>
+                            <div class="col-lg-12">
+                                <div class="mt-16">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="" name="i_agree">
+                                        <label class="form-check-label f-14-gb" for="checkDefault">Enabled MFA</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- SUBMIT -->
+                            <div class="col-lg-12">
+                                <div class="mt-24">
+                                    <button type="submit" class="set-btn-primary d-block" id="registerButton">Sign up</button>
+                                </div>
+                                <div class="text-center mt-16">
+                                    <p class="f-16-gb">Already have an account? <a href="login.php" class="f-16-bl text-decoration-none">Sign In</a></p>
+                                </div>
+                                <!-- <div class="text-center position-relative mt-32">
+                                    <span class="set-border-line d-block"></span>
+                                    <span class="set-with-google">Or&nbsp;Sign&nbsp;Up&nbsp;With</span>
+                                </div>
+                                <div class="mt-24">
+                                    <a href="#" class="set-btn-google d-block text-center mt-20 text-decoration-none"><img src="assets/images/google-icon.png" alt="google" class="me-2">Google</a>
+                                </div> -->
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </section>
+        
+        <!-- Include Font Awesome -->
+        <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    </body>
+    <?php include('includes/footer-scripts.php') ?>
+    <script>
+        var userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        $("#timezone").val(userTimezone);
+    </script>
+    <script>
+        $(document).ready(function () {
+            let initialSlideIndex = 0;
+
+            if (window.location.pathname.includes("register.php")) {
+                    initialSlideIndex = 1; // 2nd slide (index starts at 0)
+                } else if (window.location.pathname.includes("email-verification.php")) {
+                    initialSlideIndex = 2; // 3rd slide
+                }
+
+            $('#setSliderLogin').on('init', function () {
+                $(this).css({
+                    visibility: 'visible',
+                    opacity: 1,
+                    transition: 'opacity 0.3s ease'
+                });
+            });
+
+            $('#setSliderLogin').slick({
+                dots: true,
+                arrows: false,
+                infinite: false,
+                speed: 300,
+                slidesToShow: 1,
+                slidesToScroll: 1,
+                initialSlide: initialSlideIndex
+            });
+        });
+    </script>
+    <script>
+        document.getElementById("nextStepBtn").addEventListener("click", function () {
+            document.getElementById("step1").classList.add("d-none");
+            document.getElementById("step2").classList.remove("d-none");
+        });
+    </script>
+</html>

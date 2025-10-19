@@ -1,0 +1,66 @@
+<?php 
+$adminId = $_SESSION['hm_auth_data']['id'];
+?>
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <?php include('includes/head.php'); ?>
+        <link rel="stylesheet" href="assets/css/messaging.css" />
+        <script src="https://cdn.socket.io/4.5.0/socket.io.min.js?v=<?= time() ?>"></script>
+      
+    </head>
+    <body>
+        <div class="wrapper relative">
+            <?php include('includes/sidebar.php'); ?>
+            <?php include('includes/nav-header.php'); ?>
+            <div class="faqs-page-sec">
+                <main>
+                    <section class="userList">
+                        <div class="container">
+                            <div class="messaging">
+                                <div class="loader" style="display: block;">
+                                    <div class="spinner"></div>
+                                </div>
+                                <div class="inbox_msg">
+                                    <div class="mesgs" style="width:100%">
+                                        
+                                        <div class="msg_history1" id="msgHistory" >
+
+
+                                            <?php foreach ($final as $msg): ?>
+                                                <?php
+                                                    $message = htmlspecialchars($msg['message']);
+                                                    $time = date('h:i A', strtotime($msg['created_at']));
+                                                    $sender = htmlspecialchars($msg['sender']);
+                                                    $receiver = htmlspecialchars($msg['receiver']);
+                                                ?>
+
+                                                <div class="<?php echo ($msg['is_reply'] == 1) ? 'outgoing_msg' : 'incoming_msg'; ?>">
+                                                    <div class="<?php echo ($msg['is_reply'] == 1) ? 'sent_msg' : 'received_msg'; ?>">
+                                                        <p><strong><?php echo $sender; ?></strong></p>
+                                                        <p><?php echo $message; ?> <span class="time_date"><?php echo $time; ?></span></p>
+                                                    </div>
+                                                </div>
+                                        <?php endforeach; ?>
+                                            
+                                        <div class="type_msg">
+                                            <div class="input_msg_write">
+                                                <form method="post">
+                                                    <input type="text" name="message" class="write_msg" placeholder="Type a message" />
+                                                    <button class="msg_send_btn mt-2" type="submit" name="sendMessage">
+                                                        <i class="fa fa-arrow-right"></i>
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </main>
+            </div>
+        </div>
+        <?php include('includes/footer-scripts.php') ?>
+    </body>
+</html>

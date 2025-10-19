@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+    <?php include('includes/head.php') ?>
+    <body>
+        <section class="set-main-single-sec set-container-1440">
+            <!-- ************************************ -->
+            <!-- LEFT SIDE FORM -->
+            <!-- ************************************ -->
+            <div class="set-left-area set-email-verification-left">
+                <div class="set-box-why-choose mb-48">
+                <h1 class="f-32-w m-0">Why Choose HIMISH?</h1>
+                <p class="f-24-w mt-24 mb-0">It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English.</p>
+                </div>
+            </div>
+            <!-- ************************************ -->
+            <!-- RIGHT SIDE FORM -->
+            <!-- ************************************ -->
+            <div class="set-right-area py-5 px-3 px-lg-4">
+                <form action="" class="registration-form set-main-form mt-0" id="registerFinal" data-parsley-validate>
+                    <div class="set-logo-main">
+                        <a href="index.html"><img src="assets/images/logo.png" alt="logo" class="img-fluid"></a>
+                    </div>
+                    <h2 class="f-28-b mb-1 mt-30">Email Verification</h2>
+                    <p class="f-18-g m-0">You will receive an OTP on your email address <strong><?= $email ?></strong></p>
+                    <div class="row align-items-center mt-16">
+
+                        <div class="col-lg-12">
+                            <div class="email-verification-input">
+                                <input type="number" class="verification-input" maxlength="1" pattern="[0-9]*" inputmode="numeric" name="otp[]">
+                                <input type="number" class="verification-input" maxlength="1" pattern="[0-9]*" inputmode="numeric" name="otp[]">
+                                <input type="number" class="verification-input" maxlength="1" pattern="[0-9]*" inputmode="numeric" name="otp[]">
+                                <input type="number" class="verification-input" maxlength="1" pattern="[0-9]*" inputmode="numeric" name="otp[]">
+                                <input type="number" class="verification-input" maxlength="1" pattern="[0-9]*" inputmode="numeric" name="otp[]">
+                            </div>
+                        </div>
+                        <!-- SUBMIT -->
+                        <div class="col-lg-12">
+                            <div class="mt-24">
+                                <button type="submit" class="set-btn-primary d-block"  id="registerFinalBtn">Continue</button>
+                            </div>
+                            <div class="text-center mt-16">
+                                <div class="agreement-section">
+                                    <p class="agreement-text" id="otpCountdown"></p>
+                                    <a id="resendOtpLink" href="javascript:void(0);" style="display: none;" onclick="emailVerification()">Resend OTP</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+
+            <!-- <div class="container">
+                <div class="registration-content">
+                    <div class="registration-info-section">
+                        <div id="setSliderLogin">
+                            <div>
+                                <div class="registration-illustration">
+                                    <img src="assets/img/login.png" class="img-fluid" alt="Register Illustration" />
+                                </div>
+                                <div class="registration-info-text">
+                                    <h2 class="registration-info-title">Promote Anything, Reach Everyone — Effortlessly with Himish</h2>
+                                    <p class="registration-info-description">
+                                        Himish is an innovative platform designed to help businesses and individuals promote their services, products, and events with ease. Whether you want to advertise a sale, post a job opening, list a rental,
+                                        or promote an event, Himish connects your content with the right audience effortlessly.
+                                    </p>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="registration-illustration">
+                                    <img src="assets/img/register.png" class="img-fluid" alt="Register Illustration" />
+                                </div>
+                                <div class="registration-info-text">
+                                    <h2 class="registration-info-title">Promote Anything, Reach Everyone — Effortlessly with Himish</h2>
+                                    <p class="registration-info-description">
+                                        Himish is an innovative platform designed to help businesses and individuals promote their services, products, and events with ease. Whether you want to advertise a sale, post a job opening, list a rental, or promote an event, Himish connects your content with the right audience effortlessly.
+                                    </p>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="registration-illustration">
+                                    <img src="assets/img/email-verify.png" class="img-fluid" alt="Register Illustration" />
+                                </div>
+                                <div class="registration-info-text">
+                                    <h2 class="registration-info-title">Get incentives by helping community</h2>
+                                    <p class="registration-info-description">
+                                        When you recommend providers to others, you're not just supporting local businesses; you're also unlocking incentives for yourself. Each successful referral or recommendation can earn you special rewards, discounts, or perks directly from providers or stores.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+    
+                    <div class="registration-form-section">
+                        <div class="email-Verification-title">
+                            <h3>Email Verification</h3>
+                            <p>You will receive an OTP on your email address <b><?= $email ?></b></p>
+                        </div>
+    
+                        <form action="" class="registration-form" id="registerFinal">
+                            <div class="email-verification-input">
+                                <input type="number" class="verification-input" maxlength="1" pattern="[0-9]*" inputmode="numeric" name="otp[]">
+                                <input type="number" class="verification-input" maxlength="1" pattern="[0-9]*" inputmode="numeric" name="otp[]">
+                                <input type="number" class="verification-input" maxlength="1" pattern="[0-9]*" inputmode="numeric" name="otp[]">
+                                <input type="number" class="verification-input" maxlength="1" pattern="[0-9]*" inputmode="numeric" name="otp[]">
+                                <input type="number" class="verification-input" maxlength="1" pattern="[0-9]*" inputmode="numeric" name="otp[]">
+                            </div>
+                            
+                            <div>
+                                <button class="register-submit" type="submit" id="registerFinalBtn">
+                                    <span class="saveBtnTxt">Continue</span>
+                                    <span class="saveBtnImg"><img src="assets/img/forward.png" class="img-fluid w-100"
+                                            alt=""></span>
+                                </button>
+                            </div>
+                        </form>
+                        
+                    </div>
+                </div>
+            </div> -->
+            <!-- registration shape  -->
+            <!-- <div class="registration-shape">
+                <img src="assets/img/register-shape.png" class="img-fluid" alt="">
+            </div> -->
+        </section>
+        <!-- Include Font Awesome -->
+        <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    </body>
+    <?php include('includes/footer-scripts.php') ?>
+    <script>
+
+        const inputs = document.querySelectorAll('.verification-input');
+
+        inputs.forEach((input, index) => {
+            input.addEventListener('input', (e) => {
+                const value = e.target.value;
+                // If there's a value, move to the next input
+                if (value.length === 1 && index < inputs.length - 1) {
+                    inputs[index + 1].focus();
+                }
+            });
+
+            // Add backspace support to move focus to the previous input
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Backspace' && !e.target.value && index > 0) {
+                    inputs[index - 1].focus();
+                }
+            });
+        });
+
+        // Check if countdown time exists in localStorage
+        var countdownTime = localStorage.getItem('countdownTime') || 5;
+        countdownTime = parseInt(countdownTime); // Ensure it is a number
+
+        // Start countdown and trigger email verification after countdown ends
+        function updateCountdown() {
+            var minutes = Math.floor(countdownTime / 60);
+            var seconds = countdownTime % 60;
+
+            // Format minutes and seconds as 2 digits
+            minutes = minutes < 10 ? '0' + minutes : minutes;
+            seconds = seconds < 10 ? '0' + seconds : seconds;
+
+            // Update the countdown display
+            document.getElementById('otpCountdown').innerText = "Resend OTP will be enabled in " + minutes + ':' + seconds;
+
+            // Decrease the time by 1 second
+            countdownTime--;
+
+            // Save the remaining countdown time in localStorage
+            localStorage.setItem('countdownTime', countdownTime);
+
+            // When countdown reaches 0, show that OTP resend is enabled and show the button
+            if (countdownTime < 0) {
+                clearInterval(countdownInterval); // Stop the countdown
+                document.getElementById('otpCountdown').innerText = ''; // Change message
+
+                // Show the anchor link (Resend OTP)
+                document.getElementById('resendOtpLink').style.display = 'inline'; // Replaces the text with link
+
+                localStorage.removeItem('countdownTime');
+            }
+        }
+
+        // Function to handle email verification (for OTP resend)
+        function emailVerification() {
+            var email = "<?= $originalEmail ?>";  // Get email from the input field
+
+            // Perform AJAX to send OTP
+            $.ajax({
+                url: 'ajax.php?action=emailVerification',
+                type: 'POST',
+                data: { email: email },
+                beforeSend: function () {
+                    $('#resendingOTP').prop('disabled', true).text('Sending OTP...');
+                    openScreenLoader('Sending OTP. Do not refresh this page...');
+                },
+                success: function (response) {
+                    var RespJson = JSON.parse(response);
+                    // // Process response after OTP is sent
+                    localStorage.setItem('otpCode',RespJson.body.otp);
+                    handleResponse(response, 'email-verification.php?em=' + btoa(email));
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error: " + error);
+                    closeScreenLoader();
+                },
+                complete: function () {
+                    $('#resendingOTP').prop('disabled', false).text('Loading...');
+                    closeScreenLoader();
+                }
+            });
+        }
+
+        // Start the countdown every 1000 milliseconds (1 second)
+        var countdownInterval = setInterval(updateCountdown, 1000);
+    </script>
+    <script>
+        $(document).ready(function () {
+            let initialSlideIndex = 0;
+
+            if (window.location.pathname.includes("register.php")) {
+                    initialSlideIndex = 1; // 2nd slide (index starts at 0)
+                } else if (window.location.pathname.includes("email-verification.php")) {
+                    initialSlideIndex = 2; // 3rd slide
+                }
+
+            $('#setSliderLogin').on('init', function () {
+                $(this).css({
+                    visibility: 'visible',
+                    opacity: 1,
+                    transition: 'opacity 0.3s ease'
+                });
+            });
+
+            $('#setSliderLogin').slick({
+                dots: true,
+                arrows: false,
+                infinite: false,
+                speed: 300,
+                slidesToShow: 1,
+                slidesToScroll: 1,
+                initialSlide: initialSlideIndex
+            });
+        });
+    </script>
+</html>

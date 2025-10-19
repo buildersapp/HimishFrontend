@@ -1,0 +1,286 @@
+<html>
+    <?php include('includes/head.php'); ?>
+    <body class="bg-gray-50 font-sans">
+    
+    <!-- Sidebar -->
+    <?php include('includes/sidebar.php'); ?>
+
+    <!-- Mobile Header & Mobile Menu (hidden by default) -->
+    <?php include('includes/mobile-menu.php'); ?>
+
+    <!-- Main Content -->
+    <div class="md:ml-64 min-h-screen">
+        <!-- Header -->
+        <?php include('includes/nav-header.php'); ?>
+
+        <!-- Mobile Tabs -->
+        <?php include('includes/mobile-tabs.php'); ?>
+
+        <!-- Main Content -->
+        <main id="join-community-content" class="p-4 md:p-6">
+            <!-- Search Section -->
+            <div id="community-search" class="bg-white rounded-lg shadow-sm border border-gray-100 p-6 mb-6">
+                <h2 class="text-lg font-semibold text-gray-800 mb-4">Find Communities</h2>
+                <div class="flex flex-col md:flex-row gap-4">
+                    <div class="flex-1 relative">
+                        <input
+                            type="text"
+                            id="search-communities"
+                            placeholder="Search communities by name, location, or topic..."
+                            class="w-full border border-gray-300 rounded-md pl-10 pr-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent upcomingFeatureTrigger"
+                        />
+                        <i class="absolute left-3 top-3.5 text-gray-400" data-fa-i2svg="">
+                            <svg
+                                class="svg-inline--fa fa-magnifying-glass"
+                                aria-hidden="true"
+                                focusable="false"
+                                data-prefix="fas"
+                                data-icon="magnifying-glass"
+                                role="img"
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 512 512"
+                                data-fa-i2svg=""
+                            >
+                                <path
+                                    fill="currentColor"
+                                    d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"
+                                ></path>
+                            </svg>
+                        </i>
+                    </div>
+                    <div class="flex gap-2">
+                        <select class="border border-gray-300 rounded-md px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary">
+                            <option>All Locations</option>
+                            <option>Boro Park, NY</option>
+                            <option>Flatbush, NY</option>
+                            <option>Brooklyn, NY</option>
+                            <option>Manhattan, NY</option>
+                            <option>Queens, NY</option>
+                            <option>Lakewood, NJ</option>
+                        </select>
+                        <button class="px-6 py-3 bg-primary text-white rounded-md hover:bg-secondary transition upcomingFeatureTrigger">
+                            <i class="mr-2" data-fa-i2svg="">
+                                <svg
+                                    class="svg-inline--fa fa-magnifying-glass"
+                                    aria-hidden="true"
+                                    focusable="false"
+                                    data-prefix="fas"
+                                    data-icon="magnifying-glass"
+                                    role="img"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 512 512"
+                                    data-fa-i2svg=""
+                                >
+                                    <path
+                                        fill="currentColor"
+                                        d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"
+                                    ></path>
+                                </svg>
+                            </i>
+                            Search
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Join with Code Section -->
+            <div id="join-with-code" class="bg-white rounded-lg shadow-sm border border-gray-100 p-6 mb-6">
+                <h2 class="text-lg font-semibold text-gray-800 mb-4">Join with Invite Code</h2>
+                <p class="text-gray-600 mb-4">Have an invitation code? Enter it below to join a community directly.</p>
+                <div class="flex flex-col md:flex-row gap-4">
+                    <div class="flex-1">
+                        <div class="flex-1" id="invite-code">
+                            <select id="invite-code" class="w-full border border-gray-300 rounded-md px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent upcomingFeatureTrigger">
+                                <!-- <option value="">Select an invite code</option> -->
+                            </select>
+                        </div>
+                    </div>
+                    <button class="px-6 py-3 bg-green-600 text-white rounded-md hover:bg-green-700 transition upcomingFeatureTrigger">
+                        <i class="mr-2" data-fa-i2svg="">
+                            <svg class="svg-inline--fa fa-key" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="key" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg="">
+                                <path
+                                    fill="currentColor"
+                                    d="M336 352c97.2 0 176-78.8 176-176S433.2 0 336 0S160 78.8 160 176c0 18.7 2.9 36.8 8.3 53.7L7 391c-4.5 4.5-7 10.6-7 17v80c0 13.3 10.7 24 24 24h80c13.3 0 24-10.7 24-24V448h40c13.3 0 24-10.7 24-24V384h40c6.4 0 12.5-2.5 17-7l33.3-33.3c16.9 5.4 35 8.3 53.7 8.3zM376 96a40 40 0 1 1 0 80 40 40 0 1 1 0-80z"
+                                ></path>
+                            </svg>
+                        </i>
+                        Join with Code
+                    </button>
+                </div>
+            </div>
+
+            <!-- Available Communities -->
+             <?php if(count($other_communities)==0){ ?>
+            <div id="empty-state" class="bg-white rounded-lg shadow-sm border border-gray-100 flex flex-col items-center justify-center py-16 px-8 text-center">
+                <div class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mb-6">
+                    <i class="fa-solid fa-users text-gray-400 text-3xl"></i>
+                </div>
+                <h3 class="text-xl font-semibold text-gray-800 mb-3">No Communities Yet</h3>
+                <p class="text-gray-500 mb-8 max-w-md">There are no more communities to join. Create one to begin collaborating.</p>
+                <div class="flex flex-col sm:flex-row gap-3">
+                    <a href="communities.php">
+                        <button type="button" class="create-community-btn-fn px-6 py-3 bg-primary text-white rounded-md flex items-center justify-center hover:bg-secondary transition">
+                            <i class="fa-solid fa-plus mr-2"></i>
+                            Create New Community
+                        </button>
+                    </a>
+                </div>
+            </div>
+            <?php }else{ ?>
+            <div id="available-communities" class="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
+                <div class="p-4 border-b border-gray-200 flex justify-between items-center">
+                    <h3 class="font-semibold text-gray-800">Available Communities</h3>
+                    <div class="flex items-center space-x-2">
+                        <span class="text-sm text-gray-500"><?= count($other_communities); ?> communities found</span>
+                        <select class="text-sm border border-gray-300 rounded-md p-1.5 pr-8 appearance-none focus:outline-none focus:ring-2 focus:ring-primary">
+                            <option>Sort by: Popular</option>
+                            <option>Sort by: Newest</option>
+                            <option>Sort by: Members</option>
+                            <option>Sort by: Location</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Community Cards Grid -->
+                <div id="communities-grid" class="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <?php foreach ($other_communities as $community) : ?>
+                    <?php
+                        $commName     = stripslashes(htmlspecialchars($community['name'] ?? 'Untitled'));
+                        $commAddress  = htmlspecialchars($community['address'] ?? 'N/A');
+                        $members      = $community['members'] ?? [];
+                        $memberCount  = count($members);
+
+                        $type       = ($community['is_private'] ?? 0) == 1 ? 'Private' : 'Public';
+                        $typeClass  = $type === 'Private' ? 'bg-yellow-100 text-yellow-800' : 'bg-green-100 text-green-800';
+
+                        $status       = ($community['status'] ?? 0) == 1 ? 'Active' : 'Inactive';
+                        $statusClass  = $status === 'Active' ? 'bg-blue-100 text-blue-800' : 'bg-red-100 text-red-800';
+
+                        $locBadge = "";
+                        if(!empty($community['city']) && !empty($community['state'])){
+                            $locBadge     = htmlspecialchars($community['city'] ?? 'Unknown') . ', ' . htmlspecialchars($community['state'] ?? '');
+                        }
+                        $locColor     = 'bg-blue-50 text-blue-700 border border-blue-200'; // default location badge
+                        $createdDate  = date('M d, Y', strtotime($community['created_at'])); // use real date if available
+                        $iconClass    = 'fa-users'; // fallback icon
+                        $image        = $community['image'] ?? '';
+                        $commImgUrl   = $image ? MEDIA_BASE_URL.''.$image : null;
+                        $percent      = $community['price'] > 0 ? $community['price'].'$' : '-'; // replace with real commission if available
+                        $activity     = '-'; // use real activity date if available
+
+                        $linkData = $community['linkData'];
+                        $isLinkData = 0;
+                        $lDShareLink = "";
+                        $lDExpiryTime = "";
+                        if(count($linkData)>0){
+                            $isLinkData = 1;
+                            $lDShareLink = $linkData[0]['share_link'];
+                            $lDExpiryTime = $linkData[0]['expire_time'];
+                            $activity = time_ago($linkData[0]['updated_at']);
+                        }
+                    ?>
+                    <!-- Community Card -->
+                    <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition">
+                        <div class="flex items-start justify-between mb-3">
+                            <div class="flex items-center">
+                                <div class="w-12 h-12 flex items-center justify-center mr-3">
+                                    <div class="w-10 h-10 rounded-full flex items-center justify-center mr-3
+                                        <?php echo !$commImgUrl ? 'bg-purple-100' : ''; ?>">
+                                        <?php if ($commImgUrl): ?>
+                                            <img src="<?= $commImgUrl ?>" alt="<?= $commName ?>" class="w-10 h-10 rounded-full object-cover">
+                                        <?php else: ?>
+                                            <i class="fa-solid <?= $iconClass ?> text-purple-500"></i>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium text-gray-800">
+                                        <?= $commName ?>
+                                    </h4>
+                                    <?php if(!empty($locBadge)){ ?>
+                                    <div class="flex items-center text-xs text-gray-500">
+                                        <i class="mr-1" data-fa-i2svg="">
+                                            <svg
+                                                class="svg-inline--fa fa-map-pin"
+                                                aria-hidden="true"
+                                                focusable="false"
+                                                data-prefix="fas"
+                                                data-icon="map-pin"
+                                                role="img"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                viewBox="0 0 320 512"
+                                                data-fa-i2svg=""
+                                            >
+                                                <path
+                                                    fill="currentColor"
+                                                    d="M16 144a144 144 0 1 1 288 0A144 144 0 1 1 16 144zM160 80c8.8 0 16-7.2 16-16s-7.2-16-16-16c-53 0-96 43-96 96c0 8.8 7.2 16 16 16s16-7.2 16-16c0-35.3 28.7-64 64-64zM128 480V317.1c10.4 1.9 21.1 2.9 32 2.9s21.6-1 32-2.9V480c0 17.7-14.3 32-32 32s-32-14.3-32-32z"
+                                                ></path>
+                                            </svg>
+                                        </i>
+                                        <span class=""><?= $locBadge ?></span>
+                                    </div>
+                                    <?php } ?>
+                                </div>
+                            </div>
+                            <span class="px-2 py-1 <?= $typeClass ?> text-xs rounded-full"><?= $type ?></span>
+                        </div>
+                        <p class="text-sm text-gray-600 mb-3"><?= strlen($community['description']) > 125 ? substr($community['description'], 0, 125) . '...' : $community['description'] ?></p>
+                        <div class="flex items-center justify-between text-xs text-gray-500 mb-3">
+                            <?php if($memberCount > 0){ ?>
+                            <span class="">
+                                <i class="mr-1" data-fa-i2svg="">
+                                    <svg class="svg-inline--fa fa-users" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="users" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" data-fa-i2svg="">
+                                        <path
+                                            fill="currentColor"
+                                            d="M144 0a80 80 0 1 1 0 160A80 80 0 1 1 144 0zM512 0a80 80 0 1 1 0 160A80 80 0 1 1 512 0zM0 298.7C0 239.8 47.8 192 106.7 192h42.7c15.9 0 31 3.5 44.6 9.7c-1.3 7.2-1.9 14.7-1.9 22.3c0 38.2 16.8 72.5 43.3 96c-.2 0-.4 0-.7 0H21.3C9.6 320 0 310.4 0 298.7zM405.3 320c-.2 0-.4 0-.7 0c26.6-23.5 43.3-57.8 43.3-96c0-7.6-.7-15-1.9-22.3c13.6-6.3 28.7-9.7 44.6-9.7h42.7C592.2 192 640 239.8 640 298.7c0 11.8-9.6 21.3-21.3 21.3H405.3zM224 224a96 96 0 1 1 192 0 96 96 0 1 1 -192 0zM128 485.3C128 411.7 187.7 352 261.3 352H378.7C452.3 352 512 411.7 512 485.3c0 14.7-11.9 26.7-26.7 26.7H154.7c-14.7 0-26.7-11.9-26.7-26.7z"
+                                        ></path>
+                                    </svg>
+                                </i>
+                                <?= $memberCount ?> members
+                            </span>
+                            <?php }else{ ?>
+                                <span>&nbsp;</span>
+                            <?php } ?>
+
+                            <?php if($activity !== '-'){ ?>
+                            <span class="">
+                                <i class="mr-1" data-fa-i2svg="">
+                                    <svg
+                                        class="svg-inline--fa fa-calendar"
+                                        aria-hidden="true"
+                                        focusable="false"
+                                        data-prefix="fas"
+                                        data-icon="calendar"
+                                        role="img"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 448 512"
+                                        data-fa-i2svg=""
+                                    >
+                                        <path
+                                            fill="currentColor"
+                                            d="M96 32V64H48C21.5 64 0 85.5 0 112v48H448V112c0-26.5-21.5-48-48-48H352V32c0-17.7-14.3-32-32-32s-32 14.3-32 32V64H160V32c0-17.7-14.3-32-32-32S96 14.3 96 32zM448 192H0V464c0 26.5 21.5 48 48 48H400c26.5 0 48-21.5 48-48V192z"
+                                        ></path>
+                                    </svg>
+                                </i>
+                                Active <?= $activity ?>
+                            </span>
+                            <?php }else{ ?>
+                                <span>&nbsp;</span>
+                            <?php } ?>
+                        </div>
+                        <?php if($type == "Private"){ ?>
+                            <button class="w-full px-4 py-2 bg-primary text-white rounded-md text-sm hover:bg-secondary transition join-comm-fn" data-community-id="<?= $community['id'] ?>">Request to Join</button>
+                        <?php }else{ ?>
+                            <button class="w-full px-4 py-2 bg-primary text-white rounded-md text-sm hover:bg-secondary transition join-comm-fn" data-community-id="<?= $community['id'] ?>">Join</button>
+                        <?php } ?>
+                    </div>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+            <?php } ?>
+        </main>
+    </div>
+</body>
+    <?php include('includes/footer-scripts.php'); ?>
+    <script src="assets/js/join-community.js?v=<?= time() ?>"></script>
+</html>

@@ -1,0 +1,157 @@
+<html>
+    <?php include('includes/head.php'); ?>
+    <body class="bg-gray-50 font-sans">
+        <div id="main-container" class="flex h-screen">
+            <?php include('includes/sidebar.php'); ?>
+            <main id="main-content" class="flex-1 overflow-auto">
+                <?php include('includes/nav-header.php'); ?>
+                <!-- Templates Content -->
+                <div id="templates-content" class="p-8">
+
+                    <?php if($totalTemplates > 0): ?>
+
+                    <!-- Template Tabs -->
+                    <section id="template-tabs" class="mb-8">
+                        <div class="border-b border-gray-200">
+                            <nav class="flex space-x-8">
+                                <a href="?type=whatsapp" 
+                                class="py-4 px-1 border-b-2 font-medium text-sm 
+                                <?= $type == 'whatsapp' ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300' ?>">
+                                    <i class="fa-brands fa-whatsapp"></i>
+                                    <span>WhatsApp</span>
+                                    <?php if (!empty($dashboardData['templateCounts']['whatsapp']) && $dashboardData['templateCounts']['whatsapp'] > 0): ?>
+                                        <span class="bg-blue-100 text-blue-600 py-1 px-2 rounded-full text-xs">
+                                            <?= $dashboardData['templateCounts']['whatsapp'] ?>
+                                        </span>
+                                    <?php endif; ?>
+                                </a>
+                                <a href="?type=sms" 
+                                class="py-4 px-1 border-b-2 font-medium text-sm 
+                                <?= $type == 'sms' ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300' ?>">
+                                    <i class="fa-solid fa-sms"></i>
+                                    <span>SMS</span>
+                                    <?php if (!empty($dashboardData['templateCounts']['sms']) && $dashboardData['templateCounts']['sms'] > 0): ?>
+                                        <span class="bg-blue-100 text-blue-600 py-1 px-2 rounded-full text-xs">
+                                            <?= $dashboardData['templateCounts']['sms'] ?>
+                                        </span>
+                                    <?php endif; ?>
+                                </a>
+                                <a href="?type=email" 
+                                class="py-4 px-1 border-b-2 font-medium text-sm 
+                                <?= $type == 'email' ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300' ?>">
+                                    <i class="fa-solid fa-envelope"></i>
+                                    <span>Email</span>
+                                    <?php if (!empty($dashboardData['templateCounts']['email']) && $dashboardData['templateCounts']['email'] > 0): ?>
+                                        <span class="bg-blue-100 text-blue-600 py-1 px-2 rounded-full text-xs">
+                                            <?= $dashboardData['templateCounts']['email'] ?>
+                                        </span>
+                                    <?php endif; ?>
+                                </a>
+                                <a href="?type=copy_share" 
+                                class="py-4 px-1 border-b-2 font-medium text-sm 
+                                <?= $type == 'copy_share' ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300' ?>">
+                                    <i class="fa-solid fa-copy"></i>
+                                    <span>Copy & Share</span>
+                                    <?php if (!empty($dashboardData['templateCounts']['copy_share']) && $dashboardData['templateCounts']['copy_share'] > 0): ?>
+                                        <span class="bg-blue-100 text-blue-600 py-1 px-2 rounded-full text-xs">
+                                            <?= $dashboardData['templateCounts']['copy_share'] ?>
+                                        </span>
+                                    <?php endif; ?>
+                                </a>
+                            </nav>
+                        </div>
+                    </section>
+
+                    <!-- Template Actions Bar -->
+                    <section id="template-actions" class="mb-6 flex items-center justify-between">
+                        <div class="flex items-center space-x-4">
+                            <div class="relative">
+                                <i class="fa-solid fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                                <input type="text" placeholder="Search templates..." class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg  focus:ring-blue-500 focus:border-transparent w-80" id="searchMts" />
+                            </div>
+                            <select class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-transparent"
+                                    onchange="applyFilter(this.value)">
+                                <option value="">All Templates</option>
+                                <option value="recently" <?= ($_GET['filter'] ?? '') === 'recently' ? 'selected' : '' ?>>Recently Used</option>
+                                <option value="popular" <?= ($_GET['filter'] ?? '') === 'popular' ? 'selected' : '' ?>>Most Popular</option>
+                                <option value="custom" <?= ($_GET['filter'] ?? '') === 'custom' ? 'selected' : '' ?>>Custom</option>
+                            </select>
+                        </div>
+                        <div class="flex items-center space-x-2 text-sm text-gray-500">
+                            <label class="flex items-center space-x-2">
+                                <input 
+                                    type="checkbox" 
+                                    id="saveTemplateCheckbox" 
+                                    <?= ($userDetails['save_template'] == 1) ? 'checked' : ''; ?>
+                                    class="rounded border-gray-300 text-blue-600 focus:ring-blue-500" 
+                                />
+                                <span>Save template after sending</span>
+                            </label>
+                        </div>
+                    </section>
+
+                    <!-- Templates Grid -->
+                    <section id="mt-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- Dynamic content loaded via JS -->
+                    </section>
+
+                    <?php else: ?>
+                        <section id="no-templates-empty" class="bg-white rounded-xl shadow-sm border border-gray-100 p-12 mb-8">
+                            <div class="text-center max-w-md mx-auto">
+                                <div class="w-20 h-20 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                                    <i class="fa-solid fa-message text-orange-600 text-2xl"></i>
+                                </div>
+                                <h3 class="text-xl font-semibold text-gray-900 mb-3">No message templates</h3>
+                                <p class="text-gray-600 mb-6">Create reusable message templates for WhatsApp, SMS, and Email to streamline your outreach process.</p>
+                                <a href="create-template.php">
+                                <button class="bg-orange-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-orange-700 flex items-center space-x-2 mx-auto">
+                                    <i class="fa-solid fa-plus"></i>
+                                    <span>Create Message Template</span>
+                                </button>
+                                </a>
+                            </div>
+                        </section>
+                    <?php endif; ?>
+                </div>
+            </main>
+        </div>
+    </div>
+</body>
+    <?php include('includes/footer-scripts.php'); ?>
+    <script src="assets/js/message-templates.js?v=<?= time() ?>"></script>
+    <script>
+    let lData = {
+        filter: '<?= $filter; ?>',
+        type: '<?= $type; ?>',
+        search: '', 
+        isMT: 1,
+        container: '#mt-list'
+    };
+    getMessageTemplates(lData);
+    enableScrollPagination(lData,'#mt-list');
+
+    // 🔍 Handle search
+    const searchInput = document.getElementById('searchMts');
+    let searchTimer;
+
+    searchInput.addEventListener('input', function() {
+        clearTimeout(searchTimer); // debounce typing
+        searchTimer = setTimeout(() => {
+            lData.search = this.value.trim();
+            lData.page = 1; // reset pagination when searching
+            document.querySelector(lData.container).innerHTML = ''; // clear old results
+            getMessageTemplates(lData);
+        }, 400); // wait 400ms after typing
+    });
+
+    function applyFilter(value) {
+        const url = new URL(window.location.href);
+        if (value) {
+            url.searchParams.set("filter", value); // add/update filter
+        } else {
+            url.searchParams.delete("filter"); // remove if empty
+        }
+        window.location.href = url.toString();
+    }
+    </script>
+</html>

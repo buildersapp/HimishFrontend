@@ -1,0 +1,236 @@
+<html>
+    <?php include('includes/head.php'); ?>
+    <body class="bg-gray-50 font-sans">
+    
+    <!-- Sidebar -->
+    <?php include('includes/sidebar.php'); ?>
+
+    <!-- Mobile Header & Mobile Menu (hidden by default) -->
+    <?php include('includes/mobile-menu.php'); ?>
+
+    <!-- Main Content -->
+    <div class="md:ml-64 min-h-screen">
+        <!-- Header -->
+        <?php include('includes/nav-header.php'); ?>
+
+        <!-- Mobile Tabs -->
+        <?php include('includes/mobile-tabs.php'); ?>
+
+        <!-- Post-Based Links Content -->
+        <main id="post-content" class="p-4 md:p-6">
+            <!-- Post Header -->
+            <div id="post-header" class="bg-white rounded-lg shadow-sm p-6 border border-gray-100 mb-6">
+                <div class="flex flex-col md:flex-row md:items-center justify-between mb-4">
+                    <div class="flex items-center mb-4 md:mb-0">
+                        <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mr-4">
+                            <i class="fa-solid fa-file-lines text-blue-500 text-xl"></i>
+                        </div>
+                        <div>
+                            <h1 class="text-2xl font-bold text-gray-800"><?= $postData[0]['post']['title'] ?></h1>
+                            <div class="flex items-center text-sm text-gray-500 mt-1">
+                                <span class="mr-4">Created: Jul 10, 2023</span>
+                                <span class="mr-4">Category: Technology</span>
+                                <?php if ($postData[0]['status'] == 1): ?>
+                                    <span class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs">Active</span>
+                                <?php elseif ($postData[0]['status'] == 0): ?>
+                                    <span class="bg-gray-100 text-gray-800 px-2 py-1 rounded-full text-xs">Inactive</span>
+                                <?php elseif ($postData[0]['status'] == 2): ?>
+                                    <span class="bg-red-100 text-red-800 px-2 py-1 rounded-full text-xs">Expired</span>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex gap-2">
+                        <button class="bg-primary text-white px-4 py-2 rounded-md hover:bg-secondary transition upcomingFeatureTrigger"><i class="fa-solid fa-edit mr-2"></i>Edit Post</button>
+                        <button class="border border-gray-300 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-50 transition share-link-fn" data-share-link="<?php echo ($postData[0]['share_link']); ?>" data-title="<?php echo ($postData[0]['post']['title']); ?>" data-type="Post’s Referral Link"><i class="fa-solid fa-share mr-2"></i>Share</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Performance Stats -->
+            <div id="performance-stats" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                <div class="bg-white rounded-lg shadow-sm p-5 border border-gray-100">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-gray-500 text-sm">Total Views</p>
+                            <h3 class="text-2xl font-bold mt-1"><?= displayWithFallback($postsData[0]['total_click']) ?></h3>
+                            <p class="text-green-500 text-sm mt-1 flex items-center"><i class="fa-solid fa-arrow-up mr-1"></i> 10% from last week</p>
+                        </div>
+                        <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                            <i class="fa-solid fa-eye text-blue-500"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm p-5 border border-gray-100">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-gray-500 text-sm">Click-Through Rate</p>
+                            <h3 class="text-2xl font-bold mt-1">10%</h3>
+                            <p class="text-green-500 text-sm mt-1 flex items-center"><i class="fa-solid fa-arrow-up mr-1"></i> Above average</p>
+                        </div>
+                        <div class="w-10 h-10 bg-primary bg-opacity-10 rounded-full flex items-center justify-center">
+                            <i class="fa-solid fa-mouse-pointer text-primary"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm p-5 border border-gray-100">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-gray-500 text-sm">Conversions</p>
+                            <h3 class="text-2xl font-bold mt-1"><?= displayWithFallback($postsData[0]['total_convert']) ?></h3>
+                            <p class="text-green-500 text-sm mt-1 flex items-center"><i class="fa-solid fa-check mr-1"></i> 10 this week</p>
+                        </div>
+                        <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+                            <i class="fa-solid fa-shopping-cart text-green-500"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm p-5 border border-gray-100">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-gray-500 text-sm">Earnings</p>
+                            <h3 class="text-2xl font-bold mt-1">$237.60</h3>
+                            <p class="text-primary text-sm mt-1 flex items-center"><i class="fa-solid fa-dollar-sign mr-1"></i> $68 pending</p>
+                        </div>
+                        <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+                            <i class="fa-solid fa-coins text-green-500"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Post Content and Analytics -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+                <!-- Post Content -->
+                <div id="post-details" class="bg-white rounded-lg shadow-sm p-6 border border-gray-100 lg:col-span-2">
+                    <h3 class="font-semibold text-gray-800 mb-4">Post Content</h3>
+
+                    <!-- Featured Image -->
+                    <?php 
+                        $lastImage = $postData[0]['post']['image'];
+                    ?>
+                    <div class="mb-6">
+                        <img
+                            class="w-full h-64 object-cover rounded-lg"
+                            src="<?php echo MEDIA_BASE_URL.$lastImage; ?>"
+                            alt="modern tech gadgets display on clean white background, smartphone, laptop, headphones, smartwatch, minimalist style"
+                        />
+                    </div>
+
+                    <!-- Post Description -->
+                    <div class="mb-6">
+                        <h4 class="font-medium text-gray-700 mb-2">Description</h4>
+                        <p class="text-gray-600 leading-relaxed">
+                            Discover the most innovative and game-changing technology gadgets that are defining 2023. From revolutionary smartphones with cutting-edge AI capabilities to smart home devices that seamlessly integrate into
+                            your daily routine, this comprehensive guide showcases the top 10 tech gadgets that every tech enthusiast should know about.
+                        </p>
+                        <p class="text-gray-600 leading-relaxed mt-3">
+                            Each gadget has been carefully selected based on innovation, user reviews, market impact, and practical utility. Whether you're looking to upgrade your current tech setup or stay ahead of the latest trends,
+                            these gadgets represent the pinnacle of modern technology.
+                        </p>
+                    </div>
+
+                    <!-- Tags -->
+                    <?php 
+                        $keywords = $postData[0]['post']['service'];
+
+                        if (!empty($keywords) && strpos($keywords, ',') !== false) {
+                            $tags = array_map('trim', explode(',', $keywords));
+                        ?>
+                            <div class="mb-6">
+                                <h4 class="font-medium text-gray-700 mb-2">Tags</h4>
+                                <div class="flex flex-wrap gap-2">
+                                    <?php foreach ($tags as $tag) { ?>
+                                        <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">
+                                            #<?= htmlspecialchars($tag) ?>
+                                        </span>
+                                    <?php } ?>
+                                </div>
+                            </div>
+                        <?php 
+                        } 
+                    ?>
+
+
+                    <!-- Referral Links -->
+                    <div>
+                        <h4 class="font-medium text-gray-700 mb-3">Referral Links</h4>
+                        <div class="space-y-3">
+                            <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                                <div class="flex items-center">
+                                    <i class="fa-solid fa-link text-gray-400 mr-3"></i>
+                                    <div>
+                                        <div class="text-sm font-medium text-gray-800">iPhone 15 Pro</div>
+                                        <div class="text-xs text-gray-500">apple.com/iphone-15-pro?ref=postersz123</div>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <span class="text-xs text-green-600 font-medium">$15.00</span>
+                                    <button class="text-primary hover:bg-primary hover:text-white p-1 rounded transition">
+                                        <i class="fa-solid fa-copy text-xs"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                                <div class="flex items-center">
+                                    <i class="fa-solid fa-link text-gray-400 mr-3"></i>
+                                    <div>
+                                        <div class="text-sm font-medium text-gray-800">MacBook Pro M3</div>
+                                        <div class="text-xs text-gray-500">apple.com/macbook-pro?ref=postersz123</div>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <span class="text-xs text-green-600 font-medium">$45.00</span>
+                                    <button class="text-primary hover:bg-primary hover:text-white p-1 rounded transition">
+                                        <i class="fa-solid fa-copy text-xs"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                                <div class="flex items-center">
+                                    <i class="fa-solid fa-link text-gray-400 mr-3"></i>
+                                    <div>
+                                        <div class="text-sm font-medium text-gray-800">AirPods Pro (2nd gen)</div>
+                                        <div class="text-xs text-gray-500">apple.com/airpods-pro?ref=postersz123</div>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <span class="text-xs text-green-600 font-medium">$8.50</span>
+                                    <button class="text-primary hover:bg-primary hover:text-white p-1 rounded transition">
+                                        <i class="fa-solid fa-copy text-xs"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Analytics Panel -->
+                <div id="analytics-panel" class="space-y-6">
+                    <!-- Performance Chart -->
+                    <div class="bg-white rounded-lg shadow-sm p-5 border border-gray-100">
+                        <h3 class="font-semibold text-gray-800 mb-4">Views Over Time</h3>
+                        <div id="views-chart" class="h-48"></div>
+                    </div>
+
+                    <!-- Top Referrers -->
+                    <div class="bg-white rounded-lg shadow-sm p-5 border border-gray-100">
+                        <h3 class="font-semibold text-gray-800 mb-4">Top Traffic Sources</h3>
+                        <div class="space-y-3">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+    <?php include('includes/footer-scripts.php'); ?>
+</html>

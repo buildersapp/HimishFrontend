@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<?php include('includes/head.php') ?>
+</style>
+<link rel="stylesheet" href="assets/plugins/datatable/css/dataTables.bootstrap5.min.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.7.1/css/buttons.dataTables.min.css">
+<style>
+    /* .select2-container {
+        z-index: 1050 !important; 
+    } */
+    /* .select2-container--open {
+        z-index: 1060 !important; 
+    } */
+
+    /* .select2-dropdown {
+        z-index: 2000 !important;
+    } */
+
+    /* Set height for Select2 input box */
+    .select2-container .select2-selection--single {
+            height: 20px;  
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__rendered {
+            line-height: 20px !important;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__arrow {
+            top: -3px !important;
+        }
+    
+        /* Set max-height for the dropdown list */
+        /* .select2-container--default .select2-results__options {
+            max-height: 200px;  
+            overflow-y: auto;   
+        } */
+
+        #post_category_master + .select2-container {
+            /* Custom CSS for the Select2 container */
+            /* top: 300px !important; */
+        }
+    
+  </style>
+<body>
+    <!-- wrapper start  -->
+    <div class="wrapper relative">
+        <?php include('includes/sidebar.php') ?>
+ 
+        <!-- header start  -->
+        <?php include('includes/nav-header.php') ?>
+        <!-- header end  -->
+
+        <!-- content area start  -->
+    <div class="post-page-sec">
+        <main>
+            <section class="userList">
+                <div class="">
+                    <div class="row">
+                    <!-- top -->
+                        <div class="col-12">
+                            <div class="search-sec-cmn user-page d-flex align-items-center justify-content- mb-2">
+                                <!-- <div class="addUser">
+                                  <a href="#" class="btn-primary btn-small" title="Add Post" data-bs-toggle="modal" data-bs-target="#addPostModal"><i class="fa fa-plus-circle fa-lg"></i> </a>
+                                </div> -->
+                                <div class="addUser">
+                                  <a href="../create-post.php?act=nauth&from=admin" target="_blank" class="btn-primary btn-small" title="Add Post"><i class="fa fa-plus-circle fa-lg"></i> </a>
+                                </div>
+                                <div class="search-form me-2"> 
+                                    <button class="btn p-0 outline-0" type="submit"><img src="assets/img/list/search.svg"
+                                        alt="search icon" /></button>
+                                    <input type="search" id="pSearch" class="form-control form-input border-0" placeholder="Search Posts" />
+                                </div>
+                                <div class="addUser d-flex gap-3">
+                                    <!-- <a href="#" class="btn btn-cst px-3" data-bs-toggle="modal" data-bs-target="#exampleModal">Add
+                                    Post</a> -->
+                                    <?php if (hasPermission('Posts', 'delete')) { ?>
+                                    <a href="javascript:void(0)" id="increaseButton" class="btn btn-cst px-3">Increase Views</a>
+                                    <a href="#" class="btn btn-cst px-3 bg-danger " style="display: none;" id="postDltButton" 
+                                    >Delete</a>
+                                    <?php } ?>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- middle -->
+
+                        <!-- bottom -->
+                        <div class="col-12">
+                            <div class="list-users">
+                            <!-- table -->
+                            <div class="table-responsive">
+                                <table class="table postsListTable" id="postsListTable">
+                                <thead>
+                                    <tr class="table-header">
+                                    <th  class="th-checkbox">
+                                        <input type="checkbox" class="chk-box select-all" value="0"/>
+                                    </th>
+                                    <th scope="col" class="th-no">
+                                        <a href="#" class="userHeading">
+                                        ID 
+                                        </a>
+                                    </th>
+                                    <th scope="col" class="userHeading-size">
+                                        <a href="#" class="userHeading">
+                                        Title 
+                                        </a>
+                                    </th>
+                                    <th scope="col" class="userHeading-size">
+                                        <a href="#" class="userHeading">
+                                        Username 
+                                        </a>
+                                    </th>
+                                    <th scope="col">
+                                        <a href="#" class="userHeading" title="anonymous">
+                                        Ano 
+                                        </a>
+                                    </th>
+                                    <th scope="col">
+                                        <a href="#" class="userHeading" title="Wordlwide">
+                                        WW 
+                                        </a>
+                                    </th>
+                                    <th scope="col">
+                                        <a href="#" class="userHeading" title="Visible Post">
+                                        Visible 
+                                        </a>
+                                    </th>
+                                    <th scope="col">
+                                        <a href="#" class="userHeading">
+                                        Company 
+                                        </a>
+                                    </th>
+                                    <th scope="col">
+                                        <a href="#" class="userHeading">
+                                        Views 
+                                        </a>
+                                    </th>
+                                    <th scope="col">
+                                        <a href="#" class="userHeading">
+                                        Categorization 
+                                        </a>
+                                    </th>
+                                    <th scope="col">
+                                        <a href="#" class="userHeading">
+                                        Active 
+                                        </a>
+                                    </th>
+                                    <th scope="col">
+                                        <a href="#" class="userHeading">
+                                        Status 
+                                        </a>
+                                    </th>
+
+                                    <th scope="col">
+                                        <a href="#" class="userHeading">
+                                        Created 
+                                        </a>
+                                    </th>
+                                    <th scope="col">
+                                        <a href="#" class="userHeading">
+                                        Shares 
+                                        </a>
+                                    </th>
+
+                                    <th scope="col">
+                                        <div class="userHeading">ACTION</div>
+                                    </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                
+                                    
+                                </tbody>
+                                </table>
+                                <div id="noDataPostMessage" class="no-data-container" style="display: none;">
+                                    <img src="<?= NO_DATA_IMG ?>" alt="No Data">
+                                    <h3><?= NO_DATA_TITLE ?></h3>
+                                    <p><?= NO_DATA_DESC ?></p>
+                                </div>
+                            </div>
+                        
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <div class="modal fade customModal" id="addPostModal" tabindex="-1" aria-labelledby="addUserLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h2 class="modal-title fs-5" id="addUserLabel">Add Post</h2>
+                        </div>
+                        <div class="modal-body">
+                            <form class="user-form p-0 d-flex flex-column gap-3" method="post" action="" data-parsley-validate enctype="multipart/form-data" onsubmit="return validateForm();">
+                                
+                                <div class="row">
+                                    <!-- Image upload field -->
+                                    <div class="col-md-12 img-upload-add-post">
+                                        <input type="file" name="image" accept="image/*" id="imageShow1" class="d-none" required onchange="previewImage(event, 'previewImg', 'textHd1')" />
+                                        <label for="imageShow1">
+                                            <span>
+                                                <img id="previewImg" src="assets/img/user/plus.png" alt="Upload Image" />
+                                            </span>
+                                            <span id="textHd1">Upload Image</span>
+                                        </label>
+                                    </div>
+                                </div>
+                        
+                                <div class="row">
+                                    <!-- Select User -->
+                                    <div class="col-12">
+                                        <label>Select User (If no user is selected, Posterz Admin will be assigned by default.)</label>
+                                        <select class="form-control w-100" name="user_id" id="users" aria-label="Default select example">
+                                            <option value="">Select User</option>
+                                            <?php foreach ($users as $ku=>$vu) { ?>
+                                                <option value="<?= $vu['id']; ?>"><?= $vu['name']; ?></option>
+                                            <?php } ?>
+                                        </select>
+                                    </div>
+                        
+                                    <!-- Company Name -->
+                                    <div class="col-6 mt-2">
+                                        <input type="text" name="company" id="company_name" placeholder="Company" class="form-control m-0" value="<?= @$apiDataU['company'] ?>" required />
+                                    </div>
+                        
+                                    <!-- Title -->
+                                    <div class="col-6 mt-2">
+                                        <input type="text" name="title" id="title" placeholder="Title" class="form-control m-0" value="<?= @$apiDataU['title'] ?>" required />
+                                        <input type="hidden" name="cropped_image" id="croppedImage" value="">
+                                    </div>
+                        
+                                    <!-- Phone -->
+                                    <div class="col-6 mt-2">
+                                        <input type="text" name="phone" id="phone" placeholder="phone" class="form-control m-0" value="<?= @$apiDataU['title'] ?>" required />
+                                    </div>
+                                    <!-- Address -->
+                                    <div class="col-6 mt-2">
+                                        <input type="text" name="address" id="address" placeholder="Address" oninput="initAutocomplete()" autocomplete="off" value="<?= @$apiDataU['address'] ?>" class="form-control m-0" required />
+                                        <input type="hidden" name="latitude" id="latitude" value="<?php echo @$apiDataU['latitude']; ?>">
+                                        <input type="hidden" name="longitude" id="longitude" value="<?php echo @$apiDataU['longitude']; ?>">
+                                        <input type="hidden" name="location_name" id="location_name" value="">
+                                        <input type="hidden" name="state" id="state" value="">
+                                        <input type="hidden" name="email" id="email" value="">
+                                    </div>
+                                </div>
+                        
+                                <div class="row">
+
+                                    <!-- Post Type -->
+                                    <div class="col-6">
+                                        <label for="title">Post Type (Service / Product):</label>
+                                        <select id="post_type" class="form-select" name="post_type">
+                                            <option value="">Select Post Type</option>
+                                            <option value="1">Services</option>
+                                            <option value="2">Products</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- Select Category -->
+                                    <div class="col-6">
+                                        <label for="title">Select Category</label>
+                                        <select id="post_category_master" class="form-select" name="post_category_master">
+                                            <option value="">Select Category</option>
+                                        </select>
+                                    </div>
+                        
+                                    <!-- Post Keywords -->
+                                    <div class="col-6">
+                                        <label for="title">Post Keywords:</label>
+                                        <textarea rows="2" cols="2" name="service" id="service" placeholder="Post keywords here..." class="form-control"></textarea>
+                                    </div>
+                                    <!-- Scan Keywords -->
+                                    <div class="col-6">
+                                        <label for="title">GPT Keywords:</label>
+                                        <textarea rows="2" cols="2" name="keywords" id="keywords" placeholder="Post GPT Keywords..." class="form-control" readonly></textarea>
+                                    </div>
+                                </div>
+                        
+                                <div class="row">
+                        
+                                    <!-- Select Community -->
+                                    <div class="col-6">
+                                        <label>Select Community</label>
+                                        <select class="form-control w-100" name="community[]" id="communities" multiple aria-label="Default example">
+                                            <option value="">Select Community</option>
+                                            <?php foreach ($communities as $ku=>$vu) { ?>
+                                                <option value="<?= $vu['name']; ?>"><?= $vu['name']; ?></option>
+                                            <?php } ?>
+                                        </select>
+                                        <input type="hidden" name="community_type" id="community_type" value="2">
+                                    </div>
+                                    <!-- Business Location Type -->
+                                    <div class="col-6">
+                                        <label for="title">Business Location Type:</label>
+                                        <select id="business_location_type" class="form-select" name="business_location_type">
+                                            <option value="">Select Business Type</option>
+                                            <option value="Local">Local</option>
+                                            <option value="Worldwide">Worldwide</option>
+                                        </select>
+                                    </div>
+                                </div>
+                        
+                                <div class="mt-2 gap-3 d-flex flex-row">
+                                    <button type="submit" name="addPost" class="btn btnSave">Save</button>
+                                    <a href="#" onclick="window.location.reload();"><button type="button" class="btn btnClose">Close</button></a>
+                                </div>
+                            </form>
+                        </div>                        
+                    </div>
+                </div>
+            </div>
+
+            <!-- content area end -->
+            <div class="modal fade" id="jsonModal" tabindex="-1" role="dialog" aria-labelledby="jsonModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="jsonModalLabel">Formatted JSON</h5>
+                    </div>
+                    <div class="modal-body">
+                        <textarea id="jsonModalContent" class="form-control" style="height: 350px; font-size: 13px; white-space: pre-wrap;"></textarea>
+                    </div>
+                    <input type="hidden" id="p_id">
+                    <div class="modal-footer jsonModalBtn">
+                        <button type="button" class="btn btn-primary" id="updateJsonBtn">Update JSON</button>
+                        <button type="button" class="btn btn-success" id="updateAndLiveBtn">Update and Live</button>
+                    </div>
+                  </div>
+                </div>
+            </div> 
+        </main>
+        </div>
+        <!-- content area end -->
+    </div>
+    <!-- wrapper end  -->
+    <script src="assets/plugins/datatable/js/jquery.dataTables.min.js?v=<?= time() ?>"></script>
+    <?php include('includes/footer-scripts.php') ?>
+    <script src="assets/js/posts.js?v=<?= time() ?>"></script>
+
+      <script>
+
+        function showJsonModal(id,jsonString,showBtn) {
+            const decoded = jsonString.replace(/\\n/g, '\n').replace(/\\"/g, '"');
+            document.getElementById('jsonModalContent').textContent = decoded;
+            document.getElementById('p_id').value = id;
+            if(!showBtn){
+                $(".jsonModalBtn").hide();
+                $("#jsonModalContent").attr("readonly", true);
+            }
+            $('#jsonModal').modal('show'); // Requires Bootstrap's JS
+        }
+
+        function previewImage(event, imgId, textId) {
+            var img = event.target.files[0];
+            scanImage(img);
+            if (!pixelarity.open(img, false, function (res, faces) {
+                console.log("Faces detected:", faces);
+
+                // Set cropped image preview
+                var previewImg = document.getElementById(imgId);
+                previewImg.src = res;
+                previewImg.style.height = "100px";
+                previewImg.style.width = "100px";
+                previewImg.style.objectFit = "cover";
+
+                // Remove upload text
+                document.getElementById(textId).innerHTML = '';
+                document.getElementById('croppedImage').value = res;
+
+                // Remove previous face rectangles
+                document.querySelectorAll('.face').forEach(el => el.remove());
+
+                // Draw face detection boxes (if any)
+                faces.forEach(face => {
+                    let faceBox = document.createElement('div');
+                    faceBox.className = 'face';
+                    faceBox.style.position = 'absolute';
+                    //faceBox.style.border = '2px solid red';
+                    faceBox.style.height = face.height + "px";
+                    faceBox.style.width = face.width + "px";
+                    faceBox.style.top = (previewImg.getBoundingClientRect().top + face.y) + "px";
+                    faceBox.style.left = (previewImg.getBoundingClientRect().left + face.x) + "px";
+
+                    document.body.appendChild(faceBox);
+                });
+
+            }, "jpg", 0.7, true)) {
+                alert("Whoops! That is not an image!");
+            }
+        }
+
+      function scanImage(file) {
+        localStorage.setItem("scanStatus", "0");
+        let formData = new FormData();
+        formData.append('image', file);
+        $.ajax({
+            url: '<?php echo $python_api_url;?>',  // Change this to your backend upload API
+          //  url: 'ajax.php?action=scan_image',
+            type: 'POST',
+            data: formData,
+            contentType: false,
+            processData: false,
+            beforeSend: function () {
+                openScreenLoadeScan('Scanning In Progress. Do not refresh this page...');
+
+            },
+            complete : function(data){
+
+                closeScreenLoader();
+            },
+            success: function(response) {
+                
+                // response =JSON.parse(response);
+                // console.log(response,"==========response")
+                if(response){
+
+                    // Check if scanStatus is "1", then don't append values
+                    if (localStorage.getItem("scanStatus") !== "1") {
+                        if(response.locations.length > 0){
+                            $('#address').val(response.locations[0].address)
+                            $('#latitude').val(response.locations[0].latitude)
+                            $('#longitude').val(response.locations[0].longitude)
+                            $('#location_name').val(response.locations[0].location_name)
+                            $('#state').val(response.locations[0].state)
+                            if(response.locations[0].phone_numbers.length > 0){
+                                console.log("chandsan")
+                                $('#phone').val(response.locations[0].phone_numbers[0])
+                            }
+                            if(response.locations[0].email_addresses.length > 0){
+                                $('#email').val(response.locations[0].email_addresses[0])
+                            }
+                        }else{
+                            if(response.phone_numbers.length > 0){
+                                $('#phone').val(response.phone_numbers[0]);
+                            }
+                            if(response.email_addresses.length > 0){
+                                $('#email').val(response.email_addresses[0]);
+                            }
+                        }
+                        $('#title').val(response.title)
+                        $('#company_name').val(response.company_name)
+                        $('#service').val(response.keywords.toString())
+                        $('#keywords').val(response.keywords.toString())
+                    }
+                    
+                }
+                //console.log('Image uploaded successfully:', response);
+                // alert('Image Scanned successfully!');
+            },
+            error: function(error) {
+                closeScreenLoader();
+                console.error('Error uploading image:', error);
+                alert('Failed to upload image!');
+            }
+        });
+}
+
+    $(document).ready(function () {
+
+        $('#users').select2({
+            placeholder: "Select User",
+            width: '100%',
+            allowClear: true,
+            minimumResultsForSearch: 0,
+            dropdownParent: $('#addPostModal') // Ensures dropdown stays inside modal
+        });
+
+        let $select = $('#communities');
+
+        // Initialize Select2
+        $select.select2({
+            placeholder: "Select Community",
+            width: '100%',
+            minimumResultsForSearch: 0,
+        });
+
+        // Insert "Select/Unselect All" at the top
+        $select.prepend('<option value="select_all">Select / Unselect All</option>');
+
+        // Handle "Select/Unselect All" logic
+        $select.on('change', function () {
+            let selectedValues = $(this).val();
+            console.log(selectedValues);
+
+            if (selectedValues && selectedValues.includes('select_all')) {
+                if (selectedValues.length === $select.find('option').length) {
+                    // If everything is selected, unselect all
+                    $(this).val([]).trigger('change.select2');
+                } else {
+                    $('#community_type').val(0);
+                    // Otherwise, select all except "Select All"
+                    let allValues = $select.find('option:not(:first)').map(function () {
+                        return $(this).val();
+                    }).get();
+
+                    $(this).val(allValues).trigger('change.select2');
+                }
+            }
+        });
+
+        $(document).on('click', '.add-new-company', function() {
+            var newCompany = prompt("Enter New Company Name:");
+            if (newCompany) {
+                // Append new option to Select2
+                var newOption = new Option(newCompany, newCompany, true, true);
+                $('#company').append(newOption).trigger('change');
+            }
+        });        
+    });
+
+     // get product / service based on type
+     $('#post_type').change(function() {
+                    var selectedType = $(this).val();
+
+                    // Send the new value via AJAX
+                    $.ajax({
+                        url: 'ajax.php?action=get_master_sub_cat__by_type',
+                        type: 'POST',
+                        data: { type: selectedType },
+                        success: function(response) {
+                            var categories = JSON.parse(response);
+                            
+                            $('#post_category_master').empty();
+                            $('#category').empty();
+
+                            // Append keywords to the existing value of service
+                            const existingService = "";
+                            $('#service').val(existingService);
+                            //$('#service').empty();
+
+                            $('#post_category_master').append('<option value="">Select Category</option>');
+
+                            categories.forEach(function(category) {
+                                var option = $('<option></option>')
+                                    .val(category.id)
+                                    .data('tab_label_option_posts', category.tabLabelOptionPosts)
+                                    .data('keywords', category.keywords1);
+
+                                // Create the category names string, ensuring that the last name does not have a trailing '>'
+                                var categoryNames = category.names.slice(0, -1).join(' > ') + (category.names.length > 0 ? ' > ' + category.names[category.names.length - 1] : '');
+
+                                option.html('<small class="grey">' + categoryNames + '</small><p class="bold"> > ' + category.names[category.names.length - 1] + '</p>');
+
+                                $('#post_category_master').append(option);
+                            });
+
+                            $('#post_category_master').select2({
+                                placeholder: "Select Category",
+                                width: '100%',
+                                allowClear: true,
+                                minimumResultsForSearch: 0,
+                                dropdownParent: $('#addPostModal'),
+                            });
+                        },
+                        error: function(xhr, status, error) {
+                            console.log('Error: ' + error);
+                        }
+                    });
+              });
+
+              $('#post_category_master').change(function () {
+                    // Get the selected option
+                    const selectedOption = $(this).find(':selected');
+                    const keywords = selectedOption.data('keywords');
+                    const $tabDropdown = $('#category');
+                    
+                    // Append keywords to the existing value of service
+                    const appendedService =  (keywords ? ', ' + keywords : '');
+                    $('#service').val(keywords);
+              })
+
+            function validateForm() {
+                let address = document.getElementById("address").value;
+                let latitude = document.getElementById("latitude").value;
+                let longitude = document.getElementById("longitude").value;
+
+                // Prevent submission if lat/lng are missing and "Anywhere" is not checked
+                if ((!address || !latitude || !longitude)) {
+                    alert("Please enter valid address.");
+                    return false; // Prevent form submission
+                }
+                return true; // Allow form submission
+            }
+
+      </script>
+
+</body>
+
+</html>

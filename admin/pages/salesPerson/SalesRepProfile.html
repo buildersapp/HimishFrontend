@@ -1,0 +1,306 @@
+<html><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script> window.FontAwesomeConfig = { autoReplaceSvg: 'nest'};</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    
+    <style>
+        ::-webkit-scrollbar { display: none;}
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+    <script>tailwind.config = {
+  "theme": {
+    "extend": {
+      "colors": {
+        "primary": "#2563eb",
+        "secondary": "#64748b",
+        "success": "#10b981",
+        "warning": "#f59e0b",
+        "danger": "#ef4444"
+      },
+      "fontFamily": {
+        "sans": [
+          "Inter",
+          "sans-serif"
+        ]
+      }
+    }
+  }
+};</script>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;500;600;700;800;900&amp;display=swap"><style>
+  .highlighted-section {
+    outline: 2px solid #3F20FB;
+    background-color: rgba(63, 32, 251, 0.1);
+  }
+
+  .edit-button {
+    position: absolute;
+    z-index: 1000;
+  }
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
+
+  html, body {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  </style></head>
+<body class="bg-gray-50">
+
+<div id="header" class="fixed top-0 left-0 right-0 bg-white border-b border-gray-200 z-50">
+    <div class="px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-16">
+            <div class="flex items-center">
+                <button onclick="goBack()" class="mr-3 p-2 text-gray-400 hover:text-gray-600">
+                    <i class="fa-solid fa-arrow-left"></i>
+                </button>
+                <h1 class="text-2xl font-bold text-primary">Himish</h1>
+                <span class="ml-2 text-sm text-gray-500">Sales Dashboard</span>
+            </div>
+            <div class="flex items-center space-x-4">
+                <div class="relative">
+                    <button id="notificationBtn" class="p-2 text-gray-400 hover:text-gray-600 relative">
+                        <i class="fa-solid fa-bell text-lg"></i>
+                        <span class="absolute -top-1 -right-1 bg-danger text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">3</span>
+                    </button>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-2.jpg" alt="Profile" class="h-8 w-8 rounded-full">
+                    <span class="text-sm font-medium text-gray-700">John Smith</span>
+                    <button class="text-gray-400 hover:text-gray-600">
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="main-content" class="pt-16">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <div id="profile-header" class="mb-8">
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-8">
+                <div class="flex flex-col md:flex-row items-center md:items-start space-y-4 md:space-y-0 md:space-x-6">
+                    <div class="relative">
+                        <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-2.jpg" alt="Profile Picture" class="h-24 w-24 rounded-full border-4 border-primary/20">
+                        <button class="absolute bottom-0 right-0 bg-primary text-white rounded-full p-2 hover:bg-primary/90 transition-colors">
+                            <i class="fa-solid fa-camera text-sm"></i>
+                        </button>
+                    </div>
+                    <div class="text-center md:text-left flex-1">
+                        <h2 class="text-2xl font-bold text-gray-900 mb-2">John Smith</h2>
+                        <p class="text-gray-600 mb-1">Sales Representative</p>
+                        <p class="text-sm text-gray-500">Member since January 2024</p>
+                        <div class="flex flex-wrap justify-center md:justify-start gap-2 mt-4">
+                            <span class="px-3 py-1 bg-success/10 text-success text-sm font-medium rounded-full">
+                                <i class="fa-solid fa-check-circle mr-1"></i>Verified
+                            </span>
+                            <span class="px-3 py-1 bg-primary/10 text-primary text-sm font-medium rounded-full">
+                                <i class="fa-solid fa-star mr-1"></i>Top Performer
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="profile-content" class="space-y-6">
+            
+            <div id="basic-info-section" class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-lg font-semibold text-gray-900">Basic Information</h3>
+                    <button class="text-primary hover:text-primary/80 font-medium text-sm">
+                        <i class="fa-solid fa-edit mr-1"></i>Edit
+                    </button>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+                            <p class="text-gray-900 bg-gray-50 px-3 py-2 rounded-lg">John Smith</p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
+                            <p class="text-gray-900 bg-gray-50 px-3 py-2 rounded-lg">john.smith@postersz.com</p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Employee ID</label>
+                            <p class="text-gray-900 bg-gray-50 px-3 py-2 rounded-lg">PSZ-SR-001</p>
+                        </div>
+                    </div>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
+                            <p class="text-gray-900 bg-gray-50 px-3 py-2 rounded-lg">+1 (555) 123-4567</p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Department</label>
+                            <p class="text-gray-900 bg-gray-50 px-3 py-2 rounded-lg">Sales &amp; Marketing</p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Join Date</label>
+                            <p class="text-gray-900 bg-gray-50 px-3 py-2 rounded-lg">January 15, 2024</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="assigned-communities-section" class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-lg font-semibold text-gray-900">Assigned Communities</h3>
+                    <span class="text-sm text-gray-500">8 communities</span>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 transition-colors">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="font-medium text-gray-900">Tech Startups</h4>
+                            <span class="px-2 py-1 text-xs bg-green-100 text-green-800 rounded-full">Public</span>
+                        </div>
+                        <div class="text-sm text-gray-600 space-y-1">
+                            <p><i class="fa-solid fa-users mr-2 text-gray-400"></i>45 Members</p>
+                            <p><i class="fa-solid fa-dollar-sign mr-2 text-gray-400"></i>$1,250 Commission</p>
+                        </div>
+                    </div>
+                    
+                    <div class="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 transition-colors">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="font-medium text-gray-900">Marketing Pros</h4>
+                            <span class="px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded-full">Private</span>
+                        </div>
+                        <div class="text-sm text-gray-600 space-y-1">
+                            <p><i class="fa-solid fa-users mr-2 text-gray-400"></i>28 Members</p>
+                            <p><i class="fa-solid fa-dollar-sign mr-2 text-gray-400"></i>$890 Commission</p>
+                        </div>
+                    </div>
+                    
+                    <div class="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 transition-colors">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="font-medium text-gray-900">E-commerce Hub</h4>
+                            <span class="px-2 py-1 text-xs bg-green-100 text-green-800 rounded-full">Public</span>
+                        </div>
+                        <div class="text-sm text-gray-600 space-y-1">
+                            <p><i class="fa-solid fa-users mr-2 text-gray-400"></i>62 Members</p>
+                            <p><i class="fa-solid fa-dollar-sign mr-2 text-gray-400"></i>$1,840 Commission</p>
+                        </div>
+                    </div>
+                    
+                    <div class="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 transition-colors">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="font-medium text-gray-900">Digital Agency</h4>
+                            <span class="px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded-full">Private</span>
+                        </div>
+                        <div class="text-sm text-gray-600 space-y-1">
+                            <p><i class="fa-solid fa-users mr-2 text-gray-400"></i>33 Members</p>
+                            <p><i class="fa-solid fa-dollar-sign mr-2 text-gray-400"></i>$720 Commission</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <button class="mt-4 text-primary hover:text-primary/80 font-medium text-sm">
+                    <i class="fa-solid fa-plus mr-1"></i>View All Communities
+                </button>
+            </div>
+
+            <div id="performance-stats-section" class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-6">Performance Statistics</h3>
+                
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div class="text-center p-4 bg-gray-50 rounded-lg">
+                        <div class="text-2xl font-bold text-primary mb-1">$12,450</div>
+                        <div class="text-sm text-gray-600">Total Earnings</div>
+                    </div>
+                    <div class="text-center p-4 bg-gray-50 rounded-lg">
+                        <div class="text-2xl font-bold text-success mb-1">24</div>
+                        <div class="text-sm text-gray-600">Active Posts</div>
+                    </div>
+                    <div class="text-center p-4 bg-gray-50 rounded-lg">
+                        <div class="text-2xl font-bold text-purple-600 mb-1">8</div>
+                        <div class="text-sm text-gray-600">Communities</div>
+                    </div>
+                    <div class="text-center p-4 bg-gray-50 rounded-lg">
+                        <div class="text-2xl font-bold text-warning mb-1">15</div>
+                        <div class="text-sm text-gray-600">Pending Referrals</div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="account-settings-section" class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-6">Account Settings</h3>
+                
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between py-3 border-b border-gray-200">
+                        <div class="flex items-center">
+                            <i class="fa-solid fa-bell text-gray-400 mr-3"></i>
+                            <div>
+                                <p class="font-medium text-gray-900">Email Notifications</p>
+                                <p class="text-sm text-gray-600">Receive updates about your referrals and communities</p>
+                            </div>
+                        </div>
+                        <button class="bg-primary w-12 h-6 rounded-full relative">
+                            <div class="bg-white w-5 h-5 rounded-full absolute top-0.5 right-0.5 transition-transform"></div>
+                        </button>
+                    </div>
+                    
+                    <div class="flex items-center justify-between py-3 border-b border-gray-200">
+                        <div class="flex items-center">
+                            <i class="fa-solid fa-mobile-alt text-gray-400 mr-3"></i>
+                            <div>
+                                <p class="font-medium text-gray-900">SMS Notifications</p>
+                                <p class="text-sm text-gray-600">Get text alerts for important updates</p>
+                            </div>
+                        </div>
+                        <button class="bg-gray-300 w-12 h-6 rounded-full relative">
+                            <div class="bg-white w-5 h-5 rounded-full absolute top-0.5 left-0.5 transition-transform"></div>
+                        </button>
+                    </div>
+                    
+                    <div class="flex items-center justify-between py-3">
+                        <div class="flex items-center">
+                            <i class="fa-solid fa-lock text-gray-400 mr-3"></i>
+                            <div>
+                                <p class="font-medium text-gray-900">Two-Factor Authentication</p>
+                                <p class="text-sm text-gray-600">Add an extra layer of security to your account</p>
+                            </div>
+                        </div>
+                        <button class="bg-primary w-12 h-6 rounded-full relative">
+                            <div class="bg-white w-5 h-5 rounded-full absolute top-0.5 right-0.5 transition-transform"></div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="logout-section" class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-1">Sign Out</h3>
+                        <p class="text-sm text-gray-600">Sign out of your Himish sales dashboard</p>
+                    </div>
+                    <button onclick="logout()" class="bg-danger text-white px-6 py-3 rounded-lg font-medium hover:bg-danger/90 transition-colors">
+                        <i class="fa-solid fa-sign-out-alt mr-2"></i>Logout
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function goBack() {
+    window.history.back();
+}
+
+function logout() {
+    if (confirm('Are you sure you want to logout?')) {
+        window.location.href = '/login';
+    }
+}
+</script>
+
+
+</body></html>

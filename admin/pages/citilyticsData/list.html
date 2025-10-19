@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="en">
+    <?php include('includes/head.php') ?>
+    <link rel="stylesheet" href="assets/plugins/datatable/css/dataTables.bootstrap5.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.7.1/css/buttons.dataTables.min.css">
+  
+    <body>
+        <!-- wrapper start  -->
+        <div class="wrapper relative">
+            <?php include('includes/sidebar.php') ?>
+
+            <!-- header start  --> 
+            <?php include('includes/nav-header.php') ?>
+            <!-- header end  -->
+
+            <!-- content area start  -->
+            <div class="user-page-sec">
+                <main>
+                    <section class="userList set-font-14-all">
+                        <div class="container py-3">
+                            <div id="head_date">
+                                <h6 class="mb-3">
+                                    🧾 Ads Dashboard
+                                </h6>
+                                <form  method="POST" enctype="multipart/form-data" class="d-flex align-items-end gap-3 flex-wrap mb-3"
+                                style="width: 100%;">
+                                    <!-- Search Field -->
+                                    <div class="d-flex flex-column flex-grow-1">
+                                    <label class="form-label mb-1">
+                                        🔍 Search:
+                                    </label>
+                                    <input type="text" id="search-bar" class="form-control form-control-sm"
+                                    placeholder="Search ads...">
+                                    </div>
+                                </form>
+                                <div id="loading-message" class="alert alert-info mt-2" style="display: none;">
+                                    ⏳ Please wait while your image is being processed...
+                                </div>
+                            </div>
+                            <!--  main div -->
+                            <?php if (count($data) > 0) { ?>
+                                <?php foreach ($data as $k => $v) {  
+                                    $mediaUrl = !empty($v['post_images'][0]['image']) ? MEDIA_BASE_URL . $v['post_images'][0]['image'] : "assets/img/fav-icon.png";
+                                    $json_data = json_decode($v['listing_json_data_v2'],true); 
+                                    $currentListingType = $adTypeToMapping[$v['ad_type']] ?? 'service_listings';
+                                
+                                    $badgeClass = $adTypeMapping[$v['ad_type']]['class'] ?? 'bg-secondary';
+                                   
+                                ?>                           
+                            <div>
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="row">
+                                        <!-- Left Badge Column -->
+                                        <div class="col-md-1">
+                                            <span class="badge 
+                                            <?php echo $badgeClass; ?>
+                                            " style="font-size:large;">
+                                            <?php echo $v['ad_type'];?>
+                                            
+                                            </span>
+                                            <span class="badge bg-warning text-dark mt-2">
+                                            <?php echo $v['ad_purpose'];?>
+                                            </span>
+                                        </div>
+                                        <!-- Center Content Column -->
+                                        <div class="col-md-8" style="padding-left: 50px;">
+                                            <div class="d-flex align-items-center flex-wrap gap-2 mb-1">
+                                            <strong>
+                                                <?php echo $v['title'];?>
+                                            </strong>
+                                            <div class="mb-1">
+                                                <span class="badge bg-info text-dark">
+                                                Category:   <?php echo $v['category'];?>
+                                                </span>
+                                            </div>
+                                            </div>
+                                            <small class="text-muted d-block mb-1">
+                                            Posted:   <?php echo formatToUSDate($v['created_at']); 
+                                            $jsonData = json_decode($v['listing_json_data_v2'], true);
+                                            $prettyJson = json_encode($jsonData, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+                                            $escapedJson = htmlspecialchars($prettyJson, ENT_QUOTES); // for safe JS usage
+                                            
+                                            ?>
+                                            </small>
+                                            <div class="mt-1">
+                                                <a href="?deleteThis=<?php echo json_encode($v['id']); ?>" 
+                                                class="btn btn-sm btn-outline-danger" 
+                                                onclick="return confirm('Are you sure you want to delete this?')">
+                                                 🗑️
+                                             </a>
+                                             
+                                            <!-- buton two -->
+                                            <button 
+                                            title="View JSON Data" 
+                                            class="btn btn-sm btn-outline-success view-json-button"
+                                            data-id="<?= (int)$v['id'] ?>"
+                                            data-json='<?= $escapedJson; ?>'
+                                            onclick="handleJsonClick(this)">
+                                            👁️
+                                        </button>
+                                        
+
+                                         
+                                         
+                                           
+                                            <button class="btn btn-sm btn-outline-primary" onclick="toggleDetails(<?php echo $v['id'];?>)">
+                                                Ad Details
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-secondary" onclick="toggleGroupC(<?php echo $v['id'];?>)">
+                                                Listing Details
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-info">
+                                                <?php echo ($v['isPostAvailable'] ==0) ? 'Listing' : 'Post and Listing'; ?>
+                                            </button>
+                                            </div>
+                                        </div>
+                                         <!-- Right Image Column -->
+                                    <div class="col-md-3 d-flex align-items-start justify-content-center">
+                                        <img src="<?php echo $mediaUrl;?>"
+                                        alt="Ad Image" class="img-fluid fetchable-image set-img-wide-citilytica" style="height: 100px; width: auto;"
+                                        data-id="3190" onclick="toggleFullScreen(this)">
+                                      
+                                    </div>
+                                    
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="expandable-content" id="details-<?php echo $v['id'];?>" style="display: none;">
+                                    <div class="card">
+                                        <div class="card-header">
+                                        📝 Ad Details
+                                        </div>
+                                        <div class="card-body">
+                                        <div class="row mb-2">
+                                            <div class="col-md-2">
+                                            <label data-bs-toggle="tooltip" title="Short title for your ad">
+                                                🏷️ Title
+                                            </label>
+                                            <input class="form-control" id="edit-title-3190" value="<?php echo $v['title'];?>">
+                                            </div>
+                                            <div class="col-md-2">
+                                            <label data-bs-toggle="tooltip" title="Brief description of the product/service">
+                                                📝 Description
+                                            </label>
+                                            <input class="form-control" id="edit-description-3190" value="<?php echo $v['info'];?>">
+                                            </div>
+                                            <div class="col-md-2">
+                                            <label data-bs-toggle="tooltip" title="What industry this ad belongs to">
+                                                🏭 Industry
+                                            </label>
+                                            <input class="form-control" id="edit-industry-3190" value="<?php echo $v['ad_type'];?>">
+                                            </div>
+                                            <div class="col-md-2">
+                                            <label data-bs-toggle="tooltip" title="Main category of this ad">
+                                                📂 Category
+                                            </label>
+                                            <input class="form-control" id="edit-category-3190" value="<?php echo $v['category'];?>">
+                                            </div>
+                                            <div class="col-md-2">
+                                            <label data-bs-toggle="tooltip" title="Sub-category under the selected category">
+                                                📁 Sub Category
+                                            </label>
+                                            <input class="form-control" id="edit-sub_category-3190" value="<?php echo $v['subcategory'];?>">
+                                            </div>
+                                            <div class="col-md-2">
+                                            <label data-bs-toggle="tooltip" title="Comma-separated keywords for search">
+                                                🔑 Keywords
+                                            </label>
+                                            <textarea style="height: 20px;" class="form-control" id="edit-keywords-3190"
+                                            rows="3"><?php echo $v['keywords'];?></textarea>
+                                            </div>
+                                            <div class="col-md-2">
+                                            <label data-bs-toggle="tooltip" title="Additional notes for internal use">
+                                                🗒️ Notes
+                                            </label>
+                                            <input class="form-control" id="edit-notes-3190" value="">
+                                            </div>
+                                            <div class="col-md-2">
+                                            <label data-bs-toggle="tooltip" title="Reason or goal for the ad">
+                                                🎯 Purpose
+                                            </label>
+                                            <input class="form-control" type="text" id="edit-ad_purpose-3190" value="<?php echo $v['ad_purpose'];?>">
+                                            </div>
+                                            <div class="col-md-2">
+                                            <label data-bs-toggle="tooltip" title="Date and time when the ad becomes active">
+                                                📆 Valid From:
+                                            </label>
+                                            <input class="form-control" type="text" id="edit-ad_valid_from-3190" value="None">
+                                            </div>
+                                            <div class="col-md-2">
+                                            <label data-bs-toggle="tooltip" title="Date and time when the ad expires or ends">
+                                                ⏳ To:
+                                            </label>
+                                            <input class="form-control" type="text" id="edit-ad_valid_to-3190" value="None">
+                                            </div>
+                                            <div class="col-md-2">
+                                            <label data-bs-toggle="tooltip" title="Date and time when the ad was posted">
+                                                📅 Posted
+                                            </label>
+                                            <input class="form-control" id="edit-ad_valid_to-3190" value="<?php echo formatToUSDate($v['created_at']);?>">
+                                            </div>
+                                        </div>
+                                        </div>
+                                    </div>
+                                    <div class="card">
+                                        <div class="card-header d-flex justify-content-between align-items-center">
+                                        <span>
+                                            📇 Contacts
+                                        </span>
+                                        <button class="btn btn-sm btn-outline-secondary" type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#contacts-body-3190">
+                                            🔽 Details
+                                        </button>
+                                        </div>
+                                        <div id="contacts-body-3190" class="card-body p-0 collapse">
+                                        <div class="table-responsive">
+                                            <table class="contact-table table table-bordered table-sm mb-0">
+                                            <thead class="table-light">
+                                                <tr>
+                                                <th>
+                                                    Type
+                                                </th>
+                                                <th>
+                                                    Name
+                                                </th>
+                                                <th>
+                                                    Website
+                                                </th>
+                                                <th>
+                                                    Social Media
+                                                </th>
+                                                <th>
+                                                    Mobile Number
+                                                </th>
+                                               
+                                                </tr>
+                                            </thead>
+                                            <tbody id="contacts-list-3190">
+                                                <?php if (!empty($json_data[0]['contacts']) && count($json_data[0]['contacts']) > 0) {
+                                                    foreach ($json_data[0]['contacts'] as $kk => $vv) {
+                                                ?>
+                                                <tr data-contact-id="3001" class="contact-row-3190" style="height: 20px;">
+                                                    <input type="hidden" name="contact_ids" value="3001">
+                                                    <td>
+                                                        <input type="text" class="contact_type" name="contact_type_3001" value="<?php echo htmlspecialchars(@$vv['types']); ?>"
+                                                        style="height: 16px; font-size: 12px; padding: 2px; border: 0;">
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" class="contact-name" name="contact_name_3001" value="<?php echo htmlspecialchars(@$vv['name']); ?>"
+                                                        style="height: 16px; font-size: 12px; padding: 2px; border: 0;">
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" class="contact_website" name="contact_website_3001"
+                                                        value="<?php echo htmlspecialchars(@$vv['website']); ?>" style="height: 16px; font-size: 12px; padding: 2px; border: 0;">
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" class="contact_social_media" name="contact_social_media_3001"
+                                                        value=" " style="height: 16px; font-size: 12px; padding: 2px; border: 0;">
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" class="contact_mobile_number" name="contact_mobile_number_3001"
+                                                        value="" style="height:16px;font-size:12px;padding:2px;border:0;width:100%;">
+                                                    </td>
+                                                  
+                                                </tr>
+
+                                            <?php 
+                                                } 
+                                             } ?>
+                                              
+                                            </tbody>
+                                            </table>
+                                        </div>
+                                        </div>
+                                    </div>
+                                    <div class="card">
+                                        <div class="card-header d-flex justify-content-between align-items-center">
+                                        <span>
+                                            📍 Locations
+                                        </span>
+                                        <button class="btn btn-sm btn-outline-secondary" type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#location-body-3190" aria-expanded="false" aria-controls="location-body-3190">
+                                            🔽 Details
+                                        </button>
+                                        </div>
+                                        <div id="location-body-3190" class="card-body p-0 collapse">
+                                        <div class="table-responsive">
+                                            <table class="contact-table table table-bordered table-sm mb-0" style="margin-top:0;">
+                                            <thead class="table-light">
+                                                <tr>
+                                               
+                                                <th >
+                                                    Business Address
+                                                </th>
+                                                <th>
+                                                    State
+                                                </th>
+                                                <th>
+                                                    City
+                                                </th>
+                                                <th>
+                                                    Country
+                                                </th>
+                                               
+                                                </tr>
+                                            </thead>
+                                            <tbody id="location-list-3190">
+
+                                                <?php if(count($v['post_locations']) > 0) {
+                                                    foreach($v['post_locations'] as $l=>$ll) {
+                                                ?>
+                                                <tr data-location-id="3065" class="location-row-3190" style="height:20px;">
+                                                <input type="hidden" name="location_ids" value="3065">
+                                                <td class="tab_des" style="width:30%;">
+                                                    <input type="text" name="location_branch_3065" class="location-branch"
+                                                    value="<?php echo $ll['address']; ?>" style="height:16px;font-size:12px;padding:2px;border:0;width:100%;">
+                                                </td>
+                                                <td class="tab_add" style="width:20%;">
+                                                    <input type="text" name="location_address_3065" class="location-address"
+                                                    value=" <?php echo $ll['state']; ?>" style="height:16px;font-size:12px;padding:2px;border:0;width:100%;">
+                                                </td>
+                                                <td>
+                                                    <input type="text" name="location_email_3065" class="location-email" value=" <?php echo $ll['city']; ?>"
+                                                    style="height:16px;font-size:12px;padding:2px;border:0;width:100%;">
+                                                </td>
+                                                <td>
+                                                    <input type="text" name="location_phone_number_3065" class="location-phone_number"
+                                                    value=" <?php echo $ll['country_code']; ?>" style="height:16px;font-size:12px;padding:2px;border:0;width:100%;">
+                                                </td>
+                                                </tr>
+                                                <?php } } ?>
+                                            </tbody>
+                                            </table>
+                                        </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="expandable-content" id="groupC-<?php echo $v['id'];?>" style="display: none;">
+
+                                <div>
+                                    <div class="card">
+                                        <div class="card-header">
+                                       <div class="card-header">
+                                            <?php 
+                                            $adType = $v['ad_type'];
+                                            if (isset($adTypeMapping[$adType])) {
+                                                echo $adTypeMapping[$adType]['icon'] . ' ' . $adTypeMapping[$adType]['label'];
+                                            } else {
+                                                echo '📄 Listing'; // fallback
+                                            }
+                                            ?>
+                                        </div>
+                                        </div>
+                                        <div class="card-body p-0">
+                                        <div class="table-responsive">
+                                            <table class="contact-table table table-bordered table-sm mb-0" style="margin-top: 0;">
+
+                                            <thead class="table-light">
+                                                <?php  foreach ($tableHeaders[$currentListingType] as $header) { ?>
+                                                <th><?php echo $header ; ?></th>
+                                            <?php } ?>
+                                            </thead>
+                                            <tbody id="real-estate-list-<?php echo $v['id'];?>">
+                                                <?php
+                                                foreach ($v[$currentListingType] as $key=>$item) {
+
+                                                    if($currentListingType =='on_sale_listings'){ ?>
+
+                                                        <tr data-product-id="<?php echo $item['id'];?>" class="product-row-<?php echo $item['id'];?>" style="height: 20px;">
+                                                            <td>
+                                                                <input type="text" name="product_name_4638" class="product-name" value="<?php echo @$item['product_name'];?>"
+                                                                style="">
+                                                            </td>
+                                                            <td>
+                                                                <input type="text" name="product_price_4638" class="product-price" value="<?php echo @$item['price'];?>"
+                                                                style="height: 16px; font-size: 12px; padding: 2px; border: 0; width: 100%;">
+                                                            </td>
+                                                            <td>
+                                                                <input type="text" name="product_brand_4638" class="product-brand" value="<?php echo @$item['brand'];?>"
+                                                                style="height: 16px; font-size: 12px; padding: 2px; border: 0; width: 100%;">
+                                                            </td>
+                                                            <td>
+                                                                <input type="text" name="product_department_4638" class="product-department"
+                                                                value="<?php echo @$item['department'];?>" style="height: 16px; font-size: 12px; padding: 2px; border: 0; width: 100%;">
+                                                            </td>
+                                                            <td>
+                                                                <input type="text" name="product_category_4638" class="product-category"
+                                                                value="<?php echo @$item['category'];?>" style="height: 16px; font-size: 12px; padding: 2px; border: 0; width: 100%;">
+                                                            </td>
+                                                            <td>
+                                                                <input type="text" name="product_condition_4638" class="product-condition"
+                                                                value="<?php echo @$item['condition'];?>" style="height: 16px; font-size: 12px; padding: 2px; border: 0; width: 100%;">
+                                                            </td>
+                                                            <td>
+                                                                <input type="text" name="product_availability_4638" class="product-availability"
+                                                                value="<?php echo @$item['availability'];?>" style="height: 16px; font-size: 12px; padding: 2px; border: 0; width: 100%;">
+                                                            </td>
+                                                            <td>
+                                                                <input type="text" name="product_ad_purpose_4638" class="product-ad_purpose"
+                                                                value="<?php echo $v['ad_purpose'];?>" style="height: 16px; font-size: 12px; padding: 2px; border: 0; width: 100%;">
+                                                            </td>
+                                                            <td>
+                                                                <input type="text" name="product_special_notes_4638" class="product-special_notes"
+                                                                value="<?php echo @$item['special_notes'];?>" style="height: 16px; font-size: 12px; padding: 2px; border: 0; width: 100%;">
+                                                            </td>
+                                                            <td>
+                                                                <input type="text" name="product_UOM_4638" class="product-UOM" value="<?php echo @$item['u_o_m'];?>"
+                                                                style="height: 16px; font-size: 12px; padding: 2px; border: 0; width: 100%;">
+                                                            </td>
+                                                            <td>
+                                                                <input type="text" name="product_sale_price_4638" class="product-sale_price"
+                                                                value="<?php echo @$item['sale_price'];?>" style="height: 16px; font-size: 12px; padding: 2px; border: 0; width: 100%;">
+                                                            </td>
+                                                            <td>
+                                                                <input type="text" name="product_reg_price_4638" class="product-reg_price"
+                                                                value="<?php echo @$item['reg_price'];?>" style="height: 16px; font-size: 12px; padding: 2px; border: 0; width: 100%;">
+                                                            </td>
+                                                            <td>
+                                                                <input type="text" name="product_color_4638" class="product-color" value="<?php echo @$item['color'];?>"
+                                                                style="height: 16px; font-size: 12px; padding: 2px; border: 0; width: 100%;">
+                                                            </td>
+                                                            <td>
+                                                                <input type="text" name="product_size_4638" class="product-size" value="<?php echo @$item['size'];?>"
+                                                                style="height: 16px; font-size: 12px; padding: 2px; border: 0; width: 100%;">
+                                                            </td>
+                                                            <td>
+                                                                <input type="text" name="product_age_4638" class="product-age" value="<?php echo @$item['age'];?>"
+                                                                style="height: 16px; font-size: 12px; padding: 2px; border: 0; width: 100%;">
+                                                            </td>
+                                                           
+                                                            </tr>
+                                                    
+                                                            <?php } else if($currentListingType =='product_listings'){ ?>
+
+                                                        <tr data-product-id="<?php echo $item['id'];?>" class="product-row-<?php echo $item['id'];?>" style="height: 20px;">
+                                                            <td>
+                                                                <input type="text" name="product_name_4638" class="product-name" value="<?php echo @$item['product_name'];?>"
+                                                                style="">
+                                                            </td>
+                                                            <td>
+                                                                <input type="text" name="product_price_4638" class="product-price" value="<?php echo @$item['price'];?>"
+                                                                style="height: 16px; font-size: 12px; padding: 2px; border: 0; width: 100%;">
+                                                            </td>
+                                                            <td>
+                                                                <input type="text" name="product_brand_4638" class="product-brand" value="<?php echo @$item['brand'];?>"
+                                                                style="height: 16px; font-size: 12px; padding: 2px; border: 0; width: 100%;">
+                                                            </td>
+                                                            <td>
+                                                                <input type="text" name="product_department_4638" class="product-department"
+                                                                value="<?php echo @$item['department'];?>" style="height: 16px; font-size: 12px; padding: 2px; border: 0; width: 100%;">
+                                                            </td>
+                                                            <td>
+                                                                <input type="text" name="product_category_4638" class="product-category"
+                                                                value="<?php echo @$item['category'];?>" style="height: 16px; font-size: 12px; padding: 2px; border: 0; width: 100%;">
+                                                            </td>
+                                                            <td>
+                                                                <input type="text" name="product_condition_4638" class="product-condition"
+                                                                value="<?php echo @$item['condition'];?>" style="height: 16px; font-size: 12px; padding: 2px; border: 0; width: 100%;">
+                                                            </td>
+                                                            <td>
+                                                                <input type="text" name="product_availability_4638" class="product-availability"
+                                                                value="<?php echo @$item['availability'];?>" style="height: 16px; font-size: 12px; padding: 2px; border: 0; width: 100%;">
+                                                            </td>
+                                                            <td>
+                                                                <input type="text" name="product_ad_purpose_4638" class="product-ad_purpose"
+                                                                value="<?php echo $v['ad_purpose'];?>" style="height: 16px; font-size: 12px; padding: 2px; border: 0; width: 100%;">
+                                                            </td>
+                                                            <td>
+                                                                <input type="text" name="product_special_notes_4638" class="product-special_notes"
+                                                                value="<?php echo @$item['special_notes'];?>" style="height: 16px; font-size: 12px; padding: 2px; border: 0; width: 100%;">
+                                                            </td>
+                                                            <td>
+                                                                <input type="text" name="product_UOM_4638" class="product-UOM" value="<?php echo @$item['u_o_m'];?>"
+                                                                style="height: 16px; font-size: 12px; padding: 2px; border: 0; width: 100%;">
+                                                            </td>
+                                                            <td>
+                                                                <input type="text" name="product_sale_price_4638" class="product-sale_price"
+                                                                value="<?php echo @$item['sale_price'];?>" style="height: 16px; font-size: 12px; padding: 2px; border: 0; width: 100%;">
+                                                            </td>
+                                                            <td>
+                                                                <input type="text" name="product_reg_price_4638" class="product-reg_price"
+                                                                value="<?php echo @$item['reg_price'];?>" style="height: 16px; font-size: 12px; padding: 2px; border: 0; width: 100%;">
+                                                            </td>
+                                                            <td>
+                                                                <input type="text" name="product_color_4638" class="product-color" value="<?php echo @$item['color'];?>"
+                                                                style="height: 16px; font-size: 12px; padding: 2px; border: 0; width: 100%;">
+                                                            </td>
+                                                            <td>
+                                                                <input type="text" name="product_size_4638" class="product-size" value="<?php echo @$item['size'];?>"
+                                                                style="height: 16px; font-size: 12px; padding: 2px; border: 0; width: 100%;">
+                                                            </td>
+                                                            <td>
+                                                                <input type="text" name="product_age_4638" class="product-age" value="<?php echo @$item['age'];?>"
+                                                                style="height: 16px; font-size: 12px; padding: 2px; border: 0; width: 100%;">
+                                                            </td>
+                                                           
+                                                            </tr>
+                                                            <!-- real estate -->
+                                                   <?php } else if($currentListingType =='real_estate_listings'){ ?>
+
+                                                     <tr data-real-estate-id="<?php echo $item['id'];?>" class="real-estate-row-<?php echo $item['id'];?>" style="height: 20px;">
+                                        <input type="hidden" name="real_estate_ids" value="<?php echo $item['id'];?>">
+                                        <td class="fixed-width-5ch">
+                                            <input type="text" class="real-estate-type" value="<?php echo $item['property_type'];?>"
+                                            style="">
+                                        </td>
+                                        <td class="fixed-width-5ch">
+                                            <input type="text" class="real-estate-price" value="<?php echo $item['price'];?>" style="height: 16px; font-size: 12px; padding: 2px; border: 0; width: 100%;">
+                                        </td>
+                                        <td style="width: 20%;">
+                                            <input type="text" class="real-estate-location" value="<?php echo $item['property_location'];?>"
+                                            style="height: 16px; font-size: 12px; padding: 2px; border: 0; width: 100%;">
+                                        </td>
+                                        <td>
+                                            <input type="text" class="real-estate-status" value="<?php echo $item['status'];?>" style="height: 16px; font-size: 12px; padding: 2px; border: 0; width: 100%;">
+                                        </td>
+                                        <td>
+                                            <input type="text" class="real-estate-listing_type" value="<?php echo $item['listing_type'];?>" style="height: 16px; font-size: 12px; padding: 2px; border: 0; width: 100%;">
+                                        </td>
+                                        <td class="fixed-width-5ch">
+                                            <input type="text" class="real-estate-square_footage" value="<?php echo $item['square_footage'];?>" style="height: 16px; font-size: 12px; padding: 2px; border: 0; width: 100%;">
+                                        </td>
+                                        <td>
+                                            <input type="text" class="real-estate-lot_size" value="<?php echo $item['lot_size'];?>" style="height: 16px; font-size: 12px; padding: 2px; border: 0; width: 100%;">
+                                        </td>
+                                        <td class="fixed-width-5ch">
+                                            <input type="text" class="real-estate-bedrooms" value="<?php echo $item['bedrooms'];?>" style="height: 16px; font-size: 12px; padding: 2px; border: 0; width: 100%;">
+                                        </td>
+                                        <td class="fixed-width-5ch">
+                                            <input type="text" class="real-estate-bathrooms" value="<?php echo $item['bathrooms'];?>" style="height: 16px; font-size: 12px; padding: 2px; border: 0; width: 100%;">
+                                        </td>
+                                        <td>
+                                            <input type="text" class="real-estate-floor_level" value="<?php echo $item['floor_level'];?>" style="height: 16px; font-size: 12px; padding: 2px; border: 0; width: 100%;">
+                                        </td>
+                                        <td>
+                                            <input type="text" class="real-estate-furnished" value="<?php echo $item['furnished'];?>" style="height: 16px; font-size: 12px; padding: 2px; border: 0; width: 100%;">
+                                        </td>
+                                        <td>
+                                            <input type="text" class="real-estate-amenities" value="<?php echo $item['amenities'];?>" style="height: 16px; font-size: 12px; padding: 2px; border: 0; width: 100%;">
+                                        </td>
+                                        <td>
+                                            <input type="text" class="real-estate-condition" value="<?php echo $item['condition'];?>" style="height: 16px; font-size: 12px; padding: 2px; border: 0; width: 100%;">
+                                        </td>
+                                       
+                                        </tr>
+                                            <?php } else  if($currentListingType =='events'){ ?>
+                                                <tr data-event-id="<?php echo $item['id'];?>" class="event-row-<?php echo $item['id'];?>" style="height: 20px; border: 0;">
+                                                    <input type="hidden" name="event_ids" value="<?php echo $item['id'];?>">
+                                                    <td style="height: 20px; padding: 2px; width: 10%;">
+                                                        <input type="text" name="event_name_270" class="event-name" value="<?php echo $item['name'];?>" style="height: 16px; font-size: 12px; padding: 2px; border: 0; width: 100%;">
+                                                    </td>
+                                                    <td style="height: 20px; padding: 2px; width: 25%;">
+                                                        <input type="text" name="event_highlights_270" class="event-highlights"
+                                                        value="<?php echo $item['highlights'];?>" style="height: 16px; font-size: 12px; padding: 2px; border: 0; width: 100%;">
+                                                    </td>
+                                                    <td style="height: 20px; padding: 2px; width: 10%;">
+                                                        <input type="text" name="event_purpose_270" class="event-purpose" value="<?php echo $item['purpose'];?>"
+                                                        style="height: 16px; font-size: 12px; padding: 2px; border: 0; width: 100%;">
+                                                    </td>
+                                                    <td style="height: 20px; padding: 2px; width: 25%;">
+                                                        <input type="text" name="event_address_270" class="event-address" value="<?php echo $item['physical_address'];?>"
+                                                        style="height: 16px; font-size: 12px; padding: 2px; border: 0; width: 100%;">
+                                                    </td>
+                                                    <td style="height: 20px; padding: 2px; width: 10%;">
+                                                        <input type="text" name="event_time_270" class="event-time" value="<?php echo $item['time'];?>" style="height: 16px; font-size: 12px; padding: 2px; border: 0; width: 100%;">
+                                                    </td>
+                                                    <td style="height: 20px; padding: 2px; width: 10%;">
+                                                        <input type="text" name="event_date_270" class="event-date" value="<?php echo $item['date'];?>"
+                                                        style="height: 16px; font-size: 12px; padding: 2px; border: 0; width: 100%;">
+                                                    
+                                                    </tr>
+ 
+                                    <?php } else  if($currentListingType =='service_listings'){ ?>
+
+                                        <tr data-service-id="<?php echo $item['id'];?>" class="service-row-<?php echo $item['id'];?>" style="height: 20px; border: 0;">
+                                            <input type="hidden" name="service_ids" value="<?php echo $item['id'];?>">
+                                            <td style="width: 15%;">
+                                                <input type="text" name="service_title_1500" class="service-title" value="<?php echo $item['title'];?>"
+                                                style="height: 16px; font-size: 12px; padding: 2px; border: 0; width: 100%;">
+                                            </td>
+                                            <td style="width: 45%;">
+                                                <input type="text" name="<?php echo $item['description'];?>" class="service-description"
+                                                value="Distribution of all types of mailbox supplies in the greater New York area"
+                                                style="height: 16px; font-size: 12px; padding: 2px; border: 0; width: 100%;">
+                                            </td>
+                                            <td style="width: 10%;">
+                                                <input type="text" name="service_service_1500" class="service-service"
+                                                value="<?php echo $item['service'];?>" style="height: 16px; font-size: 12px; padding: 2px; border: 0; width: 100%;">
+                                            </td>
+                                            <td style="width: 10%;">
+                                                <input type="text" name="service_ad_purpose_1500" class="service-ad_purpose"
+                                                value="<?php echo $v['ad_purpose'];?>" style="height: 16px; font-size: 12px; padding: 2px; border: 0; width: 100%;">
+                                            </td>
+                                       
+                                            </tr>
+                                        <?php } else if($currentListingType =='general_items'){ ?>
+                                        <tr>
+                                            <input type="hidden" name="general_item_ids" value="<?php echo $item['id'];?>">
+                                            <td style="height: 20px; padding: 2px; border: 0;"><input type="text" name="general_item_name_new" class="general-item-name" value="<?php echo $item['name'];?>"></td>
+                                            <td style="height: 20px; padding: 2px; border: 0;"><input type="text" name="general_item_description_new" class="general-item-description" value="<?php echo $item['description'];?>"></td>
+                                            <td style="height: 20px; padding: 2px; border: 0;"><input type="text" name="general_item_price_new" class="general-item-price" value="<?php echo $item['price'];?>"></td>
+                                            <td style="height: 20px; padding: 2px; border: 0;"><input type="text" name="general_item_category_new" class="general-item-category" value="<?php echo $item['category'];?>"></td>
+                                            <td style="height: 20px; padding: 2px; border: 0;"><input type="text" name="general_item_color_new" class="general-item-color" value="<?php echo $item['item_color'];?>"></td>
+                                            <td style="height: 20px; padding: 2px; border: 0;"><input type="text" name="general_item_size_new" class="general-item-size" value="<?php echo $item['item_size'];?>"></td>
+                                            <td style="height: 20px; padding: 2px; border: 0;"><input type="text" name="general_item_age_new" class="general-item-age" value="<?php echo $item['item_age'];?>">
+                                            </td>
+                                            </tr>
+                                        
+                                            <?php } else if($currentListingType =='car_listings'){ ?>
+                                                <tr>
+
+                                                    <td><input type="text" name="year" class="general-item-name" value="<?php echo $item['year'];?>"></td>
+                                                    <td><input type="text" name="make" class="general-item-name" value="<?php echo $item['make'];?>"></td>
+                                                    <td><input type="text" name="model" class="general-item-name" value="<?php echo $item['model'];?>"></td>
+                                                    <td><input type="text" name="mileage" class="general-item-name" value="<?php echo $item['mileage'];?>"></td>
+                                                    <td><input type="text" name="condition" class="general-item-name" value="<?php echo $item['condition'];?>"></td>
+                                                    <td><input type="text" name="price" class="general-item-name" value="<?php echo $item['price'];?>"></td>
+                                                </tr>
+
+
+                                    <?php } else if($currentListingType =='found_lost_listings'){ ?>
+                                        <tr>
+                                            <td><input type="text" name="description" class="general-item-name" value="<?php echo $item['description'];?>"></td>
+                                            <td><input type="text" name="date_time" class="general-item-name" value="<?php echo $item['date_time'];?>"></td>
+                                            <td><input type="text" name="location" class="general-item-name" value="<?php echo $item['location'];?>"></td>
+
+                                        </tr>
+
+
+                            <?php } else if($currentListingType =='job_listings'){ ?>
+                                <tr>
+                                    <td><input type="text" name="job_type" class="general-item-name" value="<?php echo isset($item['job_type']) ? htmlspecialchars($item['job_type']) : ''; ?>"></td>
+                                    <td><input type="text" name="employment_type" class="general-item-name" value="<?php echo isset($item['employment_type']) ? htmlspecialchars($item['employment_type']) : ''; ?>"></td>
+                                    <td><input type="text" name="schedule" class="general-item-name" value="<?php echo isset($item['schedule']) ? htmlspecialchars($item['schedule']) : ''; ?>"></td>
+                                    <td><input type="text" name="salary" class="general-item-name" value="<?php echo isset($item['salary']) ? htmlspecialchars($item['salary']) : ''; ?>"></td>
+                                    <td><input type="text" name="posting_type" class="general-item-name" value="<?php echo isset($item['posting_type']) ? htmlspecialchars($item['posting_type']) : ''; ?>"></td>
+                                    <td><input type="text" name="application_method" class="general-item-name" value="<?php echo isset($item['application_method']) ? htmlspecialchars($item['application_method']) : ''; ?>"></td>
+                                    <td><input type="text" name="application_link" class="general-item-name" value="<?php echo isset($item['application_link']) ? htmlspecialchars($item['application_link']) : ''; ?>"></td>
+                                    <td><input type="text" name="experience" class="general-item-name" value="<?php echo isset($item['experience']) ? htmlspecialchars($item['experience']) : ''; ?>"></td>
+                                    <td><input type="text" name="skills" class="general-item-name" value="<?php echo @$item['skills']; ?>"></td>
+                                    <td><input type="text" name="perks" class="general-item-name" value="<?php echo @$item['perks'];?>"></td>
+                                    <td><input type="text" name="availability" class="general-item-name" value="<?php echo @$item['availability']; ?>"></td>
+                                </tr>
+                                
+
+
+                    <?php } else if($currentListingType =='dress_listings'){ ?>
+                        <tr>
+                            <td><input type="text" name="listing_type" class="general-item-name" value="<?php echo @$item['listing_type']; ?>"></td>
+                            <td><input type="text" name="status" class="general-item-name" value="<?php echo @$item['status']; ?>"></td>
+                            <td><input type="text" name="price" class="general-item-name" value="<?php echo @$item['price']; ?>"></td>
+                            <td><input type="text" name="color" class="general-item-name" value="<?php echo @$item['color']; ?>"></td>
+                            <td><input type="text" name="size" class="general-item-name" value="<?php echo @$item['size']; ?>"></td>
+                            <td><input type="text" name="age" class="general-item-name" value="<?php echo @$item['age']; ?>"></td>
+                            <td><input type="text" name="occasion" class="general-item-name" value="<?php echo @$item['occasion']; ?>"></td>
+                            <td><input type="text" name="condition" class="general-item-name" value="<?php echo @$item['condition']; ?>"></td>
+                            <td><input type="text" name="fabric_type" class="general-item-name" value="<?php echo @$item['fabric_type']; ?>"></td>
+                            <td><input type="text" name="rental_policy" class="general-item-name" value="<?php echo @$item['rental_policy']; ?>"></td>
+                            <td><input type="text" name="designer_brand" class="general-item-name" value="<?php echo @$item['designer_brand']; ?>"></td>
+                            <td><input type="text" name="suggested_for" class="general-item-name" value="<?php echo @$item['suggested_for']; ?>"></td>
+                        </tr>
+                        
+                        
+                        <?php }
+                     }
+                        ?>
+                                            </tbody>
+                                            </table>
+                                        </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                   <!-- companies -->
+                                <div class="card">
+                                    <div class="card-header">
+                                    Company
+                                    </div>
+                                    <div class="card-body p-0">
+                                    <div class="table-responsive">
+                                        <table class="contact-table table table-bordered table-sm mb-0">
+                                        <thead class="table-light">
+                                            <tr>
+                                            <th>
+                                                Name
+                                            </th>
+                                            <th>
+                                                Phone
+                                            </th>
+                                            <th>
+                                                Website
+                                            </th>
+                                            <th>
+                                                Email
+                                            </th>
+                                           
+                                            <th>
+                                                Verified
+                                            </th>
+                                         
+                                            <th>
+                                                Created At
+                                            </th>
+                                            <th>
+                                                Business Type
+                                            </th>
+                                            <th>
+                                                Info
+                                            </th>
+                                           
+                                            </tr>
+                                        </thead>
+                                     
+                                        <tbody id="company-list-3190">
+                                            <?php  if(!empty($v['companyProfile'])) {  ?>
+                                            <tr data-company-id="1113" class="company-row-3190">
+                                            <input type="hidden" name="company_ids" value="1113">
+                                            <td style="width: 20%;">
+                                                <input name="company_name_1113" class="company-name" value="<?php echo @$v['companyProfile']['name'];?>"
+                                                style="height: 16px; font-size: 12px; padding: 2px; border: 0; width: 100%;">
+                                            </td>
+                                            <td>
+                                                <input name="company_phone_1113" class="company-phone" value="<?php echo @$v['companyProfile']['phone'];?>"
+                                                style="height: 16px; font-size: 12px; padding: 2px; border: 0; width: 100%;">
+                                            </td>
+                                            <td>
+                                                <input name="company_website_1113" class="company-website" value="<?php echo @$v['companyProfile']['website'];?>"
+                                                style="height: 16px; font-size: 12px; padding: 2px; border: 0; width: 100%;">
+                                            </td>
+                                            <td>
+                                                <input name="company_email_1113" class="company-email" value="<?php echo @$v['companyProfile']['email'];?>"
+                                                style="height: 16px; font-size: 12px; padding: 2px; border: 0; width: 100%;">
+                                            </td>
+                                           
+                                            <td>
+                                                <input name="company_is_verified_1113" class="company-is-verified" value="<?php echo (@$v['companyProfile']['is_verified'] ==1) ? true : false;?>"
+                                                style="height: 16px; font-size: 12px; padding: 2px; border: 0; width: 100%;">
+                                            </td>
+                                           
+                                            <td>
+                                                <input name="company_created_at_1113" class="company-created-at" value="<?php echo @$v['companyProfile']['created_at'];?>"
+                                                style="height: 16px; font-size: 12px; padding: 2px; border: 0; width: 100%;">
+                                            </td>
+                                            <td>
+                                                <input name="company_business_type_1113" class="company-business-type"
+                                                value="<?php echo @$v['companyProfile']['business_type'];?>" style="height: 16px; font-size: 12px; padding: 2px; border: 0; width: 100%;">
+                                            </td>
+                                            <td>
+                                                <input name="company_info_1113" class="company-info" value="<?php echo @$v['companyProfile']['info'];?>" style="height: 16px; font-size: 12px; padding: 2px; border: 0; width: 100%;">
+                                            </td>
+                                           
+                                            </tr>
+                                            <?php } ?>
+                                        </tbody>
+                                        </table>
+                                    </div>
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
+
+                            <?php } ?>
+                            <?php } ?>
+
+
+
+                        </div>
+                      
+                        <!-- content area end -->
+                        <div class="modal fade" id="jsonModal" tabindex="-1" role="dialog" aria-labelledby="jsonModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-lg" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                <h5 class="modal-title" id="jsonModalLabel">Formatted JSON</h5>
+                                </div>
+                                <div class="modal-body">
+                                    <textarea id="jsonModalContent" class="form-control" style="height: 350px; font-size: 13px; white-space: pre-wrap;"></textarea>
+                                </div>
+                                <input type="hidden" id="p_id">
+                                <div class="modal-footer jsonModalBtn">
+                                    <button type="button" class="btn btn-primary" id="updateJsonBtn">Update JSON</button>
+                                    <button type="button" class="btn btn-success" id="updateAndLiveBtn">Update and Live</button>
+                                </div>
+                            </div>
+                            </div>
+                        </div>  
+                    </section>
+                </main>
+            </div>
+            <!-- MODALS -->
+        </div>
+        <!-- wrapper end  -->
+        <script src="assets/plugins/datatable/js/jquery.dataTables.min.js?v=<?= time() ?>"></script>
+        <?php include('includes/footer-scripts.php') ?>
+        <script src="assets/js/users.js?v=<?= time() ?>"></script>
+        <?php if(@$err == 1){ ?>
+        <script>
+            const modal = new bootstrap.Modal(document.getElementById('addUserModal'));
+            modal.show();
+        </script>
+        <?php } ?>
+        <script>
+            
+        function toggleDetails(id) {
+            const content = document.getElementById('details-' + id);
+            content.style.display = (content.style.display === "none" || content.style.display === "") ? "block" : "none";
+        }
+        function toggleGroupC(id) {
+            const groupCContent = document.getElementById('groupC-' + id);
+            groupCContent.style.display = (groupCContent.style.display === "none" || groupCContent.style.display === "") ? "block" : "none";
+        }
+        </script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const searchInput = document.getElementById("search-bar");
+        const cards = document.querySelectorAll(".card");
+    
+        searchInput.addEventListener("keyup", function () {
+            const searchTerm = searchInput.value.toLowerCase();
+    
+            cards.forEach(function (card) {
+                const textContent = card.textContent.toLowerCase();
+    
+                if (textContent.includes(searchTerm)) {
+                    card.style.display = "block";
+                } else {
+                    card.style.display = "none";
+                }
+            });
+        });
+    });
+
+    function showJsonModal(id,jsonString,showBtn) {
+                const decoded = jsonString.replace(/\\n/g, '\n').replace(/\\"/g, '"');
+                document.getElementById('jsonModalContent').textContent = decoded;
+                document.getElementById('p_id').value = id;
+                if(!showBtn){
+                    $(".jsonModalBtn").hide();
+                    $("#jsonModalContent").attr("readonly", true);
+                }
+                $('#jsonModal').modal('show'); // Requires Bootstrap's JS
+            }
+
+            function handleJsonClick(btn) {
+                const id = btn.getAttribute('data-id');
+                const jsonString = btn.getAttribute('data-json');
+
+                showJsonModal(id, jsonString, 0);
+            }
+    </script>
+    
+     
+    </body>
+</html>

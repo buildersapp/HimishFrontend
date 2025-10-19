@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+    <?php include('includes/head.php') ?>
+    <link rel="stylesheet" href="assets/plugins/datatable/css/dataTables.bootstrap5.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.7.1/css/buttons.dataTables.min.css">
+    <style>
+        i {
+            cursor: pointer !important;
+        }
+    </style>
+    <body>
+        <!-- wrapper start  -->
+        <div class="wrapper2">
+            <!-- header start  -->
+            <?php include('includes/nav-header.php') ?>
+            <!-- header end  -->
+            <!-- content area start  -->
+            <div class="user-page-sec">
+                <main class="dashboard-main">
+                    <!-- icon card section  -->
+                    <section class="iconboxes">
+                        <div class="row" id="icon-wraper">
+                            <!-- single item -->
+                            <div class="col-md-6">
+                                <a href="javascript:void(0);">
+                                    <div class="user-box single-icon-box">
+                                        <div>
+                                            <h3>Total Clicks</h3>
+                                            <h2>
+                                                <?= formatNumberUS($final['total_users']) ?> 
+                                                <span>
+                                                    <?php if ($final['user_last_week_analytics'] >= 0): ?>
+                                                        <i style="color: green;">&#9650; <?= abs($final['user_last_week_analytics']) ?>%</i>
+                                                    <?php else: ?>
+                                                        <i style="color: red;">&#9660; <?= abs($final['user_last_week_analytics']) ?>%</i>
+                                                    <?php endif; ?>
+                                                </span>
+                                            </h2>
+                                            <p>From Last week analytics</p>
+                                        </div>
+                                        <div class="icon-img">
+                                            <img src="assets/./img/dashboard/total.png" alt="" />
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                            <!-- single item -->
+                            <div class="col-md-6">
+                                <a href="javascript:void(0);">
+                                    <div class="Posts-box single-icon-box">
+                                        <div>
+                                            <h3>Total Conversions</h3>
+                                            <h2>
+                                                <?= formatNumberUS($final['total_posts']) ?> 
+                                                <span>
+                                                    <?php if ($final['post_last_week_analytics'] >= 0): ?>
+                                                        <i style="color: green;">&#9650; <?= abs($final['post_last_week_analytics']) ?>%</i>
+                                                    <?php else: ?>
+                                                        <i style="color: red;">&#9660; <?= abs($final['post_last_week_analytics']) ?>%</i>
+                                                    <?php endif; ?>
+                                                </span>
+                                            </h2>
+                                            <p>From Last week analytics</p>
+                                        </div>
+                                        <div class="icon-img">
+                                            <img src="assets/./img/dashboard/total.png" alt="" />
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </section>
+                </main>
+                <main>
+                    <section class="userList">
+                        <div class="">
+                            <div class="row">
+                                <!-- top -->
+                                 <div class="col-12">
+                                    <div class="search-sec-cmn user-page d-flex align-items-center justify-content- mb-4">
+                                        <div class="addUser">
+                                            <a href="#" class="btn-primary btn-small" title="Ads Invitation" data-bs-toggle="modal" data-bs-target="#adsInvitationModal"><button class="btn btn-primary"><i class="fa fa-plus-circle fax"></i> Create New Link</button></a>
+                                          </div>
+                                        <div class="search-form me-2">
+                                            <button class="btn p-0 outline-0" type="submit"><img src="assets/img/list/search.svg" alt="search icon" /></button>
+                                            <input type="search" class="form-control form-input border-0" id="getAdsInvitationSearch" placeholder="Search.." />
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- bottom -->
+                                <div class="col-12">
+                                    <div class="list-users table-responsive">
+                                        <!-- table -->
+                                        <table class="table data-table-cmn" id="getAdsInvitation">
+                                            <thead>
+                                                <tr class="table-header">
+
+                                                    <th scope="col" class="userHeading-size">
+                                                        Tracking # 
+                                                    </th>
+                                                    <th scope="col">
+                                                        Share Option 
+                                                    </th>
+                                                    <th scope="col">
+                                                        <a href="#" class="userHeading"> EMAILS </a>
+                                                    </th>
+                                                    <th scope="col">
+                                                        INCLUDE COUPON 
+                                                    </th>
+                                                    <th scope="col">
+                                                        <a href="#" class="userHeading"> URL </a>
+                                                    </th>
+                                                    <th scope="col">
+                                                        <a href="#" class="userHeading"> CLICKS </a>
+                                                    </th>
+                                                    <th scope="col">
+                                                        <a href="#" class="userHeading"> CONVERSIONS </a>
+                                                    </th>
+                                                    <th scope="col">
+                                                        <div class="userHeading">ACTION</div>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            </tbody>
+                                        </table>
+                                        <div id="noDataMessage" class="no-data-container" style="display: none;">
+                                            <img src="<?= NO_DATA_IMG ?>" alt="No Data">
+                                            <h3><?= NO_DATA_TITLE ?></h3>
+                                            <p><?= NO_DATA_DESC ?></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </main>
+            </div>
+            <!-- content area end -->
+            <div class="modal fade customModal" id="adsInvitationModal" tabindex="-1" aria-labelledby="addUserLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h2 class="modal-title fs-5" id="addUserLabel">Share Ad Link</h2>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <?php
+                            if (!empty($errors)) {
+                                echo "<div class='alert alert-danger'>" . implode("<br>", $errors) . "</div>";
+                            }
+                            ?>
+                            <form class="user-form p-0 d-flex flex-column gap-3" method="post" action="" data-parsley-validate enctype="multipart/form-data">
+                                
+                                <div>
+                                    <label>Select Sharing Method</label>
+                                    <select name="share_option" id="share_option" class="form-control" onchange="toggleShareOptions()" required>
+                                        <option value="">Select an option</option>
+                                        <option value="email">Send to Email</option>
+                                        <option value="whatsapp">Share on WhatsApp</option>
+                                    </select>
+                                </div>
+                                
+                                <div id="email_section" style="display: none;">
+                                    <label>Enter Email Addresses</label>
+                                    <i class="fa fa-plus-circle" onclick="addEmailField()"></i>
+                                    <div id="email_fields">
+                                        
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label>Include Coupon?</label>
+                                    <select name="include_coupon" id="include_coupon" class="form-control" onchange="toggleCouponOptions()">
+                                        <option value="no">No</option>
+                                        <option value="yes">Yes</option>
+                                    </select>
+                                </div>
+        
+                                <div id="coupon_section" style="display: none;">
+                                    <label>Coupon Type</label>
+                                    <select name="coupon_type" id="coupon_type" class="form-control" onchange="updateCouponLimit()">
+                                        <option value="percentage">Percentage Off</option>
+                                        <option value="fixed">Fixed Amount Off</option>
+                                    </select>
+                                    <input type="number" name="coupon_value" id="coupon_value" class="form-control mt-2" placeholder="Enter discount value" />
+                                    <small id="coupon_limit" class="text-muted"></small>
+                                </div>
+                                
+                                <div class="mt-2 gap-3 d-flex flex-row">
+                                    <button type="submit" class="btn btnSave" name="adsInvitation">Submit</button>
+                                    <button type="button" class="btn btnClose" onclick="window.location.reload();">Close</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- wrapper end  -->
+        <script src="assets/plugins/datatable/js/jquery.dataTables.min.js?v=<?= time() ?>"></script>
+        <?php include('includes/footer-scripts.php') ?>
+        <?php if(!empty($errors)){ ?>
+        <script>
+            const modal = new bootstrap.Modal(document.getElementById('adsInvitationModal'));
+            modal.show();
+        </script>
+        <?php } ?>
+        <script>
+            const percentageLimit = <?= $generalSettings['sales_max_percentage_discount'] ?? 50 ?>;
+            const fixedLimit = <?= $generalSettings['sales_max_fixed_discount'] ?? 100 ?>;
+        </script>
+        <script src="assets/js/adsLink.js?v=<?= time() ?>"></script>
+    </body>
+</html>

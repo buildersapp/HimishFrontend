@@ -1,0 +1,27 @@
+<?php 
+$redirectUrl = (!empty(@$_SESSION['hm_wb_logged_in'] && $_SESSION['hm_wb_logged_in'] === true)) ? 'home.php' : 'index.php';
+?>
+<!DOCTYPE html>
+<html lang="en">
+    <?php include('includes/head.php') ?>
+    <body>
+        <header>
+            <div class="terms-nav">
+                <div class="container">
+                    <div class="logo">
+                        <a href="<?= $redirectUrl; ?>"><img src="assets/images/logo-light-org.png" alt=""></a>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <section class="terms-condition">
+            <div class="container">
+                <h1 class="terms-title">Terms & Conditions</h1>
+                <div class="terms-section">
+                    <?php echo $generalSettings['terms']; ?>
+                </div>
+            </div>
+        </section>
+    </body>
+    <?php include('includes/footer-scripts.php') ?>
+</html>

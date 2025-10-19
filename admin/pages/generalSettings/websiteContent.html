@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+    <?php include('includes/head.php') ?>
+    <style>
+    .fixed-center-buttons {
+        position: fixed;
+        bottom: 10px;
+        right: 10px;
+        transform: translate(-50%, -50%);
+        z-index: 9999;
+        background: rgb(184, 191, 194);
+        padding: 1rem 2rem;
+        border-radius: 10px;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    }
+    .cmn-card {
+        margin-bottom: 20px;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        padding: 20px;
+        background: #fff;
+    }
+    </style>
+    <body>
+        <div class="wrapper relative">
+            <?php include('includes/sidebar.php') ?>
+            <?php include('includes/nav-header.php') ?>
+
+            <!-- content area start -->
+            <div class="master-detail-page-sec general-page-sec">
+                <main class="user-main">
+                    <div class="user-rigt">
+                        <form class="user-form p-0" method="post" action="" enctype="multipart/form-data" id="pageContentForm" data-parsley-validate>
+                            <input type="hidden" name="id" value="<?= $final['id'] ?>" />
+                            <div class="row">
+                            
+                                <!-- Login Page Card -->
+                                <div class="cmn-card col-ms-5 col-5 offset-1 me-3">
+                                    <h4>Login Page Content</h4>
+                                    <input type="hidden" name="page_keys[]" value="login_page" />
+
+                                    <div class="mb-3">
+                                        <label for="login_title">Title</label>
+                                        <input type="text" id="login_title" name="login_page[title]" class="form-control" 
+                                            value="<?= $final['login_page']['title'] ?? '' ?>" required>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label for="login_description">Description</label>
+                                        <textarea id="login_description" name="login_page[description]" rows="3" class="form-control" required><?= $final['login_page']['description'] ?? '' ?></textarea>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="rlogin_title">Right Title</label>
+                                        <input type="text" id="rlogin_title" name="login_page[right_title]" class="form-control" 
+                                            value="<?= $final['login_page']['right_title'] ?? '' ?>" required>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="login_description">Right Description</label>
+                                        <textarea id="login_description" name="login_page[right_description]" rows="3" class="form-control" required><?= $final['login_page']['right_description'] ?? '' ?></textarea>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label for="login_image">Image</label>
+                                        <input type="file" id="login_image" name="login_page[image]" class="form-control" accept="image/*" <?= empty($final['login_page']['image']) ? 'required' : '' ?>>
+                                        <?php if (!empty($final['login_page']['image'])): ?>
+                                            <img src="<?= MEDIA_BASE_URL.$final['login_page']['image'] ?>" alt="Login Page Image" style="max-height:100px; margin-top:10px;">
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
+
+                                <!-- Early Access Page Card -->
+                                <div class="cmn-card col-ms-5 col-5">
+                                    <h4>Early Access Page Content</h4>
+                                    <input type="hidden" name="page_keys[]" value="early_access_page" />
+
+                                    <div class="mb-3">
+                                        <label for="early_title">Title</label>
+                                        <input type="text" id="early_title" name="early_access_page[title]" class="form-control" 
+                                            value="<?= $final['early_access_page']['title'] ?? '' ?>" required>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label for="early_description">Description</label>
+                                        <textarea id="early_description" name="early_access_page[description]" rows="3" class="form-control" required><?= $final['early_access_page']['description'] ?? '' ?></textarea>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="rlogin_title">Right Title</label>
+                                        <input type="text" id="rlogin_title" name="early_access_page[right_title]" class="form-control" 
+                                            value="<?= $final['early_access_page']['right_title'] ?? '' ?>" required>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="right_login_description">Right Description</label>
+                                        <textarea id="early_description" name="early_access_page[right_description]" rows="3" class="form-control" required><?= $final['early_access_page']['right_description'] ?? '' ?></textarea>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label for="early_image">Image</label>
+                                        <input type="file" id="early_image" name="early_access_page[image]" class="form-control" accept="image/*" <?= empty($final['early_access_page']['image']) ? 'required' : '' ?>>
+                                        <?php if (!empty($final['early_access_page']['image'])): ?>
+                                            <img src="<?= MEDIA_BASE_URL.$final['early_access_page']['image'] ?>" alt="Early Access Image" style="max-height:100px; margin-top:10px;">
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Submit Button -->
+                            <div class="edit-btn fixed-center-buttons d-flex align-content-center align-items-center gap-3 flex-md-nowrap flex-wrap justify-content-md-end justify-content-center mt-5 mt-lg-0">
+                                <button type="submit" name="updateSettings" class="btn btn-primary">
+                                    <span>CLICK HERE TO UPDATE</span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </main>
+            </div>
+            <!-- content area end -->
+        </div>
+
+        <?php include('includes/footer-scripts.php') ?>
+        <script src="assets/js/companyDetails.js?v=<?= time() ?>"></script>
+    </body>
+</html>

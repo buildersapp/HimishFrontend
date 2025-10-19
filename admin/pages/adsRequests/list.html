@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+    <?php include('includes/head.php') ?>
+    <link rel="stylesheet" href="assets/plugins/datatable/css/dataTables.bootstrap5.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.7.1/css/buttons.dataTables.min.css">
+    <body>
+        <!-- wrapper start  -->
+        <div class="wrapper relative">
+            <?php include('includes/sidebar.php') ?>
+
+            <!-- header start  -->
+            <?php include('includes/nav-header.php') ?>
+            <!-- header end  -->
+
+            <!-- content area start  -->
+            <div class="ads-requests-page-css">
+                <main>
+                    <section class="userList">
+                        <div class="">
+                            <div class="row">
+                                <!-- top -->
+                                <div class="search-sec-cmn user-page d-flex align-items-center justify-content-between mb-4">
+                                    <div class="search-form me-2">
+                                        <button class="btn p-0 outline-0" type="submit"><img src="assets/img/list/search.svg" alt="search icon" /></button>
+                                        <input type="search" class="form-control form-input border-0" id="searchAds" placeholder="Search.." />
+                                    </div>
+                                </div>
+
+                                <!-- bottom -->
+                                <div class="col-12">
+                                    <div class="list-users table-responsive">
+                                        <!-- table -->
+                                        <table class="table data-table-cmn" id="adsRequestsTable">
+                                            <thead>
+                                                <tr class="table-header">
+                                                    <th scope="col" class="userHeading-size">
+                                                        <a href="#" class="userHeading"> TITLE </a>
+                                                    </th>
+                                                    <th scope="col">
+                                                        <a href="#" class="userHeading"> COMPANY </a>
+                                                    </th>
+                                                    <th scope="col">
+                                                        <a href="#" class="userHeading"> USERNAME </a>
+                                                    </th>
+                                                    <th scope="col">
+                                                        <a href="#" class="userHeading"> STATUS </a>
+                                                    </th>
+                                                    <th scope="col">
+                                                        <a href="#" class="userHeading"> PAYMENT </a>
+                                                    </th>
+                                                    <th scope="col">
+                                                        <a href="#" class="userHeading"> CREATED AT </a>
+                                                    </th>
+                                                    <th scope="col">
+                                                        <div class="userHeading">ACTION</div>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            </tbody>
+                                        </table>
+                                        <div id="noDataMessage" class="no-data-container" style="display: none;">
+                                            <img src="<?= NO_DATA_IMG ?>" alt="No Data">
+                                            <h3><?= NO_DATA_TITLE ?></h3>
+                                            <p><?= NO_DATA_DESC ?></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </main>
+            </div>
+        </div>
+        <div class="modal fade customModal" id="adsRsnModal" tabindex="-1" aria-labelledby="addPlanLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2 class="modal-title fs-5" id="addPlanLabel">Why Reject ?????????</h2>
+                    </div>
+                    <div class="modal-body">
+                        <form class="user-form p-0 d-flex flex-column gap-3" method="post" action="" data-parsley-validate enctype="multipart/form-data">
+
+                            <div>
+                                <textarea class="form-control" name="reason" cols="10" rows="10" placeholder="Enter your reason" required></textarea>
+                                <input type="hidden" name="id" value="<?= $_GET['id'] ?>"/>
+                                <input type="hidden" name="tp" value="<?= $_GET['tp'] ?>"/>
+                            </div>
+
+                            <div class="mt-2 gap-3 d-flex flex-row">
+                                <button type="submit" name="submitAdsWithRsn" class="btn btnSave">Submit</button>
+                                <a href="ads-requests.php"><button type="button" class="btn btnClose" data-bs-dismiss="modal">Close</button></a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- wrapper end  -->
+        <script src="assets/plugins/datatable/js/jquery.dataTables.min.js?v=<?= time() ?>"></script>
+        <?php include('includes/footer-scripts.php') ?>
+        <?php if(isset($_GET['cbAct']) && isset($_GET['tp']) && $_GET['tp'] == 2){ ?>
+            <script>
+                const modal = new bootstrap.Modal(document.getElementById('adsRsnModal'));
+                modal.show();
+            </script>
+            <?php } ?>
+    </body>
+</html>

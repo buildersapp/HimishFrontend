@@ -1,0 +1,341 @@
+<html>
+    <?php include('includes/head.php'); ?>
+    <style>
+    .ck-editor__editable {
+        min-height: 120px; /* adjust as needed */
+    }
+    </style>
+    <body class="bg-gray-50 font-sans">
+        <div id="main-container" class="flex h-screen">
+            <?php include('includes/sidebar.php'); ?>
+            <main id="main-content" class="flex-1 overflow-auto">
+                <?php include('includes/nav-header.php'); ?>
+                <!-- Invite Users Content -->
+                <div id="invite-users-content" class="p-8">
+                    <!-- Community Info Card -->
+                    <input type="hidden" id="communityName" value="<?= $ILData['name'] ?>" />
+                    <input type="hidden" id="communityLocation" value="<?= $ILData['address'] ?>" />
+                    <input type="hidden" id="inviteLink" value="<?= $ILData['linkData'][0]['share_link'] ?>" />
+                    <section id="community-info" class="bg-gradient-to-r from-purple-600 to-blue-600 rounded-xl p-6 mb-8 text-white">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-4">
+                                <div class="w-16 h-16 bg-white bg-opacity-20 rounded-lg flex items-center justify-center">
+                                    <i class="fas fa-laptop text-2xl"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-xl font-bold"><?= $ILData['name'] ?></h3>
+                                    <p class="text-purple-100"><?= $ILData['address'] ?></p>
+                                    <div class="flex items-center space-x-4 mt-2 text-sm">
+                                        <span class="flex items-center">
+                                            <i class="fas fa-users mr-1"></i>
+                                            <?= displayWithFallback(count($ILData['members'])) ?> Members
+                                        </span>
+                                        <span class="flex items-center">
+                                            <i class="fas fa-rectangle-ad mr-1"></i>
+                                            <?= displayWithFallback($ILData['linkData'][0]['totalAds']) ?> Ads
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <div class="text-sm text-purple-100">Commission Earned</div>
+                                <div class="text-2xl font-bold">$<?= displayWithFallback($ILData['linkData'][0]['totalCommissionEarned']) ?></div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Invite Link Section -->
+                    <section id="invite-link-section" class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-8">
+                        <div class="mb-6">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-2">Community Invite Link</h3>
+                            <p class="text-gray-600 text-sm">Share this link to invite users to join your community and post ads. You'll earn commission on all paid ads they create.</p>
+                        </div>
+
+                        <div id="invite-link-display" class="bg-gray-50 rounded-lg p-4 mb-6">
+                            <div class="flex items-center justify-between">
+                                <div class="flex-1">
+                                    <!-- <label class="block text-sm font-medium text-gray-700 mb-2">Invite Link</label> -->
+                                    <input
+                                        type="text"
+                                        value="<?= $ILData['linkData'][0]['share_link'] ?>"
+                                        readonly=""
+                                        class="w-full px-3 py-2 bg-white border border-gray-300 rounded-md text-sm font-mono text-gray-600"
+                                    />
+                                </div>
+                                <button id="copy-link-btn" class="ml-4 bg-blue-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-blue-700 flex items-center space-x-2" onclick="copyToClipboard('<?= htmlspecialchars($ILData['linkData'][0]['share_link'] ?? '', ENT_QUOTES) ?>')">
+                                    <i class="fas fa-copy"></i>
+                                    <span>Copy Link</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="bg-amber-50 border border-amber-200 rounded-lg p-4">
+                            <div class="flex items-start space-x-3">
+                                <i class="fas fa-info-circle text-amber-600 mt-0.5"></i>
+                                <div class="text-sm text-amber-800">
+                                    <strong>Commission Info:</strong> Any ads created in this community by invited users will earn you commission based on the current rate. Only paid ads count towards your earnings.
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Share Methods -->
+                    <section id="share-methods" class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+                        <div class="mb-6">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-2">Share Invitation</h3>
+                            <p class="text-gray-600 text-sm">Choose how you'd like to share your community invite link</p>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-6">
+                            <!-- Email Invite -->
+                            <form id="emailInviteForm" data-parsley-validate>
+                                <div id="email-invite" class="border border-gray-200 rounded-lg p-6 template-eds" data-type="email">
+                                    <div class="flex items-center space-x-3 mb-4">
+                                        <div class="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center">
+                                            <i class="fas fa-envelope text-red-600"></i>
+                                        </div>
+                                        <h4 class="font-semibold text-gray-900">Email Invitation</h4>
+                                    </div>
+
+                                    <input type="hidden" name="email_type" id="email_type" value="email" />
+                                    <div class="space-y-4">
+
+                                        <!-- Multiple Email Inputs -->
+                                        <div id="email-container">
+                                            <label class="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
+
+                                            <!-- Default first field with + button -->
+                                            <div class="flex items-center mb-2 email-row">
+                                                <input type="email" name="emails[]" placeholder="Enter email address" required
+                                                    class="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
+
+                                                <!-- + button only for first field -->
+                                                <button type="button" onclick="addEmailField()"
+                                                    class="ml-2 text-blue-600 hover:text-blue-800 font-bold text-lg">＋</button>
+                                            </div>
+                                        </div>
+
+                                        <!-- Message -->
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-2">Message</label>
+                                            <textarea name="message"
+                                                rows="4"
+                                                class="template-message w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                placeholder="Hi! I'd like to invite you to join our Tech Entrepreneurs community..."
+                                            ><?= htmlspecialchars($settings['community_default_template_email'] ?? '') ?></textarea>
+                                            <!-- Variable insert buttons -->
+                                            <div class="flex space-x-2 mt-2">
+                                                <button type="button" class="insert-placeholder bg-gray-200 px-2 py-1 rounded text-sm" data-placeholder="[COMMUNITY_NAME]" data-type="email">Community Name</button>
+                                                <button type="button" class="insert-placeholder bg-gray-200 px-2 py-1 rounded text-sm" data-placeholder="[COMMUNITY_LOCATION]" data-type="email">Community Location</button>
+                                                <button type="button" class="insert-placeholder bg-gray-200 px-2 py-1 rounded text-sm" data-placeholder="[INVITE_LINK]" data-type="email">Invite Link</button>
+                                            </div>
+                                            <!-- 🔔 Note for users -->
+                                            <p class="text-xs text-gray-500 mt-1">
+                                                Use these placeholders in your message. They will be replaced automatically with the community’s 
+                                                <span class="font-semibold">name</span>, 
+                                                <span class="font-semibold">location</span>, 
+                                                and <span class="font-semibold">invite link</span> when the email is sent.
+                                            </p>
+                                        </div>
+
+                                        <!-- Submit Button -->
+                                        <div class="flex w-full space-x-2">
+                                            <button type="submit" name="sendEmailInvite"
+                                                class="w-full bg-red-600 text-white py-2 rounded-lg font-medium hover:bg-red-700 flex items-center justify-center space-x-2">
+                                                <i class="fas fa-paper-plane"></i>
+                                                <span>Send Email Invite</span>
+                                            </button>
+                                            <button type="button"
+                                                class="w-10 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 flex items-center justify-center copy-mt" data-type="whatsapp">
+                                                <i class="fas fa-copy"></i>
+                                            </button>
+                                        </div>
+
+                                        <!-- Load Previous Template -->
+                                        <div class="flex justify-end">
+                                            <button type="button" 
+                                                class="loadTemplate text-blue-600 text-sm font-medium hover:text-blue-700" data-type="email">
+                                                <i class="fa-solid fa-clock-rotate-left mr-1"></i> 
+                                                Load Previous Template
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+
+                            <!-- WhatsApp Invite -->
+                            <form id="whatsAppInviteForm" data-parsley-validate>
+                                <div id="whatsapp-invite" class="border border-gray-200 rounded-lg p-6 template-eds" data-type="whatsapp">
+                                    <div class="flex items-center space-x-3 mb-4">
+                                        <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+                                            <i class="fab fa-whatsapp text-green-600"></i>
+                                        </div>
+                                        <h4 class="font-semibold text-gray-900">WhatsApp Message</h4>
+                                    </div>
+
+                                    <div class="space-y-4">
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
+                                            <input type="tel" id="whtsph" name="whtsph" placeholder="(555) 123-4567" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" oninput="this.value = formatPhoneNumberUSRC(this.value);" required />
+                                        </div>
+
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-2">Message</label>
+                                            <textarea rows="4" class="template-message w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Hey! Join our Tech Entrepreneurs community..."><?= $settings['community_default_template_whatsapp'] ?></textarea>
+                                            <!-- Variable insert buttons -->
+                                            <div class="flex space-x-2 mt-2">
+                                                <button type="button" class="insert-placeholder bg-gray-200 px-2 py-1 rounded text-sm" data-placeholder="[COMMUNITY_NAME]" data-type="whatsapp">Community Name</button>
+                                                <button type="button" class="insert-placeholder bg-gray-200 px-2 py-1 rounded text-sm" data-placeholder="[COMMUNITY_LOCATION]" data-type="whatsapp">Community Location</button>
+                                                <button type="button" class="insert-placeholder bg-gray-200 px-2 py-1 rounded text-sm" data-placeholder="[INVITE_LINK]" data-type="whatsapp">Invite Link</button>
+                                            </div>
+                                            <!-- 🔔 Note for users -->
+                                            <p class="text-xs text-gray-500 mt-1">
+                                                Use these placeholders in your message. They will be replaced automatically with the community’s 
+                                                <span class="font-semibold">name</span>, 
+                                                <span class="font-semibold">location</span>, 
+                                                and <span class="font-semibold">invite link</span> when shared on whatsapp.
+                                            </p>
+                                        </div>
+
+                                        <div class="flex w-full space-x-2">
+                                            <button class="w-full bg-green-600 text-white py-2 rounded-lg font-medium hover:bg-green-700 flex items-center justify-center space-x-2">
+                                                <i class="fab fa-whatsapp"></i>
+                                                <span>Send WhatsApp</span>
+                                            </button>
+                                            <button type="button"
+                                                class="w-10 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 flex items-center justify-center copy-mt" data-type="whatsapp">
+                                                <i class="fas fa-copy"></i>
+                                            </button>
+                                        </div>
+
+                                        <div class="flex justify-end">
+                                            <button type="button" 
+                                                class="loadTemplate text-blue-600 text-sm font-medium hover:text-blue-700" data-type="whatsapp">
+                                                <i class="fa-solid fa-clock-rotate-left mr-1"></i> 
+                                                Load Previous Template
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+
+                            <!-- SMS Invite -->
+                            <form id="smsInviteForm" data-parsley-validate>
+                                <input type="hidden" name="sms_type" value="sms" />
+
+                                <div id="sms-invite" class="border border-gray-200 rounded-lg p-6 template-eds" data-type="sms">
+                                    <div class="flex items-center space-x-3 mb-4">
+                                        <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                                            <i class="fas fa-sms text-blue-600"></i>
+                                        </div>
+                                        <h4 class="font-semibold text-gray-900">SMS Message</h4>
+                                    </div>
+
+                                    <div class="space-y-4">
+                                        <!-- 📱 Phone Numbers -->
+                                        <div id="phone-container">
+                                            <div class="flex items-center mb-2 phone-row">
+                                                <input type="tel" name="phones[]" placeholder="(555) 123-4567"
+                                                    class="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                    required oninput="this.value = formatPhoneNumberUSRC(this.value);" />
+                                                <button type="button" onclick="addPhoneField()"
+                                                    class="ml-2 text-blue-600 hover:text-blue-800 font-bold text-lg">＋</button>
+                                            </div>
+                                        </div>
+
+                                        <!-- ✉️ Message -->
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-2">Message</label>
+                                            <textarea name="message" rows="4"
+                                                class="template-message w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                placeholder="Join our Tech Entrepreneurs community..."><?= $settings['community_default_template_sms'] ?></textarea>
+                                            <!-- Variable insert buttons -->
+                                            <div class="flex space-x-2 mt-2">
+                                                <button type="button" class="insert-placeholder bg-gray-200 px-2 py-1 rounded text-sm" data-placeholder="[COMMUNITY_NAME]" data-type="sms">Community Name</button>
+                                                <button type="button" class="insert-placeholder bg-gray-200 px-2 py-1 rounded text-sm" data-placeholder="[COMMUNITY_LOCATION]" data-type="sms">Community Location</button>
+                                                <button type="button" class="insert-placeholder bg-gray-200 px-2 py-1 rounded text-sm" data-placeholder="[INVITE_LINK]" data-type="sms">Invite Link</button>
+                                            </div>
+                                            <!-- 🔔 Note for users -->
+                                            <p class="text-xs text-gray-500 mt-1">
+                                                Use these placeholders in your message. They will be replaced automatically with the community’s 
+                                                <span class="font-semibold">name</span>, 
+                                                <span class="font-semibold">location</span>, 
+                                                and <span class="font-semibold">invite link</span> when sms is sent.
+                                            </p>
+                                        </div>
+
+                                        <div class="flex w-full space-x-2">
+                                            <button type="submit"
+                                                class="flex-1 bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700 flex items-center justify-center space-x-2">
+                                                <i class="fas fa-sms"></i>
+                                                <span>Send SMS</span>
+                                            </button>
+                                            
+                                            <button type="button"
+                                                class="w-10 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 flex items-center justify-center copy-mt" data-type="sms">
+                                                <i class="fas fa-copy"></i>
+                                            </button>
+                                        </div>
+
+                                        <div class="flex justify-end">
+                                            <button type="button"
+                                                class="loadTemplate text-blue-600 text-sm font-medium hover:text-blue-700" data-type="sms">
+                                                <i class="fa-solid fa-clock-rotate-left mr-1"></i>
+                                                Load Previous Template
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+
+                            <!-- Copy Link -->
+                            <div id="copy-link-section" class="border border-gray-200 rounded-lg p-6 template-eds" data-type="copy_share">
+                                <div class="flex items-center space-x-3 mb-4">
+                                    <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
+                                        <i class="fas fa-link text-purple-600"></i>
+                                    </div>
+                                    <h4 class="font-semibold text-gray-900">Copy &amp; Share</h4>
+                                </div>
+
+                                <div class="space-y-4">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Ready-to-Share Message</label>
+                                        <textarea rows="6" readonly="" class="template-message w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50 text-sm"><?= $settings['community_default_template_copy_share'] ?></textarea>
+                                        <!-- Variable insert buttons -->
+                                        <div class="flex space-x-2 mt-2">
+                                            <button type="button" class="insert-placeholder bg-gray-200 px-2 py-1 rounded text-sm" data-placeholder="[COMMUNITY_NAME]" data-type="copy_share">Community Name</button>
+                                            <button type="button" class="insert-placeholder bg-gray-200 px-2 py-1 rounded text-sm" data-placeholder="[COMMUNITY_LOCATION]" data-type="copy_share">Community Location</button>
+                                            <button type="button" class="insert-placeholder bg-gray-200 px-2 py-1 rounded text-sm" data-placeholder="[INVITE_LINK]" data-type="copy_share">Invite Link</button>
+                                        </div>
+                                        <!-- 🔔 Note for users -->
+                                        <p class="text-xs text-gray-500 mt-1">
+                                            Use these placeholders in your message. They will be replaced automatically with the community’s 
+                                            <span class="font-semibold">name</span>, 
+                                            <span class="font-semibold">location</span>, 
+                                            and <span class="font-semibold">invite link</span> when copied.
+                                        </p>
+                                    </div>
+
+                                    <button class="w-full bg-purple-600 text-white py-2 rounded-lg font-medium hover:bg-purple-700 flex items-center justify-center space-x-2 copy-mt" data-type="copy_share">
+                                        <i class="fas fa-copy"></i>
+                                        <span>Copy Message</span>
+                                    </button>
+                                    <div class="flex justify-end">
+                                        <button type="button" 
+                                            class="loadTemplate text-blue-600 text-sm font-medium hover:text-blue-700" data-type="copy_share">
+                                            <i class="fa-solid fa-clock-rotate-left mr-1"></i> 
+                                            Load Previous Template
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </main>
+        </div>
+    </body>
+    <?php include('includes/footer-scripts.php'); ?>
+    <script src="https://cdn.ckeditor.com/ckeditor5/40.0.0/classic/ckeditor.js?v=<?= time() ?>"></script>
+    <script src="assets/js/community-invite.js?v=<?= time() ?>"></script>
+</html>

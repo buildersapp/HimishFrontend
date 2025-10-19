@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+    <?php include('includes/head.php') ?>
+    <link rel="stylesheet" href="assets/plugins/datatable/css/dataTables.bootstrap5.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.7.1/css/buttons.dataTables.min.css" />
+
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js?v=<?= time() ?>"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js?v=<?= time() ?>"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js?v=<?= time() ?>"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js?v=<?= time() ?>"></script>
+    <style>
+        .select2-container {
+            z-index: 1050 !important; /* Should be higher than Bootstrap modal (1040) */
+        }
+        .select2-container--open {
+            z-index: 1060 !important; /* Slightly higher for the open dropdown */
+        }
+    </style>
+    <body>
+        <!-- wrapper start  -->
+        <div class="wrapper relative">
+            <?php include('includes/sidebar.php') ?>
+
+            <!-- header start  -->
+            <?php include('includes/nav-header.php') ?>
+            <!-- header end  -->
+
+            <!-- content area start  -->
+            <div class="Community-page-sec">
+                <main>
+                    <section class="userList">
+                        <div class="">
+                            <div class="row">
+                                <!-- top -->
+                                <div class="search-sec-cmn user-page d-flex align-items-center justify-content-between mb-4">
+                                    <div class="d-flex align-items-center">
+                                        <div class="search-form me-2">
+                                            <button class="btn p-0 outline-0" type="submit"><img src="assets/img/list/search.svg" alt="search icon" /></button>
+                                            <input type="search" class="form-control form-input border-0" id="searchWebAd" placeholder="Search Ads" />
+                                        </div>
+                                        <div class="set-input-label-all set-filter-select-ad">
+                                            <div class="d-flex align-items-center gap-5">
+                                                <div class="set-select-grow-1">
+                                                    <select class="form-select" name="positionSSkm" id="positionFil" aria-label="Default select example">
+                                                        <option value="">All Ads</option>
+                                                        <option value="left">Left</option>
+                                                        <option value="top-right">Top Right</option>
+                                                        <option value="middle-right">Middle Right</option>
+                                                        <option value="bottom-right">Bottom Right</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="addCommunity d-flex gap-3">
+                                        <a href="#" class="btn btn-cst px-3 bg-danger " style="display: none;" id="webAdsDltButton" 
+                                        >Delete</a>
+                                        <a href="#" class="btn btn-cst px-3 mt-0" data-bs-toggle="modal" data-bs-target="#createAdModal">Create Ad</a>
+                                    </div>
+                                </div>
+
+                                <!-- bottom -->
+                                <div class="col-12">
+                                    <div class="list-users table-responsive">
+                                        <!-- table -->
+                                        <table class="table data-table-cmn set-table-align-top" id="webAdTable">
+                                            <thead>
+                                                <tr class="table-header">
+                                                    <th scope="col" class="th-checkbox">
+                                                        <input type="checkbox" class="chk-box" />
+                                                    </th>
+                                                    <th scope="col" class="th-no">
+                                                        <a href="#" class="userHeading"> Postion </a>
+                                                    </th>
+                                                    <th scope="col">
+                                                        <a href="#" class="userHeading"> Image/Video </a>
+                                                    </th>
+                                                    <th scope="col">
+                                                        <a href="#" class="userHeading"> Company </a>
+                                                    </th>
+                                                    <!-- <th scope="col">
+                                                        <a href="#" class="userHeading"> Ad Position  </a>
+                                                    </th> -->
+
+                                                    <th scope="col">
+                                                        <a href="#" class="userHeading"> CTA </a>
+                                                    </th>
+
+                                                    <th scope="col">
+                                                        <a href="#" class="userHeading"> Ad Location </a>
+                                                    </th>
+
+                                                    <th scope="col">
+                                                        <a href="#" class="userHeading"> Views </a>
+                                                    </th>
+
+                                                    <th scope="col">
+                                                        <a href="#" class="userHeading"> Created at </a>
+                                                    </th>
+                                                    <th scope="col">
+                                                        <a href="#" class="userHeading"> EXPIRES </a>
+                                                    </th>
+                                                    <th scope="col">
+                                                        <a href="#" class="userHeading"> Status </a>
+                                                    </th>
+                                                    <th scope="col">
+                                                        <a href="#" class="userHeading"> Payment </a>
+                                                    </th>
+
+                                                    <th scope="col">
+                                                        <div class="userHeading">ACTION</div>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody></tbody>
+                                        </table>
+                                        <div id="noDataMessage" class="no-data-container" style="display: none;">
+                                            <img src="<?= NO_DATA_IMG ?>" alt="No Data" />
+                                            <h3><?= NO_DATA_TITLE ?></h3>
+                                            <p><?= NO_DATA_DESC ?></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </main>
+            </div>
+            <!-- content area end -->
+            <div class="modal fade customModal" id="createAdModal" tabindex="-1" aria-labelledby="createAdModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h2 class="modal-title fs-5" id="createAdModalModalLabel">Create Ad</h2>
+                        </div>
+                        <div class="modal-body">
+                            <!-- HTML FORM (create-web-ad) -->
+                            <form class="user-form p-0 d-flex flex-column" method="post" action="" data-parsley-validate enctype="multipart/form-data">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div class="set-input-label-all">
+                                            <label>Pick an Ad Position</label>
+                                            <div class="set-block-position-ad">
+                                                <div class="row">
+                                                    <div class="col-3">
+                                                        <label class="set-radio-wrap">
+                                                            <div class="set-border-box-all h-41px"></div>
+                                                        </label>
+                                                        <label class="set-radio-wrap">
+                                                            <input type="radio" name="box" value="left" checked />
+                                                            <div class="set-border-box-all h-149px">Left</div>
+                                                        </label>
+                                                    </div>
+                                                    <div class="col-6">
+                                                        <label class="set-radio-wrap">
+                                                            <!-- <input type="radio" name="box" value="center"> -->
+                                                            <div class="set-border-box-all h-206px"></div>
+                                                        </label>
+                                                    </div>
+                                                    <div class="col-3">
+                                                        <label class="set-radio-wrap">
+                                                            <input type="radio" name="box" value="top-right" />
+                                                            <div class="set-border-box-all h-58px">Top Right</div>
+                                                        </label>
+                                                        <label class="set-radio-wrap">
+                                                            <input type="radio" name="box" value="middle-right" />
+                                                            <div class="set-border-box-all h-58px">Middle Right</div>
+                                                        </label>
+                                                        <label class="set-radio-wrap">
+                                                            <input type="radio" name="box" value="bottom-right" />
+                                                            <div class="set-border-box-all h-58px">Bottom Right</div>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <div class="img-upload-add-post">
+                                            <input type="file" name="image" accept="image/*,video/*" id="imageShow" class="d-none" onchange="previewMedia(event)" />
+                                            <label for="imageShow">
+                                                <span>
+                                                    <img id="previewImg" src="assets/img/user/plus.png"
+                                                        alt="Upload Image" class="img-fluid" />
+                                                    <video id="previewVideo" style="display: none;"></video>
+                                                </span>
+                                                <input type="hidden" name="cropped_image" id="croppedImage" value="">
+                                                <input type="hidden" name="old_img_path" id="old_img_path" value="">
+                                                <span id="textHd">Upload Image / Video</span>
+                                            </label>
+                                        </div>
+                                        <hr />
+                                    </div>
+
+                                    <div class="col-12">
+                                        <div class="set-input-label-all">
+                                            <label class="d-block">Enter Details</label>
+                                            <div class="d-flex align-items-center gap-5">
+                                                <div class="set-select-grow-1 set-input-label-all">
+                                                    <select class="js-example-basic-single form-select" name="company_id" required>
+                                                        <option value="">Select Company</option>
+                                                        <?php foreach($companies as $company): ?>
+                                                            <option value="<?= $company['id'] ?>"><?= $company['name'] ?></option>
+                                                        <?php endforeach; ?>
+                                                    </select>
+                                                </div>
+                                                <label class="set-switch">
+                                                    <input type="checkbox" class="set-input-toggle" name="show_company" value="1" />
+                                                    <span class="set-slider set-round"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <div class="row">
+                                            <div class="col-8">
+                                                <div class="set-input-label-all mt-4">
+                                                    <input type="text" name="location" id="address" autocomplete="off" placeholder="Ad Location" class="form-control m-0" oninput="initAutocomplete()" onfocus="this.setAttribute('autocomplete', 'off');" required />
+                                                    <input type="hidden" name="latitude" id="latitude">
+                                                    <input type="hidden" name="longitude" id="longitude">
+                                                    <input type="hidden" name="city" id="city">
+                                                    <input type="hidden" name="state" id="state">
+                                                    <input type="hidden" name="country_code" id="country_code">
+                                                </div>
+                                            </div>
+                                            <div class="col-4">
+                                                <div class="set-input-label-all mt-4">
+                                                    <select class="form-select" name="radius" required>
+                                                        <option selected value="5">5m</option>
+                                                        <option value="10">10m</option>
+                                                        <option value="15">15m</option>
+                                                        <option value="20">20m</option>
+                                                        <option value="25">25m</option>
+                                                        <option value="30">30m</option>
+                                                        <option value="40">40m</option>
+                                                        <option value="50">50m</option>
+                                                        <option value="75">75m</option>
+                                                        <option value="100">100m</option>
+                                                        <option value="120">120m</option>
+                                                        <option value="150">150m</option>
+                                                        <option value="200">200m</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <div class="set-input-label-all mt-4">
+                                            <input
+                                                type="url"
+                                                name="url"
+                                                placeholder="Url"
+                                                class="form-control m-0 auto-prepend-https"
+                                                autocomplete="off"
+                                                onfocus="this.setAttribute('autocomplete', 'off');"
+                                                inputmode="url"
+                                                required
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <div class="set-input-label-all mt-4 position-relative">
+                                            <img src="assets/img/clarity_date-line.png" alt="calendar" class="set-calendar-icon-input" />
+                                            <input type="text" name="datefilter" onfocus="this.setAttribute('autocomplete', 'off');" autocomplete="off" value="" class="w-100 set-zindex-1001" placeholder="Begin - End" />
+                                            <input type="hidden" name="start_date" id="hiddenStartDate" required>
+                                            <input type="hidden" name="end_date" id="hiddenEndDate" required>
+                                            <input type="hidden" name="ad_id" id="ad_id" value="0">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-12 mt-4">
+                                        <label class="fw-bold mb-2">Ad Cost Summary</label>
+                                        <div id="costBreakdownBox" class="text-start">
+                                            <div>Sub Total: <span id="subTotalAmount" class="text-dark">$0.00</span></div>
+                                            <div>Tax (<span id="taxRatePercent"><?php echo $plans[0]['tax']; ?></span>%): <span id="taxAmount" class="text-dark">$0.00</span></div>
+                                            <div class="fw-bold">Total: <span id="totalCost" class="text-primary">$0.00</span></div>
+                                            <div class="mt-2 text-muted" id="costBreakdown">Charged for: -</div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Hidden fields to send via PHP -->
+                                    <input type="hidden" name="sub_total" id="sub_total" />
+                                    <input type="hidden" name="tax_amount" id="tax_amount" />
+                                    <input type="hidden" name="total_amount" id="total_amount" />
+                                    <input type="hidden" name="charged_breakdown" id="charged_breakdown" />
+                                    <input type="hidden" name="total_days" id="total_days" />
+
+
+                                    <div class="col-12 mt-4">
+                                        <div class="gap-3 d-flex flex-row align-items-center">
+                                            <button type="submit" name="<?= ($editMode) ? 'updateWebAd' : 'createWebAd' ?>" class="btn btnSave"><?= ($editMode) ? 'Update' : 'Save' ?></button>
+                                            <button type="button" class="btn btnClose" data-bs-dismiss="modal">Cancel</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- wrapper end  -->
+        <script src="assets/plugins/datatable/js/jquery.dataTables.min.js?v=<?= time() ?>"></script>
+        <script src="assets/plugins/select2/select2-custom.js?v=<?= time() ?>"></script>
+
+        <?php include('includes/footer-scripts.php') ?>
+        <script src="assets/js/webAds.js?v=<?= time() ?>"></script>
+
+        <!-- Trigger Modal Script -->
+        <script>
+            $(document).ready(function () {
+                if (<?= (int)$ad_id ?> > 0) {
+                    const modal = new bootstrap.Modal(document.getElementById('createAdModal'));
+                    modal.show();
+                }
+            });
+        </script>
+
+        <!-- Hidden ad_id for JavaScript -->
+        <script>
+            const ad_id = <?= (int)$ad_id ?>;
+        </script>
+
+        <!-- Prepopulate Form Values in Modal -->
+        <script>
+    $(document).ready(function () {
+        if (ad_id > 0) {
+            $("input[name='box'][value='<?= $ad['position'] ?>']").prop('checked', true);
+            $("select[name='company_id']").val("<?= $ad['company_id'] ?>").trigger('change');
+            $("input[name='show_company']").prop('checked', <?= $ad['show_company'] ? 'true' : 'false' ?>);
+            $("input[name='url']").val("<?= htmlspecialchars($ad['url']) ?>");
+            $("input[name='location']").val("<?= htmlspecialchars($ad['address']) ?>");
+            $("#ad_id").val(ad_id);
+            $("#latitude").val("<?= $ad['latitude'] ?>");
+            $("#longitude").val("<?= $ad['longitude'] ?>");
+            $("#city").val("<?= $ad['city'] ?>");
+            $("#state").val("<?= $ad['state'] ?>");
+            $("#country_code").val("<?= $ad['country_code'] ?>");
+            $("select[name='radius']").val("<?= $ad['miles'] ?>");
+            $("#old_img_path").val("<?= htmlspecialchars($ad['media']) ?>");
+
+            const startDate = "<?= $ad['start_date'] ?>";
+            const endDate = "<?= $ad['end_date'] ?>";
+
+            $("input[name='datefilter']").val(`${startDate} - ${endDate}`).trigger('change');
+            $("#hiddenStartDate").val(startDate);
+            $("#hiddenEndDate").val(endDate);
+
+            const start = parseStartDate($("#hiddenStartDate").val());
+            const end = parseEndDate($("#hiddenEndDate").val());
+
+            if (typeof calculateAdCost === 'function') {
+                calculateAdCost(start, end);
+            }
+
+            <?php if (!empty($ad['media'])): ?>
+                <?php if ($ad['media_type'] == 0): ?>
+                    $("#previewImg").attr("src", "<?= MEDIA_BASE_URL.''.$ad['media'] ?>").css({ display: 'block', width: '100px', height: '100px', objectFit: 'cover' });
+                    $("#previewVideo").hide();
+                <?php else: ?>
+                    $("#previewVideo").attr("src", "<?= MEDIA_BASE_URL.''.$ad['media'] ?>").css({ display: 'block', width: '140px', height: '140px' }).prop('controls', true);
+                    $("#previewImg").hide();
+                <?php endif; ?>
+                $("#textHd").html('');
+            <?php endif; ?>
+        }
+    });
+
+    function parseStartDate(dateStr) {
+        const [month, day, year] = dateStr.split('/');
+        const date = new Date(`${year}-${month}-${day}`);
+        date.setHours(0, 0, 0, 0); // 00:00:00
+        return date;
+    }
+
+    function parseEndDate(dateStr) {
+        const [month, day, year] = dateStr.split('/');
+        const date = new Date(`${year}-${month}-${day}`);
+        date.setHours(23, 59, 59, 999); // 23:59:59
+        return date;
+    }
+</script>
+
+        <script>
+
+        function previewMedia(event) {
+            const fileInput = event.target;
+            const file = fileInput.files[0];
+
+            if (file) {
+                const previewContainer = document.getElementById('previewContainer');
+                const previewImg = document.getElementById('previewImg');
+                const previewVideo = document.getElementById('previewVideo');
+
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+                    const fileType = file.type.split('/')[0]; // Get file type (image/video)
+
+                    if (fileType === 'image') {
+
+                      if (!pixelarity.open(file, false, function (res, faces) {
+                        console.log("Faces detected:", faces);
+
+                        // Set cropped image preview
+                        var previewImg = document.getElementById('previewImg');
+                        previewImg.src = res;
+                        previewImg.style.height = "100px";
+                        previewImg.style.width = "100px";
+                        previewImg.style.objectFit = "cover";
+
+                        // Hide video preview
+                        previewVideo.style.display = 'none';
+
+                        // Remove upload text
+                        document.getElementById('textHd').innerHTML = '';
+                        document.getElementById('croppedImage').value = res;
+
+                        // Remove previous face rectangles
+                        document.querySelectorAll('.face').forEach(el => el.remove());
+
+                        // Draw face detection boxes (if any)
+                        faces.forEach(face => {
+                            let faceBox = document.createElement('div');
+                            faceBox.className = 'face';
+                            faceBox.style.position = 'absolute';
+                            //faceBox.style.border = '2px solid red';
+                            faceBox.style.height = face.height + "px";
+                            faceBox.style.width = face.width + "px";
+                            faceBox.style.top = (previewImg.getBoundingClientRect().top + face.y) + "px";
+                            faceBox.style.left = (previewImg.getBoundingClientRect().left + face.x) + "px";
+
+                            document.body.appendChild(faceBox);
+                        });
+                      }, "jpg", 0.7, true)) {
+                        alert("Whoops! That is not an image!");
+                      }
+                    } else if (fileType === 'video') {
+                        // Show video preview (first frame thumbnail)
+                        previewVideo.src = e.target.result;
+                        previewVideo.style.display = 'block';
+                        previewVideo.style.height = '140px';
+                        previewVideo.style.width = '140px';
+                        previewVideo.controls = true; // Add controls for video playback
+
+                        // Hide image preview
+                        previewImg.style.display = 'none';
+                    }
+
+                    $('#textHd').html('');
+                };
+
+                reader.readAsDataURL(file);
+            }
+        }
+
+
+            const pricing = {};
+            const taxRate = <?php echo $plans[0]['tax']; ?>;
+
+            <?php foreach ($plans as $plan): ?>
+                pricing["<?php echo $plan['code']; ?>"] = {
+                    days: <?php echo ($plan['code'] === 'month' ? 30 : ($plan['code'] === 'week' ? 7 : 1)); ?>,
+                    price: <?php echo $plan['price']; ?>
+                };
+            <?php endforeach; ?>
+
+            function calculateAdCost(startDate, endDate) {
+                const diffTime = endDate - startDate;
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+                let remainingDays = diffDays;
+                let subtotal = 0;
+                let breakdown = [];
+
+                const months = Math.floor(remainingDays / pricing.month.days);
+                if (months > 0) {
+                    subtotal += months * pricing.month.price;
+                    breakdown.push(`${months} Month${months > 1 ? 's' : ''}`);
+                    remainingDays %= pricing.month.days;
+                }
+
+                const weeks = Math.floor(remainingDays / pricing.week.days);
+                if (weeks > 0) {
+                    subtotal += weeks * pricing.week.price;
+                    breakdown.push(`${weeks} Week${weeks > 1 ? 's' : ''}`);
+                    remainingDays %= pricing.week.days;
+                }
+
+                if (remainingDays > 0) {
+                    subtotal += remainingDays * pricing.day.price;
+                    breakdown.push(`${remainingDays} Day${remainingDays > 1 ? 's' : ''}`);
+                }
+
+                const taxAmount = subtotal * (taxRate / 100);
+                const totalWithTax = subtotal + taxAmount;
+
+                // Update display
+                $("#subTotalAmount").text(`$${subtotal.toFixed(2)}`);
+                $("#taxAmount").text(`$${taxAmount.toFixed(2)}`);
+                $("#totalCost").text(`$${totalWithTax.toFixed(2)}`);
+                $("#costBreakdown").text(`Charged for: ${breakdown.join(', ')}`);
+
+                // Set hidden fields
+                $("#sub_total").val(subtotal.toFixed(2));
+                $("#tax_amount").val(taxAmount.toFixed(2));
+                $("#total_amount").val(totalWithTax.toFixed(2));
+                $("#charged_breakdown").val(breakdown.join(', '));
+                $("#total_days").val(diffDays);
+            }
+
+            $(function () {
+                const dateInput = $('input[name="datefilter"]');
+
+                dateInput.daterangepicker({
+                    autoUpdateInput: false,
+                    locale: { cancelLabel: "Clear" },
+                    drops: "up", // Open picker on top
+                    minDate: moment() // Disable past dates
+                });
+
+                dateInput.on("apply.daterangepicker", function (ev, picker) {
+                    ev.preventDefault();
+                    ev.stopPropagation();
+
+                    // Prevent any scroll jump
+                    document.activeElement.blur();
+
+                    const start = picker.startDate.format("MM/DD/YYYY");
+                    const end = picker.endDate.format("MM/DD/YYYY");
+
+                    $(this).val(`${start} - ${end}`);
+
+                    // Set hidden fields for start and end dates
+                    $('#hiddenStartDate').val(start);
+                    $('#hiddenEndDate').val(end);
+
+                    calculateAdCost(picker.startDate.toDate(), picker.endDate.toDate());
+                });
+
+                dateInput.on("cancel.daterangepicker", function (ev) {
+                    ev.preventDefault();
+                    ev.stopPropagation(); // ✅ Prevent modal scroll jump
+                    $(this).val("");
+                    $("#totalCost").text("$0.00");
+                    $("#costBreakdown").text("");
+                });
+            });
+        </script>
+
+
+        <script>
+            $(document).ready(function () {
+                $(".js-example-basic-single").select2({
+                    dropdownParent: $("#createAdModal"),
+                });
+
+                $('input[name="datefilter"]').on('cancel.daterangepicker', function(ev, picker) {
+                    $(this).val('');
+                });
+
+                });
+            </script>
+            <script>
+              $('#createAdModal').on('shown.bs.modal', function () {
+                const $select = $('.js-example-basic-single');
+                    if ($select.hasClass('select2-hidden-accessible')) {
+                        $select.select2('destroy');
+                    }
+
+                    $select.select2({
+                        dropdownParent: $('#createAdModal .modal-content'),
+                        width: '100%'
+                    });
+                });
+            </script>
+    </body>
+</html>

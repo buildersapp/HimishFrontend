@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+    <?php include('includes/head.php') ?>
+    <link rel="stylesheet" href="assets/plugins/datatable/css/dataTables.bootstrap5.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.7.1/css/buttons.dataTables.min.css">
+    <body>
+        <!-- wrapper start  -->
+        <div class="wrapper relative">
+            <?php include('includes/sidebar.php') ?>
+
+            <!-- header start  -->
+            <?php include('includes/nav-header.php') ?>
+            <!-- header end  -->
+
+            <!-- content area start  -->
+            <div class="user-page-sec">
+                <main>
+                    <section class="userList">
+                        <div class="">
+                            <div class="row">
+                                <!-- top -->
+                                 <div class="col-12">
+                                    <div class="search-sec-cmn user-page d-flex align-items-center justify-content- mb-4">
+                                        <div class="addUser">
+                                            <a href="#" class="btn-primary btn-small" title="Add Country" data-bs-toggle="modal" data-bs-target="#addCountryModal"><i class="fa fa-plus-circle fa-2x"></i> </a>
+                                          </div>
+                                        <div class="search-form me-2">
+                                            <button class="btn p-0 outline-0" type="submit"><img src="assets/img/list/search.svg" alt="search icon" /></button>
+                                            <input type="search" class="form-control form-input border-0" id="searchCountry" placeholder="Search Country" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- bottom -->
+                                <div class="col-12">
+                                    <div class="list-users table-responsive">
+                                        <!-- table -->
+                                        <table class="table data-table-cmn" id="countryTable">
+                                            <thead>
+                                                <tr class="table-header">
+                                                    <th scope="col" class="userHeading-size">
+                                                        # ID 
+                                                    </th>
+
+                                                    <th scope="col" class="userHeading-size">
+                                                        COUNTRY CODE 
+                                                    </th>
+                                                    <th scope="col">
+                                                        NAME 
+                                                    </th>
+                                                    <th scope="col">
+                                                        <a href="#" class="userHeading"> CURRENCY CODE </a>
+                                                    </th>
+                                                    <th scope="col">
+                                                        SYMBOL 
+                                                    </th>
+                                                    <th scope="col">
+                                                        <a href="#" class="userHeading"> TIMEZONE </a>
+                                                    </th>
+                                                    <th scope="col">
+                                                        <a href="#" class="userHeading"> MULTIPLIER </a>
+                                                    </th>
+                                                    <th scope="col">
+                                                        <a href="#" class="userHeading"> STATUS </a>
+                                                    </th>
+                                                    <th scope="col">
+                                                        <a href="#" class="userHeading"> CREATED </a>
+                                                    </th>
+                                                    <th scope="col">
+                                                        <div class="userHeading">ACTION</div>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            </tbody>
+                                        </table>
+                                        <div id="noDataMessage" class="no-data-container" style="display: none;">
+                                            <img src="<?= NO_DATA_IMG ?>" alt="No Data">
+                                            <h3><?= NO_DATA_TITLE ?></h3>
+                                            <p><?= NO_DATA_DESC ?></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </main>
+            </div>
+            <!-- content area end -->
+            <div class="modal fade customModal" id="addCountryModal" tabindex="-1" aria-labelledby="addUserLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h2 class="modal-title fs-5" id="addUserLabel">Add <?= $title ?></h2>
+                        </div>
+                        <div class="modal-body py-0">
+                            <form class="user-form p-3" method="post" action="" data-parsley-validate enctype="multipart/form-data">
+                                <small class="text-info mb-3">Enter the country name and click outside to auto-populate</small>
+
+                                <!-- Loader -->
+                                <div id="loader" style="display:none; text-align:center; margin-bottom:10px;">
+                                    <span>Syncing Data...</span>
+                                </div>
+
+                                <!-- Hidden ID for update -->
+                                <input type="hidden" name="country_id" value="<?= @$apiDataU['id'] ?>" />
+
+                                <div class="row mt-3">
+
+                                    <!-- Country Name -->
+                                    <div class="col-md-4 mb-3">
+                                        <label for="name">Country Name</label>
+                                        <input type="text" name="name" id="name" placeholder="Country Name"  
+                                            class="form-control" value="<?= @$apiDataU['name'] ?>" required />
+                                    </div>
+
+                                    <!-- Country Code -->
+                                    <div class="col-md-4 mb-3">
+                                        <label for="country_code">Country Code</label>
+                                        <input type="text" name="country_code" id="country_code" placeholder="Country Code"  
+                                            class="form-control" value="<?= @$apiDataU['country_code'] ?>" required disabled />
+                                    </div>
+
+                                    <!-- Currency Code -->
+                                    <div class="col-md-4 mb-3">
+                                        <label for="currency_code">Currency Code</label>
+                                        <input type="text" name="currency_code" id="currency_code" placeholder="Currency Code" 
+                                            class="form-control" value="<?= @$apiDataU['currency_code'] ?>" required disabled />
+                                    </div>
+
+                                    <!-- Currency Symbol -->
+                                    <div class="col-md-4 mb-3">
+                                        <label for="currency_symbol">Currency Symbol</label>
+                                        <input type="text" name="currency_symbol" id="currency_symbol" placeholder="Currency Symbol"  
+                                            value="<?= @$apiDataU['currency_symbol'] ?>" class="form-control" required disabled />
+                                    </div>
+
+                                    <!-- Multiplier -->
+                                    <div class="col-md-4 mb-3">
+                                        <label for="currency_multiplier">Currency Multiplier</label>
+                                        <input type="text" data-parsley-type="number" name="currency_multiplier" id="currency_multiplier" 
+                                            placeholder="Currency Multiplier" value="<?= @$apiDataU['currency_multiplier'] ?>" 
+                                            class="form-control" required disabled />
+                                    </div>
+
+                                    <!-- Date Format -->
+                                    <div class="col-md-4 mb-3">
+                                        <label for="date_format">Date Format</label>
+                                        <select name="date_format" id="date_format" class="form-control" required>
+                                            <option value="">Select Date Format</option>
+                                            <option value="DD/MM/YYYY" <?= (@$apiDataU['date_format']=="DD/MM/YYYY")?"selected":"" ?>>DD/MM/YYYY</option>
+                                            <option value="MM-DD-YYYY" <?= (@$apiDataU['date_format']=="MM-DD-YYYY")?"selected":"" ?>>MM-DD-YYYY</option>
+                                            <option value="YYYY-MM-DD" <?= (@$apiDataU['date_format']=="YYYY-MM-DD")?"selected":"" ?>>YYYY-MM-DD</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- Timezone -->
+                                    <div class="col-md-6 mb-3">
+                                        <label for="timezone">Timezone (*Comma Seperated , if multiple)</label>
+                                        <input type="text" name="timezone" id="timezone" placeholder="Timezone" 
+                                            value="<?= isset($apiDataU['timezone']) ? implode(', ', (array)$apiDataU['timezone']) : '' ?>" 
+                                            class="form-control" disabled />
+                                    </div>
+
+
+                                </div>
+
+                                <!-- Buttons -->
+                                <div class="mt-3 d-flex gap-3">
+                                    <?php if (!empty($apiDataU['id'])) { ?>
+                                        <button type="submit" name="updateCountry" class="btn btnSave">Update</button>
+                                    <?php } else { ?>
+                                        <button type="submit" name="addCountry" class="btn btnSave">Save</button>
+                                    <?php } ?>
+                                    <a href="countries.php"><button type="button" class="btn btnClose">Close</button></a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- wrapper end  -->
+        <script src="assets/plugins/datatable/js/jquery.dataTables.min.js?v=<?= time() ?>"></script>
+        <?php include('includes/footer-scripts.php') ?>
+        <?php if(@$_GET['err'] == 1 || @$_GET['id']){ ?>
+        <script>
+            const modal = new bootstrap.Modal(document.getElementById('addCountryModal'));
+            modal.show();
+        </script>
+        <?php } ?>
+        <script>
+        // Disable fields except name
+        function toggleFields(disabled) {
+            document.querySelectorAll("#country_code, #currency_code, #languages, #currency_symbol, #currency_multiplier, #date_format, #timezone")
+                .forEach(el => el.disabled = disabled);
+        }
+
+        // If add mode -> disable fields, if edit mode -> already filled
+        <?php if(!empty($apiDataU['id'])): ?>
+            toggleFields(false);
+        <?php endif; ?>
+
+        document.getElementById("name").addEventListener("blur", function() {
+            let countryName = this.value.trim();
+            if (!countryName) return;
+
+            document.getElementById("loader").style.display = "block";
+            toggleFields(true);
+
+            fetch(`https://restcountries.com/v3.1/name/${countryName}?fullText=true`)
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById("loader").style.display = "none";
+
+                if (!data || data.status === 404) {
+                    alert("Country not found!");
+                    return;
+                }
+                let c = data[0];
+
+                if (c.cca2) document.getElementById("country_code").value = c.cca2;
+                if (c.currencies) {
+                    let code = Object.keys(c.currencies)[0];
+                    document.getElementById("currency_code").value = code;
+                    document.getElementById("currency_symbol").value = c.currencies[code].symbol || "";
+                }
+                // if (c.languages) {
+                //     let langs = Object.values(c.languages).join(", ");
+                //     document.getElementById("languages").value = langs;
+                // }
+                if (c.timezones && c.timezones.length > 0) {
+                    document.getElementById("timezone").value = c.timezones[0];
+                }
+
+                toggleFields(false);
+            })
+            .catch(err => {
+                document.getElementById("loader").style.display = "none";
+                console.error("Error fetching country data", err);
+            });
+        });
+        </script>
+    </body>
+</html>

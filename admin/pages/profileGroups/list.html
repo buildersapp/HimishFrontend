@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+    <?php include('includes/head.php') ?>
+    <link rel="stylesheet" href="assets/plugins/datatable/css/dataTables.bootstrap5.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.7.1/css/buttons.dataTables.min.css">
+    <style>
+    .table-bordered {
+        border-collapse: collapse !important;
+    }
+    </style>
+    <body>
+        <!-- wrapper start  -->
+        <div class="wrapper relative">
+            <?php include('includes/sidebar.php') ?>
+
+            <!-- header start  -->
+            <?php include('includes/nav-header.php') ?>
+            <!-- header end  -->
+
+            <?php
+            if (isset($_GET['id']) && !empty($apiDataU['permissions']['permissions'])) {
+                $permissions_json = $apiDataU['permissions']['permissions'];
+            }
+            ?>
+
+            <!-- content area start  -->
+            <div class="user-page-sec">
+                <main>
+                    <section class="userList">
+                        <div class="">
+                            <div class="row">
+                                <!-- top -->
+                                 <div class="col-12">
+                                    <div class="search-sec-cmn user-page d-flex align-items-center justify-content- mb-4">
+                                        <?php if (hasPermission('General Settings', 'add')) { ?>
+                                        <div class="addUser">
+                                            <a href="#" class="btn-primary btn-small" title="Add User" data-bs-toggle="modal" data-bs-target="#addPGModal"><i class="fa fa-plus-circle fa-2x"></i> </a>
+                                        </div>
+                                        <?php } ?>
+                                        <div class="search-form me-2">
+                                            <button class="btn p-0 outline-0" type="submit"><img src="assets/img/list/search.svg" alt="search icon" /></button>
+                                            <input type="search" class="form-control form-input border-0" id="searchPG" placeholder="Search..." />
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- bottom -->
+                                <div class="col-12">
+                                    <div class="list-users table-responsive">
+                                        <!-- table -->
+                                        <table class="table data-table-cmn" id="profileGroupsTable">
+                                            <thead>
+                                                <tr class="table-header">
+
+                                                    <th scope="col" class="userHeading-size">
+                                                        # 
+                                                    </th>
+
+                                                    <th scope="col" class="userHeading-size">
+                                                        NAME 
+                                                    </th>
+                                                    <th scope="col">
+                                                        <a href="#" class="userHeading"> STATUS </a>
+                                                    </th>
+                                                    <th scope="col">
+                                                        <a href="#" class="userHeading"> CREATED </a>
+                                                    </th>
+                                                    <th scope="col">
+                                                        <div class="userHeading">ACTION</div>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            </tbody>
+                                        </table>
+                                        <div id="noDataMessage" class="no-data-container" style="display: none;">
+                                            <img src="<?= NO_DATA_IMG ?>" alt="No Data">
+                                            <h3><?= NO_DATA_TITLE ?></h3>
+                                            <p><?= NO_DATA_DESC ?></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </main>
+            </div>
+            <!-- content area end -->
+            <div class="modal fade customModal" id="addPGModal" tabindex="-1" aria-labelledby="addUserLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h2 class="modal-title fs-5" id="addUserLabel"><?= isset($_GET['id']) ? 'Update' : 'Add' ?> <?= $title ?></h2>
+                        </div>
+                        <div class="modal-body">
+                            <form class="user-form p-0 d-flex flex-column gap-3" 
+                                method="post" 
+                                action="" 
+                                data-parsley-validate 
+                                enctype="multipart/form-data">
+
+                                <!-- Basic Info -->
+                                <div class="row g-3">
+                                    <div class="col-md-4">
+                                        <label>Name</label>
+                                        <input type="text" name="name" id="NAME" placeholder="Name" 
+                                            class="form-control m-0" 
+                                            value="<?= @$apiDataU['name'] ?>" required />
+                                        <input type="hidden" name="account_type" id="account_type" value="2">
+                                    </div>
+                                </div>
+
+                                <!-- Actions -->
+                                <div class="mt-3 d-flex gap-3">
+                                    <button type="submit" name="<?= isset($_GET['id']) ? 'updateProfileGroups' : 'addProfileGroups' ?>" class="btn btnSave"><?= isset($_GET['id']) ? 'Update' : 'Save' ?></button>
+                                    <a href="#" onclick="window.location.href = 'profile-groups.php';">
+                                        <button type="button" class="btn btnClose">Close</button>
+                                    </a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- wrapper end  -->
+        <script src="assets/plugins/datatable/js/jquery.dataTables.min.js?v=<?= time() ?>"></script>
+        <?php include('includes/footer-scripts.php') ?>
+        <script src="assets/js/users.js?v=<?= time() ?>"></script>
+        <?php if($err == 1 || isset($_GET['id'])){ ?>
+        <script>
+            const modal = new bootstrap.Modal(document.getElementById('addPGModal'));
+            modal.show();
+        </script>
+        <?php } ?>
+        <script>
+        function buildPermissionsJson() {
+            let json = {};
+            document.querySelectorAll("tbody tr").forEach(row => {
+                let module = row.querySelector("td").innerText.trim();
+
+                json[module] = {
+                    add: row.querySelector("input[name='permissions["+module+"][add]']").checked,
+                    edit: row.querySelector("input[name='permissions["+module+"][edit]']").checked,
+                    delete: row.querySelector("input[name='permissions["+module+"][delete]']").checked,
+                    view: row.querySelector("input[name='permissions["+module+"][view]']").checked
+                };
+            });
+
+            document.getElementById("permissions_json").value = JSON.stringify(json);
+
+            return true; // allow form to submit after setting value
+        }
+        </script>
+    </body>
+</html>

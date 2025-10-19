@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+    <?php include('includes/head.php') ?>
+    <link rel="stylesheet" href="assets/plugins/datatable/css/dataTables.bootstrap5.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.7.1/css/buttons.dataTables.min.css">
+    <body>
+        <!-- wrapper start  -->
+        <div class="wrapper relative">
+            <?php include('includes/sidebar.php') ?>
+
+            <!-- header start  -->
+            <?php include('includes/nav-header.php') ?>
+            <!-- header end  -->
+            <!-- content area start  -->
+        <div class="transactions-page">
+            <main>
+                <section class="userList">
+                    <div class="">
+                        <div class="row">
+                            <!-- top -->
+                            <div class="col-12">
+                                <div class="search-sec-cmn d-flex align-items-center justify-content-between mb-3">
+                                    <div class="search-form">
+                                        <button class="btn p-0 outline-0" type="submit"><img src="assets/img/list/search.svg"
+                                                alt="search icon" /></button>
+                                        <input type="search" id="searchTransaction" class="form-control form-input border-0"
+                                            placeholder="Search Transaction" />
+                                    </div>
+                                    <div class="addUser">
+                                        <a href="#" class="btn btn-ex px-3">
+                                            <span><img src="assets/img/pro-ser/export.svg" alt="export"></span>
+                                            <span>Export to Excel</span>
+                                        </a>
+                                        <a href="#" class="btn btn-cst px-3 bg-danger " style="display: none;" id="transactionDeleteButton" 
+                                        >Delete</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- middle -->
+                        
+                            <!-- bottom -->
+                            <div class="col-12">
+                                <div class="list-users">
+                                    <!-- table -->
+                                    <div class="table-responsive">
+                                        <table class="table" id="transactionTable">
+                                            <thead>
+                                                <tr class="table-header">
+                                                    <th scope="col" class="th-checkbox">
+                                                        <input type="checkbox" class="chk-box select-all" value="0"/>
+                                                    </th>
+                                        
+                                                    <th scope="col" class="userHeading-size">
+                                                        <a href="#" class="userHeading">
+                                                            COMPANY 
+                                                        </a>
+                                                    </th>
+                                                    <th scope="col">
+                                                        <a href="#" class="userHeading">
+                                                            Payment <br> Method 
+                                                        </a>
+                                                    </th>
+                                                
+                                                    <th scope="col">
+                                                        <a href="#" class="userHeading">
+                                                            Paid For 
+                                                        </a>
+                                                    </th>
+                                                    <th scope="col">
+                                                        <a href="#" class="userHeading">
+                                                            date <br> Changed 
+                                                        </a>
+                                                    </th>
+                                                    <th scope="col">
+                                                        <a href="#" class="userHeading">
+                                                            Credits <br>
+                                                            Used 
+                                                        </a>
+                                                    </th>
+                                                    <th scope="col">
+                                                        <a href="#" class="userHeading">
+                                                            TAX 
+                                                        </a>
+                                                    </th>
+                                                    <th scope="col">
+                                                        <a href="#" class="userHeading">
+                                                        Total Amt <br>
+                                                        (INCL. TAX) 
+                                                        </a>
+                                                    </th>
+
+                                                    <th scope="col">
+                                                        <a href="#" class="userHeading">
+                                                            Status 
+                                                        </a>
+                                                    </th>
+                                                    <th scope="col">
+                                                        <div class="userHeading">ACTION</div>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            
+                                            </tbody>
+                                        </table>
+                                        <div id="noDataMessage" class="no-data-container" style="display: none;">
+                                            <img src="<?= NO_DATA_IMG ?>" alt="No Data">
+                                            <h3><?= NO_DATA_TITLE ?></h3>
+                                            <p><?= NO_DATA_DESC ?></p>
+                                        </div>
+                                    </div>
+                                
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </div>
+        <!-- content area end -->
+
+            
+        </div>
+        <!-- wrapper end  -->
+        <script src="assets/plugins/datatable/js/jquery.dataTables.min.js?v=<?= time() ?>"></script>
+        <?php include('includes/footer-scripts.php') ?>
+        <script src="assets/js/transaction.js?v=<?= time() ?>"></script>
+
+    </body>
+</html>

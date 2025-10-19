@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+    <?php include('includes/head.php') ?>
+    <body>
+        <?php include('includes/nav-header.php') ?>
+        <main>
+            <!-- <section class="header-profile-sponsor ps-3 ps-lg-0">
+                <div class="container-xlx">
+                    <div class="row header-flow-row align-items-center">
+                        <div class="col ps-0 ps-xl-auto ps-lg-4">
+                            <div class="header-flow-left">
+                                <div class="header-flow-left-inner">
+                                    <button class="header-flow-left-inner-button">
+                                        <img src="assets/img/left-arrow.svg" alt="left-arrow" />
+                                    </button>
+                                    <span class="mx-auto d-xl-none d-block">Company Profile</span>
+                                    <span class="me-auto d-xl-block d-none">Company Profile</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col d-xl-block d-none"></div>
+                    </div>
+                </div>
+            </section> -->
+            <section class="row container-xlx set-margin-52">
+                <div class="col-lg-2">
+                    <div class="d-flex align-items-center justify-content-start">
+                        <div class="set-company-card-box-76 set-card-175 flex-shrink-0">
+                            <img src="<?php echo !empty($companyDetails[0]['logo']) ? MEDIA_BASE_URL.$companyDetails[0]['logo'] : generateBase64Image($companyDetails[0]['name']); ?>" class="img-fluid" alt="" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-5">
+                    <!-- profile card  -->
+                    <div class="profile-card profile-cardx new-profile-cardx text-start p-0">
+                        <!-- profile details -->
+                        <h2>
+                            <?= $companyDetails[0]['name'] ?>
+                            <?php if($companyDetails[0]['is_verified']){ ?>
+                                <span class="">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
+                                        <path d="M8.50007 15.5006C7.40452 15.5006 6.32427 15.2434 5.34623 14.7498C4.36818 14.2562 3.51965 13.5399 2.86888 12.6586C2.2181 11.7773 1.78327 10.7555 1.59935 9.67551C1.41543 8.59551 1.48756 7.48742 1.80994 6.44038C2.13232 5.39334 2.69595 4.43657 3.45548 3.64706C4.21502 2.85754 5.14925 2.25732 6.18304 1.89466C7.21682 1.53201 8.32129 1.41705 9.4076 1.55905C10.4939 1.70104 11.5317 2.09601 12.4376 2.71219C12.561 2.79648 12.6459 2.92635 12.6736 3.07325C12.7013 3.22014 12.6695 3.37202 12.5852 3.49547C12.5009 3.61892 12.3711 3.70383 12.2242 3.73152C12.0773 3.75921 11.9254 3.72741 11.8019 3.64313C10.7172 2.9052 9.41669 2.55156 8.10764 2.63856C6.79858 2.72556 5.55631 3.24819 4.57877 4.12318C3.60123 4.99817 2.94466 6.17517 2.7137 7.46662C2.48274 8.75807 2.69067 10.0897 3.30436 11.2492C3.91805 12.4088 4.90218 13.3296 6.09994 13.8649C7.29771 14.4002 8.64017 14.5192 9.91343 14.203C11.1867 13.8868 12.3175 13.1535 13.1256 12.12C13.9337 11.0865 14.3727 9.81226 14.3726 8.50031C14.371 7.8684 14.2685 7.24079 14.0688 6.64125C14.0421 6.57047 14.0299 6.49502 14.033 6.41942C14.0361 6.34382 14.0544 6.26962 14.0868 6.20127C14.1193 6.13291 14.1652 6.0718 14.2218 6.0216C14.2784 5.97139 14.3445 5.93312 14.4163 5.90908C14.488 5.88504 14.5639 5.87572 14.6393 5.88168C14.7147 5.88764 14.7882 5.90876 14.8553 5.94377C14.9224 5.97878 14.9817 6.02696 15.0297 6.08543C15.0777 6.1439 15.1135 6.21146 15.1348 6.28406C15.4839 7.33597 15.5786 8.45568 15.4111 9.55128C15.2435 10.6469 14.8186 11.6871 14.171 12.5866C13.5235 13.4861 12.6719 14.2193 11.6861 14.7258C10.7003 15.2324 9.6084 15.4979 8.50007 15.5006Z" fill="#1F458A"  />
+                                        <path d="M7.68385 12.25C7.61067 12.2499 7.53843 12.2307 7.47247 12.1936C7.40651 12.1565 7.34852 12.1025 7.30278 12.0357L4.85996 8.45833C4.79759 8.34017 4.77414 8.1995 4.79398 8.0626C4.81382 7.92569 4.8756 7.80192 4.96777 7.71441C5.05995 7.6269 5.17621 7.58164 5.29483 7.58709C5.41345 7.59253 5.52632 7.64831 5.61235 7.74399L7.62767 10.6785C8.49487 9.09837 10.8595 5.33812 14.6141 3.29228C14.7302 3.23692 14.8601 3.23589 14.9768 3.28939C15.0935 3.3429 15.1882 3.44684 15.2412 3.57972C15.2943 3.7126 15.3016 3.86424 15.2617 4.00327C15.2218 4.1423 15.1378 4.25807 15.027 4.32663C10.5908 6.74964 8.13578 11.9014 8.11135 11.9528C8.07178 12.0336 8.01594 12.1019 7.94867 12.1517C7.8814 12.2015 7.80475 12.2313 7.72538 12.2386L7.68385 12.25Z" fill="#1F458A" />
+                                    </svg>
+                                </span>
+                            <?php } ?>
+                            <?php if(!$isMainAdmin && $companyDetails[0]['i_chat_handler'] == 0 && isset($_SESSION['hm_wb_auth_data'])){ ?>
+                                <a href="single-chat.php?id=<?= base64_encode($companyDetails[0]['id']); ?>&type=<?= base64_encode(3); ?>">
+                                    <?php if($companyDetails[0]['owner_id'] == 0){ ?>
+                                        <img src="assets/images/message.svg" alt="" data-bs-toggle="tooltip" data-bs-placement="top" title="Not Claimed">
+                                    <?php }else{  ?>
+                                        <?php if ($companyDetails[0]['online'] == 0){ ?>
+                                            <img src="assets/images/message-1.svg" alt="" data-bs-toggle="tooltip" data-bs-placement="top" title="Offline">
+                                        <?php }else{ ?>
+                                            <img src="assets/images/message-2.svg" alt="" data-bs-toggle="tooltip" data-bs-placement="top" title="Online">
+                                        <?php } ?>
+                                    <?php } ?>
+                                </a>
+                            <?php } ?>
+                        </h2>
+                        <p class="text-start">@<?= $companyDetails[0]['display_id'] ?></p>
+                    </div>
+                    <div class="d-flex mt-2">
+                        <div class="user-connet-ratingnew-wrapper p-0 justify-content-between">
+                            <div class="">
+                                <p>Connections <span><?php echo $companyDetails[0]['total_followers']; ?></span></p>
+                            </div>
+                            <?php 
+                                $rating = floatval($companyDetails[0]['company_rating']);
+                                $starRating = floatval($rating) > 2 ? floatval($rating) : 0.0;
+                                // Ensure rating is a float
+                                $displayRating = $rating < 3 ? 1 : 5;
+                            ?>
+                            <div class="d-flex gap-2 align-items-center">
+                                <p><?php echo number_format($rating, 1); ?></p>
+
+                                <div class="rateit mt-1" data-rateit-value="<?php echo $starRating; ?>" data-rateit-min="0" data-rateit-max="<?= $displayRating ?>" data-rateit-readonly="true" <?php echo $rating < 3 ? 'data-rateit-resetable="false"' : ''; ?>></div>
+                                <p class="set-flex-grow">
+                                    <?php echo $rating < 3 ? 'Not Yet Rated' : '' ?>
+                                </p>
+                            </div>
+                            
+                        </div>
+
+                    </div>
+                    <!-- switch button -->
+                     <div class="d-flex align-items-center mt-4 gap-3">
+                        <?php if($companyDetails[0]['owner_id']==0){ ?>
+                            <?php if($companyDetails[0]['i_requested_owner']==0){ ?>
+                            <button type="button" data-bs-toggle="offcanvas" data-bs-target="#createClaimOffcanvas" aria-controls="createClaimOffcanvas" class="delet-buttton-com invite-buttton-com claim-company" onclick="$('#post_id').val(0); $('#company_id').val(<?= $companyDetails[0]['id'] ?>);">Claim This Company</button>
+                            <?php }else{ ?>
+                            <button type="button" class="delet-buttton-com invite-buttton-com claim-" disabled style="opacity: 0.3;">Claim Request Sent</button>
+                            <?php } ?>
+                        <?php } ?>
+                        <div class="d-flex">
+                                <?php if($companyDetails[0]['i_follow'] == 3){ ?>
+                                    <button type="button" class="delet-buttton-com invite-buttton-com claim-  main-color follow-company-fn" data-company-id="<?= $companyDetails[0]['id'] ?>" data-type="1" id="cf<?= $companyDetails[0]['id'] ?>">Connect</button>
+                                <?php }else{ ?>
+                                    <button type="button" class="delet-buttton-com invite-buttton-com claim-  main-color follow-company-fn" data-company-id="<?= $companyDetails[0]['id'] ?>" data-type="0" id="cf<?= $companyDetails[0]['id'] ?>" style="opacity: 0.5">Pending</button>
+                                <?php } ?>                      
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-1"></div>
+                <div class="col-lg-4">
+                    <div class="">
+                        <h5 class="f-18-gb">Contacts</h5>
+                        <!-- Email -->
+                        <?php if(!empty($companyDetails[0]['email'])){ ?>
+                        <div class="new-builder-com d-flex pt-2">
+                            <p><?= $companyDetails[0]['email'] ?>&nbsp;</p>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 22 22" fill="none">
+                                <path d="M18.333 3.66797H3.66634C2.65801 3.66797 1.84217 4.49297 1.84217 5.5013L1.83301 16.5013C1.83301 17.5096 2.65801 18.3346 3.66634 18.3346H18.333C19.3413 18.3346 20.1663 17.5096 20.1663 16.5013V5.5013C20.1663 4.49297 19.3413 3.66797 18.333 3.66797ZM18.333 7.33464L10.9997 11.918L3.66634 7.33464V5.5013L10.9997 10.0846L18.333 5.5013V7.33464Z" fill="#5A5A5A" />
+                            </svg>
+                       </div>
+                        <?php } ?>
+
+                        <!-- Branches -->
+                        <?php foreach ($companyDetails[0]['company_branches'] as $branch): ?>
+                        <div class="new-builder-com new-builder-com-two pt-1">
+                            <span>Location Name: <?= htmlspecialchars($branch['name']) ?></span><br />
+                            <a href="https://www.google.com/maps?q=<?php echo $branch['latitude']; ?>,<?php echo $branch['longitude']; ?>" target="_blank"><span class="user-comm-link-two"><?= htmlspecialchars($branch['address']) ?></span></a><br />
+                             <?php if (!empty($branch['phone_numbers'])): ?>
+                                <span>
+                                <a href="tel:<?= htmlspecialchars($branch['phone_numbers']) ?>" class="user-comm-link-two">
+                                    <?= htmlspecialchars($branch['phone_numbers']) ?>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
+                                        <path d="M4.33333 2C3.71449 2 3.121 2.24583 2.68342 2.68342C2.24583 3.121 2 3.71449 2 4.33333L2 6.2C2 11.6124 6.3876 16 11.8 16H13.6667C14.2855 16 14.879 15.7542 15.3166 15.3166C15.7542 14.879 16 14.2855 16 13.6667V12.3768C16 12.1167 15.9275 11.8617 15.7907 11.6404C15.6538 11.4192 15.4581 11.2405 15.2253 11.1243L12.9713 9.9968C12.7919 9.90708 12.5952 9.85699 12.3947 9.8499C12.1942 9.84282 11.9945 9.87891 11.8092 9.95574C11.6239 10.0326 11.4572 10.1483 11.3205 10.2952C11.1838 10.442 11.0803 10.6166 11.0169 10.8069L10.7388 11.6404C10.6876 11.7934 10.5824 11.9224 10.4429 12.0033C10.3034 12.0842 10.1391 12.1115 9.98093 12.08C8.97892 11.8796 8.05864 11.3871 7.33599 10.6646C6.61334 9.94214 6.12066 9.02196 5.92 8.02C5.88849 7.86182 5.91576 7.69757 5.99668 7.55805C6.07761 7.41853 6.20665 7.31332 6.3596 7.26213L7.39467 6.9168C7.72917 6.8051 8.00919 6.57128 8.17876 6.26206C8.34833 5.95285 8.39497 5.59104 8.30933 5.24893L7.7624 3.0612C7.68687 2.75835 7.51229 2.48943 7.26642 2.29716C7.02054 2.10489 6.71746 2.00029 6.40533 2H4.33333Z" fill="#5A5A5A" />
+                                    </svg>
+                                </a>
+                                 </span>
+                                <?php endif; ?>
+                        </div>
+                        <?php endforeach; ?>
+                    </div>
+                    
+                </div>
+                <div class="col-lg-12">
+                    <div class="mt-4">
+                                                    <h5 class="f-18-gb">Company Info</h5>
+                                                    <!-- Owner -->
+                                                    <?php if(!empty($companyDetails[0]['owner_name'])){ ?>
+                                                    <div class="new-builder-com">
+                                                        <p>Owner Name</p>
+                                                        <a href="user-details.php?id=<?= base64_encode($companyDetails[0]['owner_id']) ?>" target="_blank"><span class="text-primary"><?= $companyDetails[0]['owner_name'] ?></span></a>
+                                                    </div>
+                                                    <?php } ?>
+                                                    
+                                                    <!-- Business Type -->
+                                                    <?php if(!empty($companyDetails[0]['business_type'])){ ?>
+                                                    <div class="new-builder-com new-builder-com-two pt-2">
+                                                        <p>Company Type</p>
+                                                        <span><?= $companyDetails[0]['business_type'] ?></span>
+                                                    </div>
+                                                    <?php } ?>
+
+                                                    <!-- Categories -->
+                                                    <?php if(count($companyDetails[0]['company_categories']) > 0) { 
+                                                        $categories = $companyDetails[0]['company_categories']; 
+                                                    ?>
+                                                        <div class="new-builder-com new-builder-com-two">
+                                                            <p>Category & Sub-Category</p>
+                                                            <?php foreach ($categories as $index => $category): ?>
+                                                                <div class="company-category mt-2">
+                                                                    <h4><?php echo $category['parentCategory']['parentCategory']['name']; ?></h4>
+                                                                    <p><?php echo $category['parentCategory']['name']; ?></p>
+                                                                    <img src="assets/img/arr-com.png" alt="">
+                                                                </div>
+                                                                <?php if ($index < count($categories) - 1): ?>
+                                                                    <hr class="com-location"/>
+                                                                <?php endif; ?>
+                                                            <?php endforeach; ?>
+                                                        </div>
+                                                    <?php } ?>
+                                                        
+                                                    <!-- Tags -->
+                                                    <?php if (!empty($companyDetails[0]['keywords'])): ?>
+                                                    <div class="new-builder-com new-builder-com-two pt-2">
+                                                        <p>Tags</p>
+                                                        <div class="new-builder-com-two-options set-flex-wrap-button-all">
+                                                            <?php foreach (explode(',', $companyDetails[0]['keywords']) as $keyword): ?>
+                                                            <button><?php echo $keyword; ?></button>
+                                                            <?php endforeach; ?>
+                                                        </div>
+                                                    </div>
+                                                    <?php endif; ?>
+
+                                                    <!-- Description -->
+                                                    <?php if(!empty($companyDetails[0]['info'])){ ?>
+                                                    <div class="new-builder-com new-builder-com-two">
+                                                        <p>Description</p>
+                                                        <span><?= $companyDetails[0]['info'] ?></span>
+                                                    </div>
+                                                    <?php } ?>
+                                                </div>
+                </div>
+            </section>
+            <section class="dashboardx set-margin-52">
+                <div class="container-xlx">
+                    <div class="row">
+                        <div class="col">
+                            <?php 
+                                // Filter images where img_type is 0
+                                $filtered_images = $companyDetails[0]['company_cover_images'];
+                            ?>
+                            <!-- <div class="dashboard-cover-slider">
+                                    <div id="carouselExample" class="carousel slide">
+                                        <div class="carousel-inner">
+                                            <?php if(count($filtered_images)) { ?>
+                                            <div id="carouselExample" class="carousel slide" data-bs-ride="carousel">
+                                                <div class="carousel-inner">
+                                                    <?php foreach ($filtered_images as $index => $image) { ?>
+                                                        <div class="carousel-item set-carousel-inner-img-org <?= $index === 0 ? 'active' : ''; ?>">
+                                                            <img 
+                                                                src="<?= !empty($image['image']) ? MEDIA_BASE_URL . addslashes($image['image']) : 'assets/img/maps-locationa-ads.png'; ?>" 
+                                                                class="d-block w-100" 
+                                                                alt="...">
+                                                        </div>
+                                                    <?php } ?>
+                                                </div>
+                                                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+                                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                                    <span class="visually-hidden">Previous</span>
+                                                </button>
+                                                <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+                                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                                    <span class="visually-hidden">Next</span>
+                                                </button>
+                                            </div>
+                                        <?php } else { ?>
+                                            <div class="dashboard-cover new-dashboard-cover" 
+                                                style="background-image: url('assets/img/bi_image-fill.svg');">
+                                            </div>
+                                        <?php } ?>
+
+                            </div>
+                        </div>
+                            </div> -->
+                    <div class="row dashboardx-tabs new-dashboardx-tabs">
+                        <div class="col-lg-12">
+                            <!-- tab button  -->
+
+                            <div class="new-members-com com-new-members-com d-none d-lg-flex ms-0 justify-content-between set-new-detail-company-main">
+                                <!-- 1 -->
+                                <button class="nav-linkx-com d-flex justify-content-center align-items-center">
+                                    Showcase
+                                </button>
+                                <!-- 2 -->
+                                <button class="nav-linkx-com d-flex justify-content-center align-items-center">
+                                    Posts
+                                </button>
+                                <!-- 3 -->
+                                <button class="nav-linkx-com d-flex justify-content-center align-items-center">
+                                    Team
+                                </button>
+                                <!-- 4 -->
+                                <button class="nav-linkx-com d-flex justify-content-center align-items-center">
+                                    Recommends
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" id="dashboard-row">
+                        <!-- content tab  -->
+                        <div class="col-lg-12 mt-1">
+                            <div class="main-content sideBar-wraper hide-scrollbar main-content-new">
+                                <!-- posts feed button mobile -->
+                                <div class="posts-feed-button-mobile">
+                                    <div class="new-members-com com-new-members-com d-flex d-lg-none">
+                                        <!-- 1 -->
+                                        <button class="nav-linkx-com d-flex justify-content-center align-items-center">
+                                            <div class="nav-linkx-svg">
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                                                    <path
+                                                        stroke-linecap="round"
+                                                        stroke-linejoin="round"
+                                                        d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z"
+                                                    ></path>
+                                                </svg>
+                                            </div>
+                                            Showcase
+                                        </button>
+                                        <!-- 2 -->
+                                        <button class="nav-linkx-com d-flex justify-content-center align-items-center">
+                                            <div class="nav-linkx-svg">
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                                                    <path
+                                                        stroke-linecap="round"
+                                                        stroke-linejoin="round"
+                                                        d="M6.827 6.175A2.31 2.31 0 0 1 5.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 0 0-1.134-.175 2.31 2.31 0 0 1-1.64-1.055l-.822-1.316a2.192 2.192 0 0 0-1.736-1.039 48.774 48.774 0 0 0-5.232 0 2.192 2.192 0 0 0-1.736 1.039l-.821 1.316Z"
+                                                    ></path>
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12.75a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0ZM18.75 10.5h.008v.008h-.008V10.5Z"></path>
+                                                </svg>
+                                            </div>
+                                            Posts
+                                        </button>
+                                        <!-- 3 -->
+                                        <button class="nav-linkx-com d-flex justify-content-center align-items-center">
+                                            <div class="nav-linkx-svg">
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                                                    <path
+                                                        stroke-linecap="round"
+                                                        stroke-linejoin="round"
+                                                        d="M18 18.72a9.094 9.094 0 0 0 3.741-.479 3 3 0 0 0-4.682-2.72m.94 3.198.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0 1 12 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 0 1 6 18.719m12 0a5.971 5.971 0 0 0-.941-3.197m0 0A5.995 5.995 0 0 0 12 12.75a5.995 5.995 0 0 0-5.058 2.772m0 0a3 3 0 0 0-4.681 2.72 8.986 8.986 0 0 0 3.74.477m.94-3.197a5.971 5.971 0 0 0-.94 3.197M15 6.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm6 3a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Zm-13.5 0a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Z"
+                                                    ></path>
+                                                </svg>
+                                            </div>
+                                            Team
+                                        </button>
+                                        <!-- 4 -->
+                                        <button class="nav-linkx-com d-flex justify-content-center align-items-center">
+                                            <div class="nav-linkx-svg">
+                                                <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                                                    <path
+                                                        d="M13 2C11.5823 2.00322 10.1988 2.43928 9.03184 3.25072C7.86487 4.06216 6.96919 5.21092 6.4628 6.54561C5.95642 7.88031 5.86309 9.33833 6.19512 10.7275C6.52715 12.1168 7.26896 13.372 8.3228 14.3279V24L13 20.8571L17.6772 24V14.3279C18.731 13.372 19.4728 12.1168 19.8049 10.7275C20.1369 9.33833 20.0436 7.88031 19.5372 6.54561C19.0308 5.21092 18.1351 4.06216 16.9682 3.25072C15.8012 2.43928 14.4177 2.00322 13 2ZM16.1181 21.0614L13.8653 19.5529L13 18.9714L12.1347 19.5529L9.88187 21.0614V15.3964C10.8489 15.8882 11.9169 16.1444 13 16.1444C14.0831 16.1444 15.1511 15.8882 16.1181 15.3964V21.0614ZM16.8119 13C15.9104 13.8871 14.7321 14.4325 13.477 14.5435C12.2218 14.6545 10.9673 14.3243 9.92628 13.6089C8.88526 12.8936 8.1219 11.8372 7.76578 10.6191C7.40966 9.40095 7.48274 8.09614 7.97259 6.92613C8.46245 5.75613 9.33891 4.79303 10.4532 4.20032C11.5675 3.60761 12.8509 3.42182 14.0856 3.67448C15.3204 3.92713 16.4303 4.60267 17.2271 5.58642C18.0239 6.57017 18.4583 7.80151 18.4567 9.07143C18.4558 9.80364 18.3099 10.5283 18.0274 11.2029C17.745 11.8775 17.3317 12.4885 16.8119 13Z"
+                                                    ></path>
+                                                </svg>
+                                            </div>
+                                            Recommends
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="posts-feedx">
+                                    <!-- tab content  -->
+                                    <div class="tab-content" id="pills-tabContent">
+                                        <!-- My post tab content  -->
+                                        <div>
+                                            <!-- tab 1 -->
+                                            <div class="nav-linkx-com-tab-one">
+                                                <!-- inner--infos -->
+                                                <?php if($isMainOwner){ ?>
+                                                <div class="inner-infos-coms inner-py-10">
+                                                    <div class="inner-info-coms-left">
+                                                    </div>
+                                                    <div class="inner-info-coms-right d-flex align-items-center justify-content-end">
+                                                        <a href="create-showcase.php?id=<?= base64_encode($companyDetails[0]['id']) ?>" class="saveBtn set-margin-left-auto">
+                                                            <!-- <span class="saveBtnTxt">Add New Item/Service</span> -->
+                                                            <span class="saveBtnImg" style="width: 16px;"><img src="assets/img/add.png" class="img-fluid w-100" alt="" /></span>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                                <?php } ?>
+                                                <!-- info part -->
+                                                <?php if(count($showcases)){ ?>
+                                                <div class="com-inner-part-one mt-4">
+                                                    <div class="com-inner-part-one-single">
+                                                        <div class="inner-items-wrappers-com">
+                                                            <?php foreach ($showcases as $category): ?>
+                                                                <div class="crdshwc">
+                                                                    <div class="inner-item-boxes">
+                                                                        <!-- Show the first image -->
+                                                                        <a href="<?php echo count($category['showcase_images']) ? MEDIA_BASE_URL.$category['showcase_images'][0]['image'] : generateBase64Image($category['info']); ?>" 
+                                                                        data-fancybox="all-showcases">
+                                                                            <img src="<?php echo count($category['showcase_images']) ? MEDIA_BASE_URL.$category['showcase_images'][0]['image'] : generateBase64Image($category['info']); ?>" 
+                                                                                alt="" 
+                                                                                class="img-fluid inner-item-boxes-image" />
+                                                                        </a>
+
+                                                                        <!-- Hidden additional images -->
+                                                                        <?php if (count($category['showcase_images']) > 1): ?>
+                                                                            <?php foreach (array_slice($category['showcase_images'], 1) as $image): ?>
+                                                                                <a href="<?php echo MEDIA_BASE_URL.$image['image']; ?>" 
+                                                                                data-fancybox="all-showcases" 
+                                                                                style="display: none;"></a>
+                                                                            <?php endforeach; ?>
+                                                                        <?php endif; ?>
+
+                                                                        <?php if($isMainOwner){ ?>
+                                                                            <div class="inner-item-boxes-top">
+                                                                                <a href="#"><i class="fa fa-trash text-danger del-showcase" data-id="<?= $category['id'] ?>" data-company-id="<?= $companyDetails[0]['id'] ?>"></i></a>
+                                                                            </div>
+                                                                        <?php } ?>
+                                                                        <div class="inner-item-boxes-overlay"></div>
+                                                                        <div class="inner-item-boxes-bottom">
+                                                                        <p><?php echo $category['info']; ?></p>
+                                                                        <p>
+                                                                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="15" viewBox="0 0 14 15" fill="none">
+                                                                                <path d="M10 2.23242L8 12.2324M6 2.23242L4 12.2324M3 5.23242H12M2 9.23242H11" stroke="white" stroke-linecap="round" stroke-linejoin="round" />
+                                                                            </svg>
+                                                                            <?php echo $category['code']; ?>
+                                                                        </p>
+                                                                    </div>
+                                                                    </div>
+                                                                </div>
+                                                            <?php endforeach; ?>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <?php }else{
+                                                    echo renderNoDataCard('No Catalogue Available!', '', 'This company has not uploaded any catalogue yet.');
+                                                } ?>
+                                            </div>
+                                            <!-- tab 2 -->
+                                            <div class="nav-linkx-com-tab-two">
+                                                <!-- inner--infos -->
+                                                <div class="inner-infos-coms">
+                                                    
+                                                </div>
+                                                <!-- inner part -->
+                                                <div class="">
+                                                    <div class="post-cards set-flex-gap-0 row" id="company-post-container">
+                                                        
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- tab 3 -->
+                                            <div class="nav-linkx-com-tab-three">
+                                                <?php if(count($members)){ ?>
+                                                    <!-- inner--infos -->
+                                                    <div class="inner-infos-coms inner-py-40-20">
+                                                        <?php if(count($chat_members)){ ?>
+                                                        <div class="inner-info-coms-left">
+                                                            <div class="inner-info-coms-left-three-pill">
+                                                                <p>
+                                                                    Incoming chats handled  by
+                                                                    <a class="text-primary" href="user-details.php?id=<?= base64_encode($chat_members[0]['user']['id']) ?>"><?= substr($chat_members[0]['user']['name'],0,15) ?>..</a>
+                                                                </p>
+                                                                <button>
+                                                                    <img src="assets/img/msg-items-pill.svg" alt="" />
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                        <?php } ?>
+                                                        <div class="inner-info-coms-right d-flex align-items-center justify-content-end">
+                                                            <button class="saveBtn">
+                                                                <span class="saveBtnTxt">Invite Members</span>
+                                                                <span class="saveBtnImg"><img src="assets/img/forward.png" class="img-fluid w-100" alt="" /></span>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                    <!-- inner part -->
+                                                    <div class="com-inner-part">
+                                                        <div class="tab-content" id="pills-tabContent">
+                                                            <!-- My post tab content  -->
+                                                            <div class="tab-pane fade show active" id="pills-myposts" role="tabpanel" aria-labelledby="pills-myposts-tab">
+                                                                <div class="post-cards">
+                                                                    <div>
+                                                                        <!-- post list  -->
+                                                                        <div class="post-card-litss d-flex align-items-center">
+                                                                            <button class="post-card-litss-buttons-active tab-com-button">
+                                                                                <?= $isMainOwner ? 'Active' : 'Total Members' ?> (<?= count($active_members) ?>)
+                                                                            </button>
+                                                                            <?php if($isMainOwner){ ?>
+                                                                            <button class="post-card-litss-buttons tab-com-button">
+                                                                                Request (<?= count($members_requests) ?>)
+                                                                            </button>
+                                                                            <?php } ?>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="first-com">
+                                                            <?php foreach ($active_members as $members) : ?>
+
+                                                            <?php if($members['main_owner']==1){ ?>
+                                                                <!-- owner card -->
+                                                                <div class="single-com set-company-detail-user-profile">
+                                                                    <div class="notification-imgBox new-notification-imgBox">
+                                                                        <div class="new-notification-img">
+                                                                            <img src="<?php echo !empty($members['user']['image']) ? MEDIA_BASE_URL.$members['user']['image'] : generateBase64Image($members['user']['name']); ?>" class="img-fluid w-100 rounded-pz" alt="" />
+                                                                        </div>
+                                                                        <div class="notification-content new-notification-content ms-2">
+                                                                            <a href="user-details.php?id=<?= base64_encode($members['user']['id']) ?>" class="new-read-title" target="_blank">
+                                                                                <?= $members['user']['name'] ?>
+                                                                                <img src="assets/img/mdi_approve-check.svg" alt="" />
+                                                                            </a>
+                                                                            <p class="new-read-msg">
+                                                                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
+                                                                                    <path
+                                                                                        d="M9 0.75L2.25 3.75V8.25C2.25 12.4125 5.13 16.305 9 17.25C12.87 16.305 15.75 12.4125 15.75 8.25V3.75L9 0.75ZM9 3.675C9.44501 3.675 9.88002 3.80696 10.25 4.05419C10.62 4.30143 10.9084 4.65283 11.0787 5.06396C11.249 5.4751 11.2936 5.9275 11.2068 6.36395C11.12 6.80041 10.9057 7.20132 10.591 7.51599C10.2763 7.83066 9.87541 8.04495 9.43895 8.13177C9.0025 8.21858 8.5501 8.17403 8.13896 8.00373C7.72783 7.83343 7.37643 7.54504 7.12919 7.17503C6.88196 6.80502 6.75 6.37001 6.75 5.925C6.75 5.32826 6.98705 4.75597 7.40901 4.33401C7.83097 3.91205 8.40326 3.675 9 3.675ZM9 9.6C10.5 9.6 13.5 10.4175 13.5 11.91C13.0074 12.6526 12.3387 13.2617 11.5535 13.6831C10.7684 14.1045 9.89111 14.325 9 14.325C8.10889 14.325 7.23163 14.1045 6.44645 13.6831C5.66127 13.2617 4.99258 12.6526 4.5 11.91C4.5 10.4175 7.5 9.6 9 9.6Z"
+                                                                                        fill="#979797"
+                                                                                    />
+                                                                                </svg>
+                                                                                Owner (Me)
+                                                                            </p>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            <?php }else{ ?>
+                                                                <!-- non-owner -->
+                                                                <div class="single-com new-single-com">
+                                                                    <div class="notification-imgBox new-notification-imgBox">
+                                                                        <div class="new-notification-img">
+                                                                            <img src="<?php echo !empty($members['user']['image']) ? MEDIA_BASE_URL.$members['user']['image'] : generateBase64Image($members['user']['name']); ?>" class="img-fluid w-100 rounded-pz" alt="" />
+                                                                        </div>
+                                                                        <div class="notification-content new-notification-content ms-2">
+                                                                            <a href="user-details.php?id=<?= base64_encode($members['user']['id']) ?>" class="new-read-title" target="_blank">
+                                                                                <?= $members['user']['name'] ?>
+                                                                                <img src="assets/img/mdi_approve-check.svg" alt="" />
+                                                                            </a>
+                                                                            <p class="new-read-msg">
+                                                                                <?php if($members['is_admin']==1){ ?>
+                                                                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
+                                                                                    <path
+                                                                                        d="M9 0.75L2.25 3.75V8.25C2.25 12.4125 5.13 16.305 9 17.25C12.87 16.305 15.75 12.4125 15.75 8.25V3.75L9 0.75ZM9 3.675C9.44501 3.675 9.88002 3.80696 10.25 4.05419C10.62 4.30143 10.9084 4.65283 11.0787 5.06396C11.249 5.4751 11.2936 5.9275 11.2068 6.36395C11.12 6.80041 10.9057 7.20132 10.591 7.51599C10.2763 7.83066 9.87541 8.04495 9.43895 8.13177C9.0025 8.21858 8.5501 8.17403 8.13896 8.00373C7.72783 7.83343 7.37643 7.54504 7.12919 7.17503C6.88196 6.80502 6.75 6.37001 6.75 5.925C6.75 5.32826 6.98705 4.75597 7.40901 4.33401C7.83097 3.91205 8.40326 3.675 9 3.675ZM9 9.6C10.5 9.6 13.5 10.4175 13.5 11.91C13.0074 12.6526 12.3387 13.2617 11.5535 13.6831C10.7684 14.1045 9.89111 14.325 9 14.325C8.10889 14.325 7.23163 14.1045 6.44645 13.6831C5.66127 13.2617 4.99258 12.6526 4.5 11.91C4.5 10.4175 7.5 9.6 9 9.6Z"
+                                                                                        fill="#979797"
+                                                                                    />
+                                                                                </svg>
+                                                                                <?php } ?>
+                                                                                <?= $members['role'] ?>
+                                                                            </p>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="notification-btns new-notification-btns d-flex flex-column align-items-end">
+                                                                        <?php if($isMainAdmin){ ?>
+                                                                        <button class="cancel-btn" data-id="<?= $members['id'] ?>" id="removeCompanyMemberFn">Remove</button>
+
+                                                                        <button class="accept-btn" data-company-id="<?= $companyId ?>" data-user-id="<?= $members['user']['id'] ?>" id="makeCompanyAdminFn" data-is-admin="<?= $members['is_admin'] ?>">
+                                                                            <?= ($members['is_admin']==0) ? 'Make' : 'Remove' ?> Admin
+                                                                        </button>
+                                                                        <?php } ?>
+                                                                    </div>
+                                                                </div>
+                                                            <?php } ?>
+                                                            <?php endforeach; ?>
+                                                        </div>
+                                                        <div class="second-com">
+                                                            <?php foreach ($members_requests as $members) : ?>
+                                                            <!-- single item -->
+                                                            <div class="single-com">
+                                                                <div class="notification-imgBox new-notification-imgBox">
+                                                                    <div class="new-notification-img">
+                                                                        <img src="<?php echo !empty($members['user']['image']) ? MEDIA_BASE_URL.$members['user']['image'] : generateBase64Image($members['user']['name']); ?>" class="img-fluid w-100 rounded-pz" alt="" />
+                                                                    </div>
+                                                                    <div class="notification-content new-notification-content ms-2">
+                                                                        <a href="user-details.php?id=<?= base64_encode($members['user']['id']) ?>" class="new-read-title" target="_blank">
+                                                                            <?= $members['user']['name'] ?>
+                                                                            <img src="assets/img/mdi_approve-check.svg" alt="" />
+                                                                        </a>
+                                                                        <p class="new-read-msg"><?= $members['role'] ?></p>
+                                                                    </div>
+                                                                </div>
+                                                                <?php if($isMainAdmin == 1){ ?>
+                                                                <div class="notification-btns new-notification-btns">
+                                                                    <button class="cancel-btn acceptRejectAssociationReq" data-id="<?= $members['id'] ?>" data-company-id="<?= $companyId ?>" data-status="2">Reject</button>
+                                                                    <button class="accept-btn acceptRejectAssociationReq" data-id="<?= $members['id'] ?>" data-status="1" data-company-id="<?= $companyId ?>">
+                                                                        Accept
+                                                                    </button>
+                                                                </div>
+                                                                <?php } ?>
+                                                            </div>
+                                                            <?php endforeach; ?>
+                                                        </div>
+                                                    </div>
+                                                <?php }else{
+                                                    echo renderNoDataCard('No Team Members Available!', '', 'There are no team members listed for this company at the moment.');
+                                                } ?>
+                                            </div>
+                                            <!-- tab 4 -->
+                                            <div class="nav-linkx-com-tab-four">
+                                                <!-- inner--infos -->
+                                                <div class="inner-infos-coms inner-py-40">
+                                                    <div class="inner-info-coms-right d-flex align-items- justify-content-start">
+                                                        <?php if($isMainOwner || $isMainAdmin){ ?>
+                                                        <button class="saveBtn share-fn" data-id="<?php echo base64_encode($companyDetails[0]['id']); ?>" data-title="Company" data-type="get_companies" data-meta="company_recommend">
+                                                            <span class="saveBtnTxt">Ask Recommendations</span>
+                                                            <span class="saveBtnImg"><img src="assets/img/forward.png" class="img-fluid w-100 rounded-pz" alt="" /></span>
+                                                        </button>
+                                                        <?php } ?>
+                                                        <button class="mx-4 share-item share-like" onclick="getCompanyRecommends({ company_id: '<?= addslashes($companyDetails[0]['id']) ?>' || 0, company_name: '<?= addslashes($companyDetails[0]['name']) ?>', total_recommends: '<?= addslashes($companyDetails[0]['total_recommend_web']) ?>' || 0, container: '#pc-recommends-container', i_recommend: '<?= $companyDetails[0]['i_recommend'] ?>' })">
+                                                            <img src="assets/img/<?php echo $companyDetails[0]['i_recommend'] ? 'like-fill' : 'like' ?>.png" alt="Recommend">
+                                                            <span class="like-count"><?php echo ($companyDetails[0]['total_recommend_web'] == 0) ? '' : $companyDetails[0]['total_recommend_web']; ?></span>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <!-- info part -->
+                                                <?php if(count($recommends)){ ?>
+                                                <div class="com-inner-part">
+                                                    <div class="first-com">
+                                                        <?php foreach ($recommends as $recommend) : ?>
+                                                        <!-- single item -->
+                                                        <div class="single-com new-single-com">
+                                                            <div class="notification-imgBox new-notification-imgBox">
+                                                                <div class="new-notification-img">
+                                                                    <img src="<?php echo !empty($recommend['user']['image']) ? MEDIA_BASE_URL.$recommend['user']['image'] : generateBase64Image($recommend['user']['name']); ?>" class="img-fluid w-100 rounded-pz" alt="" />
+                                                                </div>
+                                                                <div class="notification-content new-notification-content ms-2">
+                                                                    <a href="user-details.php?id=<?= base64_encode($recommend['user']['id']) ?>" class="new-read-title">
+                                                                        <?= $recommend['user']['name'] ?>
+                                                                    </a>
+                                                                    <p class="new-read-msg">
+                                                                        <?= time_ago($recommend['created_at']) ?>
+                                                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
+                                                                            <path
+                                                                                d="M10.5 10.689V16.5H3C2.99977 15.5842 3.20919 14.6804 3.61222 13.858C4.01526 13.0357 4.6012 12.3165 5.32516 11.7555C6.04912 11.1946 6.89188 10.8069 7.78887 10.622C8.68585 10.4371 9.61325 10.46 10.5 10.689ZM9 9.75C6.51375 9.75 4.5 7.73625 4.5 5.25C4.5 2.76375 6.51375 0.75 9 0.75C11.4862 0.75 13.5 2.76375 13.5 5.25C13.5 7.73625 11.4862 9.75 9 9.75ZM14.5635 12.75H17.253V14.25H14.5635L15.9352 15.621L14.8748 16.6823L11.6925 13.5L14.8748 10.3178L15.9352 11.379L14.5635 12.75Z"
+                                                                                fill="#747474"
+                                                                            />
+                                                                        </svg>
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                            <?php if($recommend['thanked']==0){ ?>
+                                                            <div class="notification-btns new-notification-btns d-flex flex-column align-items-end">
+                                                                <a href="javascript:void(0)" id="recommendCompanyThanks" data-id="<?= $recommend['id'] ?>" data-company-id="<?= $companyId ?>">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" viewBox="0 0 34 34" fill="none">
+                                                                        <path
+                                                                            d="M28.9278 12.6821C30.0547 14.6214 30.5011 16.8817 30.1959 19.1038C29.8908 21.3259 28.8517 23.3823 27.2437 24.946C26.722 26.8694 25.6426 28.5953 24.1416 29.9062C22.6406 31.2171 20.7851 32.0544 18.8091 32.3124C16.833 32.5705 14.8247 32.2379 13.0374 31.3564C11.25 30.4749 9.76364 29.0841 8.7655 27.3592L4.11706 19.3081C3.84017 18.8282 3.70546 18.2794 3.72863 17.7258C3.75181 17.1722 3.93192 16.6366 4.24796 16.1814C4.564 15.7263 5.00294 15.3704 5.51357 15.1553C6.0242 14.9402 6.58547 14.8747 7.13191 14.9665L6.13316 13.2399C5.86523 12.7756 5.73018 12.2466 5.7428 11.7107C5.75542 11.1748 5.91521 10.6527 6.20469 10.2016C6.49417 9.75042 6.90218 9.38759 7.38406 9.1528C7.86594 8.91801 8.40313 8.82031 8.93683 8.87039L8.81198 8.65258C8.41078 7.98948 8.28942 7.19417 8.47461 6.4416C8.65979 5.68903 9.13635 5.04085 9.79945 4.63965C10.4625 4.23845 11.2578 4.11709 12.0104 4.30227C12.763 4.48746 13.4112 4.96402 13.8124 5.62711C14.0058 5.1086 14.3425 4.65569 14.7834 4.32109C15.2242 3.98649 15.7509 3.78396 16.3024 3.73707C16.8538 3.69018 17.4072 3.80086 17.8982 4.05622C18.3892 4.31158 18.7975 4.70113 19.0757 5.17953L21.137 8.74953C21.3308 8.23045 21.6682 7.77718 22.1098 7.44258C22.5515 7.10799 23.0791 6.90586 23.6313 6.85978C24.1834 6.81369 24.7373 6.92556 25.2283 7.18232C25.7193 7.43908 26.1272 7.83015 26.4043 8.30992L28.9278 12.6821ZM14.9346 7.57016L15.77 9.01648C16.0175 9.22846 16.2272 9.48083 16.3903 9.76289L18.4528 13.3289C18.6776 12.7269 19.0952 12.216 19.6404 11.8759C20.1857 11.5357 20.8281 11.3854 21.4677 11.4483L18.1553 5.71078C18.0333 5.49931 17.8707 5.31395 17.677 5.16529C17.4833 5.01664 17.2622 4.90759 17.0263 4.84439C16.7904 4.78118 16.5444 4.76505 16.3023 4.79692C16.0602 4.82879 15.8268 4.90803 15.6153 5.03012C15.1882 5.27668 14.8766 5.68282 14.7489 6.15917C14.6857 6.39503 14.6696 6.64103 14.7014 6.88313C14.7333 7.12523 14.8126 7.35868 14.9346 7.57016ZM10.5664 9.56234C10.7818 9.74853 10.9685 9.9656 11.1203 10.2065C11.3425 9.60083 11.7598 9.0863 12.3066 8.7439C12.8534 8.40151 13.4985 8.2507 14.1404 8.31523L12.9451 6.25664C12.8262 6.03923 12.665 5.84779 12.471 5.69356C12.2771 5.53934 12.0542 5.42544 11.8156 5.35856C11.577 5.29169 11.3274 5.27319 11.0816 5.30414C10.8357 5.3351 10.5985 5.41489 10.3839 5.53883C10.1693 5.66277 9.98166 5.82835 9.83198 6.02585C9.68229 6.22334 9.5736 6.44877 9.51228 6.68887C9.45096 6.92897 9.43826 7.17891 9.47492 7.42399C9.51157 7.66908 9.59685 7.90436 9.72573 8.11601L10.5664 9.56234ZM26.2237 24.6512C26.5339 23.5058 26.6139 22.3102 26.4591 21.1336C26.3044 19.9571 25.9178 18.8229 25.3219 17.7967L22.7985 13.4259C22.5511 12.9994 22.1445 12.6886 21.6681 12.5618C21.1916 12.435 20.6843 12.5027 20.2578 12.7498C19.8497 12.9864 19.5469 13.3693 19.4105 13.8208C19.2742 14.2723 19.3145 14.7587 19.5233 15.1816L21.0374 17.798C21.0723 17.8585 21.0949 17.9252 21.104 17.9944C21.1131 18.0636 21.1085 18.1339 21.0904 18.2013C21.0723 18.2687 21.0412 18.3318 20.9987 18.3872C20.9562 18.4425 20.9032 18.489 20.8428 18.5239C20.7824 18.5588 20.7157 18.5814 20.6465 18.5905C20.5773 18.5996 20.507 18.595 20.4396 18.5769C20.3722 18.5588 20.309 18.5277 20.2537 18.4852C20.1983 18.4427 20.1519 18.3897 20.117 18.3293L15.4685 10.2941C15.2168 9.88028 14.8136 9.58099 14.3445 9.45995C13.8755 9.33892 13.3777 9.4057 12.9572 9.64608C12.5367 9.88647 12.2265 10.2815 12.0928 10.747C11.9591 11.2126 12.0123 11.712 12.2412 12.1389L15.5124 17.7967C15.5828 17.9188 15.6019 18.0638 15.5654 18.1999C15.5289 18.336 15.4399 18.4521 15.3178 18.5225C15.1958 18.593 15.0507 18.6121 14.9146 18.5756C14.7785 18.5391 14.6624 18.45 14.592 18.328L10.2663 10.8453C10.1474 10.6279 9.98618 10.4365 9.79221 10.2822C9.59824 10.128 9.3754 10.0141 9.13678 9.94724C8.89817 9.88036 8.64859 9.86186 8.40273 9.89282C8.15686 9.92377 7.91966 10.0036 7.70507 10.1275C7.49048 10.2514 7.30283 10.417 7.15315 10.6145C7.00347 10.812 6.89477 11.0374 6.83345 11.2775C6.77214 11.5176 6.75943 11.7676 6.79609 12.0127C6.83274 12.2577 6.91802 12.493 7.04691 12.7047L11.8282 20.9869C11.8986 21.1089 11.9177 21.254 11.8812 21.3901C11.8447 21.5262 11.7556 21.6422 11.6336 21.7127C11.5115 21.7831 11.3665 21.8022 11.2304 21.7657C11.0943 21.7292 10.9782 21.6402 10.9078 21.5181L8.25152 16.9175C8.12943 16.706 7.96688 16.5207 7.77316 16.372C7.57944 16.2234 7.35833 16.1143 7.12247 16.0511C6.8866 15.9879 6.6406 15.9718 6.3985 16.0036C6.1564 16.0355 5.92295 16.1147 5.71148 16.2368C5.5 16.3589 5.31465 16.5215 5.16599 16.7152C5.01733 16.9089 4.90829 17.13 4.84508 17.3659C4.78188 17.6017 4.76575 17.8478 4.79762 18.0899C4.82948 18.3319 4.90872 18.5654 5.03081 18.7769L9.67925 26.8293C10.5724 28.3761 11.9041 29.6233 13.5061 30.4132C15.1081 31.2032 16.9083 31.5004 18.6791 31.2673C20.45 31.0341 22.1119 30.2811 23.4548 29.1035C24.7978 27.9258 25.7613 26.3764 26.2237 24.6512ZM28.0074 13.2134L25.4839 8.8425C25.3619 8.63102 25.1993 8.44567 25.0056 8.29701C24.8119 8.14836 24.5908 8.03931 24.3549 7.97611C24.119 7.9129 23.873 7.89677 23.6309 7.92864C23.3888 7.96051 23.1554 8.03975 22.9439 8.16183C22.7324 8.28392 22.5471 8.44647 22.3984 8.64019C22.2498 8.83391 22.1407 9.05502 22.0775 9.29088C22.0143 9.52675 21.9982 9.77275 22.03 10.0149C22.0619 10.2569 22.1411 10.4904 22.2632 10.7019L23.096 12.1455C23.3439 12.3588 23.5544 12.612 23.7189 12.8946L26.2423 17.2655C27.2371 18.9789 27.702 20.9486 27.5784 22.9259C28.5724 21.518 29.1412 19.8543 29.2173 18.1326C29.2933 16.4108 28.8734 14.7034 28.0074 13.2134Z"
+                                                                            fill="black"
+                                                                        />
+                                                                    </svg>
+                                                                </a>
+                                                            </div>
+                                                            <?php } ?>
+                                                        </div>
+                                                        <?php endforeach; ?>
+                                                    </div>
+                                                </div>
+                                                <?php }else{
+                                                    echo renderNoDataCard('No Recommends Available!', '', 'It looks like no one has recommended you yet.');
+                                                } ?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+        <?php include('includes/footer-scripts.php') ?>
+        <script src="assets/js/company-details.js?v=<?= time() ?>"></script>
+        <script src="assets/js/scrollPost.js?v=<?= time() ?>"></script>
+        <script>
+            $(document).ready(function () {
+                Fancybox.bind('[data-fancybox="all-showcases"]', {
+                    compact: false,
+                    contentClick: "iterateZoom",
+                    Images: {
+                        Panzoom: {
+                            maxScale: 2,
+                        },
+                    },
+                    Carousel: {
+                        infinite: true,
+                        preload: 2,
+                    },
+                    Toolbar: {
+                        display: {
+                            left: [],
+                            middle: [],
+                            right: ["iterateZoom", "close"],
+                        }
+                    },
+                    Thumbs: true 
+                });
+            });
+        </script>        
+        <script>
+        let postsData = {
+            company_id: '<?= $companyId ?>',
+        };
+
+        // Initial Fetch on Page Load
+        $(document).ready(function () {
+            getCompanyPosts(postsData);
+        });
+        </script>
+    </body>
+</html>

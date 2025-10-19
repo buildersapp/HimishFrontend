@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<?php include('includes/head.php') ?>
+<link rel="stylesheet" href="assets/plugins/datatable/css/dataTables.bootstrap5.min.css" />
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.7.1/css/buttons.dataTables.min.css" />
+
+<body>
+    <!-- wrapper start  -->
+    <div class="wrapper relative">
+        <?php include('includes/sidebar.php') ?>
+
+        <!-- header start  -->
+        <?php include('includes/nav-header.php') ?>
+        <!-- header end  -->
+
+        <!-- content area start  -->
+        <div class="detailsshare-detail-page-sec">
+            <main class="user-main">
+                <div class="user-row">
+
+                    <!-- avatar card  -->
+                    <div class="w-24">
+                        <div class="user-left user-left2 w-100">
+
+                            <div class="avatar-img">
+
+                                <!-- <img src="assets/img/user/avatar.png" class="img-fluid" alt="Avatar" /> -->
+                                <img src="<?php echo ($final['user']['image']) ?  MEDIA_BASE_URL.$final['user']['image'] : 'assets/img/user/avatar.png';?>"
+                                    class="img-fluid rounded-pz" alt="Avatar" />
+
+                            </div>
+                            <div class="avatar-content">
+                                <h1>
+                                    <?=$final['user']['name']?>
+                                </h1>
+                                <p>User</p>
+                            </div>
+                            <div class="avatar-icon-box-wraper">
+                                <div class="avatar-icon-box">
+                                    <div class="avatat-icon-img">
+                                        <img src="assets/img/user/camera.png" alt="" />
+                                    </div>
+                                    <div class="avatat-icon-content">
+                                        <h2>
+                                            <?= $final['user']['total_posts'];?>
+                                        </h2>
+                                        <p>Total Posts</p>
+                                    </div>
+                                </div>
+                                <div class="avatar-icon-box">
+                                    <div class="avatat-icon-img">
+                                        <h3>Ad</h3>
+                                    </div>
+                                    <div class="avatat-icon-content">
+                                        <h2>
+                                            <?= $final['user']['total_ads'];?>
+                                        </h2>
+                                        <p>Total Ads</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="pt-3 cmn-img-bottom">
+                            <?php if (count($final['post_images']) > 0) : ?>
+                            <?php if ($final['post_images'][0]['type'] == 1) : ?>
+                            <video class="img-fluid w-100 video" controls autoplay muted loop playsinline>
+                                <source src="<?php echo MEDIA_BASE_URL . $final['post_images'][0]['image']; ?>">
+                            </video>
+                            <?php else : ?>
+                            <img src="<?php echo MEDIA_BASE_URL . $final['post_images'][0]['image']; ?>"
+                                class="img-fluid w-100" alt="Avatar" />
+                            <?php endif; ?>
+                            <?php else : ?>
+                            <img src="assets/img/user/poster.png" alt="poster" class="img-fluid w-100">
+                            <?php endif; ?>
+
+                        </div>
+                    </div>
+
+
+
+
+
+                    <div class="user-right">
+                        <!-- Tab header -->
+                        <div class="tab-header flex-xl-nowrap flex-wrap gap-4 justify-content-xl-between justify-content-center">
+                            <!-- Tab list -->
+                            <ul class="tablist">
+                                <li class="active-tablist" id="post-details-tb" data-tab="post-details">
+                                     Detail
+                                </li>
+                                <li data-tab="locations" id="locationsTb">Locations</li>
+                            </ul>
+                            <!-- Edit button -->
+                            <div class="edit-btn d-flex align-content-center align-items-center  gap-3 flex-md-nowrap flex-wrap justify-content-md-end justify-content-center">
+
+
+                                <!-- <button>
+                                    <span class="button-icon"><img src="assets/img/user/edit.png" class="w-100" alt="" /></span>
+                                    <span>Edit</span>
+                                </button> -->
+
+                            </div>
+                        </div>
+
+                        <!-- Tab content (initially, only one should be visible) -->
+                        <div class="ps-lg-4 tab-content" id="post-details">
+                            <div class="row">
+                                <div class="col-2">
+                                    <!-- Banner Image: start  -->
+                                    <div class="bannerImage mb-4 mt-3 ">
+                                        <p>Image/Video:</p>
+                                        <div class="bannerImageItem row text-center">
+
+                                            <div class="col-lg-2">
+                                                <div class="img-upload">
+                                                    <input type="file" name="image" accept="image/*, video/*" id="imageShow"
+                                                        class="d-none" onchange="previewImage(event)" />
+                                                    <label for="imageShow">
+                                                        <span id="previewContainer">
+                                                            <img id="previewImg" src="assets/img/user/plus.png"
+                                                                alt="Upload Image" />
+                                                        </span>
+                                                        <span id="textHd">Upload </br> Image/Video</span>
+                                                    </label>
+                                                </div>
+
+                                            </div>
+
+
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-10 mt-3">
+                                    <form class="user-form ps-0 pb-0" method="post" id="myPostForm">
+
+                                        <div class="row g-2 mb-2" id="user-form-row">
+                                            <div class="col-md-8">
+                                                <div>
+                                                    <label for="name">Title:</label>
+                                                    <input type="text" name="title" value="<?php echo $final['title']; ?>"
+                                                        id="title" placeholder="Deal Title" class="form-control" />
+                                                        <input type="hidden" name="type" id="type" value="<?php echo $final['type']; ?>" />
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div>
+                                                    <label for="email">Status:</label>
+                                                    <div class="StatusActive">
+                                                        <select class="form-select" name="status"
+                                                            aria-label="Default select example">
+                                                            <option value="1" <?php echo ($final['status']==1) ? 'selected' : ''
+                                                                ;?>>Active</option>
+                                                            <option value="0" <?php echo ($final['status']==0) ? 'selected' : ''
+                                                                ;?>>Deactive</option>
+                                                            <option value="2" <?php echo ($final['status']==2) ? 'selected' : ''
+                                                                ;?>>Draft</option>
+                                                        </select>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                           
+                                        </div>
+                                        <div class="row g-2 mb-2">
+                                             <div class="col-md-4">
+                                                <label for="title">Service / Product:</label>
+                                                <select id="post_type" class="form-select" name="post_type">
+                                                    <option value="" <?=($defaultType=='' ) ? 'selected' : '' ?>>Select Post
+                                                        Type</option>
+                                                    <option value="1" <?=($defaultType=='1' ) ? 'selected' : '' ?>>Services
+                                                    </option>
+                                                    <option value="2" <?=($defaultType=='2' ) ? 'selected' : '' ?>>Products
+                                                    </option>
+                                                </select>
+                                            </div>
+                                            <!-- <div class="col-md-4">
+                                                <div>
+                                                    <label for="title">Address:</label>
+                                                    <input type="text" name="address" id="address" oninput="initAutocomplete()"
+                                                        value="<?php echo $final['address']; ?>"
+                                                        placeholder="Deal address here..." class="form-control">
+                                                    <input type="hidden" name="latitude" id="latitude"
+                                                        value="<?php echo $final['latitude']; ?>">
+                                                    <input type="hidden" name="longitude" id="longitude"
+                                                        value="<?php echo $final['longitude']; ?>">
+                                                </div>
+                                            </div> -->
+                                            <div class="col-md-5">
+                                                <label for="title">Category</label>
+                                                <a href="add-update-master-category.php?post_id=<?= base64_encode($final['id']) ?>&page=dealshare"
+                                                    class="float-right" target="_blank">Click here if you can't find
+                                                    your category</a>
+                                                <select id="post_category_master" class="form-select"
+                                                    name="post_category_master">
+                                                    <option value="">Select Category</option>
+                                                    <?php foreach ($masterCatSub as $kt => $vt) { ?>
+                                                    <option value="<?= $vt['id'] ?>"
+                                                        data-tab_label_option_posts="<?= htmlspecialchars($vt['tabLabelOptionPosts'], ENT_QUOTES, 'UTF-8'); ?>"
+                                                        data-keywords="<?= htmlspecialchars($vt['keywords1'], ENT_QUOTES, 'UTF-8'); ?>"
+                                                        <?=($defaultCategory==$vt['id']) ? 'selected' : '' ; ?>
+                                                        >
+                                                        <small class="grey">
+                                                            <?= implode(' > ', array_slice($vt['names'], 0, -1)) ?>
+                                                            <?php if (!empty($vt['names'])): ?>
+                                                            <p class="bold"> >
+                                                                <?= end($vt['names']); ?>
+                                                            </p>
+                                                            <?php endif; ?>
+                                                        </small>
+                                                    </option>
+                                                    <?php } ?>
+                                                </select>
+                                            </div>
+                                            <input type="hidden" name="service" id="service" value="<?= $final['service'];?>">
+                                            <div class="col-md-3">
+                                                <?php 
+                                                    $datetime = (new DateTime($final['created_at']))->format('m-d-y h:i A');
+                                                ?>
+                                                <div>
+                                                    <label for="date">Created Date:</label>
+                                                    <input type="datetime-local" name="created_at" id="datetime"
+                                                        value="<?= $datetime;?>" class="form-control" readonly />
+                                                </div>
+                                            </div>
+                                            <input type="hidden" name="post_id" value="<?= $final['id'];?>">
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-12 mt-3">
+                                                <?php if (hasPermission('Deal Share', 'edit')) { ?>
+                                                <div class="d-flex flex-wrap gap-3">
+                                                    <button type="button" class="btn btnSave ">Save</button>
+                                                    <button class="btn btnClose">Cancel</button>
+                                                </div>
+                                                <?php } ?>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                         <div id="locations" class="tab-content hidden">
+                            <!-- Locations Table -->
+                            <div class="table-responsive table-space">
+                                <h5>Locations</h5>
+                                 <hr />
+                                <!-- Add New Loc Row -->
+                                <table class="table table-bordered table-striped">
+                                    <tr>
+                                        <form method="POST">
+                                            <td class="col-md-4">
+                                                <input type="text" id="address_new2" name="address" class="form-control address-autocomplete" placeholder="Enter address" autocomplete="off" />
+                                            </td>
+                                            <td class="col-md-2">
+                                                <input type="text" id="state_new2" name="state" class="form-control" placeholder="State" />
+                                            </td>
+                                            <td class="col-md-3">
+                                                <input type="text" id="city_new2" name="city" class="form-control" placeholder="City" />
+                                            </td>
+                                            <td class="col-md-3">
+                                                <input type="text" id="country_code_new2" name="country_code" class="form-control" placeholder="Country Code" />
+                                            </td>
+                                            <td class="text-center">
+                                                <input type="hidden" name="type" value="1">
+                                                <input type="hidden" id="longitude_new2" name="longitude" class="form-control" placeholder="Longitude" />
+                                                <input type="hidden" id="latitude_new2" name="latitude" class="form-control" placeholder="Latitude" />
+                                                <?php if (hasPermission('Deal Share', 'edit')) { ?>
+                                                <button type="submit" name="addPostLoc" class="btn btn-success btn-sm">
+                                                    <i class="fas fa-plus-circle"></i> Add Location
+                                                </button>
+                                                <?php } ?>
+                                            </td>
+                                        </form>
+                                    </tr>
+                                </table>
+
+                                <hr />
+                                <?php if (count($final['post_locations']) > 0): ?>
+                                    <table class="table table-bordered table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>Address</th>
+                                                <th>State</th>
+                                                <th>City</th>
+                                                <th>Latitude</th>
+                                                <th>Longitude</th>
+                                                <th>Country Code</th>
+                                                <th class="text-center">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php foreach ($final['post_locations'] as $index => $location): ?>
+                                            <tr>
+                                                <form method="POST">
+                                                    <!-- Address with Autocomplete -->
+                                                    <td class="col-md-4">
+                                                        <input type="text" id="address_<?= $index ?>" name="address" value="<?= htmlspecialchars($location['address']) ?>" class="form-control address-autocomplete" autocomplete="off" />
+                                                    </td>
+                                                    <td class="col-md-1">
+                                                        <input type="text" id="state_<?= $index ?>" name="state" value="<?= htmlspecialchars($location['state']) ?>" class="form-control" />
+                                                    </td>
+                                                    <td class="col-md-3">
+                                                        <input type="text" id="city_<?= $index ?>" name="city" value="<?= htmlspecialchars($location['city']) ?>" class="form-control" />
+                                                    </td>
+                                                    <td class="col-md-1">
+                                                        <input type="text" id="latitude_<?= $index ?>" name="latitude" value="<?= htmlspecialchars($location['latitude']) ?>" class="form-control" />
+                                                    </td>
+                                                    <td class="col-md-1">
+                                                        <input type="text" id="longitude_<?= $index ?>" name="longitude" value="<?= htmlspecialchars($location['longitude']) ?>" class="form-control" />
+                                                    </td>
+                                                    <td class="col-md-1">
+                                                        <input type="text" id="country_code_<?= $index ?>" name="country_code" value="<?= htmlspecialchars($location['country_code']) ?>" class="form-control" />
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <input type="hidden" name="location_id" value="<?= $location['id']; ?>">
+                                                        <?php if (hasPermission('Deal Share', 'edit')) { ?>
+                                                        <button type="submit" class="btn btn-info btn-sm" name="updateLoc">
+                                                            <i class="fas fa-save"></i> Update
+                                                        </button>
+                                                        <?php } ?>
+                                                    </td>
+                                                </form>
+                                            </tr>
+                                            <?php endforeach; ?>
+                                        </tbody>
+                                    </table>
+                                <?php else: ?>
+                                    <p>No locations available.</p>
+                                <?php endif; ?>
+
+                            </div>
+
+                            <?php if (hasPermission('Deal Share', 'edit')) { ?>
+                            <div class="fixed-center-buttons d-flex flex-wrap gap-3">
+                                <button type="button" class="btn btnSave btnSavePost">Save Post Details</button>
+                            </div>
+                            <?php } ?>
+                        </div>
+
+                    </div>
+                </div>
+            </main>
+        </div>
+        <!-- content area end -->
+
+    </div>
+    <!-- wrapper end  -->
+    <script src="assets/plugins/datatable/js/jquery.dataTables.min.js?v=<?= time() ?>"></script>
+    <?php include('includes/footer-scripts.php') ?>
+    <script src="assets/js/postDetails.js?v=<?= time() ?>"></script>
+      <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const urlParams = new URLSearchParams(window.location.search);
+            const activeTab = urlParams.get('tab');      // e.g., ?tab=post-details
+            const redirect = urlParams.get('redirect');  // e.g., ?redirect=categories
+        
+            const defaultTab = redirect || activeTab || 'post-details';
+
+            console.log(defaultTab);
+        
+            const tabListItems = document.querySelectorAll('.tablist li');
+            const tabContents = document.querySelectorAll('.tab-content');
+        
+            tabListItems.forEach((tab) => {
+                tab.classList.remove('active-tablist');
+        
+                if (tab.dataset.tab === defaultTab) {
+                    tab.classList.add('active-tablist'); // activate tab
+                }
+            });
+        
+            tabContents.forEach((content) => {
+                content.classList.add('hidden');
+        
+                if (content.id === defaultTab) {
+                    content.classList.remove('hidden'); // show related content
+                }
+            });
+        });
+            </script> 
+    <script>
+        function previewImage(event) {
+            const fileInput = event.target;
+            const file = fileInput.files[0];
+
+            if (file) {
+                const previewContainer = document.getElementById('previewContainer'); // Container to display preview
+                previewContainer.innerHTML = ''; // Clear previous content
+
+                if (file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+
+                    reader.onload = function (e) {
+                        const img = document.createElement('img');
+                        img.src = e.target.result; // Set the image source to the file's data URL
+                        img.style.height = '140px'; // Set the height to 140px
+                        img.style.width = '140px'; // Set the width to 140px
+                        img.style.objectFit = 'cover'; // Optional: To maintain aspect ratio
+                        previewContainer.appendChild(img); // Add the image to the container
+                    };
+
+                    reader.readAsDataURL(file);
+                } else if (file.type.startsWith('video/')) {
+                    const video = document.createElement('video');
+                    video.src = URL.createObjectURL(file); // Set the video source to the file's URL
+                    video.autoplay = true; // Autoplay the video
+                    video.muted = true; // Mute the video
+                    video.loop = true; // Loop the video
+                    video.style.height = '140px'; // Set the height to 140px
+                    video.style.width = '140px'; // Set the width to 140px
+                    video.style.objectFit = 'cover'; // Optional: To maintain aspect ratio
+                    previewContainer.appendChild(video); // Add the video to the container
+                }
+
+                // Clear any text or messages
+                $('#textHd').html('');
+            }
+        }
+        $(document).ready(function () {
+
+            $('#post_category_master').select2();
+
+            $('#post_category_master').change(function () {
+                // Get the selected option
+                const selectedOption = $(this).find(':selected');
+                const tabLabelOptions = selectedOption.data('tab_label_option_posts');
+                const keywords = selectedOption.data('keywords');
+                const $tabDropdown = $('#category');
+
+                // Append keywords to the existing value of service
+                const existingService = "<?php echo $final['service']; ?>";
+                const appendedService = existingService + (keywords ? ', ' + keywords : '');
+                $('#service').val(keywords);
+
+                // Clear existing options
+                $tabDropdown.html('<option value="">Select an Option</option>');
+
+                // Populate new options if data is available
+                if (tabLabelOptions) {
+                    const optionsArray = tabLabelOptions.split(','); // Split into individual options
+                    $.each(optionsArray, function (index, value) {
+                        const trimmedValue = $.trim(value);
+                        $tabDropdown.append(`<option value="${trimmedValue}">${trimmedValue}</option>`);
+                    });
+                }
+            });
+
+            // get product / service based on type
+            $('#post_type').change(function () {
+                var selectedType = $(this).val();
+
+                // Send the new value via AJAX
+                $.ajax({
+                    url: 'ajax.php?action=get_master_sub_cat__by_type',
+                    type: 'POST',
+                    data: { type: selectedType },
+                    success: function (response) {
+                        var categories = JSON.parse(response);
+
+                        $('#post_category_master').empty();
+                        $('#category').empty();
+
+                        // Append keywords to the existing value of service
+                        const existingService = "<?php echo $final['service']; ?>";
+                        $('#service').val(existingService);
+                        //$('#service').empty();
+
+                        $('#post_category_master').append('<option value="">Select Category</option>');
+
+                        categories.forEach(function (category) {
+                            var option = $('<option></option>')
+                                .val(category.id)
+                                .data('tab_label_option_posts', category.tabLabelOptionPosts)
+                                .data('keywords', category.keywords1);
+
+                            // Create the category names string, ensuring that the last name does not have a trailing '>'
+                            var categoryNames = category.names.slice(0, -1).join(' > ') + (category.names.length > 0 ? ' > ' + category.names[category.names.length - 1] : '');
+
+                            option.html('<small class="grey">' + categoryNames + '</small><p class="bold"> > ' + category.names[category.names.length - 1] + '</p>');
+
+                            $('#post_category_master').append(option);
+                        });
+                    },
+                    error: function (xhr, status, error) {
+                        console.log('Error: ' + error);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>

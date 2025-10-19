@@ -1,0 +1,1105 @@
+<!DOCTYPE html>
+<html lang="en">
+    <?php include('includes/head.php') ?>
+    </style>
+    <link rel="stylesheet" href="assets/plugins/datatable/css/dataTables.bootstrap5.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.7.1/css/buttons.dataTables.min.css">
+    <style>
+        /* Set height for Select2 input box */
+        .select2-container {
+            width: 100% !important;
+        }
+
+        /* Set height for Select2 input box */
+        .select2-container .select2-selection--single {
+            height: 40px;  /* Adjust height of the select input box */
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__rendered {
+            line-height: 40px !important;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__arrow {
+            top: 7px !important;
+        }
+    
+        /* Set max-height for the dropdown list */
+        .select2-container--default .select2-results__options {
+            max-height: 200px;  /* Adjust the dropdown height */
+            overflow-y: auto;   /* Enable scrolling if content exceeds height */
+        }
+    </style>
+    <body>
+        <!-- wrapper start  -->
+        <div class="wrapper relative">
+            <?php include('includes/sidebar.php') ?>
+
+            <!-- header start  -->
+            <?php include('includes/nav-header.php') ?>
+            <!-- header end  -->
+
+            <!-- content area start  -->
+        <div class="">
+            <main class="user-main">
+            <div class="user-row">
+    
+                <!-- avatar card  -->
+                <div class="user-left">
+                    <!-- company owner profile -->
+                <?php if($final['is_main_admin_exist']) { ?>
+                    <div class="pb-2">
+                        <div class="avatar-img">
+                        <img src="<?php echo ($final['owner_image']) ?  MEDIA_BASE_URL.$final['owner_image'] : 'assets/img/user/avatar.png';?>" class="img-fluid rounded-pz" alt="Avatar" />
+                        </div>
+                        <div class="avatar-content">
+                        <h1><?php echo $final['owner_name'];?></h1>
+                        <p>Company Owner</p>
+                        </div>
+                        <div class="avatar-icon-box-wraper">
+                        <div class="avatar-icon-box">
+                            <div class="avatat-icon-img">
+                            <img src="assets/img/user/camera.png" alt="" />
+                            </div>
+                            <div class="avatat-icon-content">
+                            <h2><?php echo $final['total_owner_post'];?></h2>
+                            <p>Total Posts</p>
+                            </div>
+                        </div>
+                        <div class="avatar-icon-box">
+                            <div class="avatat-icon-img">
+                            <h3>Ad</h3>
+                            </div>
+                            <div class="avatat-icon-content">
+                            <h2><?php echo $final['total_owner_ads'];?></h2>
+                            <p>Total Ads</p>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                    <hr class="mt-4 mb-4">
+                <?php } ?>
+                <!-- company profile -->
+                <div class="pt-2">
+                    <div class="avatar-img text-center">
+                    <img src="<?php echo ($final['logo']) ?  MEDIA_BASE_URL.$final['logo'] : 'assets/img/fav-icon.png';?>" class="img-fluid" alt="Avatar" />
+                    </div>
+                    <div class="avatar-content">
+                    <h1><?php echo $final['name'];?></h1>
+                    </div>
+                    <div class="avatar-icon-box-wraper">
+                    <div class="avatar-icon-box">
+                        <div class="avatat-icon-img">
+                        <img src="assets/img/user/camera.png" alt="" />
+                        </div>
+                        <div class="avatat-icon-content">
+                        <h2><?php echo $final['total_posts'];?></h2>
+                        <p>Total Posts</p>
+                        </div>
+                    </div>
+                    <div class="avatar-icon-box">
+                        <div class="avatat-icon-img">
+                        <h3>Ad</h3>
+                        </div>
+                        <div class="avatat-icon-content">
+                        <h2><?php echo $final['total_ads'];?></h2>
+                        <p>Total Ads</p>
+                        </div>
+                    </div>
+                    <div class="avatar-icon-box">
+                        <div class="avatat-icon-img">
+                        <img src="assets/img/heroicons_document.svg" alt="" />
+                        </div>
+                        <div class="avatat-icon-content">
+                        <h2><?php echo $final['total_showcase'];?></h2>
+                        <p>Showcase</p>
+                        </div>
+                    </div>
+                    <div class="avatar-icon-box">
+                        <div class="avatat-icon-img">
+                        <img src="assets/img/ph_hands-clapping-thin.svg" alt="" />
+                        </div>
+                        <div class="avatat-icon-content">
+                        <h2><?php echo $final['total_recommend_web'];?></h2>
+                        <p>Recommends</p>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+    
+    
+    
+                </div>
+    
+    
+    
+    
+    
+                <div class="user-right">
+                <!-- Tab header -->
+                <div class="tab-header flex-xl-nowrap flex-wrap gap-4 justify-content-xl-between justify-content-center">
+                    <!-- Tab list -->
+                    <ul class="tablist">
+                    <li class="active-tablist" data-tab="company-details">
+                        Details
+                    </li>
+                    <li data-tab="company_categories">Categories</li>
+                    <li data-tab="company_branches">Branches</li>
+                    <li id="cpost" rel="<?php echo $final['id'];?>" data-tab="posts">Posts</li>
+                    <li id="cshow" rel="<?php echo $final['id'];?>"  data-tab="showcase">Showcase</li>
+                    <li data-tab="team">Team</li>
+                    <li id="cRec" rel="<?php echo $final['id'];?>" data-tab="recommends">Recommends</li>
+                    </ul>
+                    <!-- Edit button -->
+                    <div
+                    class="edit-btn d-flex align-content-center align-items-center  gap-3 flex-md-nowrap flex-wrap justify-content-md-end justify-content-center" >
+                    <!-- <button >
+                        <span class="button-icon"><img src="assets/img/user/edit.png" class="w-100" alt="" /></span>
+                        <span>Edit</span>
+                    </button> -->
+                    </div>
+                </div>
+    
+                <!-- Tab content (initially, only one should be visible) -->
+                <div id="company-details" class="tab-content">
+                    <div class="changeLogo">
+                    <div class="imgBox">
+                        <!-- <img src="assets/img/demo-logo.png" alt="logo" class="img-fluid"> -->
+                        <img id="previewImg"  src="<?php echo ($final['logo']) ?  MEDIA_BASE_URL.$final['logo'] : 'assets/img/fav-icon.png';?>" class="img-fluid" alt="Logo" />
+                    </div>
+                    <label for="changeLogoUpload" class="changeLogoUpload">
+                        Change logo
+                        <input type="file" id="changeLogoUpload" accept="image/*" onchange="previewImage(event,'previewImg')" class="d-none">
+                    </label>
+                    </div>
+                
+                    <form class="user-form ps-0 pb-0"  method="post" id="myCompanyForm">
+                        <!-- Banner Image: start  -->
+                        <div class="bannerImage mb-2">
+                        <p class="ps-0">Banner Image:</p>
+                        <div class="bannerImageItem row">
+                            <?php $__Cindex =1; if(count($final['company_cover_images']) > 0) { 
+                                foreach($final['company_cover_images'] as $kk =>$vv) { 
+                                    if($vv['img_type'] ==0) { 
+                                        $__Cindex =0;
+                                ?>
+                            <div class="col-lg-3">
+                                <div class="uploadImage">
+                                    <img src="<?php echo ($vv['image']) ?  MEDIA_BASE_URL.$vv['image'] : 'assets/img/upload-image.png';?>" alt="upload-image" class="img-fluid">
+                                </div>
+                            </div>
+                            <?php  } } } ?>
+    
+                            <div class="col-lg-4">
+                                <div class="img-upload set-w-auto-100">
+                                    <input type="file" id="imgUpload" accept="image/*" onchange="previewImage(event,'previewImg2')" class="d-none" />
+                                    <label for="imgUpload"><span><img id="previewImg2" src="assets/img/user/plus.png" alt="" /></span>
+                                    <span id="textHd">Upload Image</span></label>
+                                </div>
+                            </div>
+                            <input type="hidden" name="cover_primary_index" value="<?=$__Cindex;?>">
+    
+        
+                        </div>
+                        </div>
+        
+                        <!-- Banner Image: start  -->
+                        <div class="bannerImage mb-2">
+                        <p class="ps-0">Listing Image:</p>
+                            <div class="bannerImageItem row text-center">
+            
+                                <?php $__index =1; if(count($final['company_cover_images']) > 0) { 
+                                    foreach($final['company_cover_images'] as $kk =>$vv) { 
+                                        if($vv['img_type'] ==1) { 
+                                            $__index =0;
+                                    ?>
+                                <div class="col-lg-4">
+                                    <div class="uploadImage">
+                                        <img src="<?php echo ($vv['image']) ?  MEDIA_BASE_URL.$vv['image'] : 'assets/img/upload-image.png';?>" alt="upload-image" class="img-fluid">
+                                    </div>
+                                </div>
+                                <?php  } } } ?>
+        
+                                <input type="hidden" name="listing_primary_index" value="<?=$__index;?>">
+                                <div class="col-lg-4">
+                                <div class="img-upload set-w-auto-100">
+                                    <input type="file" id="listImg" accept="image/*" onchange="previewImage(event,'previewImg3')" class="d-none" />
+                                    <label for="listImg"><span><img id="previewImg3" src="assets/img/user/plus.png" alt="" /></span>
+                                    <span id="textHd1">Upload Image</span>
+                                </label>
+                                </div>
+                                </div>
+            
+            
+                            </div>
+                        </div>
+        
+                        <div class="row" id="user-form-row">
+                            <div class="col-md-3">
+                                <div>
+                                    <label for="name">Company Name:</label>
+                                    <input type="text" name="name" id="name" value="<?=$final['name'];?>" placeholder="Himish" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div>
+                                    <label for="name">Company DBA:</label>
+                                    <input type="text" name="short_name" id="short_name" value="<?=$final['short_name'];?>" placeholder="DBA" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div>
+                                    <label for="email">Company Email:</label>
+                                    <input type="email" name="email" id="email" value="<?=$final['email'];?>"
+                                    class="form-control" />
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div>
+                                    <label for="Website">Website:</label>
+                                    <input type="url" name="Website" id="Website" value="<?=$final['website'];?>"
+                                    class="form-control" />
+                                </div>
+                            </div>
+
+                            <div class="col-md-2">
+                                <div>
+                                    <label for="email">Status:</label>
+                                    <div class="StatusActive">
+                                        <select class="form-select" name="status" aria-label="Default select example">
+                                            <option value="1" <?php echo ($final['status'] ==1) ? 'selected' : '';?>>Active</option>
+                                            <option value="0" <?php echo ($final['status'] ==0) ? 'selected' : '';?>>Deactive</option>
+                                            <option value="2" <?php echo ($final['status'] ==2) ? 'selected' : '';?>>Draft</option>
+                                        </select>
+                                
+                                    </div>
+                                </div>
+                                </div>
+
+                            
+                            <input type="hidden" name="company_id" value="<?=$final['id'];?>">
+
+
+                        
+        
+                            
+
+                            <div class="col-md-4">
+                                <div>
+                                    <label for="title">Info:</label>
+                                    <textarea rows="2" cols="4" name="info"   placeholder="Company info here..."
+                                    class="form-control"><?php echo $final['info']; ?></textarea>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div>
+                                    <label for="title">Keywords:</label>
+                                    <textarea rows="2" cols="4" name="keywords"   placeholder="Keywords info here..."
+                                    class="form-control"><?php echo $final['keywords']; ?></textarea>
+                                </div>
+                            </div>
+        
+                            <div class="col-md-2">
+                                <div>
+                                    <label for="Twtter">Company Type:</label>
+                                    <select class="form-control m-0" name="business_type" required>
+                                        <option value="">Select Business Type</option>
+                                        <option value="Wholesale" <?=($final['business_type'] =='Wholesale') ? 'selected' : '';?>>Wholesale</option>
+                                        <option value="Retail" <?=($final['business_type'] =='Retail') ? 'selected' : '';?>>Retail</option>
+                                        <option value="Manufacturer" <?=($final['business_type'] =='Manufacturer') ? 'selected' : '';?>> Manufacturer</option>
+                                        <option value="Service Provider" <?=($final['business_type'] =='Service Provider') ? 'selected' : '';?>>Service Provider</option>
+                                    </select>
+                                </div>
+                            </div>
+        
+                            <div class="col-md-2">
+                                <div>
+                                    <label for="Twtter">Business Location Type:</label>
+                                    <select class="form-control m-0" name="business_location_type" required>
+                                        <option value="">Select Location Type</option>
+                                        <option value="Worldwide" <?=($final['business_location_type'] =='Worldwide') ? 'selected' : '';?>>Worldwide</option>
+                                        <option value="Local" <?=($final['business_location_type'] =='Local') ? 'selected' : '';?>>Local</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <?php 
+                                $datetime = (new DateTime($final['created_at']))->format('Y-m-d\TH:i');
+
+                                ?>
+                            <div>
+                                <label for="date">Created Date:</label>
+                                <input type="datetime-local" name="created_at" id="datetime" value="<?= $datetime;?>"
+                                class="form-control">
+        
+                            </div>
+
+                            </div>
+
+                            <?php if (hasPermission('Companies', 'edit')) { ?>
+                            <div class="col-12 mt-4">
+                                <div class="d-flex flex-wrap gap-3">
+                                    <button type="button" class="btn btnSave companyFormSb">Save</button>
+                                    <button onclick="location.reload();" class="btn btnClose">Cancel</button>
+                                </div>
+                            </div>
+                            <?php } ?>
+
+                            </form>
+                        </div>
+
+                </div>
+                <!-- company_categories -->
+                <div id="company_categories" class="tab-content hidden">
+                    <!-- Inline Form for Adding Category -->
+                    <div class="card row mb-4 mt-3">
+                        <h6 class="mt-3">Add Category</h6>
+                        <div class="col-md-12">
+                            <form method="post" class="row d-flex py-3 px-4">
+                                <div class="col-md-2">
+                                    <select id="post_type" class="form-select" name="post_type">
+                                        <option value="">Type</option>
+                                        <option value="1">Services</option>
+                                        <option value="2">Products</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-8">
+                                    <select id="post_category_master" class="form-select" name="post_category_master">
+                                        <option value="">Select Category</option>
+                                    </select>
+                                </div>
+                                <?php if (hasPermission('Companies', 'edit')) { ?>
+                                <div class="col-md-2 d-flex align-items-end">
+                                    <button type="submit" name="addCat" class="btn btn-primary w-100">Save</button>
+                                </div>
+                                <?php } ?>
+                            </form>
+                        </div>
+                    </div>
+                
+                    <!-- Categories Table -->
+                    <div class="table-responsive table-space mt-4">
+                        <h5 class="mb-4">Categories</h5>
+                        <?php if (count($final['company_categories']) > 0): ?>
+                            <table class="table table-bordered table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Type</th>
+                                        <th>Master Category</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php foreach ($final['company_categories'] as $category): ?>
+                                        <tr>
+                                            <form method="POST">
+                                                <!-- Type (Service or Product) -->
+                                                <td>
+                                                    <?= $category['parentCategory']['type'] == 1 ? 'Service' : 'Product'; ?>
+                                                </td>
+                                                
+                                                <!-- Dropdown for Master Category Sub -->
+                                                <input type="hidden" name="request_id_c" value="<?= $category['id'] ?>" />
+                                                <td>
+                                                    <select class="form-select post_category_master" name="post_category_master_c">
+                                                        <?php foreach ($category['masterCatSub'] as $kt => $vt): ?>
+                                                            <option 
+                                                                value="<?= $vt['id']; ?>"  
+                                                                data-tab_label_option_posts="<?= htmlspecialchars($vt['tabLabelOptionPosts'], ENT_QUOTES, 'UTF-8'); ?>"
+                                                                data-keywords="<?= htmlspecialchars($vt['keywords1'], ENT_QUOTES, 'UTF-8'); ?>"
+                                                                <?= ($category['parentCategory']['id'] == $vt['id']) ? 'selected' : ''; ?>
+                                                            >
+                                                                <small class="grey">
+                                                                    <?= implode(' > ', array_slice($vt['names'], 0, -1)); ?> >
+                                                                    <?php if (!empty($vt['names'])): ?>
+                                                                        <p class="fw-bold"><?= end($vt['names']); ?></p>
+                                                                    <?php endif; ?>
+                                                                </small>
+                                                            </option>
+                                                        <?php endforeach; ?>
+                                                    </select>
+                                                </td>
+                                                
+                                                <!-- Action Buttons -->
+                                                <td class="text-center">
+                                                    <input type="hidden" name="category_id" value="<?= $category['parentCategory']['id']; ?>">
+                                                    <div class="d-flex justify-content-center">
+                                                        <?php if (hasPermission('Companies', 'edit')) { ?>
+                                                        <button type="submit" class="btn btn-primary btn-sm me-2" name="updateCat">
+                                                            <i class="fas fa-save"></i> Save
+                                                        </button>
+                                                        <?php } ?>
+                                                        <?php if (hasPermission('Companies', 'delete')) { ?>
+                                                        <a onclick="return confirm('Are you sure you want to delete this item?');" href="?request_id=<?= $category['id'] ?>&del=1&id=<?= base64_encode($id) ?>" class="btn btn-danger text-white">
+                                                            <i class="fas fa-trash"></i> Delete
+                                                        </a>
+                                                        <?php } ?>
+                                                    </div>
+                                                </td>
+                                            </form>
+                                        </tr>
+                                    <?php endforeach; ?>
+
+                                     <?php if(count($tabLabel) > 0) {  ?>
+                                        <tr>
+                                            <form method="POST">
+                                               <td>
+                                                    Tab Label
+                                                </td>
+                                                <!-- Dropdown for Master Category Sub -->
+                                                <td>
+                                                    <select class="form-select post_category_master" name="tab_label_option">
+                                                       <?php foreach ($tabLabel as $k => $t): ?>
+                                                            <option 
+                                                                value="<?= $t; ?>"  
+                                                                <?= ($final['tab_label_option'] == $t) ? 'selected' : ''; ?>
+                                                            >
+                                                                <?= $t; ?>
+                                                            </option>
+                                                        <?php endforeach; ?>
+
+                                                    </select>
+                                                </td>
+                                                
+                                                <!-- Action Buttons -->
+                                                <td class="text-center">
+                                                    <?php if (hasPermission('Companies', 'edit')) { ?>
+                                                    <div class="d-flex justify-content-center">
+                                                        <button type="submit" class="btn btn-primary btn-sm me-2" name="updateTabLabel">
+                                                            <i class="fas fa-save"></i> Save
+                                                        </button>
+                                                    </div>
+                                                    <?php } ?>
+                                                </td>
+                                            </form>
+                                        </tr>
+                                    <?php } ?>
+                                </tbody>
+                            </table>
+                        <?php else: ?>
+                            <p>No categories available.</p>
+                        <?php endif; ?>
+                    </div>
+                </div>
+    
+    <!-- location -->
+                <div id="company_branches" class="tab-content hidden">
+                <!-- Add New Branch Row -->
+                 <div class="set-main-table-company-branch">
+                    <table class="table table-bordered">
+                        <tr>
+                            <form method="POST">
+                                <td class="col-md-3">
+                                    <input type="text" id="address_new" name="address" class="form-control address-autocomplete" placeholder="Enter address" autocomplete="off" />
+                                </td>
+                                <td class="col-md-2">
+                                    <input type="text" id="city_new" name="city" class="form-control" placeholder="City" />
+                                </td>
+                                <td class="col-md-1">
+                                    <input type="text" id="state_new" name="state" class="form-control" placeholder="State" />
+                                </td>
+                                
+                                <td class="col-md-1">
+                                    <input type="text" id="country_code_new" name="country_code" class="form-control" placeholder="Country Code" />
+                                </td>
+
+                                <td class="col-md-2">
+                                    <input type="text" id="phone_new" name="phone" class="form-control" placeholder="Phone" />
+                                </td>
+
+                                <td class="col-md-2">
+                                    <input type="text" id="fax_new" name="fax" class="form-control" placeholder="Fax" />
+                                </td>
+                                <td class="text-center">
+                                    <input type="hidden" name="type" value="0">
+                                    <input type="hidden" id="longitude_new" name="longitude" class="form-control" placeholder="Longitude" />
+                                    <input type="hidden" id="latitude_new" name="latitude" class="form-control" placeholder="Latitude" />
+
+                                    <?php if (hasPermission('Companies', 'add')) { ?>
+                                    <button type="submit" name="addBranch" class="btn btn-success btn-sm">
+                                        <i class="fas fa-plus-circle"></i> Add Branch
+                                    </button>
+                                    <?php } ?>
+                                </td>
+                            </form>
+                        </tr>
+                    </table>
+                    </div>  
+                              <hr />
+                                <?php if (!empty($final['company_branches'])): ?>
+                                    <div class="table-responsive table-space set-main-table-company-branch">
+                                    <table class="table table-bordered table-striped dataTable">
+                                        <!-- <thead>
+                                            <tr>
+                                                <th>Address</th>
+                                                <th>State</th>
+                                                <th>City</th>
+                                                <th>Latitude</th>
+                                                <th>Longitude</th>
+                                                <th>Country Code</th>
+                                                <th>Phone</th>
+                                                <th>Fax</th>
+                                                <th class="text-center">Actions</th>
+                                            </tr>
+                                        </thead> -->
+                                        <tbody>
+                                            <?php foreach ($final['company_branches'] as $index => $branch): ?>
+                                                <?php $uniqueIndex = $index + 99; ?>
+                                                <tr class="tidmis_<?= $branch['id'] ?>">
+                                                    <form method="POST">
+
+                                                    <td class="col-md-3">
+                                                        <input type="text" id="address_<?= $uniqueIndex ?>" name="address" value="<?= htmlspecialchars($branch['address']) ?>" class="form-control address-autocomplete" autocomplete="off" />
+                                                    </td>
+                                                    <td class="col-md-2">
+                                                        <input type="text" id="city_<?= $uniqueIndex ?>" name="city" value="<?= htmlspecialchars($branch['city']) ?>" class="form-control" />
+                                                    </td>
+                                                    <td class="" >
+                                                        <input type="text" id="state_<?= $uniqueIndex ?>" name="state" value="<?= htmlspecialchars($branch['state']) ?>" class="form-control" style="width: 50px;" />
+                                                    </td>
+                                                    
+                                                    <td class="col-md-1">
+                                                        <input type="text" id="latitude_<?= $uniqueIndex ?>" name="latitude" value="<?= htmlspecialchars($branch['latitude']) ?>" class="form-control" />
+                                                    </td>
+                                                    <td class="col-md-1">
+                                                        <input type="text" id="longitude_<?= $uniqueIndex ?>" name="longitude" value="<?= htmlspecialchars($branch['longitude']) ?>" class="form-control" />
+                                                    </td>
+                                                    <td class="col-md-1">
+                                                        <input type="text" id="country_code_<?= $uniqueIndex ?>" name="country_code" value="<?= htmlspecialchars($branch['country_code']) ?>" class="form-control" />
+                                                    </td>
+
+                                                    <td class="col-md-2">
+                                                        <input type="text" id="" name="phone" value="718 308 7700" class="form-control" />
+                                                    </td>
+
+                                                    <td class="col-md-2">
+                                                        <input type="text" id="" name="fax" value="917.685.6566" class="form-control" />
+                                                    </td>
+
+                                                        <td class="text-center">
+                                                            <input type="hidden" name="type" value="0">
+                                                            <input type="hidden" name="branch_id" value="<?= $branch['id'] ?>">
+                                                            <?php if (hasPermission('Companies', 'edit')) { ?>
+                                                            <button type="submit" name="updateBranch" class="btn btn-success btn-sm">
+                                                                <i class="fas fa-save"></i>
+                                                            </button>
+                                                            <?php } ?>
+                                                            <?php if (hasPermission('Companies', 'delete')) { ?>
+                                                            <button type="button" class="btn btn-danger btn-sm" ><i class="fa fa-trash  delete-branch" id="<?php echo base64_encode($branch['id']);?>" data-branch-index="<?= $index; ?>"></i></button>
+                                                            <?php } ?>
+
+                                                        </td>
+                                                    </form>
+                                                </tr>
+                                            <?php endforeach; ?>
+                                        </tbody>
+                                    </table>
+                                    </div>
+                                <?php else: ?>
+                                    <p>No Company Branches available.</p>
+                                <?php endif; ?>
+
+                                <br>
+
+
+                </div>
+    
+    <!-- posts -->
+                <div id="posts" class="tab-content hidden">
+                    <div class="table-responsive table-space mt-4">
+                    <table class="table companyPosts" id="companyPosts">
+                        <thead>
+                        <tr class="table-header">
+                            <!-- <th scope="col" class="th-checkbox">
+                            <input type="checkbox" class="chk-box" />
+                            </th>
+                            <th scope="col" class="th-no">
+                            <a href="#" class="userHeading">
+                                NO 
+                            </a>
+                            </th> -->
+                            <th scope="col" class="userHeading-size">
+                            <a href="#" class="userHeading">
+                                USERNAME 
+                            </a>
+                            </th>
+                            <th scope="col">
+                            <a href="#" class="userHeading">
+                                ANONYMOUS 
+                            </a>
+                            </th>
+                            <th scope="col">
+                            <a href="#" class="userHeading">
+                                COMPANY NAME
+                                
+                            </a>
+                            </th>
+                            <th scope="col">
+                            <a href="#" class="userHeading">
+                                VIEW 
+                            </a>
+                            </th>
+                            <th scope="col">
+                            <a href="#" class="userHeading">
+                                CATEGORY 
+                            </a>
+                            </th>
+                            <th scope="col">
+                            <a href="#" class="userHeading">
+                                Status 
+                            </a>
+                            </th>
+                            <th scope="col">
+                            <a href="#" class="userHeading">
+                                CREATED
+                            </a>
+                            </th>
+                            <th scope="col">
+                            <div class="userHeading">ACTION</div>
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            <!-- <tr class="first-row">
+                                <th scope="row justify-content-center align-items-center">
+                                <input type="checkbox" class="chk-box" />
+                                </th>
+                                <td>
+                                <div class="userNo">01</div>
+                                </td>
+                                <td>
+                                <div class="d-flex flex-row align-items-center justify-content-between userNms">
+                                    Joseph Got <span>v</span>
+                                </div>
+                                </td>
+                                <td>
+                                <div class="userNo">No</div>
+                                </td>
+                                <td>
+                                <div class="userNo">OZI</div>
+                                </td>
+                                <td>
+                                <div class="userVw d-flex justify-content-center align-items-center">
+                                    09
+                                </div>
+                                </td>
+                                <td>
+                                <div class="userCt d-flex justify-content-center align-items-center">
+                                    Category
+                                </div>
+                                </td>
+                                <td>
+                                <div class="userActive">Active</div>
+                                </td>
+                                <td>
+                                <div class="userNo">7/29/2024</div>
+                                </td>
+                                <td class="d-flex flex-row">
+                                <button class="btn btn-crud">
+                                    <img src="assets/img/list/view.svg" alt="" />
+                                </button>
+                                <button class="btn btn-crud">
+                                    <img src="assets/img/list/edit.svg" alt="" />
+                                </button>
+                                <button class="btn btn-crud">
+                                    <img src="assets/img/list/delete.svg" alt="" />
+                                </button>
+                                </td>
+                            </tr> -->
+                    
+                        </tbody>
+                    </table>
+                    <div id="noDataMessage" class="no-data-container" style="display: none;">
+                        <img src="<?php echo NO_DATA_IMG ?>" alt="No Data">
+                        <h3><?= NO_DATA_TITLE ?></h3>
+                        <p><?= NO_DATA_DESC ?></p>
+                    </div>
+                    </div>
+                    
+                </div>
+    
+    <!-- showcase -->
+                <div id="showcase" class="tab-content hidden">
+                    <div class="table-responsive table-space mt-4">
+                        <table class="table companyShowCase" id="companyShowCase">
+                            <thead>
+                            <tr class="table-header">
+                                <!-- <th scope="col" class="th-checkbox">
+                                <input type="checkbox" class="chk-box" />
+                                </th>
+                                <th scope="col" class="th-no">
+                                <a href="#" class="userHeading">
+                                    No 
+                                </a>
+                                </th> -->
+                                <th scope="col" class="userHeading-size">
+                                <a href="#" class="userHeading">
+                                    Image
+                                </a>
+                                </th>
+                                <th scope="col">
+                                <a href="#" class="userHeading">
+                                    Item 
+                                </a>
+                                </th>
+                                <th scope="col">
+                                <a href="#" class="userHeading">
+                                    Category 
+                                </a>
+                                </th>
+                                <th scope="col">
+                                <a href="#" class="userHeading">
+                                    PrIce 
+                                </a>
+                                </th>
+                                <th scope="col">
+                                <a href="#" class="userHeading">
+                                    Description 
+                                </a>
+                                </th>
+        
+                                <th scope="col">
+                                <a href="#" class="userHeading">
+                                    Status 
+                                </a>
+                                </th>
+                                <th scope="col">
+                                <a href="#" class="userHeading">
+                                    Created at 
+                                </a>
+                                </th>
+        
+                                <th scope="col">
+                                <div class="userHeading">ACTION</div>
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                        
+                        
+                            </tbody>
+                        </table>
+                        <div id="noDataMessageShowCase" class="no-data-container" style="display: none;">
+                            <img src="<?php echo NO_DATA_IMG ?>" alt="No Data">
+                            <h3><?= NO_DATA_TITLE ?></h3>
+                            <p><?= NO_DATA_DESC ?></p>
+                        </div>
+                    </div>
+                    <!-- pagination -->
+                    
+                </div>
+    <!-- teams -->
+                <div id="team" class="tab-content hidden">
+                    <div class="table-responsive table-space mt-4">
+                    <table class="table">
+                        <thead>
+                        <tr class="table-header">
+                            <!-- <th scope="col" class="th-checkbox">
+                            <input type="checkbox" class="chk-box" />
+                            </th>
+                            <th scope="col" class="th-no">
+                            <a href="#" class="userHeading">
+                                ID 
+                            </a>
+                            </th> -->
+                            <th scope="col" class="userHeading-size">
+                            <a href="#" class="userHeading">
+                                user 
+                            </a>
+                            </th>
+                            <th scope="col">
+                            <a href="#" class="userHeading">
+                                Type 
+                            </a>
+                            </th>
+    
+                            <th scope="col">
+                            <a href="#" class="userHeading">
+                                STATUS 
+                            </a>
+                            </th>
+                            <th scope="col">
+                            <a href="#" class="userHeading">
+                                JOINED 
+                            </a>
+                            </th>
+                            <th scope="col">
+                            <div class="userHeading">ACTION</div>
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            <?php if (!empty($final['company_members'])) { 
+                                foreach ($final['company_members'] as $index => $member) { 
+                            ?>
+                            <tr class="<?= $index % 2 === 0 ? 'second-row' : 'first-row'; ?>">
+                                <!-- <th scope="row justify-content-center align-items-center">
+                                    <input type="checkbox" class="chk-box" />
+                                </th>
+                                <td>
+                                    <div class="userNo"><?= str_pad($index + 1, 2, '0', STR_PAD_LEFT); ?></div>
+                                </td> -->
+                                <td>
+                                    <div class="d-flex flex-row align-items-center userName">
+                                        <img src="<?= !empty($member['user']['image']) ? MEDIA_BASE_URL . $member['user']['image'] : 'assets/img/list/list-users.png'; ?>" 
+                                                alt="<?= htmlspecialchars($member['user']['name'] ?? 'User'); ?>" />
+                                        <?= htmlspecialchars($member['user']['name'] ?? 'N/A'); ?>
+                                    </div>
+                                </td>
+                                <td>
+                                    <!-- RoleRole -->
+                                    <div class="userNo">
+                                        <select class="form-control1 m-0 team-role-select" data-id="<?= $member['id'] ?>" id="team_role_fn">
+                                            <option value="">Select Role</option>
+                                            <option value="Owner" <?=($member['role'] =='Owner') ? 'selected' : '';?>>Owner</option>
+                                            <option value="Partner" <?=($member['role'] =='Partner') ? 'selected' : '';?>>Partner</option>
+                                            <option value="Manager" <?=($member['role'] =='Manager') ? 'selected' : '';?>>Manager</option>
+                                            <option value="Sales Person" <?=($member['role'] =='Sales Person') ? 'selected' : '';?>>Sales Person</option>
+                                            <option value="Employee" <?=($member['role'] =='Employee') ? 'selected' : '';?>>Employee</option>
+                                            <option value="Others" <?=($member['role'] =='Others') ? 'selected' : '';?>>Others</option>
+                                        </select>
+                                    </div>
+                                    
+                                </td>
+                                <td>
+                                    <div class="<?= $member['status'] ? 'userActive' : 'userInactive'; ?>">
+                                        <?= $member['status'] ? 'Active' : 'Inactive'; ?>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="userNo"><?= date('m/d/Y', strtotime($member['created_at'])); ?></div>
+                                </td>
+                                <td class="d-flex flex-row">
+                                    <a href="view-user.php?id=<?php echo base64_encode($member['user_id']) ?>" class="btn btn-crud">
+                                        <img src="assets/img/list/view.svg" alt="View" />
+                                    </a>
+                                    
+                                    <?php if (hasPermission('Companies', 'delete')) { ?>
+                                    <button class="btn btn-crud" data-action="delete" data-table="company_members" data-id="<?php echo base64_encode($member['id']) ?>" data-bs-toggle="tooltip" data-bs-placement="top" onclick="handleActionButtons(this)" aria-label="delete" data-bs-original-title="delete">
+                                        <img src="assets/img/list/delete.svg" alt="delete">
+                                    </button>
+                                    <?php } ?>
+                                </td>
+                            </tr>
+                            <?php 
+                                } 
+                            } else { ?>
+                            <tr>
+                                <td colspan="7" class="text-center">No members found.</td>
+                            </tr>
+                            <?php } ?>
+                            
+                        </tbody>
+                    </table>
+                    </div>
+                
+                </div>
+    <!-- recommends -->
+                <div id="recommends" class="tab-content hidden">
+                    <div class="table-responsive table-space mt-4">
+                    <table class="table" id="cRecommends">
+                        <thead>
+                        <tr class="table-header">
+                            <!-- <th scope="col" class="th-checkbox">
+                            <input type="checkbox" class="chk-box" />
+                            </th>
+                            <th scope="col" class="th-no">
+                            <a href="#" class="userHeading">
+                                ID 
+                            </a>
+                            </th> -->
+                            <th scope="col" class="userHeading-size">
+                            <a href="#" class="userHeading">
+                                user 
+                            </a>
+                            </th>
+                            <th scope="col">
+                            <a href="#" class="userHeading">
+                                Type 
+                            </a>
+                            </th>
+    
+                            <th scope="col">
+                            <a href="#" class="userHeading">
+                                Thankfully 
+                            </a>
+                            </th>
+                            <th scope="col">
+                            <a href="#" class="userHeading">
+                                JOINED 
+                            </a>
+                            </th>
+                            <th scope="col">
+                            <div class="userHeading">ACTION</div>
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                    <div id="noDataMessageRec" class="no-data-container" style="display: none;">
+                        <img src="<?php echo NO_DATA_IMG ?>" alt="No Data">
+                        <h3><?= NO_DATA_TITLE ?></h3>
+                        <p><?= NO_DATA_DESC ?></p>
+                    </div>
+                    </div>
+                
+                </div>
+    
+    
+                </div>
+            </div>
+            </main>
+        </div>
+        <!-- content area end -->
+        </div>
+        <!-- wrapper end  -->
+        <script src="assets/plugins/datatable/js/jquery.dataTables.min.js?v=<?= time() ?>"></script>
+        <?php include('includes/footer-scripts.php') ?>
+        <script src="assets/plugins/select2/select2-custom.js?v=<?= time() ?>"></script>
+        <script src="assets/js/companyDetails.js?v=<?= time() ?>"></script>
+         <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const urlParams = new URLSearchParams(window.location.search);
+            const activeTab = urlParams.get('tab');      // e.g., ?tab=post-details
+            const redirect = urlParams.get('redirect');  // e.g., ?redirect=categories
+        
+            const defaultTab = redirect || activeTab || 'company-details';
+
+            console.log(defaultTab);
+        
+            const tabListItems = document.querySelectorAll('.tablist li');
+            const tabContents = document.querySelectorAll('.tab-content');
+        
+            tabListItems.forEach((tab) => {
+                tab.classList.remove('active-tablist');
+        
+                if (tab.dataset.tab === defaultTab) {
+                    tab.classList.add('active-tablist'); // activate tab
+                }
+            });
+        
+            tabContents.forEach((content) => {
+                content.classList.add('hidden');
+        
+                if (content.id === defaultTab) {
+                    content.classList.remove('hidden'); // show related content
+                }
+            });
+        
+          
+        });
+    </script>   
+        <script>
+            
+            $('.post_category_master').select2();
+            function previewImage(event, previewElementId) {
+                const fileInput = event.target;
+                const file = fileInput.files[0];
+
+                if (file) {
+                    const reader = new FileReader();
+
+                    reader.onload = function(e) {
+                        const previewImg = document.getElementById(previewElementId);
+                        previewImg.src = e.target.result; // Set the image source to the file's data URL
+                        previewImg.style.display = 'block'; // Ensure the image is visible
+                        previewImg.style.height = '140px'; // Set the height to 140px
+                        previewImg.style.width = '140px'; // Set the width to 140px
+                        previewImg.style.objectFit = 'cover'; // Maintain aspect ratio
+                    };
+
+                    reader.readAsDataURL(file);
+                }
+                $('#textHd').html(''); // Update any additional UI element if necessary
+            }
+
+            $(document).ready(function () {
+
+                // Initialize select2 for category dropdown
+                $('#post_category_master').select2();
+
+                // Event handler for category selection change
+                $('#post_category_master').change(function () {
+                    const selectedOption = $(this).find(':selected');
+                    const tabLabelOptions = selectedOption.data('tab_label_option_posts');
+                    const keywords = selectedOption.data('keywords');
+                    const $tabDropdown = $('#category');
+
+                    // Clear existing options
+                    $tabDropdown.html('<option value="">Select an Option</option>');
+
+                    // Populate new options if data is available
+                    if (tabLabelOptions) {
+                        const optionsArray = tabLabelOptions.split(','); // Split into individual options
+                        $.each(optionsArray, function (index, value) {
+                            const trimmedValue = $.trim(value);
+                            $tabDropdown.append(`<option value="${trimmedValue}">${trimmedValue}</option>`);
+                        });
+                    }
+                });
+
+                // Fetch product / service categories based on type
+                $('#post_type').change(function() {
+                    var selectedType = $(this).val();
+
+                    // Send the new value via AJAX
+                    $.ajax({
+                        url: 'ajax.php?action=get_master_sub_cat__by_type',
+                        type: 'POST',
+                        data: { type: selectedType },
+                        success: function(response) {
+                            var categories = JSON.parse(response);
+                            
+                            $('#post_category_master').empty();
+                            $('#category').empty();
+
+                            $('#post_category_master').append('<option value="">Select Category</option>');
+
+                            categories.forEach(function(category) {
+                                var option = $('<option></option>')
+                                    .val(category.id)
+                                    .data('tab_label_option_posts', category.tabLabelOptionPosts)
+                                    .data('keywords', category.keywords1);
+
+                                // Create the category names string, ensuring that the last name does not have a trailing '>'
+                                var categoryNames = category.names.slice(0, -1).join(' > ') + (category.names.length > 0 ? ' > ' + category.names[category.names.length - 1] : '');
+
+                                option.html('<small class="grey">' + categoryNames + '</small>');
+
+                                $('#post_category_master').append(option);
+                            });
+                        },
+                        error: function(xhr, status, error) {
+                            console.log('Error: ' + error);
+                        }
+                    });
+                });
+            });
+
+
+            $(document).on('change', '.team-role-select', function () {
+                    const Id = $(this).data('id');
+                    const newRole = $(this).val();
+
+                    if (!Id || !newRole) return;
+
+                    $.ajax({
+                        url: 'ajax.php?action=updateTeamRole',
+                        method: 'POST',
+                        data: {
+                            Id: Id,
+                            role: newRole
+                        },
+                        success: function (response) {
+                            $.toastr.success('Updated', {position: 'top-center', time: 5000});
+                            // You can show a toast or alert here if needed
+                        },
+                        error: function (err) {
+                            console.error('Update failed:', err);
+                        }
+                    });
+                });
+            </script>
+    </body>
+</html>

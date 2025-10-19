@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+    <?php include('includes/head.php') ?>
+    <body>
+        <?php include('includes/nav-header.php') ?>
+        <main>
+            <section class="select-content-main">
+                <div class="container">
+                    <section class="select-community-container new-community-container">
+                        <div class="comunity-container new-comunity-container">
+                            <div class="new-comunity-title">
+                                <div class="new-comm-left">
+                                    <div class="count-comm-tile">
+                                        <span><?= count($my_communities) ?></span>
+                                    </div>
+                                    <div class="count-comm-tile-text">
+                                        <h4>My Communities</h4>
+                                        <h5>Communities you already joined</h5>
+                                        <p><a href="#" data-bs-toggle="modal" data-bs-target="#selecComunityDetailsModalCP">Connect</a> to more communities.</p>
+                                    </div>
+                                </div>
+                                <div class="new-comm-right d-flex">
+                                    <a class="new-comm-right-link" href="#" data-bs-toggle="modal" data-bs-target="#selecComunityDetailsModalCP">
+                                        <img src="assets/img/group-my-community-peoples.svg" alt="" />
+                                    </a>
+                                    <!-- <a href="/create-community.php" class="new-comm-right-link ms-3" data-bs-toggle="offcanvas"
+                                        data-bs-target="#createComunityOffcanvas"
+                                        aria-controls="createComunityOffcanvas">
+                                        <img src="assets/img/community-pluss.svg" alt="" />
+                                    </a> -->
+                                    <a href="create-community.php" class="new-comm-right-link ms-3">
+                                        <img src="assets/img/community-pluss.svg" alt="" />
+                                    </a>
+                                </div>
+                            </div>
+                            <!-- comunity select  -->
+                            <div class="comunity-select">
+                                <?php if(count($my_communities)){ ?>
+                                <!-- comunity boxes  -->
+                                <div class="comunity-boxes comunity-boxes-my thin-scrollbar set-communities-cards-3-row">
+                                    <?php foreach ($my_communities as $community): ?>
+                                    <!-- single item  -->
+                                    <div class="single-com-box new-single-com-box">
+                                        <label class="custom-checkbox w-100">
+                                            <a href="community-detail.php?id=<?= base64_encode($community['id']) ?>" class="com-img position-relative">
+                                                <div class="w-100">
+                                                    <img src="<?php echo !empty($community['image']) ? MEDIA_BASE_URL.$community['image'] : generateBase64Image($community['name']); ?>" alt="" />
+                                                    <!-- overlay -->
+                                                    <div class="overlay-comm <?= ($community['is_private'] && !$community['status']) ? '' : 'com-hidden' ?>"></div>
+                                                    <div class="overlay-text-comm <?= ($community['is_private'] && !$community['status']) ? '' : 'com-hidden' ?>">
+                                                        <img src="assets/img/game-icons_sands-of-time.svg" alt="" />
+                                                        
+                                                        <?php if ($community['is_private'] && !$community['is_approved']): ?>
+                                                            <p>Membership Approval Pending</p>
+                                                        <?php endif; ?>
+
+                                                        <?php if ($community['is_private'] && !$community['status']): ?>
+                                                            <p>Community waiting for approval by Himish</p>
+                                                        <?php endif; ?>
+                                                    </div>
+                                                </div>
+                                                <span class="position-absolute private-tag <?= $community['is_private'] ? '' : 'com-hidden' ?>">private</span>
+                                            </a>
+                                            <input type="checkbox" class="checkbox-input" />
+                                            <span class="com-body">
+                                                <span class="com-title"><?= $community['name'] ?></span>
+                                                <span class="com-text"><?= $community['description'] ?></span>
+                                                <?php if(!empty($community['latitude']) && !empty($community['longitude'])){ ?>
+                                                    <span class="com-text">
+                                                        <i class="fa fa-map-pin"></i>
+                                                        <?= $community['city'].', '.$community['state'] ?>
+                                                    </span>
+                                                <?php } ?>
+                                                <div class="user-comm-count d-flex justify-content-between align-items-center">
+                                                    <div class="user-comm-count-item-left">
+                                                        <div class="user-comm-count-item-left-inner">
+                                                            <?php foreach ($community['members'] as $members): ?>
+                                                            <img src="<?php echo !empty($members['user']['image']) ? MEDIA_BASE_URL.$members['user']['image'] : generateBase64Image($members['user']['name']); ?>" alt="" class="image-fluid" />
+                                                            <?php endforeach; ?>
+                                                        </div>
+                                                        <div class="user-comm-count-item-left-text"><span><?= ($community['total_members']-count($community['members']) > 0) ? '+'.($community['total_members']-count($community['members'])). '' : $community['total_members'].'' ?></span></div>
+                                                    </div>
+                                                    <div class="user-comm-count-item-left-two hidden">
+                                                        <img src="assets/img/infos-fluent_info-32-regular.svg" alt="" />
+                                                    </div>
+                                                    <!-- lock -->
+                                                    <div class="user-comm-count-item-right <?= $community['is_private'] ? '' : 'com-hidden' ?>">
+                                                        <a href="#"> <img src="assets/img/solar_lock-linear.svg" alt="" /></a>
+                                                    </div>
+                                                </div>
+                                            </span>
+                                        </label>
+                                        <!-- top -->
+                                        <div class="com-top">
+                                            <div class="com-top-left">
+                                                <a href="#" class="com-top-left-link">
+                                                    <img src="assets/img/eos-icons_admin.svg" alt="" />
+                                                </a>
+                                            </div>
+                                            <div class="com-top-right">
+                                                <div class="dropdown action-item">
+                                                    <button class="btn btn-link p-0 dropdown-toggle" type="button" id="postActionsDropdown1" data-bs-toggle="dropdown" aria-expanded="false">
+                                                        <img src="assets/img/dots.png" alt="More Options" />
+                                                    </button>
+                                                    <ul class="dropdown-menu" aria-labelledby="postActionsDropdown1">
+                                                        <li><a class="dropdown-item leave-community-fn" data-id="<?= $community['id'] ?>">Leave Community</a></li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <?php endforeach; ?>
+                                </div>
+                                <?php }else{
+                                    echo renderNoDataCard('No Communities Joined!', '', 'You have not joined any communities yet.');
+                                } ?>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </section>
+            <div class="modal fade" id="selecComunityDetailsModalCP" tabindex="-1" aria-labelledby="selecComunityDetailsModalCPLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            <section class="select-community-container">
+                                <div class="comunity-container">
+                                    <div class="comunity-title">
+                                        <h2>Choose Communities</h2>
+                                    </div>
+                                    <!-- comunity select  -->
+                                    <div class="comunity-select">
+                                        <div class="comunity-search">
+                                            <div class="comunity-search-input">
+                                                <input type="text" placeholder="Search Community" class="form-control" />
+                                                <img src="assets/img/searchform.png" alt="" />
+                                            </div>
+                                        </div>
+                                        <div class="community-summary">
+                                            <div class="community-stats">
+                                                <div class="stat-item">
+                                                    <p>Communities</p>
+                                                    <h4><?= count($other_communities) ?></h4>
+                                                </div>
+                                                <div class="stat-item-2">
+                                                    <p>Selected</p>
+                                                    <h4>0</h4>
+                                                </div>
+                                            </div>
+                                            <div class="community-action-buttons">
+                                                <button class="btn-unselect-all">Select All</button>
+                                            </div>
+                                        </div>
+            
+                                        <?php if(count($other_communities)){ ?>
+                                            <!-- Community Boxes -->
+                                            <div class="comunity-boxes comunity-boxes-my thin-scrollbar cpScrlB">
+                                                <?php foreach ($other_communities as $community): ?>
+                                                <!-- Single Community Item -->
+                                                <div class="single-com-box new-single-com-box">
+                                                    <label class="custom-checkbox w-100">
+                                                        <input
+                                                            type="checkbox"
+                                                            name="selected_community"
+                                                            class="checkbox-input community-radio-ch"
+                                                            value="<?= $community['id']; ?>"
+                                                        />
+                                                        <a href="#" class="com-img position-relative">
+                                                            <div class="w-100">
+                                                                <img src="<?php echo !empty($community['image']) ? MEDIA_BASE_URL.$community['image'] : generateBase64Image($community['name']); ?>" alt="" />
+                                                                <!-- Overlay -->
+                                                                <div class="overlay-comm <?= ($community['is_private'] && !$community['status']) ? '' : 'com-hidden' ?>"></div>
+                                                                <div class="overlay-text-comm <?= ($community['is_private'] && !$community['status']) ? '' : 'com-hidden' ?>">
+                                                                    <img src="assets/img/game-icons_sands-of-time.svg" alt="" />
+                                                                    <?php if ($community['is_private'] && !$community['is_approved']): ?>
+                                                                    <p>Membership Approval Pending</p>
+                                                                    <?php endif; ?>
+                                                                    <?php if ($community['is_private'] && !$community['status']): ?>
+                                                                    <p>Community waiting for approval by Himish</p>
+                                                                    <?php endif; ?>
+                                                                </div>
+                                                            </div>
+                                                            <span class="position-absolute private-tag <?= $community['is_private'] ? '' : 'com-hidden' ?>">private</span>
+                                                        </a>
+                                                        <div class="com-body">
+                                                            <span class="com-title"><?= $community['name'] ?></span>
+                                                            <span class="com-text"><?= $community['description'] ?></span>
+                                                            <?php if(!empty($community['latitude']) && !empty($community['longitude'])){ ?>
+                                                            <span class="com-text">
+                                                                <i class="fa fa-map-pin"></i>
+                                                                <?= $community['city'].', '.$community['state'] ?>
+                                                            </span>
+                                                            <?php } ?>
+                                                            <!-- Lock -->
+                                                            <span class="user-comm-count-item-right <?= $community['is_private'] ? '' : 'com-hidden' ?>">
+                                                                <img src="assets/img/solar_lock-linear.svg" alt="" />
+                                                            </span>
+                                                        </div>
+                                                    </label>
+                                                </div>
+                                                <?php endforeach; ?>
+                                            </div>
+                                            <?php }else{
+                                                echo renderNoDataCard('No Communities Joined!', '', 'You have not joined any communities yet.');
+                                            } ?>
+                                    </div>
+                                </div>
+                                <div class="not-find cpScrlF d-flex justify-content-between align-items-center">
+                                    <input type="hidden" id="selectedCommunitiesInput" name="selectedCommunities">
+                                    
+                                    <button type="button" class="saveBtn join-comm-fn mt-0" data-bs-dismiss="modal">
+                                        <span class="saveBtnTxt">Save</span>
+                                        <span class="saveBtnImg"><img src="assets/img/forward.png" class="img-fluid w-100" alt="" /></span>
+                                    </button>
+                                    
+                                    <button type="button" class="skipBtn" data-bs-dismiss="modal">Cancel</button>
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- offcanvas create Community  -->
+            <div class="offcanvas offcanvas-end" tabindex="-1" id="createComunityOffcanvas" aria-labelledby="createComunityLabel">
+                <div class="offcanvas-header createComunityoffcanvas-header">
+                    <div class="createComunityLabel">
+                        <h5>Create Community</h5>
+                        <p>You will be able to access the community after admin approval.</p>
+                    </div>
+                    <button type="button" class="modal-close" data-bs-dismiss="offcanvas" aria-label="Close">
+                        <img src="assets/img/cross.png" alt="" />
+                    </button>
+                </div>
+                <div class="offcanvas-body addComunityOffcanvas-body">
+                    <div class="createComunityForm">
+                        <div class="notification-bar"></div>
+                        <form id="createCommunity" action="" method="POST">
+                            <div class="private-check-wraper">
+                                <label class="private-custom-checkbox" for="private-checkbox">
+                                    <input type="checkbox" class="private-checkbox-input" id="private-checkbox" />
+                                    <span class="private-checkbox-custom"></span>
+                                    <span class="private-custom-checkbox-text">Private Community</span>
+                                </label>
+                                <button class="tooltipBtn">
+                                    <img src="assets/img/tooltip.png" alt="" />
+                                </button>
+                            </div>
+                            <div class="comunity-image-upload-wrapper">
+                                <label for="imageUploadInput" class="comunity-image-upload-label">
+                                    <span class="uploadIconComunity">
+                                        <img src="assets/img/uploadfil.png" class="img-fluid" alt="Upload Icon" />
+                                    </span>
+                                    <span class="uploadTextcomunity">Upload Image</span>
+                                </label>
+                                <input type="file" id="imageUploadInput" class="comunity-image-upload-input" style="display: none;" />
+                                <div class="comunity-image-upload-preview" style="display: none;">
+                                    <div class="remove-img">
+                                        <img src="assets/img/cross1.png" class="img-fluid" alt="Remove" />
+                                    </div>
+                                    <img id="previewImage" src="" class="img-fluid" alt="Preview Image" />
+                                </div>
+                            </div>
+
+                            <!-- Title -->
+                            <div class="input-wrapper">
+                                <input type="text" placeholder="Community Name" id="title-input" class="form-input communityName" />
+                                <label for="title-input" class="input-icon">
+                                    <img src="assets/img/comunity.png" alt="Title Icon" />
+                                </label>
+                                <label for="title-input" class="postdetails-form-bar"> </label>
+                            </div>
+                            <!-- Description -->
+                            <div class="description-input-wrapper">
+                                <input type="text" placeholder="Description" id="title-input" class="communityDescription form-input" />
+                            </div>
+                            <!-- Address -->
+                            <!-- <div class="description-input-wrapper">
+                                <input type="text" placeholder="Address" id="title-input" class="form-input" />
+                                <input type="text" name="address" id="address" placeholder="Address" oninput="initAutocomplete()" autocomplete="off" class="form-control m-0" required />
+                                <input type="hidden" name="latitude" id="latitude">
+                                <input type="hidden" name="longitude" id="longitude">
+                                <input type="hidden" name="city" id="city">
+                                <input type="hidden" name="state" id="state">
+                            </div> -->
+
+                            <div class="input-group boots-input w-full">
+                                <!-- <span class="input-group-icon">
+                                    <img src="assets/img/location-new.svg" alt="calendar icon" />
+                                </span> -->
+                                <div class="divider-input"></div>
+                                <input type="text" class="form-control" id="address" name="address" placeholder="Location"
+                                required
+                                oninput="initAutocomplete()" />
+                            </div>
+                            <input type="hidden" name="latitude" id="latitude" value="<?php echo @$apiDataU['latitude']; ?>">
+                            <input type="hidden" name="longitude" id="longitude" value="<?php echo @$apiDataU['longitude']; ?>">
+                            <input type="hidden" name="city" id="city" value="<?php echo @$apiDataU['city']; ?>">
+                            <input type="hidden" name="state" id="state" value="<?php echo @$apiDataU['state']; ?>">
+                            
+                            <!-- submit  -->
+                            <div class="mt-3">
+                                <button class="register-submit" type="submit">
+                                    <span class="saveBtnTxt">Save</span>
+                                    <span class="saveBtnImg"><img src="assets/img/forward.png" class="img-fluid w-100" alt="" /></span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+        </main>
+        <?php include('includes/footer-scripts.php') ?>
+        <script src="assets/js/communities.js?v=<?= time() ?>"></script>
+        <script src="assets/js/add-community.js?v=<?= time() ?>"></script>
+    </body>
+</html>

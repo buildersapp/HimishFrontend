@@ -1,0 +1,36 @@
+<html>
+    <?php include('includes/head.php'); ?>
+    <body class="bg-gray-50 font-sans">
+    
+    <!-- Sidebar -->
+    <?php include('includes/sidebar.php'); ?>
+
+    <!-- Mobile Header & Mobile Menu (hidden by default) -->
+    <?php include('includes/mobile-menu.php'); ?>
+
+    <!-- Main Content -->
+    <div class="md:ml-64 min-h-screen">
+        <!-- Header -->
+        <?php include('includes/nav-header.php'); ?>
+
+        <!-- Mobile Tabs -->
+        <?php include('includes/mobile-tabs.php'); ?>
+        
+        <!-- Content -->
+        <main id="communities-content" class="p-4 md:p-6">
+            <!-- Empty State -->
+            <div id="empty-state" class="bg-white rounded-lg shadow-sm border border-gray-100 flex flex-col items-center justify-center py-16 px-8 text-center">
+                <div class="w-14 h-14 rounded-full bg-indigo-100 flex items-center justify-center mb-4">
+                    <svg class="w-8 h-8 text-indigo-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M13 16h-1v-4h-1m1-4h.01M12 20a8 8 0 100-16 8 8 0 000 16z" />
+                    </svg>
+                </div>
+                <h3 class="text-xl font-semibold text-gray-800 mb-3">Feature Coming Soon!</h3>
+                <p class="text-gray-500 mb-8 max-w-md">We’re working hard to bring you powerful tools to help you succeed. Great things take time, and your patience means the world to us. Stay tuned — you’ll be notified in your portal as soon as this feature goes live.</p>
+            </div>
+        </main>
+    </div>
+</body>
+    <?php include('includes/footer-scripts.php'); ?>
+</html>

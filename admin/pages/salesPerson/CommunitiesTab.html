@@ -1,0 +1,403 @@
+<html><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script> window.FontAwesomeConfig = { autoReplaceSvg: 'nest'};</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    
+    <style>
+        ::-webkit-scrollbar { display: none;}
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+    <script>tailwind.config = {
+  "theme": {
+    "extend": {
+      "colors": {
+        "primary": "#2563eb",
+        "secondary": "#64748b",
+        "success": "#10b981",
+        "warning": "#f59e0b",
+        "danger": "#ef4444"
+      },
+      "fontFamily": {
+        "sans": [
+          "Inter",
+          "sans-serif"
+        ]
+      }
+    }
+  }
+};</script>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;500;600;700;800;900&amp;display=swap"><style>
+  .highlighted-section {
+    outline: 2px solid #3F20FB;
+    background-color: rgba(63, 32, 251, 0.1);
+  }
+
+  .edit-button {
+    position: absolute;
+    z-index: 1000;
+  }
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
+
+  html, body {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  </style></head>
+<body class="bg-gray-50">
+
+<div id="header" class="fixed top-0 left-0 right-0 bg-white border-b border-gray-200 z-50">
+    <div class="px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-16">
+            <div class="flex items-center">
+                <button id="backBtn" class="mr-3 p-2 text-gray-400 hover:text-gray-600">
+                    <i class="fa-solid fa-arrow-left"></i>
+                </button>
+                <h1 class="text-2xl font-bold text-primary">Himish</h1>
+                <span class="ml-2 text-sm text-gray-500">Communities</span>
+            </div>
+            <div class="flex items-center space-x-4">
+                <div class="relative">
+                    <button id="notificationBtn" class="p-2 text-gray-400 hover:text-gray-600 relative">
+                        <i class="fa-solid fa-bell text-lg"></i>
+                        <span class="absolute -top-1 -right-1 bg-danger text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">3</span>
+                    </button>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-2.jpg" alt="Profile" class="h-8 w-8 rounded-full">
+                    <span class="text-sm font-medium text-gray-700">John Smith</span>
+                    <button class="text-gray-400 hover:text-gray-600">
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="main-content" class="pt-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <div id="communities-header" class="mb-8">
+            <div class="flex justify-between items-center">
+                <div>
+                    <h2 class="text-3xl font-bold text-gray-900 mb-2">My Communities</h2>
+                    <p class="text-gray-600">Manage and grow your communities to increase earnings</p>
+                </div>
+                <div class="flex space-x-3">
+                    <button id="createCommunityBtn" class="bg-purple-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-purple-700 transition-colors">
+                        <i class="fa-solid fa-plus mr-2"></i>Create Community
+                    </button>
+                    <button id="inviteUserBtn" class="bg-primary text-white px-6 py-3 rounded-lg font-medium hover:bg-primary/90 transition-colors">
+                        <i class="fa-solid fa-user-plus mr-2"></i>Invite User
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="communities-stats" class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                <div class="flex items-center">
+                    <div class="p-3 bg-purple-100 rounded-lg">
+                        <i class="fa-solid fa-users text-purple-600 text-xl"></i>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-600">Total Communities</p>
+                        <p class="text-2xl font-bold text-gray-900">8</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                <div class="flex items-center">
+                    <div class="p-3 bg-blue-100 rounded-lg">
+                        <i class="fa-solid fa-user-group text-blue-600 text-xl"></i>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-600">Total Members</p>
+                        <p class="text-2xl font-bold text-gray-900">247</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                <div class="flex items-center">
+                    <div class="p-3 bg-success/10 rounded-lg">
+                        <i class="fa-solid fa-dollar-sign text-success text-xl"></i>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-600">Community Earnings</p>
+                        <p class="text-2xl font-bold text-gray-900">$4,280</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                <div class="flex items-center">
+                    <div class="p-3 bg-orange-100 rounded-lg">
+                        <i class="fa-solid fa-chart-line text-orange-600 text-xl"></i>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-600">Active Today</p>
+                        <p class="text-2xl font-bold text-gray-900">5</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="communities-filters" class="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-6">
+            <div class="flex flex-wrap items-center justify-between gap-4">
+                <div class="flex items-center space-x-4">
+                    <div class="flex items-center space-x-2">
+                        <label class="text-sm font-medium text-gray-700">Filter:</label>
+                        <select class="border border-gray-300 rounded-lg px-3 py-2 text-sm">
+                            <option>All Communities</option>
+                            <option>Public</option>
+                            <option>Private</option>
+                            <option>Most Active</option>
+                        </select>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <label class="text-sm font-medium text-gray-700">Sort by:</label>
+                        <select class="border border-gray-300 rounded-lg px-3 py-2 text-sm">
+                            <option>Latest Activity</option>
+                            <option>Member Count</option>
+                            <option>Earnings</option>
+                            <option>Date Created</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <div class="relative">
+                        <i class="fa-solid fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                        <input type="text" placeholder="Search communities..." class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="communities-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            
+            <div id="community-1" class="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition-shadow">
+                <div class="p-6">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="flex items-center">
+                            <div class="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center text-white font-bold text-lg mr-3">
+                                TS
+                            </div>
+                            <div>
+                                <h4 class="text-lg font-semibold text-gray-900">Tech Startups</h4>
+                                <p class="text-sm text-gray-500">Created 3 months ago</p>
+                            </div>
+                        </div>
+                        <span class="px-2 py-1 text-xs bg-green-100 text-green-800 rounded-full font-medium">Public</span>
+                    </div>
+                    
+                    <p class="text-sm text-gray-600 mb-4">A community for tech entrepreneurs and startup founders to share insights and network.</p>
+                    
+                    <div class="space-y-3 mb-6">
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="text-gray-600 flex items-center">
+                                <i class="fa-solid fa-users mr-2 text-purple-600"></i>Members
+                            </span>
+                            <span class="font-medium text-gray-900">45</span>
+                        </div>
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="text-gray-600 flex items-center">
+                                <i class="fa-solid fa-clock mr-2 text-blue-600"></i>Last Activity
+                            </span>
+                            <span class="font-medium text-gray-900">2 hours ago</span>
+                        </div>
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="text-gray-600 flex items-center">
+                                <i class="fa-solid fa-dollar-sign mr-2 text-success"></i>Commission
+                            </span>
+                            <span class="font-medium text-success">$1,250</span>
+                        </div>
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="text-gray-600 flex items-center">
+                                <i class="fa-solid fa-ad mr-2 text-orange-600"></i>Ads Created
+                            </span>
+                            <span class="font-medium text-gray-900">12</span>
+                        </div>
+                    </div>
+                    
+                    <div class="flex space-x-2">
+                        <button class="flex-1 bg-primary text-white py-2 px-3 rounded-lg text-sm font-medium hover:bg-primary/90 transition-colors">
+                            <i class="fa-solid fa-eye mr-1"></i>View
+                        </button>
+                        <button class="flex-1 bg-gray-200 text-gray-700 py-2 px-3 rounded-lg text-sm font-medium hover:bg-gray-300 transition-colors">
+                            <i class="fa-solid fa-edit mr-1"></i>Edit
+                        </button>
+                        <button class="bg-purple-600 text-white py-2 px-3 rounded-lg text-sm font-medium hover:bg-purple-700 transition-colors">
+                            <i class="fa-solid fa-user-plus"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="community-2" class="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition-shadow">
+                <div class="p-6">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="flex items-center">
+                            <div class="w-12 h-12 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center text-white font-bold text-lg mr-3">
+                                MP
+                            </div>
+                            <div>
+                                <h4 class="text-lg font-semibold text-gray-900">Marketing Pros</h4>
+                                <p class="text-sm text-gray-500">Created 2 months ago</p>
+                            </div>
+                        </div>
+                        <span class="px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded-full font-medium">Private</span>
+                    </div>
+                    
+                    <p class="text-sm text-gray-600 mb-4">Exclusive community for digital marketing professionals and growth hackers.</p>
+                    
+                    <div class="space-y-3 mb-6">
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="text-gray-600 flex items-center">
+                                <i class="fa-solid fa-users mr-2 text-purple-600"></i>Members
+                            </span>
+                            <span class="font-medium text-gray-900">28</span>
+                        </div>
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="text-gray-600 flex items-center">
+                                <i class="fa-solid fa-clock mr-2 text-blue-600"></i>Last Activity
+                            </span>
+                            <span class="font-medium text-gray-900">1 day ago</span>
+                        </div>
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="text-gray-600 flex items-center">
+                                <i class="fa-solid fa-dollar-sign mr-2 text-success"></i>Commission
+                            </span>
+                            <span class="font-medium text-success">$890</span>
+                        </div>
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="text-gray-600 flex items-center">
+                                <i class="fa-solid fa-ad mr-2 text-orange-600"></i>Ads Created
+                            </span>
+                            <span class="font-medium text-gray-900">8</span>
+                        </div>
+                    </div>
+                    
+                    <div class="flex space-x-2">
+                        <button class="flex-1 bg-primary text-white py-2 px-3 rounded-lg text-sm font-medium hover:bg-primary/90 transition-colors">
+                            <i class="fa-solid fa-eye mr-1"></i>View
+                        </button>
+                        <button class="flex-1 bg-gray-200 text-gray-700 py-2 px-3 rounded-lg text-sm font-medium hover:bg-gray-300 transition-colors">
+                            <i class="fa-solid fa-edit mr-1"></i>Edit
+                        </button>
+                        <button class="bg-purple-600 text-white py-2 px-3 rounded-lg text-sm font-medium hover:bg-purple-700 transition-colors">
+                            <i class="fa-solid fa-user-plus"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="community-3" class="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition-shadow">
+                <div class="p-6">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="flex items-center">
+                            <div class="w-12 h-12 bg-gradient-to-r from-green-500 to-teal-500 rounded-lg flex items-center justify-center text-white font-bold text-lg mr-3">
+                                EC
+                            </div>
+                            <div>
+                                <h4 class="text-lg font-semibold text-gray-900">E-commerce Hub</h4>
+                                <p class="text-sm text-gray-500">Created 1 month ago</p>
+                            </div>
+                        </div>
+                        <span class="px-2 py-1 text-xs bg-green-100 text-green-800 rounded-full font-medium">Public</span>
+                    </div>
+                    
+                    <p class="text-sm text-gray-600 mb-4">Connect with e-commerce business owners and share growth strategies.</p>
+                    
+                    <div class="space-y-3 mb-6">
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="text-gray-600 flex items-center">
+                                <i class="fa-solid fa-users mr-2 text-purple-600"></i>Members
+                            </span>
+                            <span class="font-medium text-gray-900">67</span>
+                        </div>
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="text-gray-600 flex items-center">
+                                <i class="fa-solid fa-clock mr-2 text-blue-600"></i>Last Activity
+                            </span>
+                            <span class="font-medium text-gray-900">3 hours ago</span>
+                        </div>
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="text-gray-600 flex items-center">
+                                <i class="fa-solid fa-dollar-sign mr-2 text-success"></i>Commission
+                            </span>
+                            <span class="font-medium text-success">$1,680</span>
+                        </div>
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="text-gray-600 flex items-center">
+                                <i class="fa-solid fa-ad mr-2 text-orange-600"></i>Ads Created
+                            </span>
+                            <span class="font-medium text-gray-900">19</span>
+                        </div>
+                    </div>
+                    
+                    <div class="flex space-x-2">
+                        <button class="flex-1 bg-primary text-white py-2 px-3 rounded-lg text-sm font-medium hover:bg-primary/90 transition-colors">
+                            <i class="fa-solid fa-eye mr-1"></i>View
+                        </button>
+                        <button class="flex-1 bg-gray-200 text-gray-700 py-2 px-3 rounded-lg text-sm font-medium hover:bg-gray-300 transition-colors">
+                            <i class="fa-solid fa-edit mr-1"></i>Edit
+                        </button>
+                        <button class="bg-purple-600 text-white py-2 px-3 rounded-lg text-sm font-medium hover:bg-purple-700 transition-colors">
+                            <i class="fa-solid fa-user-plus"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="community-4" class="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition-shadow">
+                <div class="p-6">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="flex items-center">
+                            <div class="w-12 h-12 bg-gradient-to-r from-red-500 to-pink-500 rounded-lg flex items-center justify-center text-white font-bold text-lg mr-3">
+                                RE
+                            </div>
+                            <div>
+                                <h4 class="text-lg font-semibold text-gray-900">Real Estate Network</h4>
+                                <p class="text-sm text-gray-500">Created 2 weeks ago</p>
+                            </div>
+                        </div>
+                        <span class="px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded-full font-medium">Private</span>
+                    </div>
+                    
+                    <p class="text-sm text-gray-600 mb-4">Professional network for real estate agents and property investors.</p>
+                    
+                    <div class="space-y-3 mb-6">
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="text-gray-600 flex items-center">
+                                <i class="fa-solid fa-users mr-2 text-purple-600"></i>Members
+                            </span>
+                            <span class="font-medium text-gray-900">34</span>
+                        </div>
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="text-gray-600 flex items-center">
+                                <i class="fa-solid fa-clock mr-2 text-blue-600"></i>Last Activity
+                            </span>
+                            <span class="font-medium text-gray-900">5 hours ago</span>
+                        </div>
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="text-gray-600 flex items-center">
+                                <i class="fa-solid fa-dollar-sign mr-2 text-success"></i>Commission
+                            </span>
+                            <span class="font-medium text-success">$460</span>
+                        </div>
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="text-gray-600 flex items-center">
+                                <i class="fa-solid fa-ad mr-2 text-orange-600"></i>Ads Created
+                            </span>
+                            <span class="font-medium text-gray-900">6</span>
+                        </div>
+                    </div>
+                    
+                </div></div></div></div></div></body></html>

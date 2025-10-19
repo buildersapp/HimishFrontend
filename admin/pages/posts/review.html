@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+    <?php include('includes/head.php') ?>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+        body {
+            font-family: 'Montserrat', sans-serif;
+        }
+    </style>
+    <body>
+        <!-- wrapper start  -->
+        <?php if($id > 0): ?>
+        <div class="wrapper relative ps-0 max-w-[1320px] mx-auto">
+            <!-- header end  -->
+
+            <!-- content area start  -->
+            <?php if(isset($_GET['res'])): ?>
+            <?php
+            $status = $_GET['res'] ?? '';
+            $message = $status === 'success' ? 'Post Action Completed' : 'Server Error! Please try again later.';
+            $bgColor = $status === 'success' ? 'bg-green-50' : 'bg-red-50';
+            $borderColor = $status === 'success' ? 'border-green-400' : 'border-red-400';
+            $textColor = $status === 'success' ? 'text-green-700' : 'text-red-700';
+            $iconColor = $status === 'success' ? 'text-green-500' : 'text-red-500';
+            $title = $status === 'success' ? 'Success!' : 'Error!';
+            ?>
+
+            <div class="flex justify-center mt-10 px-4">
+                <div class="w-full max-w-md sm:max-w-lg md:max-w-xl bg-white rounded-xl shadow-lg overflow-hidden border-l-8 <?= $borderColor ?> <?= $bgColor ?> p-6 relative">
+                    
+                    <!-- Icon -->
+                    <div class="absolute top-4 right-4 cursor-pointer" onclick="this.parentElement.remove();">
+                        <?php if($status === 'success'): ?>
+                            <svg class="w-6 h-6 <?= $iconColor ?>" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                        <?php else: ?>
+                            <svg class="w-6 h-6 <?= $iconColor ?>" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                        <?php endif; ?>
+                    </div>
+
+                    <!-- Content -->
+                    <h2 class="text-2xl font-bold mb-2 <?= $textColor ?>"><?= $title ?></h2>
+                    <p class="text-gray-700 text-lg"><?= $message ?></p>
+                    
+                    <!-- Optional action button -->
+                    <div class="mt-4">
+                        <a href="review-post.php?post_id=<?= $id ?>" class="inline-block px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-700 transition">
+                            Go Back
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <?php else: ?>
+                <main id="main-content" class="pt-4 pb-[95px]">
+
+                    <h2 id="post-title" class="text-lg lg:text-xl font-bold text-brand-dark mb-2 lg:mb-4 max-w-[850px] mx-auto w-[92%]"><?= $final['title'] ?></h2>
+
+                    <div id="post-card" class="bg-black rounded-lg text-white p-3 lg:p-6 text-center mb-6 shadow-md mx-auto w-[92%]">
+
+                        <img class="w-48 mx-auto mb-4" src="<?php echo (count($final['post_images']) > 0) ?  MEDIA_BASE_URL.$final['post_images'][0]['image'] : 'assets/img/poster.png';?>" alt="FlatEx tire service logo, white text on black background, clean vector design" />
+
+                        <div class="space-y-3 text-sm">
+                            <p class="">
+                                <?php if (!empty($final['address'])): ?>
+                                    <?= htmlspecialchars($final['address']) ?><br />
+                                <?php endif; ?>
+
+                                <?php if (!empty($final['city']) || !empty($final['state'])): ?>
+                                    <?= htmlspecialchars($final['city']) ?>
+                                    <?= !empty($final['city']) && !empty($final['state']) ? ', ' : '' ?>
+                                    <?= htmlspecialchars($final['state']) ?>
+                                <?php endif; ?>
+                            </p>
+
+                            <div>
+                                <?php if(!empty($final['user']['name'])){ ?>
+                                <p class=""><?= $final['user']['name'] ?></p>
+                                <?php } ?>
+                                <?php if(!empty($final['email'])){ ?>
+                                <p class="">EMAIL: <?= $final['email'] ?></p>
+                                <?php } ?>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="max-w-[850px] mx-auto w-[92%]">
+                        <div id="post-details-form" class="bg-white p-3 lg:p-5 rounded-lg border border-brand-stroke">
+                            <form class="space-y-4" method="post">
+                                <div>
+                                    <label for="type" class="block text-sm font-medium text-brand-gray mb-1">Type</label>
+                                    <select id="type" name="type" class="w-full px-3 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-brand-blue focus:border-brand-blue">
+                                        <option value="0">Post Only</option>
+                                        <option value="2">Post and Listing</option>
+                                        <option value="1">Listing Only</option>
+                                        <option value="3">OnSale Listing</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label for="group" class="block text-sm font-medium text-brand-gray mb-1">Group</label>
+                                    <select id="group" name="gender" class="w-full px-3 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-brand-blue focus:border-brand-blue">
+                                        <option value="">Select Group</option>
+                                        <?php foreach ($profileGroups as $gender): ?>
+                                            <option value="<?= htmlspecialchars($gender['id']) ?>" 
+                                                <?= (isset($final['gender']) && $final['gender'] === $gender['id']) ? 'selected' : '' ?>>
+                                                <?= htmlspecialchars($gender['name']) ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
+                                <footer id="footer" class="fixed bottom-0 left-0 right-0 w-full max-w-[850px] mx-auto bg-white p-2 border border-brand-stroke mt-2 rounded-lg">
+                                    <!-- <button type="submit" name="approve_changes" class="w-full bg-brand-blue text-[#ca8a04] font-bold py-3 px-4 rounded-lg shadow-lg hover:bg-blue-600 hover:text-white transition-colors"><span>Approve with Changes</span></button> -->
+
+                                    <button type="submit" name="approve" class="w-full flex-1 text-center py-2 lg:py-3 px-4 bg-white border border-green-500 text-green-600 font-semibold rounded-lg hover:bg-green-50 transition text-sm lg:text-md" onclick="window.location.href='?op=accept&post_id=<?= $id ?>'">Approve</button>
+
+                                    <button type="submit" name="reject" class="w-full flex-1 mt-2 text-center py-2 lg:py-3 px-4 bg-white border border-red-500 text-red-600 font-semibold rounded-lg hover:bg-red-50 transition text-sm lg:text-md" onclick="window.location.href='?op=reject&post_id=<?= $id ?>'">Reject</button>
+                                </footer>
+                            </form>
+                        </div>
+                    </div>
+                </main>
+            <?php endif; ?>
+            <!-- content area end -->
+        </div>
+        <?php else: ?>
+            <div class="flex items center justify-center h-screen">
+                <div class="bg-red-50 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                    <strong class="font-bold">Error!</strong>
+                    <span class="block sm:inline">Invalid Post.</span>
+                </div>
+            </div>
+        <?php endif; ?>
+        <!-- wrapper end  -->
+        <script src="assets/plugins/datatable/js/jquery.dataTables.min.js?v=<?= time() ?>"></script>
+        <?php include('includes/footer-scripts.php') ?>
+    </body>
+</html>
