@@ -48,7 +48,7 @@ if (count($final['company_categories']) > 0) {
     }
 }
 
-// dump($final);
+//dump($final);
 
 // Breadcrumbs
 $breadcrumb = [
@@ -141,39 +141,6 @@ if (isset($_POST['updateTabLabel'])) {
     }
 }
 
-// add branch
-if (isset($_POST['addBranch'])) {
-
-    $address        = $_POST['address'];
-    $state          = $_POST['state'];
-    $city           = $_POST['city'];
-    $country_code   = $_POST['country_code'];
-    $latitude       = $_POST['latitude'];
-    $longitude      = $_POST['longitude'];
-    $type           = $_POST['type'];
-
-    $apiData = [
-        'company_id'    => $id,
-        'address'       => $address,
-        'state'         => $state,
-        'city'          => $city,
-        'country_code'  => $country_code,
-        'latitude'      => $latitude,
-        'longitude'     => $longitude,
-        'type'          => 0
-    ];
-
-    // If you are using an API to update location
-    $response = sendCurlRequest(BASE_URL . '/updateCompanyLocation', 'POST', $apiData, [], true);
-    $decodedResponse = json_decode($response, true);
-
-    if ($decodedResponse['success']) {
-        echo "<script>alert('Company branch added successfully!'); window.location.href = 'company-details.php?id=" . $_GET['id'] . "&redirect=company_branches';</script>";
-    } else {
-        echo "<script>alert('Failed to update company branch!');</script>";
-    }
-}
-
 if (isset($_POST['updateBranch'])) {
 
     $location_id    = $_POST['branch_id'];
@@ -184,6 +151,14 @@ if (isset($_POST['updateBranch'])) {
     $latitude       = $_POST['latitude'];
     $longitude      = $_POST['longitude'];
     $type           = $_POST['type'];
+    $branch          = $_POST['branch'];
+    $zipcode           = $_POST['zipcode'];
+    $fax           = $_POST['fax'];
+
+    $phones = isset($_POST['phone']) ? array_filter($_POST['phone'], 'trim') : [];
+
+    // Convert array of phones into a comma-separated string for storage
+    $phone_numbers = implode(', ', $phones);
 
     $apiData = [
         'loc_id'        => $location_id,
@@ -193,6 +168,56 @@ if (isset($_POST['updateBranch'])) {
         'country_code'  => $country_code,
         'latitude'      => $latitude,
         'longitude'     => $longitude,
+        'type'          => 0,
+        'phone_numbers' => $phone_numbers,
+        'branch_name'   => $branch,
+        'zipcode'=> $zipcode,
+        'fax' => $fax
+    ];
+
+    // If you are using an API to update location
+    $response = sendCurlRequest(BASE_URL . '/updateCompanyLocation', 'POST', $apiData, [], true);
+    $decodedResponse = json_decode($response, true);
+
+    if ($decodedResponse['success']) {
+        echo "<script>alert('Company branch updated successfully!'); window.location.href = 'company-details.php?id=" . $_GET['id'] . "&redirect=company_branches';</script>";
+    } else {
+        echo "<script>alert('Failed to update company branch!');</script>";
+    }
+}
+
+// add branch
+if (isset($_POST['addBranch'])) {
+
+    $address        = $_POST['address'];
+    $state          = $_POST['state'];
+    $city           = $_POST['city'];
+    $country_code   = $_POST['country_code'];
+    $latitude       = $_POST['latitude'];
+    $longitude      = $_POST['longitude'];
+    $type           = $_POST['type'];
+    
+    $branch          = $_POST['branch'];
+    $zipcode           = $_POST['zipcode'];
+    $fax           = $_POST['fax'];
+
+    $phones = isset($_POST['phone']) ? array_filter($_POST['phone'], 'trim') : [];
+
+    // Convert array of phones into a comma-separated string for storage
+    $phone_numbers = implode(', ', $phones);
+
+    $apiData = [
+        'company_id'    => $id,
+        'address'       => $address,
+        'state'         => $state,
+        'city'          => $city,
+        'country_code'  => $country_code,
+        'latitude'      => $latitude,
+        'longitude'     => $longitude,
+        'phone_numbers'=> $phone_numbers,
+        'fax' => $fax,
+        'branch_name'=> $branch,
+        'zipcode'=> $zipcode,
         'type'          => 0
     ];
 
@@ -201,7 +226,7 @@ if (isset($_POST['updateBranch'])) {
     $decodedResponse = json_decode($response, true);
 
     if ($decodedResponse['success']) {
-        echo "<script>alert('Company Branch updated successfully!'); window.location.href = 'company-details.php?id=" . $_GET['id'] . "&redirect=company_branches';</script>";
+        echo "<script>alert('Company branch added successfully!'); window.location.href = 'company-details.php?id=" . $_GET['id'] . "&redirect=company_branches';</script>";
     } else {
         echo "<script>alert('Failed to update company branch!');</script>";
     }

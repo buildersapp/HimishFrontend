@@ -61,26 +61,25 @@ $decodedResponse = json_decode($response, true);
         'city'          => cleanInputs($_POST['city']),
         'latitude'          => cleanInputs($_POST['latitude']),
         'longitude'          => cleanInputs($_POST['longitude']),
-        'community_type'=> cleanInputs($_POST['community_type']),
-        'radius'        => cleanInputs($_POST['radius']),
         'type'          => 1
     ];
 
-    if($apiDataU['community_type'] != 0){
-        if($apiDataU['community_type'] == 2){
-            $selectedCommunities = json_decode($_POST['selected_communities'], true);
-            $communityNames = array_map(function ($community) {
-                return $community['name'];
-            }, $selectedCommunities);
+    // if($apiDataU['community_type'] != 0){
+    //     if($apiDataU['community_type'] == 2){
+    //         $selectedCommunities = json_decode($_POST['selected_communities'], true);
+    //         $communityNames = array_map(function ($community) {
+    //             return $community['name'];
+    //         }, $selectedCommunities);
             
-            $commaSeparatedNames = implode(',', $communityNames);
-        }else{
-            $commaSeparatedNames = $userDetails['community'];
-        }
-        $apiDataU['community'] = $commaSeparatedNames;
-    }
+    //         $commaSeparatedNames = implode(',', $communityNames);
+    //     }else{
+    //         $commaSeparatedNames = $userDetails['community'];
+    //     }
+    //     $apiDataU['community'] = $commaSeparatedNames;
+    // }
 
     // add post_locations array
+    $postLocations = [];
     if (isset($_POST['selected_locations']) && !empty($_POST['selected_locations'])) {
         $post_locations = json_decode($_POST['selected_locations'],true);
         $apiDataU['address'] = $post_locations[0]['address'];
@@ -90,27 +89,35 @@ $decodedResponse = json_decode($response, true);
         $apiDataU['city'] = $post_locations[0]['city'];
         $apiDataU['country_code'] = $post_locations[0]['country_code'];
         $apiDataU['post_locations'] = json_encode($post_locations);
+    }else{
+        $postLocations['address'] = $apiDataU['address'];
+        $postLocations['latitude'] = $apiDataU['latitude'];
+        $postLocations['longitude'] = $apiDataU['longitude'];
+        $postLocations['state'] = $apiDataU['state'];
+        $postLocations['city'] = $apiDataU['city'];
+        $postLocations['country_code'] = $apiDataU['country_code'];
+        $apiDataU['post_locations'] = json_encode($postLocations);
     }
 
     // get categorization
-    if(isset($apiDataU['info']) && !empty($apiDataU['info'])){
-        $responseCat = sendCurlRequest(BASE_URL.'/searchPills', 'POST', ['description' => cleanInputs($apiDataU['info'])], [], true);
-        $decodedResponseCat = json_decode($responseCat, true);
-        //dump($decodedResponseCat);
-        if (!empty($decodedResponseCat['body']) && is_array($decodedResponseCat['body'])) {
-            foreach ($decodedResponseCat['body'] as $category) {
-                $apiDataU['service'] = $category['keywords4'];
-                $categoryArray[] = [
-                    'id'  => $category['id'] ?? "",
-                    'category'     => end($category['treeStructure']) ?? "",
-                    'subcategory'  => $category['treeStructure'][2] ?? "",
-                    'pills'  => explode(',',$category['keywords4']) ?? [],
-                ];
-            }
-        }
-    }
+    // if(isset($apiDataU['info']) && !empty($apiDataU['info'])){
+    //     $responseCat = sendCurlRequest(BASE_URL.'/searchPills', 'POST', ['description' => cleanInputs($apiDataU['info'])], [], true);
+    //     $decodedResponseCat = json_decode($responseCat, true);
+    //     //dump($decodedResponseCat);
+    //     if (!empty($decodedResponseCat['body']) && is_array($decodedResponseCat['body'])) {
+    //         foreach ($decodedResponseCat['body'] as $category) {
+    //             $apiDataU['service'] = $category['keywords4'];
+    //             $categoryArray[] = [
+    //                 'id'  => $category['id'] ?? "",
+    //                 'category'     => end($category['treeStructure']) ?? "",
+    //                 'subcategory'  => $category['treeStructure'][2] ?? "",
+    //                 'pills'  => explode(',',$category['keywords4']) ?? [],
+    //             ];
+    //         }
+    //     }
+    // }
 
-    $apiDataU['categoryArray'] = json_encode($categoryArray);
+    //$apiDataU['categoryArray'] = json_encode($categoryArray);
     
     // Check if a file was uploaded
     if (isset($_POST['croppedImages']) && is_array($_POST['croppedImages'])) {
@@ -133,9 +140,8 @@ $decodedResponse = json_decode($response, true);
             }
         }
     }
-    //dump($apiDataU);
 
-    $response = sendCurlRequest(BASE_URL.'/update-post-admin', 'POST', $apiDataU, [], true);
+    $response = sendCurlRequest(BASE_URL.'/update-post-user', 'POST', $apiDataU, [], true);
     $decodedResponse = json_decode($response, true);
     //dump($decodedResponse);
     if($decodedResponse['success']){
@@ -302,6 +308,8 @@ if($postId > 0){
         $selectedCommunityType = isset($apiDataU['community_type']) ? $apiDataU['community_type'] : '1';
     }
 }
+
+//dump($postDetail);
 
 $title = ($postId > 0) ? "Update Listing" : "Create Listing";
 include('pages/posts/create-listing.html');

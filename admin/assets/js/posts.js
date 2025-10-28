@@ -105,7 +105,7 @@ complete: function(data) {
                 openScreenLoader(`Increasing ${increaseAmount} views. Do not refresh this page...`);
             },
             success: function (response) {
-                //location.reload();
+                location.reload();
             },
             complete: function () {
                 closeScreenLoader();

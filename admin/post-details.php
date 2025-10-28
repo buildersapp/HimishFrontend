@@ -77,8 +77,6 @@ if(!empty($final['company_id']) && $final['company_id'] > 0){
     $final['company_data'] = $postCompanyDataResponse['body'][0];
 }
 
-//dump($final['company_data']['company_branches']);
-
 
 if (count($final['post_categories']) > 0) {
     foreach ($final['post_categories'] as $key => $category) {
@@ -136,12 +134,20 @@ if (isset($_POST['updateCat'])) {
 if (isset($_POST['updateLoc'])) {
 
     $location_id    = $_POST['location_id'];
+    $branch          = $_POST['branch'];
     $address          = $_POST['address'];
     $state          = $_POST['state'];
     $city           = $_POST['city'];
     $country_code   = $_POST['country_code'];
     $latitude       = $_POST['latitude'];
     $longitude      = $_POST['longitude'];
+    $zipcode           = $_POST['zipcode'];
+    $fax           = $_POST['fax'];
+
+    $phones = isset($_POST['phone']) ? array_filter($_POST['phone'], 'trim') : [];
+
+    // Convert array of phones into a comma-separated string for storage
+    $phone_numbers = implode(', ', $phones);
 
     $apiData = [
         'loc_id'        => $location_id,
@@ -151,6 +157,10 @@ if (isset($_POST['updateLoc'])) {
         'country_code'  => $country_code,
         'latitude'      => $latitude,
         'longitude'     => $longitude,
+        'phone_numbers'=> $phone_numbers,
+        'branch_name'=> $branch,
+        'zipcode'=> $zipcode,
+        'fax' => $fax
     ];
 
     // If you are using an API to update location
@@ -173,6 +183,15 @@ if (isset($_POST['addPostLoc'])) {
     $latitude       = $_POST['latitude'];
     $longitude      = $_POST['longitude'];
 
+    $branch          = $_POST['branch'];
+    $zipcode           = $_POST['zipcode'];
+    $fax           = $_POST['fax'];
+
+    $phones = isset($_POST['phone']) ? array_filter($_POST['phone'], 'trim') : [];
+
+    // Convert array of phones into a comma-separated string for storage
+    $phone_numbers = implode(', ', $phones);
+
     $apiData = [
         'post_id'        => $id,
         'address'         => $address,
@@ -181,6 +200,10 @@ if (isset($_POST['addPostLoc'])) {
         'country_code'  => $country_code,
         'latitude'      => $latitude,
         'longitude'     => $longitude,
+        'phone_numbers'=> $phone_numbers,
+        'fax' => $fax,
+        'branch_name'=> $branch,
+        'zipcode'=> $zipcode,
     ];
 
     // If you are using an API to update location
@@ -204,6 +227,14 @@ if (isset($_POST['updateBranch'])) {
     $latitude       = $_POST['latitude'];
     $longitude      = $_POST['longitude'];
     $type           = $_POST['type'];
+    $branch          = $_POST['branch'];
+    $zipcode           = $_POST['zipcode'];
+    $fax           = $_POST['fax'];
+
+    $phones = isset($_POST['phone']) ? array_filter($_POST['phone'], 'trim') : [];
+
+    // Convert array of phones into a comma-separated string for storage
+    $phone_numbers = implode(', ', $phones);
 
     $apiData = [
         'loc_id'        => $location_id,
@@ -213,7 +244,11 @@ if (isset($_POST['updateBranch'])) {
         'country_code'  => $country_code,
         'latitude'      => $latitude,
         'longitude'     => $longitude,
-        'type'          => 0
+        'type'          => 0,
+        'phone_numbers' => $phone_numbers,
+        'branch_name'   => $branch,
+        'zipcode'=> $zipcode,
+        'fax' => $fax
     ];
 
     // If you are using an API to update location
@@ -226,6 +261,7 @@ if (isset($_POST['updateBranch'])) {
         echo "<script>alert('Failed to update company branch!');</script>";
     }
 }
+
 // add branch
 if (isset($_POST['addBranch'])) {
 
@@ -236,6 +272,15 @@ if (isset($_POST['addBranch'])) {
     $latitude       = $_POST['latitude'];
     $longitude      = $_POST['longitude'];
     $type           = $_POST['type'];
+    
+    $branch          = $_POST['branch'];
+    $zipcode           = $_POST['zipcode'];
+    $fax           = $_POST['fax'];
+
+    $phones = isset($_POST['phone']) ? array_filter($_POST['phone'], 'trim') : [];
+
+    // Convert array of phones into a comma-separated string for storage
+    $phone_numbers = implode(', ', $phones);
 
     $apiData = [
         'company_id'    => $final['company_id'],
@@ -245,6 +290,10 @@ if (isset($_POST['addBranch'])) {
         'country_code'  => $country_code,
         'latitude'      => $latitude,
         'longitude'     => $longitude,
+        'phone_numbers'=> $phone_numbers,
+        'fax' => $fax,
+        'branch_name'=> $branch,
+        'zipcode'=> $zipcode,
         'type'          => 0
     ];
 
@@ -351,6 +400,6 @@ if (isset($_POST['cateJsonButton'])) {
 }
 
 
-// dump($company);
+//dump($final);
 $title = $final['title']. ' - Post';
 include('pages/posts/details.html');

@@ -45,6 +45,9 @@ if(isset($_POST['updateSettings'])){
     $fd_shown_after_x_feeds       =   cleanInputs($_POST['fd_shown_after_x_feeds']);
     $fd_live_for_days       =   cleanInputs($_POST['fd_live_for_days']);
 
+    $sms_gateway_user       =   cleanInputs($_POST['sms_gateway_user']);
+    $sms_gateway_pass       =   cleanInputs($_POST['sms_gateway_pass']);
+
 
     $post_owner_email_trigger_mode = isset($_POST['post_owner_email_trigger_mode']) ? 1 : 0;
 
@@ -93,6 +96,8 @@ if(isset($_POST['updateSettings'])){
         'ww_community_price' => $ww_community_price,
         'show_post_in_search' => $show_post_in_search,
         'discount_community' => $discount_community,
+        'sms_gateway_pass' => $sms_gateway_pass,
+        'sms_gateway_user' => $sms_gateway_user,
         'free_community' => $free_community
         // 'deal_share_expire'                  => $deal_share_expire
     ];

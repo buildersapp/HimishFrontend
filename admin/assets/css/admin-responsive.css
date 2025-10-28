@@ -596,7 +596,33 @@ table.dataTable tbody tr td {
     border-radius: 50px;
     margin-right: 8px;
 }
+.p-2px {
+    padding: 2px !important;
+}
+@media only screen and (max-width: 1899px) {
+    .set-table-scroll-below-1900 {
+        overflow-x: scroll;
+    }
+    /* width */
+    .set-table-scroll-below-1900::-webkit-scrollbar {
+        height: 4px;
+    }
 
+    /* Track */
+    .set-table-scroll-below-1900::-webkit-scrollbar-track {
+    background: #f1f1f1; 
+    }
+    
+    /* Handle */
+    .set-table-scroll-below-1900::-webkit-scrollbar-thumb {
+    background: #888; 
+    }
+
+    /* Handle on hover */
+    .set-table-scroll-below-1900::-webkit-scrollbar-thumb:hover {
+    background: #555; 
+    }
+}
 
 
 

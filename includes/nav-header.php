@@ -129,6 +129,18 @@ $bottom_right_ads = array_values(array_filter($webAds, function($mem) {
             </div>
         </div>
         <div class="header-right">
+            <!-- QUICK SEARCH -->
+            <form action="" method="">
+                <div class="position-relative">
+                    <div class="input-group set-input-quick-search">
+                        <input type="search" class="form-control global-search-inp" data-type="qs" placeholder="Quick Search..." data-radius="<?= @$userDetails['radius'] ?>" value="<?= @$_GET['search'] ?>" >
+                        <span class="input-group-text " id="basic-addon2"><i class="fa fa-search"></i></span>
+                    </div>
+                    <div class="global-search-dropdown-inp" style="display: none;"></div>
+                </div>
+            </form>
+            <!-- ADD BUSINESS -->
+            <a href="create-company.php" class="set-btn-add-business">Add Business</a>
             <!-- <div class="search">
                 <div action="" class="navSearch" style="position: relative;">
                     <input type="text" class="form-control global-search" placeholder="Search..." data-radius="<?= @$userDetails['radius'] ?>" value="<?= @$_GET['search'] ?>" />
@@ -168,6 +180,7 @@ $bottom_right_ads = array_values(array_filter($webAds, function($mem) {
             </button>
             </div>
             <?php } ?>
+            
             <!-- nav profile img  -->
             <div class="nav-profile position-relative">
                 <button class="profile-btn" id="profileOptions" data-bs-toggle="dropdown" aria-expanded="false">
@@ -225,7 +238,7 @@ $bottom_right_ads = array_values(array_filter($webAds, function($mem) {
                     </li>
                     <!-- item 3 -->
                     <li>
-                        <a class="dropdown-item profile-single d-flex gap-3 align-items-center set-padding-item" href="user-details.php?id=<?= base64_encode(@$userDetails['id']) ?>&type=0">
+                        <a class="dropdown-item profile-single d-flex gap-3 align-items-center set-padding-item" href="##udT<?= base64_encode(@$userDetails['id']) ?>&type=0">
                             <div class="set-user-round">
                                 <img src="assets/img/camera.png" alt="" />
                             </div>
@@ -992,22 +1005,22 @@ $bottom_right_ads = array_values(array_filter($webAds, function($mem) {
     <div class="offcanvas-body addComunityOffcanvas-body">
         <div class="createComunityForm">
             <div class="notification-bar"></div>
-            <form action="" data-parsley-validate>
+            <form action="" data-parsley-validate class="px-0">
                 <input type="hidden" name="type" id="ad_cc_type" value="0" />
                 <input type="hidden" name="post_id" id="post_id" value="0" />
                 <input type="hidden" name="company_id" id="company_id" value="0" />
-                <div class="input-wrapper mb-3">
+                <!-- <div class="input-wrapper mb-3">
                     <input type="checkbox" name="show_username" id="show_username" />
                     <label for="title-input" class="input-icon">
                         Display Poster Name
                     </label>
-                </div>
+                </div> -->
                 <div class="input-wrapper">
                     <input type="email" name="email" id="email" placeholder="Enter your email address" id="title-input" class="form-input" required />
-                    <label for="title-input" class="input-icon">
+                    <!-- <label for="title-input" class="input-icon">
                         <img src="assets/img/comunity.png" alt="Title Icon" />
                     </label>
-                    <label for="title-input" class="postdetails-form-bar"> </label>
+                    <label for="title-input" class="postdetails-form-bar"> </label> -->
                 </div>
                 <!-- submit  -->
                 <div class="mt-3">
@@ -1226,7 +1239,7 @@ $bottom_right_ads = array_values(array_filter($webAds, function($mem) {
                         <!-- profile details -->
                         <h2><?= @$userDetails['name'] ?></h2>
                         <a href="#" class="profile-usernamer">@<?= @$userDetails['handle_name'] ?></a>
-                        <a href="user-details.php?id=<?= base64_encode(@$userDetails['id']) ?>" class="profile-link" target="_blank">
+                        <a href="##udT<?= base64_encode(@$userDetails['id']) ?>" class="profile-link" target="_blank">
                             <img src="assets/img/link.png" alt="">
                         </a>
                     </div>
@@ -1298,7 +1311,7 @@ $bottom_right_ads = array_values(array_filter($webAds, function($mem) {
                 </li>
                 <!-- item 3 -->
                 <li>
-                    <a class="dropdown-item profile-single" href="user-details.php?id=<?= base64_encode(@$userDetails['id']) ?>">
+                    <a class="dropdown-item profile-single" href="##udT<?= base64_encode(@$userDetails['id']) ?>">
                         <span class="profile-single-left">
                             <img src="assets/img/camera.png" alt="" />
                             <span>My Posts</span>

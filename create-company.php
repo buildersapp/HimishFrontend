@@ -119,6 +119,16 @@ if (isset($_POST['addCompany'])) {
         $companyBranchesJson = json_decode($_POST['company_branches_array'], true);
         if(count($companyBranchesJson) > 0){
             $companyData['company_branches'] = $_POST['company_branches_array']; // JSON string
+        }else{
+            $companyData['company_branches'] = json_encode([[
+                'address' => $companyData['address'],
+                'latitude' => $companyData['latitude'],
+                'longitude' => $companyData['longitude'],
+                'city' => $companyData['city'],
+                'state' => $companyData['state'],
+                'country_code' => $companyData['country_code'],
+                'phone_numbers' => $companyData['phone']
+            ]], JSON_UNESCAPED_UNICODE);
         }
     }
 
@@ -164,7 +174,11 @@ if (isset($_POST['addCompany'])) {
             echo "<script>window.location.href = 'create-ad.php'</script>";
         }
         else {
-            echo "<script>window.location.href = 'companies.php'</script>";
+            if (isset($decodedResponse['body']['id']) && !empty($decodedResponse['body']['id'])) {
+                echo "<script>window.location.href = 'company-details.php?id=" . base64_encode($decodedResponse['body']['id']) . "';</script>";
+            } else {
+                echo "<script>window.location.href = 'companies.php';</script>";
+            }
         }
     } else {
         setcookie('wb_errorMsg', $decodedResponse['message'], time() + 5, "/");

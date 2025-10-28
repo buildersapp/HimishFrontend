@@ -79,6 +79,7 @@
                                 <li class="active-tablist" id="post-details-tb" data-tab="post-details">
                                     Listing Details
                                 </li>
+                                <li data-tab="categories" id="categoriesTb">Categories</li>
                                 <li data-tab="locations" id="locationsTb">Listing Locations</li>
                             </ul>
                        
@@ -150,7 +151,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-2">
+                                    <!-- <div class="col-md-2">
                                         <div>
                                             <label for="title">Service / Product:</label>
                                             <select id="post_type" class="form-select" name="post_type">
@@ -162,10 +163,10 @@
                                                     >Products</option>
                                             </select>
                                         </div>
-                                    </div>
+                                    </div> -->
                                 </div>
                                 <div class="row g-2 mb-2">
-                                    <div class="col-md-10 mt-2">
+                                    <!-- <div class="col-md-10 mt-2">
                                         <div>
                                             <label for="title">Select Category</label>
                                             <a href="add-update-master-category.php?post_id=<?= base64_encode($final['id']) ?>&page=listing"
@@ -192,7 +193,7 @@
                                                 <?php } ?>
                                             </select>
                                         </div>
-                                    </div>
+                                    </div> -->
                                     <div class="col-md-2">
                                         <label for="title">Tab Label</label>
                                         <select id="category" class="form-select" name="category">
@@ -307,8 +308,127 @@
                             </form>
                         </div>
 
-                        <!-- location -->
 
+                        <!-- post_categories -->
+                        <div id="categories" class="tab-content hidden">
+                            <!-- Inline Form for Adding Category -->
+                            <div class="card row mb-4 mt-3">
+                                <div class="d-flex justify-content-xl-between">
+                                    <h6 class="mt-3">Add Category</h6>
+                                    <a href="add-update-master-category.php?post_id=<?= base64_encode($final['id']) ?>&page=listing"
+                                    class="float-right category-anchor-right mt-3" target="_blank"><h6 class=" fs-13">Click here if you can't find your
+                                    category</h6></a>
+                                </div>
+                                <div class="col-md-12 mt-3">
+                                    <form method="post" class="row d-flex py-3 px-4">
+                                        <div class="col-md-2">
+                                            <select id="post_type" class="form-select" name="post_type">
+                                                <option value="">Type</option>
+                                                <option value="1" <?= $defaultType == '1' ? 
+                                                'selected' : '' ?>>Services</option>
+                                                <option value="2"<?= $defaultType == '2' ? 
+                                                'selected' : '' ?>>Products</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <select id="post_category_master" class="form-sele2ct" name="post_category_master">
+                                                <option value="">Select Category</option>
+                                                <?php foreach ($masterCatSub as $kt => $vt) { ?>
+                                                    <option value="<?= $vt['id'] ?>"
+                                                        data-tab_label_option_posts="<?= htmlspecialchars($vt['tabLabelOptionPosts'], ENT_QUOTES, 'UTF-8'); ?>"
+                                                        data-keywords="<?= htmlspecialchars($vt['keywords1'], ENT_QUOTES, 'UTF-8'); ?>"
+                                                        <?=($defaultCategory==$vt['id']) ? 'selected' : '' ; ?>
+                                                        >
+                                                        <small class="grey">
+                                                            <?= implode(' > ', array_slice($vt['names'], 0, -1)) ?>
+                                                            <?php if (!empty($vt['names'])): ?>
+                                                            <p class="bold"> >
+                                                                <?= end($vt['names']); ?>
+                                                            </p>
+                                                            <?php endif; ?>
+                                                        </small>
+                                                    </option>
+                                                    <?php } ?>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-2 d-flex align-items-end">
+                                            <button type="submit" name="addCat" class="btn btn-primary w-100">Add</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        
+                            <!-- Categories Table -->
+                            <div class="table-responsive table-space mt-4">
+                                <h5 class="mb-4">Categories</h5>
+                                <?php if (count($final['post_categories']) > 0): ?>
+                                    <table class="table table-bordered table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>Type</th>
+                                                <th>Master Category</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php foreach ($final['post_categories'] as $category): ?>
+                                                <tr>
+                                                    <form method="POST">
+                                                        <!-- Type (Service or Product) -->
+                                                        <td>
+                                                            <?= $category['parentCategory']['type'] == 1 ? 'Service' : 'Product'; ?>
+                                                        </td>
+                                                        
+                                                        <!-- Dropdown for Master Category Sub -->
+                                                        <input type="hidden" name="request_id_c" value="<?= $category['id'] ?>" />
+                                                        <td>
+                                                            <select class="form-select post_category_master" name="post_category_master_c">
+                                                                <?php foreach ($category['masterCatSub'] as $kt => $vt): ?>
+                                                                    <option 
+                                                                        value="<?= $vt['id']; ?>"  
+                                                                        data-tab_label_option_posts="<?= htmlspecialchars($vt['tabLabelOptionPosts'], ENT_QUOTES, 'UTF-8'); ?>"
+                                                                        data-keywords="<?= htmlspecialchars($vt['keywords1'], ENT_QUOTES, 'UTF-8'); ?>"
+                                                                        <?= ($category['parentCategory']['id'] == $vt['id']) ? 'selected' : ''; ?>
+                                                                    >
+                                                                        <small class="grey">
+                                                                            <?= implode(' > ', array_slice($vt['names'], 0, -1)); ?> >
+                                                                            <?php if (!empty($vt['names'])): ?>
+                                                                                <p class="fw-bold"><?= end($vt['names']); ?></p>
+                                                                            <?php endif; ?>
+                                                                        </small>
+                                                                    </option>
+                                                                <?php endforeach; ?>
+                                                            </select>
+                                                        </td>
+                                                        
+                                                        <!-- Action Buttons -->
+                                                        <td class="text-center">
+                                                            <input type="hidden" name="category_id" value="<?= $category['parentCategory']['id']; ?>">
+                                                            <div class="d-flex justify-content-center">
+                                                                <button type="submit" class="btn btn-info btn-sm me-2" name="updateCat">
+                                                                    <i class="fas fa-save"></i> Update
+                                                                </button>
+                                                                <a onclick="return confirm('Are you sure you want to delete this item?');" href="?request_id=<?= $category['id'] ?>&del=1&id=<?= base64_encode($id) ?>" class="btn btn-danger text-white">
+                                                                    <i class="fas fa-trash"></i> Delete
+                                                                </a>
+                                                            </div>
+                                                        </td>
+                                                    </form>
+                                                </tr>
+                                            <?php endforeach; ?>
+                                        </tbody>
+                                    </table>
+                                <?php else: ?>
+                                    <p>No categories available.</p>
+                                <?php endif; ?>
+                            </div>
+
+                            <div class="fixed-center-buttons d-flex flex-wrap gap-3">
+                                <button type="button" class="btn btnSave btnSavePost">Save Post Details</button>
+                            </div>
+                        </div>
+
+                        <!-- location -->
                          <div id="locations" class="tab-content hidden">
                             <!-- Locations Table -->
                             <div class="table-responsive table-space">
@@ -412,9 +532,6 @@
                             </div>
                             <?php } ?>
                         </div>
-
-
-
                     </div>
                 </div>
             </main>
@@ -435,8 +552,6 @@
             const redirect = urlParams.get('redirect');  // e.g., ?redirect=categories
         
             const defaultTab = redirect || activeTab || 'post-details';
-
-            console.log(defaultTab);
         
             const tabListItems = document.querySelectorAll('.tablist li');
             const tabContents = document.querySelectorAll('.tab-content');
@@ -456,6 +571,13 @@
                     content.classList.remove('hidden'); // show related content
                 }
             });
+
+            // Trigger any specific tab click if needed
+            if (defaultTab === 'categories') {
+                $('#categoriesTb').trigger('click');
+            } else if (defaultTab === 'post-details') {
+                $('#post-details-tb').trigger('click');
+            }
         });
     </script> 
     <script>

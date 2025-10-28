@@ -534,7 +534,9 @@ $(document).on("click", "#claimPostFn", function () {
   var type = $('#ad_cc_type').val();
   var post_id = $('#post_id').val();
   var company_id = $('#company_id').val();
-  var show_username = $('#show_username').prop('checked');
+  var show_username = $('#show_username').length 
+    ? ($('#show_username').prop('checked') ? 1 : 0)
+    : 0;
   var email = $('#email').val();
 
   $.ajax({
@@ -559,7 +561,7 @@ $(document).on("click", "#claimPostFn", function () {
               var offcanvas = bootstrap.Offcanvas.getInstance(offcanvasElement);
               if (offcanvas) {
                 offcanvas.hide();
-                $("#claimp"+post_id).attr('disabled',true);
+                $("#claimp"+post_id).text('Request Sent');
               }
             }
           }else{
@@ -667,6 +669,7 @@ $(document).on("click", ".fav-ads-fn", function () {
 $(document).on("keyup", ".global-search-inp", function () {
   var searchValue = $(this).val();
   var radiusValue = $(this).data('radius');
+  var typeValue = $(this).data('type');
   $(".clear-withoutSrc").show();
 
   if(searchValue === ""){
@@ -674,7 +677,7 @@ $(document).on("keyup", ".global-search-inp", function () {
   }
 
   if (searchValue.length < 2) {
-    $(".global-search-dropdown").hide();
+    typeValue === "qs" ? $(".global-search-dropdown-inp").hide() : $(".global-search-dropdown").hide();
     return;
   }
 
@@ -685,16 +688,10 @@ $(document).on("keyup", ".global-search-inp", function () {
       success: function (response) {
           try {
               var jsonResponse = JSON.parse(response);
-              var dropdown = $(".global-search-dropdown");
+              var dropdown = typeValue === "qs" ? $(".global-search-dropdown-inp") : $(".global-search-dropdown");
               dropdown.empty();
 
               jsonResponse.forEach(category => {
-                  //var categoryTitle = `<div class="global-search-category">${category.title}</div>`;
-                  // var suggestionsList = category.suggestions.map(suggestion => 
-                  //     `<div class="global-search-item" data-id="${suggestion.id}" data-ispost="${suggestion.isPost}" data-category="${category.category}" data-keyword="${suggestion.keyword}">
-                  //       ${suggestion.title}
-                  //     </div>`
-                  // ).join("");
 
                   var categoryTitleText = category.title.replace(
                     new RegExp(searchValue, 'gi'),
@@ -781,6 +778,7 @@ $(document).on("click", ".global-search-item", function () {
 $(document).on("click", ".clear-withoutSrc", function () {
   $(".global-search-inp").val('');
   $(".global-search-dropdown").hide();
+  $(".global-search-dropdown-inp").hide();
   $(this).hide();
 });
 
@@ -1082,6 +1080,7 @@ $(document).on("click", ".company_recommend_fn", function () {
 $(document).on("click", function (event) {
   if (!$(event.target).closest(".search").length) {
       $(".global-search-dropdown").hide();
+      $(".global-search-dropdown-inp").hide();
   }
 });
 
@@ -1426,18 +1425,36 @@ $(document).on("click", ".acceptRejectCommunityReq", function () {
 document.addEventListener('DOMContentLoaded', function () {
   const websiteInputs = document.querySelectorAll('.auto-prepend-https');
 
-  websiteInputs.forEach(function(input) {
+  websiteInputs.forEach(function (input) {
+
+    // Clean up any duplicated https://
+    function normalizeHttps(val) {
+      // Remove all existing "http://" or "https://" occurrences
+      val = val.replace(/^https?:\/\//gi, '');
+      // Always prepend exactly one "https://"
+      return 'https://' + val;
+    }
+
+    // Auto prepend or clean up on focus
     input.addEventListener('focus', function (event) {
-      let val = input.value.trim();
-
-      // Prepend https:// if not already present
-      if (!/^https?:\/\//i.test(val)) {
-        input.value = 'https://' + val;
-      }
-
-      // Optional: prevent any strange default behavior (safety)
+      input.value = normalizeHttps(input.value.trim());
       event.preventDefault();
       event.stopPropagation();
+    });
+
+    // Clean pasted content to ensure single https://
+    input.addEventListener('paste', function (event) {
+      event.preventDefault();
+      const pastedText = (event.clipboardData || window.clipboardData).getData('text');
+      input.value = normalizeHttps(pastedText.trim());
+    });
+
+    // Clean up manually typed "https://" duplication in real time
+    input.addEventListener('input', function () {
+      // Only fix if user tries to type another https://
+      if ((input.value.match(/https?:\/\//gi) || []).length > 1) {
+        input.value = normalizeHttps(input.value);
+      }
     });
   });
 });

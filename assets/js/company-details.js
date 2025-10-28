@@ -73,18 +73,18 @@ document.addEventListener("DOMContentLoaded", function () {
     button.addEventListener("click", function () {
         // Remove active class from all buttons
         boostButtons.forEach((btn) =>
-        btn.classList.remove("boosttype-card-item-active")
-        );
+            btn.classList.remove("boosttype-card-item-active")
+            );
 
-        // Add active class to the clicked button
-        this.classList.add("boosttype-card-item-active");
+            // Add active class to the clicked button
+            this.classList.add("boosttype-card-item-active");
 
-        // Show confirm button
-        confirmButtonDiv.classList.remove("hidden");
+            // Show confirm button
+            confirmButtonDiv.classList.remove("hidden");
 
-        // Store the selected URL
-        selectedUrl = this.getAttribute("data-url");
-    });
+            // Store the selected URL
+            selectedUrl = this.getAttribute("data-url");
+        });
     });
 
     // Handle confirm button click
@@ -94,6 +94,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
     });
 });
+
 document.addEventListener("DOMContentLoaded", function () {
     // Select all buttons
     const navButtons = document.querySelectorAll(".nav-linkx-com");
@@ -157,23 +158,23 @@ const [companyTab, contactTab] = document.querySelectorAll(
 );
 
 // Function to handle tab switching
-const switchTab = (index) => {
-    buttons.forEach((btn) =>
-    btn.classList.remove("connect-switch-button-active")
-    );
-    buttons[index].classList.add("connect-switch-button-active");
+// const switchTab = (index) => {
+//     buttons.forEach((btn) =>
+//     btn.classList.remove("connect-switch-button-active")
+//     );
+//     buttons[index].classList.add("connect-switch-button-active");
 
-    companyTab.style.display = index === 0 ? "block" : "none";
-    contactTab.style.display = index === 1 ? "block" : "none";
-};
+//     companyTab.style.display = index === 0 ? "block" : "none";
+//     contactTab.style.display = index === 1 ? "block" : "none";
+// };
 
 // Add event listeners using forEach
-buttons.forEach((button, index) =>
-    button.addEventListener("click", () => switchTab(index))
-);
+// buttons.forEach((button, index) =>
+//     button.addEventListener("click", () => switchTab(index))
+// );
 
 // Set initial active state
-switchTab(2);
+//switchTab(2);
 
 // Rate it & Slick Slider
 $(document).ready(function () {

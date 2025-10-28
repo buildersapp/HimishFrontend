@@ -26,7 +26,7 @@ $hasCompanies = !$connectToExisting;
                 <p>@<?= @$userDetails['handle_name'] ?? 'guestuser' ?></p>
 
                 <?php if(@$userDetails){ ?>
-                <a href="user-details.php?id=<?= base64_encode(@$userDetails['id']) ?>&type=0" class="profile-link">
+                <a href="##udT<?= base64_encode(@$userDetails['id']) ?>&type=0" class="profile-link">
                     <img src="assets/img/link.png" alt="">
                 </a>
                 <?php } ?>

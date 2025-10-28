@@ -517,7 +517,7 @@ if (!function_exists('AdsCard')) {
                     </div> -->
                     <div class="author-info">
                         <h3>
-                            <a href="company-details.php?id=<?= base64_encode($post['companyProfile']['id']) ?>"><span><?php echo $post['companyProfile']['name']; ?></span></a>
+                            <a href="company-details.php?id=<?= base64_encode(@$post['companyProfile']['id']) ?>"><span><?php echo @$post['companyProfile']['name']; ?></span></a>
                             <span><img src="assets/images/verify-badge.png" alt=""></span>
                         </h3>
                         <div class="author-loc">
@@ -804,7 +804,7 @@ if (!function_exists('lookingForCard')) {
                         ?>
 
                         <h3>
-                            <span><a href="user-details.php?id=<?= base64_encode($post['user']['id']) ?>" target="_blank"><?= $post['user']['name'] ?></a></span>
+                            <span><a href="##udT<?= base64_encode($post['user']['id']) ?>" target="_blank"><?= $post['user']['name'] ?></a></span>
                             <?php if ($showDropdown): ?>
                             <div class="dropdown action-item cmnt-action">
                                 <button class="btn btn-link p-0 dropdown-toggle" type="button"
@@ -2256,7 +2256,13 @@ if (!function_exists('newListingCard')) {
                                             <img src="assets/images/claim.png" height="18px" alt="time">
                                         </button>
                                         <ul class="dropdown-menu set-position-inner">
-                                            <?php if(isset($_SESSION['hm_wb_auth_data']) && $_SESSION['hm_wb_auth_data']['id'] == $post['user']['id']){ ?>
+                                            <?php if (
+                                                isset($_SESSION['hm_wb_auth_data']) &&
+                                                (
+                                                    $_SESSION['hm_wb_auth_data']['id'] == $post['user']['id'] ||
+                                                    $_SESSION['hm_wb_auth_data']['id'] == $post['owner_id']
+                                                )
+                                            ) { ?>
                                                 <li><a class="py-0 px-0" href="create-listing.php?id=<?= base64_encode($post['id']) ?>"><p class="dropdown-item text-secondary">Edit</p></a></li>
                                                 <li><p class="dropdown-item delete-pst-fn" data-id="<?= $post['id'] ?>">Delete</p></li>
                                             <?php }else{ ?>
@@ -2358,13 +2364,20 @@ if (!function_exists('newListingCard')) {
                                 <div class="d-flex align-items-center mt-1 justify-content-between">
                                     <!-- TITLE -->
                                     <div>
-                                        <div class="d-flex justify-content-between">
+                                        <div class="d-flex justify-content-between gap-2">
                                             <a href="post-details.php?id=<?php echo base64_encode($post['id']); ?>&type=1" class="d-block text-decoration-none f-14-gb set-fw-600">
                                                 <?php 
                                                     $title = $post['title'] ?: '';
                                                     echo (strlen($title) > 25) ? substr($title, 0, 25) . '...' : $title;
                                                 ?>
                                             </a>
+                                            <a href="#" class="set-post-stamp d-inline-flex align-items-center gap-1 position-static"><img src="assets/images/message.png" alt="message"></a>
+                                            
+                                            <!-- <?php if(isset($_SESSION['wb_auth_data']) && $_SESSION['wb_auth_data']['id'] !== $post['user']['id']){ ?>
+                                                <a href="single-chat.php?id=<?= secureUrlEncode($post['id']) ?>&type=<?= secureUrlEncode(2) ?>" class="set-post-stamp d-inline-flex align-items-center gap-1 position-static">
+                                                    <img src="assets/images/message.png" alt="message">
+                                                </a>
+                                                <?php } ?> -->
                                         </div>
                                         <!-- LOCATION -->
                                         <span class="f-10-grey-67 d-flex gap-2 align-items-center"><a href="#" class="text-decoration-none f-12-grey-67"><img src="assets/images/location-07.png" alt="location" class="pe-1"><?php echo (!empty($post['city']) && !empty($post['state'])) ? $post['city'] . ', ' . $post['state'] : ($post['city'] ?: $post['state']); ?></a><span></span>
@@ -3028,6 +3041,15 @@ if (!function_exists('dealCard')) {
         <?php if(!$isDetail){ ?>
             <div class="col-12 col-md-6 col-lg-3 mt-3">
             <div class="product-container vpc-deal-card deal id="lcp-<?php echo ($post['id']); ?>" data-post-id="<?php echo ($post['id']); ?>" data-i-view="<?php echo ($post['i_view']); ?>">
+                <div class="set-share-tag-cards-deal">
+                    <div class="product-share share-fn set-product-share-himish" data-id="<?php echo base64_encode($post['id']); ?>" data-title="Deal" data-type="get_deals">
+                        <img src="assets/images/share-new.png" alt="">
+                        <span><?php echo ($post['total_share'] == 0) ? '' : $post['total_share']; ?></span>
+                    </div>
+                    <div class="product-bookmark fav-post-fn set-product-bookmark-himish" data-post-id="<?php echo $post['id']; ?>" data-favorited="<?php echo $post['i_fav'] ? '1' : '0'; ?>" data-post-type="2">
+                        <img src="assets/images/<?php echo $post['i_fav'] ? 'tag-icon-fill.png' : 'tag-icon.png'; ?>" class="img-fluid" alt="">
+                    </div>
+                </div>
                 <div class="product-image">
                     <a href="post-details.php?id=<?php echo base64_encode($post['id']); ?>" class="set-img-deal-card-org">
                         <img src="<?= count($post['post_images']) ? MEDIA_BASE_URL.@$post['post_images'][0]['image'] : 'assets/img/favicon.png'; ?>" width="125" height="120" alt="">
@@ -3035,11 +3057,19 @@ if (!function_exists('dealCard')) {
                 </div>
                 <div class="product-details">
                     <div class="product-description">
-                        <p class="username d-flex align-items-center justify-content-between"><a href="user-details.php?id=<?php echo base64_encode($post['user']['id']); ?>">@<?= $post['user']['handle_name'] ?></a>&emsp;<span class="time-posted"><?= time_ago($post['created_at']) ?></span></p>
-                        <h2 class="product-title f-16-gb fw-semibold"><a href="post-details.php?id=<?php echo base64_encode($post['id']); ?>"><?php echo $post['title'] ?: ''; ?></a></h2>
+                        <p class="username d-flex align-items-center gap-2">
+                            <a href="##udT<?php echo base64_encode($post['user']['id']); ?>">@<?= $post['user']['handle_name'] ?>
+                            </a> 
+                            <span class="time-posted"><span class="set-black-circle-icon">•</span><?= time_ago($post['created_at']) ?></span>
+                        </p>
+                        <h2 class="product-title set-min-h-44-text f-16-gb fw-semibold">
+                            <a href="post-details.php?id=<?php echo base64_encode($post['id']); ?>">
+                                <?= mb_substr($post['title'], 0, 45) . (strlen($post['title']) > 45 ? '...' : '') ?>
+                            </a>
+                        </h2>
                         <p class="product-summary">
                             <a href="post-details.php?id=<?php echo base64_encode($post['id']); ?>" class="f-12-g">
-                            <?= mb_substr($post['info'], 0, 35) . (strlen($post['info']) > 35 ? '...' : '') ?>
+                            <?= mb_substr($post['info'], 0, 30) . (strlen($post['info']) > 30 ? '...' : '') ?>
                             </a>
                         </p>
                     </div>
@@ -3050,15 +3080,7 @@ if (!function_exists('dealCard')) {
                         </div>
                     </div>
                     <div class="product-pricing mt-1">
-                        <div class="d-flex gap-2 align-items-center">
-                            <div class="product-share share-fn set-product-share-himish" data-id="<?php echo base64_encode($post['id']); ?>" data-title="Deal" data-type="get_deals">
-                                <img src="assets/images/share-new.png" alt="">
-                                <span><?php echo ($post['total_share'] == 0) ? '' : $post['total_share']; ?></span>
-                            </div>
-                            <div class="product-bookmark fav-post-fn set-product-bookmark-himish" data-post-id="<?php echo $post['id']; ?>" data-favorited="<?php echo $post['i_fav'] ? '1' : '0'; ?>" data-post-type="2">
-                                <img src="assets/images/<?php echo $post['i_fav'] ? 'tag-icon-fill.png' : 'tag-icon.png'; ?>" class="img-fluid" alt="">
-                            </div>
-                        </div>
+                        
                         <?php if((isset($_SESSION['hm_wb_auth_data']) && $_SESSION['hm_wb_auth_data']['account_type'] == 2) 
                             || (isset($_SESSION['hm_wb_auth_data']) && $_SESSION['hm_wb_auth_data']['id'] == $post['user']['id'])){ ?>
                             <div class="mt-3 dropdown action-item cmnt-action set-three-dots-org">
@@ -3138,7 +3160,7 @@ if (!function_exists('dealCard')) {
                         </div>
                         <div class="col-lg-6">
                             <div class="view-product-details set-bg-right-detail-deal text-start">
-                                <h4><a href="user-details.php?id=<?php echo base64_encode($post['user']['id']); ?>">@<?= $post['user']['handle_name'] ?> <span><img src="assets/images/clock-01.png" alt="time"><?= time_ago($post['created_at']) ?></span></a></h4>
+                                <h4><a href="##udT<?php echo base64_encode($post['user']['id']); ?>">@<?= $post['user']['handle_name'] ?> <span><img src="assets/images/clock-01.png" alt="time"><?= time_ago($post['created_at']) ?></span></a></h4>
                                 <h2 class="product-title f-16-gb mt-12 fw-semibold"><a><?php echo $post['title'] ?: ''; ?></a></h2>
                                 <p><?= $post['info'] ?></p>
                                 <div class="view-product-details-feature">
@@ -3287,7 +3309,7 @@ if (!function_exists('dealShareCard')) {
                             </div>
                             <div class="view-share-post-author">
                                 <img src="<?php echo !empty($post['user']['image']) ? MEDIA_BASE_URL.$post['user']['image'] : generateBase64Image($post['user']['name']); ?>" class="mail-avatar-rounded-ds" alt="">
-                                <a href="user-details.php?id=<?php echo base64_encode($post['user']['id']); ?>"><span class="author-name">@<?= $post['user']['handle_name'] ?></span></a>
+                                <a href="##udT<?php echo base64_encode($post['user']['id']); ?>"><span class="author-name">@<?= $post['user']['handle_name'] ?></span></a>
                             </div>
                             <?php if(!empty($post['address'])){ ?>
                             <div class="shared-deals-location">
@@ -3744,7 +3766,7 @@ if (!function_exists('getNotificationContentByCode')) {
                 if($post['_metadata']){
                     $button2 = '<a href="create-ad.php?ad_id='.base64_encode($post['request_id']).'"><button class="cancel-btn">Extend Ad Time</button></a>';
                 }
-            } elseif ($code == 58 || $code == 28 || $code == 1 || $code == 16 || $code == 18 || $code == 8999 || $code == 666) { // LikePost
+            } elseif ($code == 13 || $code == 57 || $code == 56 || $code == 58 || $code == 28 || $code == 1 || $code == 16 || $code == 18 || $code == 8999 || $code == 666) { // LikePost
                 $button2 = '<a href="post-details.php?id='.base64_encode($post['request_id']).'"><button class="cancel-btn">View</button></a>';
             } elseif ($code == 31 || $code == 12 || $code == 30) { // newListing
                 $button2 = '<a href="post-details.php?id='.base64_encode($post['request_id']).'&type=1"><button class="cancel-btn">View</button></a>';

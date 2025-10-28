@@ -25,6 +25,7 @@ if(isset($_POST['submitNM'])){
     $id                     =   cleanInputs(base64_decode($_POST['Id']));
     $push_message           =   cleanInputs($_POST['push_message']);
     $notification_message   =   cleanInputs($_POST['notification_message']);
+    $template_code   =   cleanInputs($_POST['template_code']);
     $email_text   =   ($_POST['email_text']);
     $title   =   cleanInputs($_POST['title']);
     $name   =   cleanInputs($_POST['name']);
@@ -40,6 +41,7 @@ if(isset($_POST['submitNM'])){
         'push_enable' => $push_enable,
         'email_enable' => $email_enable,
         'after_expire_time' => $after_expire_time,
+        'template_code' => $template_code
     ];
 
     if(isset($_POST['email_enable'])){

@@ -7,7 +7,7 @@
         <main>
             <!-- title start -->
             <h4 class="text-center title-2x-bg">
-                Create Listing
+                <?= isset($_GET['id']) ? 'Update' : 'Create' ?> Listing
             </h4>
             <form method="post" id="listingCreateForm" data-parsley-validate enctype="multipart/form-data" onsubmit="return validateFormWithHoldOn('listingCreateForm', 'Your listing is being created...', false);">
 
@@ -197,7 +197,7 @@
                 </section>
 
                 <!-- Communities start -->
-                <section class="flow detailssTwo" id="communitiess">
+                <!-- <section class="flow detailssTwo" id="communitiess">
                     <div class="upload-container">
                         <div class="details-communities">
                             <div class="row communities-row">
@@ -239,7 +239,7 @@
                             </div>
                         </div>
                     </div>
-                </section>
+                </section> -->
 
                 <!-- Select Location Where you want to post -->
                 <section class="flow detailssTwo" id="listingLoc" style="display: none;">

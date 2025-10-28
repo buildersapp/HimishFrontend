@@ -163,6 +163,26 @@ if(isset($_GET['action']) && $_GET['action'] == "emailVerification"){
     echo $response;
 }
 
+// ownerVerification
+if(isset($_GET['action']) && $_GET['action'] == "ownerVerification"){
+    $method         =   cleanInputs($_POST['method']);
+    $value          =   cleanInputs($_POST['value']); // Default to 0 if not set
+    $apiData = [
+        'method' => $method,
+        'value' => $value,
+    ];
+
+    if($method == 'email'){
+        $emailOtpData = ['email'   => $value, 'type' => 1];
+        $response = sendCurlRequest(BASE_URL.'/emailVerification', 'POST', $emailOtpData);
+    }else{
+        $phoneOtpData = ['phone'   => $value];
+        $response = sendCurlRequest(BASE_URL.'/verifyOwnerWithOtp', 'POST', $phoneOtpData);
+    }
+    $decodedResponse = json_decode($response, true);
+    echo $response;
+}
+
 // registerUser
 if(isset($_GET['action']) && $_GET['action'] == "registerUser"){
 
@@ -2573,6 +2593,20 @@ if(isset($_GET['action']) && $_GET['action'] == "early_access_form") {
     $type = cleanInputs($_POST['audience_type'] ?? '');
     $email = cleanInputs($_POST['email'] ?? '');
     $phone = cleanInputs($_POST['phone'] ?? '');
+
+    $recaptchaSecret = RECAPTCHA_SECRET_KEY;
+    $recaptchaResponse = $_POST['g-recaptcha-response'] ?? '';
+
+    $verify = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret={$recaptchaSecret}&response={$recaptchaResponse}");
+    $responseData = json_decode($verify);
+
+    if (empty($responseData->success) || !$responseData->success) {
+        echo json_encode([
+            "success" => false, 
+            "message" => "reCAPTCHA verification failed."
+        ]);
+        exit;
+    }
 
     // Backend validation: email and phone should not be blank
     if(empty($email) || empty($phone)) {

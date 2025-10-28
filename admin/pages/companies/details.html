@@ -486,114 +486,182 @@
                 <div id="company_branches" class="tab-content hidden">
                 <!-- Add New Branch Row -->
                  <div class="set-main-table-company-branch">
-                    <table class="table table-bordered">
-                        <tr>
-                            <form method="POST">
-                                <td class="col-md-3">
-                                    <input type="text" id="address_new" name="address" class="form-control address-autocomplete" placeholder="Enter address" autocomplete="off" />
-                                </td>
-                                <td class="col-md-2">
-                                    <input type="text" id="city_new" name="city" class="form-control" placeholder="City" />
-                                </td>
-                                <td class="col-md-1">
-                                    <input type="text" id="state_new" name="state" class="form-control" placeholder="State" />
-                                </td>
-                                
-                                <td class="col-md-1">
-                                    <input type="text" id="country_code_new" name="country_code" class="form-control" placeholder="Country Code" />
-                                </td>
-
-                                <td class="col-md-2">
-                                    <input type="text" id="phone_new" name="phone" class="form-control" placeholder="Phone" />
-                                </td>
-
-                                <td class="col-md-2">
-                                    <input type="text" id="fax_new" name="fax" class="form-control" placeholder="Fax" />
-                                </td>
-                                <td class="text-center">
-                                    <input type="hidden" name="type" value="0">
-                                    <input type="hidden" id="longitude_new" name="longitude" class="form-control" placeholder="Longitude" />
-                                    <input type="hidden" id="latitude_new" name="latitude" class="form-control" placeholder="Latitude" />
-
-                                    <?php if (hasPermission('Companies', 'add')) { ?>
-                                    <button type="submit" name="addBranch" class="btn btn-success btn-sm">
-                                        <i class="fas fa-plus-circle"></i> Add Branch
-                                    </button>
-                                    <?php } ?>
-                                </td>
-                            </form>
-                        </tr>
-                    </table>
+                    <div class="set-table-scroll-below-1900">
+                        <table class="table table-bordered">
+                            <tr>
+                                <form method="POST">
+                                    <td class="p-2px" >
+                                        <input type="text" id="branch_new" name="branch" class="form-control" placeholder="Branch" autocomplete="off" style="width: 70px" />
+                                    </td>
+                                    <td class="p-2px">
+                                        <input type="text" id="address_new" name="address" class="form-control address-autocomplete" placeholder="Enter address" autocomplete="off" style="width: 145px" />
+                                    </td>
+                                    <td class="p-2px">
+                                        <input type="text" id="city_new" name="city" class="form-control" placeholder="City" style="width: 70px" />
+                                    </td>
+                                    <td class="p-2px">
+                                        <input type="text" id="state_new" name="state" class="form-control" placeholder="State" style="width: 40px" />
+                                    </td>
+                                    <td class="p-2px">
+                                        <input type="text" id="zipcode_new" name="zipcode" class="form-control" placeholder="Zip" style="width: 45px" />
+                                    </td>
+                                    <td class="p-2px">
+                                        <input type="text" id="latitude_new" name="latitude" class="form-control" placeholder="Lat" style="width: 40px" />
+                                    </td>
+                                    <td class="p-2px">
+                                        <input type="text" id="longitude_new" name="longitude" class="form-control" placeholder="Long" style="width: 40px" />
+                                    </td>
+                                    
+                                    <td class="p-2px">
+                                        <input type="text" id="country_code_new" name="country_code" class="form-control" placeholder="Country Code" style="width: 35px" />
+                                    </td>
+                                    <td class="p-2px">
+                                        <input type="text" id="phone_new" name="phone[]" class="form-control" placeholder="Phone 1" style="width: 112px"  oninput="this.value = formatPhoneNumberUSRC(this.value);" />
+                                    </td>
+                                    <td class="p-2px">
+                                        <input type="text" id="phone_new_2" name="phone[]" class="form-control" placeholder="Phone 2" style="width: 112px"  oninput="this.value = formatPhoneNumberUSRC(this.value);" />
+                                    </td>
+                                    <td class="p-2px">
+                                        <input type="text" id="phone_new_3" name="phone[]" class="form-control" placeholder="Phone 3" style="width: 112px"  oninput="this.value = formatPhoneNumberUSRC(this.value);" />
+                                    </td>
+                                    <td class="p-2px">
+                                        <input type="text" id="fax_new" name="fax" class="form-control" placeholder="Fax" style="width: 112px" />
+                                    </td>
+                                    <td class="text-center">
+                                        <input type="hidden" name="type" value="1">
+                                        <?php if (hasPermission('Companies', 'add')) { ?>
+                                        <button type="submit" name="addBranch" class="btn btn-success btn-sm">
+                                            <i class="fas fa-plus-circle"></i> Branch
+                                        </button>
+                                        <?php } ?>
+                                    </td>
+                                </form>
+                            </tr>
+                        </table>
+                    </div>
                     </div>  
                               <hr />
                                 <?php if (!empty($final['company_branches'])): ?>
                                     <div class="table-responsive table-space set-main-table-company-branch">
-                                    <table class="table table-bordered table-striped dataTable">
-                                        <!-- <thead>
-                                            <tr>
-                                                <th>Address</th>
-                                                <th>State</th>
-                                                <th>City</th>
-                                                <th>Latitude</th>
-                                                <th>Longitude</th>
-                                                <th>Country Code</th>
-                                                <th>Phone</th>
-                                                <th>Fax</th>
-                                                <th class="text-center">Actions</th>
-                                            </tr>
-                                        </thead> -->
-                                        <tbody>
-                                            <?php foreach ($final['company_branches'] as $index => $branch): ?>
-                                                <?php $uniqueIndex = $index + 99; ?>
-                                                <tr class="tidmis_<?= $branch['id'] ?>">
-                                                    <form method="POST">
-
-                                                    <td class="col-md-3">
-                                                        <input type="text" id="address_<?= $uniqueIndex ?>" name="address" value="<?= htmlspecialchars($branch['address']) ?>" class="form-control address-autocomplete" autocomplete="off" />
-                                                    </td>
-                                                    <td class="col-md-2">
-                                                        <input type="text" id="city_<?= $uniqueIndex ?>" name="city" value="<?= htmlspecialchars($branch['city']) ?>" class="form-control" />
-                                                    </td>
-                                                    <td class="" >
-                                                        <input type="text" id="state_<?= $uniqueIndex ?>" name="state" value="<?= htmlspecialchars($branch['state']) ?>" class="form-control" style="width: 50px;" />
-                                                    </td>
-                                                    
-                                                    <td class="col-md-1">
-                                                        <input type="text" id="latitude_<?= $uniqueIndex ?>" name="latitude" value="<?= htmlspecialchars($branch['latitude']) ?>" class="form-control" />
-                                                    </td>
-                                                    <td class="col-md-1">
-                                                        <input type="text" id="longitude_<?= $uniqueIndex ?>" name="longitude" value="<?= htmlspecialchars($branch['longitude']) ?>" class="form-control" />
-                                                    </td>
-                                                    <td class="col-md-1">
-                                                        <input type="text" id="country_code_<?= $uniqueIndex ?>" name="country_code" value="<?= htmlspecialchars($branch['country_code']) ?>" class="form-control" />
-                                                    </td>
-
-                                                    <td class="col-md-2">
-                                                        <input type="text" id="" name="phone" value="718 308 7700" class="form-control" />
-                                                    </td>
-
-                                                    <td class="col-md-2">
-                                                        <input type="text" id="" name="fax" value="917.685.6566" class="form-control" />
-                                                    </td>
-
-                                                        <td class="text-center">
-                                                            <input type="hidden" name="type" value="0">
-                                                            <input type="hidden" name="branch_id" value="<?= $branch['id'] ?>">
-                                                            <?php if (hasPermission('Companies', 'edit')) { ?>
-                                                            <button type="submit" name="updateBranch" class="btn btn-success btn-sm">
-                                                                <i class="fas fa-save"></i>
-                                                            </button>
-                                                            <?php } ?>
-                                                            <?php if (hasPermission('Companies', 'delete')) { ?>
-                                                            <button type="button" class="btn btn-danger btn-sm" ><i class="fa fa-trash  delete-branch" id="<?php echo base64_encode($branch['id']);?>" data-branch-index="<?= $index; ?>"></i></button>
-                                                            <?php } ?>
-
+                                        <table class="table table-bordered table-striped dataTable">
+                                            <tbody>
+                                                <?php foreach ($final['company_branches'] as $index => $location): ?>
+                                                    <?php $uniqueIndex = $index + 99; ?>
+                                                    <tr class="tidmis_<?= $location['id'] ?>">
+                                                    <!-- <form method="POST">
+                                                        <td class="p-2px">
+                                                            <input type="text" id="" name="branch" class="form-control address-autocomplete" placeholder="Branch" autocomplete="off" style="width: 70px" />
                                                         </td>
-                                                    </form>
-                                                </tr>
-                                            <?php endforeach; ?>
-                                        </tbody>
-                                    </table>
+                                                        <td class="p-2px">
+                                                            <input type="text" id="address_<?= $uniqueIndex ?>" name="address" value="<?= htmlspecialchars($branch['address']) ?>" class="form-control address-autocomplete" autocomplete="off" style="width: 145px" />
+                                                        </td>
+                                                        <td class="p-2px">
+                                                            <input type="text" id="city_<?= $uniqueIndex ?>" name="city" value="<?= htmlspecialchars($branch['city']) ?>" class="form-control" style="width: 70px" />
+                                                        </td>
+                                                        <td class="p-2px">
+                                                            <input type="text" id="state_<?= $uniqueIndex ?>" name="state" value="<?= htmlspecialchars($branch['state']) ?>" class="form-control" style="width: 40px;" />
+                                                        </td>
+                                                        <td class="p-2px">
+                                                            <input type="text" id="" name="state" class="form-control" placeholder="Zip" style="width: 45px" />
+                                                        </td>
+                                                        
+                                                        <td class="p-2px">
+                                                            <input type="text" id="latitude_<?= $uniqueIndex ?>" name="latitude" value="<?= htmlspecialchars($branch['latitude']) ?>" class="form-control" style="width: 40px" />
+                                                        </td>
+                                                        <td class="p-2px">
+                                                            <input type="text" id="longitude_<?= $uniqueIndex ?>" name="longitude" value="<?= htmlspecialchars($branch['longitude']) ?>" class="form-control" style="width: 40px" />
+                                                        </td>
+                                                        <td class="p-2px">
+                                                            <input type="text" id="country_code_<?= $uniqueIndex ?>" name="country_code" value="<?= htmlspecialchars($branch['country_code']) ?>" class="form-control"  style="width: 35px" />
+                                                        </td>
+
+                                                        <td class="p-2px">
+                                                            <input type="text" id="" name="phone" value="718 308 7700" class="form-control" style="width: 112px" />
+                                                        </td>
+                                                        <td class="p-2px">
+                                                            <input type="text" id="" name="phone" value="718 308 7700" class="form-control" style="width: 112px" />
+                                                        </td>
+                                                        <td class="p-2px">
+                                                            <input type="text" id="" name="phone" value="718 308 7700" class="form-control" style="width: 112px" />
+                                                        </td>
+                                                        <td class="p-2px">
+                                                            <input type="text" id="" name="fax" value="917.685.6566" class="form-control" style="width: 112px" />
+                                                        </td>
+
+                                                            <td class="text-center" style="width: 98px;">
+                                                                <input type="hidden" name="type" value="0">
+                                                                <input type="hidden" name="branch_id" value="<?= $branch['id'] ?>">
+                                                                <?php if (hasPermission('Companies', 'edit')) { ?>
+                                                                <button type="submit" name="updateBranch" class="btn btn-success btn-sm">
+                                                                    <i class="fas fa-save"></i>
+                                                                </button>
+                                                                <?php } ?>
+                                                                <?php if (hasPermission('Companies', 'delete')) { ?>
+                                                                <button type="button" class="btn btn-danger btn-sm" ><i class="fa fa-trash  delete-branch" id="<?php echo base64_encode($branch['id']);?>" data-branch-index="<?= $index; ?>"></i></button>
+                                                                <?php } ?>
+
+                                                            </td>
+                                                    </form> -->
+                                                    <form method="POST">
+                                                    <td class="p-2px">
+                                                        <input type="text" id="" name="branch" class="form-control" placeholder="Branch" autocomplete="off" style="width: 70px" value="<?= htmlspecialchars($location['branch_name'] ?? '') ?>" />
+                                                    </td>
+                                                    <!-- Address with Autocomplete -->
+                                                    <td class="p-2px">
+                                                        <input type="text" id="address_<?= $index ?>" name="address" value="<?= htmlspecialchars($location['address']) ?>" class="form-control address-autocomplete" autocomplete="off" style="width: 145px" />
+                                                    </td>
+                                                    <td class="p-2px">
+                                                        <input type="text" id="city_<?= $index ?>" name="city" value="<?= htmlspecialchars($location['city']) ?>" class="form-control" style="width: 70px" />
+                                                    </td>
+                                                    <td class="p-2px">
+                                                        <input type="text" id="state_<?= $index ?>" name="state" value="<?= htmlspecialchars($location['state']) ?>" class="form-control"  style="width: 40px" />
+                                                    </td>
+                                                    <td class="p-2px">
+                                                        <input type="text" id="zipcode_<?= $index ?>" name="zipcode" class="form-control" placeholder="Zip" style="width: 45px" value="<?= htmlspecialchars($location['zipcode'] ?? '') ?>" />
+                                                    </td>
+                                                    <input type="hidden" id="latitude_<?= $index ?>" name="latitude" value="<?= htmlspecialchars($location['latitude']) ?>" class="form-control" />
+                                                    <input type="hidden" id="longitude_<?= $index ?>" name="longitude" value="<?= htmlspecialchars($location['longitude']) ?>" class="form-control" />
+                                                    <td class="p-2px">
+                                                        <input type="text" id="country_code_<?= $index ?>" name="country_code" value="<?= htmlspecialchars($location['country_code']) ?>" class="form-control" style="width: 35px" />
+                                                    </td>
+                                                    <?php
+                                                    $phones = isset($location['phone_numbers']) ? explode(',', $location['phone_numbers']) : [];
+                                                    ?>
+
+                                                    <td class="p-2px">
+                                                        <input type="text" id="phone_new" name="phone[]" class="form-control" placeholder="Phone 1"
+                                                            style="width: 112px" value="<?= isset($phones[0]) ? htmlspecialchars(trim($phones[0])) : '' ?>"
+                                                             oninput="this.value = formatPhoneNumberUSRC(this.value);" />
+                                                    </td>
+                                                    <td class="p-2px">
+                                                        <input type="text" id="phone_new_2" name="phone[]" class="form-control" placeholder="Phone 2"
+                                                            style="width: 112px" value="<?= isset($phones[1]) ? htmlspecialchars(trim($phones[1])) : '' ?>"  oninput="this.value = formatPhoneNumberUSRC(this.value);" />
+                                                    </td>
+                                                    <td class="p-2px">
+                                                        <input type="text" id="phone_new_3" name="phone[]" class="form-control" placeholder="Phone 3"
+                                                            style="width: 112px" value="<?= isset($phones[2]) ? htmlspecialchars(trim($phones[2])) : '' ?>"  oninput="this.value = formatPhoneNumberUSRC(this.value);" />
+                                                    </td>
+                                                    <td class="p-2px">
+                                                        <input type="text" id="fax_new" name="fax" class="form-control" placeholder="Fax" value="<?= htmlspecialchars($location['fax']) ?>" style="width: 112px" />
+                                                    </td>
+                                                    <td class="text-center" style="width: 98px;">
+                                                                <input type="hidden" name="type" value="0">
+                                                                <input type="hidden" name="branch_id" value="<?= $location['id'] ?>">
+                                                                <?php if (hasPermission('Companies', 'edit')) { ?>
+                                                                <button type="submit" name="updateBranch" class="btn btn-success btn-sm">
+                                                                    <i class="fas fa-save"></i>
+                                                                </button>
+                                                                <?php } ?>
+                                                                <?php if (hasPermission('Companies', 'delete')) { ?>
+                                                                <button type="button" class="btn btn-danger btn-sm" ><i class="fa fa-trash  delete-branch" id="<?php echo base64_encode($location['id']);?>" data-branch-index="<?= $index; ?>"></i></button>
+                                                                <?php } ?>
+
+                                                            </td>
+                                                </form>
+                                                    </tr>
+                                                <?php endforeach; ?>
+                                            </tbody>
+                                        </table>
                                     </div>
                                 <?php else: ?>
                                     <p>No Company Branches available.</p>
@@ -1100,6 +1168,26 @@
                         }
                     });
                 });
+
+                // Function to format phone number
+        function formatPhoneNumber(value) {
+            const cleaned = value.replace(/\D/g, "").substring(0, 10); // Only digits, max 10
+            const match = cleaned.match(/^(\d{3})(\d{3})(\d{0,4})$/);
+            if (match) {
+                return `(${match[1]}) ${match[2]}-${match[3]}`;
+            }
+            return cleaned;
+        }
+
+        // Function to format phone number
+        function formatPhoneNumberUSRC(value) {
+            const cleaned = value.replace(/\D/g, "").substring(0, 10); // Only digits, max 10
+            const match = cleaned.match(/^(\d{3})(\d{3})(\d{0,4})$/);
+            if (match) {
+                return `(${match[1]}) ${match[2]}-${match[3]}`;
+            }
+            return cleaned;
+        }
             </script>
     </body>
 </html>

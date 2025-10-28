@@ -279,7 +279,6 @@ if(isset($_GET['action']) && $_GET['action']=="get_users"){
         ]);
         exit;
     }
-    //dump($decodedResponse);
 
     // Initialize variables
     $final = [];
@@ -330,8 +329,8 @@ if(isset($_GET['action']) && $_GET['action']=="get_users"){
 
                 $final[] = array(
                     "DT_RowId" => $row['id'],
-                    '<input type="checkbox" class="chk-box" value="'.$row['id'].'" />',
-                    '<div class="content userHandle"> '.($row['id'] ? $row['id'] : '0').'</div>',
+                    '<input type="checkbox" class="chk-box" value="'.$row['id'].' " />',
+                    '<div class="content userHandle"> '.($row['id'] ? $row['id'] : '0').' <br> <span class="text-danger">'.($row['profile_group']['name'] ??  '' ).'</span></div>',
                     '<div class="content d-flex flex-row align-items-center userName">
                     '.$imgData.' '.$row['name'].'</div>',
                     '<div class="content userHandle text-primary"> @'.($row['handle_name'] ? $row['handle_name'] : 'N/A').'</div>',
@@ -1572,8 +1571,8 @@ if(isset($_GET['action'])  && $_GET['action']=="get_posts"){
             $final[] = array(
                 "DT_RowId" => $row['id'],
                 '<input type="checkbox" class="chk-box" value="'.$row['id'].'" />',
-                '<div class="content userNo">'.$rowNumber.'</div>',
-                '<div class="content userNo text-primary"><a href="post-details.php?id='.base64_encode($row['id']).'" target="_blank">'.$row['title'].'</a></div>',
+                '<div class="content userNo">'.$rowNumber.' <br> <span class="text-danger">'.($row['gender']['name'] ??  '' ).'</span></div>',
+                '<div class="content userNo text-primary"><a href="post-details.php?id='.base64_encode($row['id']).'">'.$row['title'].'</a></div>',
                 '<div class="content d-flex flex-row align-items-center justify-content-between">' . $userDropdown . '</div>',
                 '<div class="content userNo"> '.($row['user_type'] ==0  ? 'No' : 'Yes').'</div>',
                 ''.$ww.'',
@@ -1770,6 +1769,14 @@ if(isset($_GET['action']) && $_GET['action'] == "update_post"){
     } else if (!empty($postFields['community'])) {
         // If communities are selected, convert array to comma-separated string
         $postFields['community'] = implode(',', $postFields['community']);
+    }
+
+    if (
+        isset($postFields['owner_approved'], $postFields['admin_approved']) &&
+        $postFields['owner_approved'] == '1' &&
+        $postFields['admin_approved'] == '1'
+    ) {
+        $postFields['status'] = 1;
     }
     
 
@@ -2228,7 +2235,7 @@ if(isset($_GET['action'])  && $_GET['action']=="get_looking_for"){
                 $final[] = array(
                     "DT_RowId" => $row['id'],
                     '<input type="checkbox" class="chk-box" value="'.$row['id'].'" />',
-                    '<div class="content userNo">'.$rowNumber.'</div>',
+                    '<div class="content userNo">'.$rowNumber.' <br> <span class="text-danger">'.($row['gender']['name'] ??  '' ).'</span></div>',
                     '<div class="content d">
                     <a href="listing-details.php?id='.base64_encode($row['id']).'">'.$row['title'].'</a></div>',
                     '<div class="content d-flex">
@@ -4080,7 +4087,7 @@ if(isset($_GET['action'])  && $_GET['action']=="get_noti_templates"){
     $sortColumnMap = [
         0 => 'title',
         2 => 'name',
-        1 => 'code',
+        1 => 'template_code',
         3 => 'push_message',
         4 => 'notification_message',
         5 => 'email_text',
@@ -4145,7 +4152,7 @@ if(isset($_GET['action'])  && $_GET['action']=="get_noti_templates"){
             $final[] = array(
                 "DT_RowId" => $row['id'],
                 '<div class="userNo content"> '.($row['title'] ? ''.$row['title'] : 'N/A').' </div>',
-                '<div class="userNo content"> '.($row['code'] ? ''.$row['code'] : 'N/A').' </div>',
+                '<div class="userNo content"> '.($row['template_code'] ? ''.$row['template_code'] : 'N/A').' </div>',
                 '<div class="userNo content"> '.($row['name'] ? ''.$row['name'] : 'N/A').' </div>',
                 '<div class="userNo content"> '.($row['after_expire_time'] ? ''.$row['after_expire_time'] : 'N/A').' </div>',
                 '<div class="userNo content"> '.($row['push_message'] ? ''.$row['push_message'] : 'N/A').' </div>',
@@ -4156,7 +4163,8 @@ if(isset($_GET['action'])  && $_GET['action']=="get_noti_templates"){
                     data-id="'.base64_encode($row['id']).'" 
                     data-push_message="'.htmlspecialchars($row['push_message'], ENT_QUOTES).'" 
                     data-notification_message="'.htmlspecialchars($row['notification_message'], ENT_QUOTES).'" 
-                    data-code="'.htmlspecialchars($row['code'], ENT_QUOTES).'" 
+                    data-code="'.htmlspecialchars($row['code'], ENT_QUOTES).'"
+                    data-template-code="'.htmlspecialchars($row['template_code'], ENT_QUOTES).'" 
                     data-title="'.htmlspecialchars($row['title'], ENT_QUOTES).'"                    data-after_expire_time="'.htmlspecialchars($row['after_expire_time'], ENT_QUOTES).'" 
                     data-name="'.$row['name'].'" 
                     data-after_expire_time="'.htmlspecialchars($row['after_expire_time'], ENT_QUOTES).'" 

@@ -82,10 +82,19 @@
                     <div class="row">
                         <div class="col-12 col-lg-12">
                             <div class="chatss-right mb-lg-5">
-                                <div class="text-center">
+                                <!-- <div class="text-center">
                                   <a href="#"><img src="assets/images/himish-block.png" alt="logo"></a>
-                                </div>
-                                <div class="chatss-right-top this-single-chat-page" id="userNameC"></div>
+                                </div> -->
+                                <?php if($type == 3){ ?>
+
+                                  <?php if($data['owner_id'] == 0){ ?>
+                                    <div class="alert alert-warning" role="alert">
+                                      <i class="fa fa-info-circle"></i> Company owner is not on himish yet, we will send this message via email or SMS, and notify you when they reply.
+                                    </div>
+                                  <?php } ?>
+                                <?php } ?>
+                                <div class="chatss-right-top this-single-chat-page-nh
+                                " id="userNameC"></div>
                                 <div class="chatss-right-top"></div>
                                 <div class="chatss-right-bottom messages"></div>
                                 <div class="chatss-right-input parent-chatss-right-input" id="chatButton">
@@ -122,7 +131,7 @@
                                                 <div class="voice-dropdown" id="voice-dropdown">
                                                     <div class="d-flex justify-content-between align-items-center voice-dropdown-top">
                                                         <p>Recording Started</p>
-                                                        <button class="close-voice"><img src="assets/img/clsoe-x-close.png" alt="" /></button>
+                                                        <button type="button" class="close-voice"><img src="assets/img/clsoe-x-close.png" alt="" /></button>
                                                     </div>
                                                     <div class="voice-dropdown-image">
                                                         <div><img src="assets/img/voice-recoard.png" alt="" /></div>
@@ -292,6 +301,7 @@
   // send text message only
   send_text_only.addEventListener("click", function () {
     const textToSend = transcriptEl.textContent.trim();
+    console.log(activeChat);
     if (textToSend) {
      
         const data = {
@@ -417,15 +427,8 @@
 
           return `
             <div class="company-item new-company-item-ss">
-              <div class="company-carousel">
-                <div id="companyCarouselIndicators" class="carousel slide" data-bs-ride="carousel">
-                  <div class="carousel-indicators">${carouselIndicators}</div>
-                  <div class="carousel-inner">${carouselInner}</div>
-                </div>
-              </div>
-
-              <div class="company-details">
-                <div class="company-logo">
+              <div class="company-details d-flex">
+                <div class="company-logo mx-2">
                   <img src="${logo}" alt="Company Logo" class="img-fluid">
                 </div>
                 <div class="company-info">
@@ -465,19 +468,6 @@
                     </div>
 
                   </div>
-                </div>
-
-                <div class="company-share-icons">
-                  <button class="share-item share-like">
-                    <img src="${recommendIcon}" alt="Like Icon">
-                    <span class="like-count">${data.total_recommend || 0}</span>
-                  </button>
-                  <button class="share-item share-button">
-                    <img src="./assets/img/share.png" alt="Share Icon">
-                  </button>
-                  <button class="share-item share-bookmark">
-                    <img src="./assets/img/bookmarkBlack.png" alt="Bookmark Icon">
-                  </button>
                 </div>
               </div>
 
@@ -604,7 +594,7 @@
                 const response = await fetch(BASE_URL+"/apis/upload-media", {
                     method: "POST",
                     headers: {
-                        "security_key": "UG9zdGVyeiBBcHAgQ3JlYXRlIEJ5IENoYW5kYW4"
+                        "security_key": SECURITY_KEY
                         // Don't set Content-Type manually when using FormData
                     },
                     body: formData,
@@ -650,6 +640,7 @@
 
                 const BASE_URL = "<?= BASE_URL_NORMAL ?>";
                 const MEDIA_BASE_URL = "<?= MEDIA_BASE_URL ?>";
+                const SECURITY_KEY = "<?= SECURITY_KEY ?>";
                 const NO_DATA_IMG = "./assets/img/user-icon.png";
                 const company_image = "./assets/img/profile-chat-01.png";
 
@@ -674,7 +665,7 @@
                 const connectUser = (userId) => {
                     socket.emit("connectUser", { user_id: userId });
                     socket.on("connectUserListener", (response) => {
-                        console.log("User Connected:", response);
+                        //console.log("User Connected:", response);
                     });
                 };
 
@@ -740,15 +731,22 @@
                                         </div>`
                                 }
                                 else if(msg.message_type==3){
-                                    const extension = msg.media.split('.').pop().toLowerCase();
 
-                                    ___message =`<h4>@${name}</h4>
-                                            <p>${(msg.message) ? msg.message :'' }</p><div class="chatss-right-bottom-users-extra">
-                                         <audio controls>
-                                            <source src="${MEDIA_BASE_URL + msg.media}" type="audio/${extension}">
-                                            Your browser does not support the audio element.
-                                        </audio>
-                                        </div>`
+                                  const hasMedia = msg && msg.media;
+                                  const extension = hasMedia ? msg.media.split('.').pop().toLowerCase() : '';
+
+                                  ___message = `
+                                      <h4>@${name}</h4>
+                                      ${msg?.message ? `<p>${msg.message}</p>` : ''}
+                                      ${hasMedia ? `
+                                          <div class="chatss-right-bottom-users-extra">
+                                              <audio controls>
+                                                  <source src="${MEDIA_BASE_URL + msg.media}" type="audio/${extension}">
+                                                  Your browser does not support the audio element.
+                                              </audio>
+                                          </div>` : ''}
+                                  `;
+
                                 }
                                 else if(msg.message_type==4){
                                     const extension = msg.media.split('.').pop().toLowerCase();
@@ -834,8 +832,6 @@
                                   message: messageInput.value,
                                   constantId: constantId,
                                 };
-
-                                console.log(data);
 
 
                                 if(messageInput.value){

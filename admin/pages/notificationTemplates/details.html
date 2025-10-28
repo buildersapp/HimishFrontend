@@ -60,7 +60,7 @@
                                                     <a href="#" class="userHeading"> TITLE </a>
                                                 </th>
                                                 <th scope="col" class="userHeading-size">
-                                                    <a href="#" class="userHeading"> CODE </a>
+                                                    <a href="#" class="userHeading"> TEMPLATE CODE </a>
                                                 </th>
                                                 <th scope="col" class="userHeading-size">
                                                     <a href="#" class="userHeading"> NAME </a>
@@ -107,6 +107,12 @@
                             <form class="user-form p-0 d-flex flex-column gap-3" method="post" action="" data-parsley-validate enctype="multipart/form-data">
                                 <input type="hidden" name="Id" id="Id" value="" />
                                 
+                                <div>
+                                    <label for="code">Template Code</label>
+                                    <div class="d-flex align-items-center">
+                                        <textarea class="form-control" name="template_code" rows="1" id="template_code"></textarea>
+                                    </div>
+                                </div>
                                 <div>
                                     <label for="code">Code</label>
                                     <div class="d-flex align-items-center">

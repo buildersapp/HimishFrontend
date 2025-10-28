@@ -2433,6 +2433,7 @@ $(document).on('click', '.editNM', function () {
     // Set values
     $("#Id").val($(this).attr("data-id"));
     $("#code").val($(this).attr("data-code"));
+    $("#template_code").val($(this).attr("data-template-code"));
     $("#title").val($(this).attr("data-title"));
     $("#name").val($(this).attr("data-name"));
     $("#after_expire_time").val($(this).attr("data-after_expire_time"));
@@ -4034,7 +4035,7 @@ function initAutocompleteMulti() {
             document.getElementById(`latitude_${index}`).value = lat;
             document.getElementById(`longitude_${index}`).value = lng;
 
-            let city = '', state = '', country = '', countryName = '';
+            let city = '', state = '', country = '', countryName = '', zipcode = '';
 
             place.address_components.forEach(component => {
                 const types = component.types;
@@ -4051,11 +4052,20 @@ function initAutocompleteMulti() {
                     country = component.short_name;
                     countryName = component.long_name; // for removing from input
                 }
+
+                if (types.includes('postal_code')) {
+                    console.log(component);
+                    zipcode = component.long_name;
+                }
             });
 
             document.getElementById(`city_${index}`).value = city;
             document.getElementById(`state_${index}`).value = state;
             document.getElementById(`country_code_${index}`).value = country;
+            console.log(`zipcode_${index}`)
+            if (document.getElementById(`zipcode_${index}`)) {
+                document.getElementById(`zipcode_${index}`).value = zipcode;
+            }
 
             // Remove country name from the address input field
             let formattedAddress = place.formatted_address || input.value;

@@ -17,7 +17,6 @@ if($type == 3){
     $response = sendCurlRequest(BASE_URL.'/get-company'.$query_data, 'GET', []);
     $decodedResponse = json_decode($response, true);
     $data = count($decodedResponse['body']) > 0 ? $decodedResponse['body'][0] : [];
-    // dump($data);
     $user2_id = $data['owner_id'];
 }else if($type==2){
     $apiData = [

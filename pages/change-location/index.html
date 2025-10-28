@@ -6,6 +6,10 @@
         include('includes/nav-header.php');
         $defaultLatitude = $userDetails['latitude'] ?? 40.712776; // Default: New York
         $defaultLongitude = $userDetails['longitude'] ?? -74.005974;
+        $defaultCity = $userDetails['city'] ?? 'Brooklyn';
+        $defaultState = $userDetails['state'] ?? 'NY';
+        $defaultCountry = $userDetails['country_code'] ?? 'US';
+        $defaultAddress = $userDetails['location'] ?? '';
         $defaultRadius = $userDetails['radius'] ?? 200;
         ?>
         
@@ -13,10 +17,10 @@
             <section class="location-search-section">
                 <div class="container">
                     <form id="locationForm" method="POST" action="">
-                        <input type="hidden" id="address" name="address">
-                        <input type="hidden" id="city" name="city">
-                        <input type="hidden" id="state" name="state">
-                        <input type="hidden" id="country_code" name="country_code">
+                        <input type="hidden" id="address" name="address" value="<?= @$ddefaultAddress ?>">
+                        <input type="hidden" id="city" name="city" value="<?= @$defaultCity ?>">
+                        <input type="hidden" id="state" name="state" value="<?= @$defaultState ?>">
+                        <input type="hidden" id="country_code" name="country_code" value="<?= @$defaultCountry ?>">
                         <input type="hidden" id="latitude" name="latitude" value="<?= $defaultLatitude ?>">
                         <input type="hidden" id="longitude" name="longitude" value="<?= $defaultLongitude ?>">
                         <input type="hidden" id="radius" name="radius" value="<?= $defaultRadius ?>">

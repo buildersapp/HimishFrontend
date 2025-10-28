@@ -448,9 +448,16 @@
                                     </div>
 
                                     <!-- Input Field -->
+
                                     <div class="input-wrapper mt-3">
                                         <input type="text" placeholder="Enter company email" id="verify-input" name="verification-input" class="form-input" />
-                                        
+                                        <button type="button" id="send-otp-btn" class="btn btn-secondary mt-2">Send OTP</button>
+                                    </div>
+
+                                    <!-- OTP Section -->
+                                    <div id="otp-section" class="mt-3" style="display: none;">
+                                        <input type="text" id="otp-input" placeholder="Enter OTP" class="form-input" />
+                                        <button type="button" id="verify-otp-btn" class="btn btn-primary mt-2">Verify OTP</button>
                                     </div>
 
                                     <p class="mb-0 small-text-form mt-3">
@@ -477,7 +484,10 @@
                             <!-- Buttons  -->
                             <div class="not-find">
                                 <div class="upload-button-wrapper d-flex justify-content-center flex-column">
-                                    <button type="submit" name="<?= ($companyId == 0) ? 'addCompany' : 'updateCompany' ?>" class="upload-buttom-top"> <?= ($companyId == 0) ? 'Create' : 'Update' ?> Company <img src="assets/img/Arrow Forward.svg" alt="Arrow" /> </button>
+                                    <button type="submit" id="create-company-btn" name="<?= ($companyId == 0) ? 'addCompany' : 'updateCompany' ?>" class="upload-buttom-top">
+                                    <?= ($companyId == 0) ? 'Create' : 'Update' ?> Company <img src="assets/img/Arrow Forward.svg" alt="Arrow" />
+                                    </button>
+
                                     <button type="button" class="upload-buttom-bottom" onclick="prevStep(1)">Back</button>
                                     <button class="cancelbtn" type="button" onclick="if(confirm('Are you sure you want to discard ?')){ window.location.href = 'home.php'; }">Cancel</button>
                                 </div>

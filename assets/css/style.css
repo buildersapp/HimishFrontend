@@ -76,7 +76,7 @@ header {
   display: flex;
   align-items: center;
   justify-content: end;
-  gap: 24px;
+  gap: 18px;
 }
 
 .header-right button {
@@ -877,7 +877,7 @@ header {
 #connectionOffcanvas .modal-close img,
 #walletOffcanvas .modal-close img {
   width: 100%;
-  background: white;
+  background: #f2f8ff;
 }
 
 #notificationOffcanvas h5,
@@ -924,7 +924,7 @@ header {
 .notification-lists {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 8px;
 }
 
 .notification-box {
@@ -2191,11 +2191,7 @@ header {
 }
 
 .register-submit {
-  background: linear-gradient(
-    90deg,
-    rgba(70, 20, 202, 1) 0%,
-    rgba(149, 77, 225, 1) 100%
-  );
+  background: #1F458A;
   padding: 16px 105px;
   display: flex;
   align-items: center;
@@ -2208,7 +2204,7 @@ header {
 }
 
 .register-submit:hover {
-  background: linear-gradient(90deg, rgb(47, 7, 156) 0%, rgb(81, 19, 148) 100%);
+  opacity: 0.9;
 }
 
 .agreement-section {

@@ -173,6 +173,11 @@
                             </div>
                           </div>
 
+                          <div class="mt-24">
+                            <!-- Google reCAPTCHA Widget -->
+                            <div class="g-recaptcha" data-sitekey="<?= RECAPTCHA_SITE_KEY ?>"></div>
+                          </div>
+
                           <div class="set-text-center mt-24">
                             <button type="submit" class="set-btn-primary d-block">Get Early Access</button>
                           </div>
@@ -240,7 +245,7 @@
   <script src="https://code.jquery.com/jquery-3.6.0.min.js?v=<?= time() ?>"></script>
   <script src="https://cdn.jsdelivr.net/npm/parsleyjs@2.9.2/dist/parsley.min.js?v=<?= time() ?>"></script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/parsleyjs/src/parsley.css">
-
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
   <script>
     // Function to format phone number
   function formatPhoneNumberUSRC(value) {
@@ -282,6 +287,15 @@
     $('#earlyAccessForm').on('submit', function (e) {
       e.preventDefault();
 
+      // Check if reCAPTCHA is solved
+      if (typeof grecaptcha !== 'undefined') {
+        const response = grecaptcha.getResponse();
+        if (!response) {
+          alert("⚠️ Please verify that you're not a robot.");
+          return;
+        }
+      }
+      
       if ($(this).parsley().isValid()) {
         $.ajax({
           url: $(this).attr('action'),

@@ -227,6 +227,30 @@
                                                     </select>
                                                 </div>
                                             </div>
+
+                                            <div class="col-md-4">
+                                                <div>
+                                                    <label for="Owner Approved">Owner Approved:</label>
+                                                    <select class="form-select" name="owner_approved">
+                                                        <option value="1" <?php echo ($final['owner_approved']==1) ? 'selected' : '' ;?>
+                                                            >Yes</option>
+                                                        <option value="0" <?php echo ($final['owner_approved']==0) ? 'selected' : '' ;?>
+                                                            >No</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <div>
+                                                    <label for="Admin Approved">Admin Approved:</label>
+                                                    <select class="form-select" name="admin_approved">
+                                                        <option value="1" <?php echo ($final['admin_approved']==1) ? 'selected' : '' ;?>
+                                                            >Yes</option>
+                                                        <option value="0" <?php echo ($final['admin_approved']==0) ? 'selected' : '' ;?>
+                                                            >No</option>
+                                                    </select>
+                                                </div>
+                                            </div>
         
                                             <div class="col-md-2">
                                                 <div>
@@ -687,48 +711,78 @@
                             </div> -->
                         
                             <!-- Locations Table -->
-                            <div class="table-responsive table-space">
+                            <div class="table-responsive table-space set-main-table-company-branch">
                                 <h5>Post Locations</h5>
                                  <hr />
                                 <!-- Add New Loc Row -->
-                                <table class="table table-bordered table-striped">
-                                    <tr>
-                                        <form method="POST">
-                                            <td class="col-md-4">
-                                                <input type="text" id="address_new2" name="address" class="form-control address-autocomplete" placeholder="Enter address" autocomplete="off" />
-                                            </td>
-                                            <td class="col-md-2">
-                                                <input type="text" id="state_new2" name="state" class="form-control" placeholder="State" />
-                                            </td>
-                                            <td class="col-md-3">
-                                                <input type="text" id="city_new2" name="city" class="form-control" placeholder="City" />
-                                            </td>
-                                            <td class="col-md-3">
-                                                <input type="text" id="country_code_new2" name="country_code" class="form-control" placeholder="Country Code" />
-                                            </td>
-                                            <td class="text-center">
-                                                <input type="hidden" name="type" value="1">
-                                                <input type="hidden" id="longitude_new2" name="longitude" class="form-control" placeholder="Longitude" />
-                                                <input type="hidden" id="latitude_new2" name="latitude" class="form-control" placeholder="Latitude" />
-                                                <button type="submit" name="addPostLoc" class="btn btn-success btn-sm">
-                                                    <i class="fas fa-plus-circle"></i> Add Location
-                                                </button>
-                                            </td>
-                                        </form>
-                                    </tr>
-                                </table>
-
+                                <div class="set-table-scroll-below-1900">
+                                    <table class="table table-bordered table-striped">
+                                        <tr>
+                                            <form method="POST">
+                                                <td class="p-2px" >
+                                                    <input type="text" id="" name="branch" class="form-control" placeholder="Branch" autocomplete="off" style="width: 70px" />
+                                                </td>
+                                                <td class="p-2px">
+                                                    <input type="text" id="address_new2" name="address" class="form-control address-autocomplete" placeholder="Address" autocomplete="off" style="width: 145px" />
+                                                </td>
+                                                <td class="p-2px">
+                                                    <input type="text" id="city_new2" name="city" class="form-control" placeholder="City" style="width: 70px" />
+                                                </td>
+                                                <td class="p-2px">
+                                                    <input type="text" id="state_new2" name="state" class="form-control" placeholder="State" style="width: 40px;" />
+                                                </td>
+                                                <td class="p-2px" >
+                                                    <input type="text" id="zipcode_new2" name="zipcode" class="form-control" placeholder="Zip" autocomplete="off" style="width: 45px" />
+                                                </td>
+                                                <td class="p-2px">
+                                                    <input type="text" id="latitude_new2" name="latitude" class="form-control" placeholder="Lat" style="width: 40px" />
+                                                </td>
+                                                <td class="p-2px">
+                                                    <input type="text" id="longitude_new2" name="longitude" class="form-control" placeholder="Long" style="width: 40px" />
+                                                </td>
+                                                <td class="p-2px">
+                                                    <input type="text" id="country_code_new2" name="country_code" class="form-control" placeholder="Ctry" style="width: 35px" />
+                                                </td>
+                                                <td class="p-2px">
+                                                    <input type="text" id="phone_new_1" name="phone[]" class="form-control" placeholder="Phone 1" style="width: 112px" oninput="this.value = formatPhoneNumberUSRC(this.value);"/>
+                                                </td>
+                                                <td class="p-2px">
+                                                    <input type="text" id="phone_new_2" name="phone[]" class="form-control" placeholder="Phone 2" style="width: 112px" oninput="this.value = formatPhoneNumberUSRC(this.value);" />
+                                                </td>
+                                                <td class="p-2px">
+                                                    <input type="text" id="phone_new_3" name="phone[]" class="form-control" placeholder="Phone 3" style="width: 112px" oninput="this.value = formatPhoneNumberUSRC(this.value);" />
+                                                </td>
+                                                <td class="p-2px">
+                                                    <input type="text" id="fax_new" name="fax" class="form-control" placeholder="Fax" style="width: 112px" />
+                                                </td>
+                                                <td class="text-center">
+                                                    <input type="hidden" name="type" value="1">
+                                                    <button type="submit" name="addPostLoc" class="btn btn-success btn-sm">
+                                                        <i class="fas fa-plus-circle"></i> Location
+                                                    </button>
+                                                </td>
+                                            </form>
+                                        </tr>
+                                    </table>
+                                </div>
                                 <hr />
                                 <?php if (count($final['post_locations']) > 0): ?>
+                                <div class="set-table-scroll-below-1900">
                                     <table class="table table-bordered table-striped">
                                         <thead>
                                             <tr>
+                                                <th>Branch</th>
                                                 <th>Address</th>
-                                                <th>State</th>
                                                 <th>City</th>
-                                                <th>Latitude</th>
-                                                <th>Longitude</th>
-                                                <th>Country Code</th>
+                                                <th>State</th>
+                                                <th>Zip</th>
+                                                <!-- <th>Lat</th>
+                                                <th>Long</th> -->
+                                                <th>Cty</th>
+                                                <th>Phone 1</th>
+                                                <th>Phone 2</th>
+                                                <th>Phone 3</th>
+                                                <th>Fax</th>
                                                 <th class="text-center">Actions</th>
                                             </tr>
                                         </thead>
@@ -736,24 +790,46 @@
                                             <?php foreach ($final['post_locations'] as $index => $location): ?>
                                             <tr>
                                                 <form method="POST">
+                                                    <td class="p-2px">
+                                                        <input type="text" id="" name="branch" class="form-control" placeholder="Branch" autocomplete="off" style="width: 70px" value="<?= htmlspecialchars($location['branch_name'] ?? '') ?>" />
+                                                    </td>
                                                     <!-- Address with Autocomplete -->
-                                                    <td class="col-md-4">
-                                                        <input type="text" id="address_<?= $index ?>" name="address" value="<?= htmlspecialchars($location['address']) ?>" class="form-control address-autocomplete" autocomplete="off" />
+                                                    <td class="p-2px">
+                                                        <input type="text" id="address_<?= $index ?>" name="address" value="<?= htmlspecialchars($location['address']) ?>" class="form-control address-autocomplete" autocomplete="off" style="width: 145px" />
                                                     </td>
-                                                    <td class="col-md-1">
-                                                        <input type="text" id="state_<?= $index ?>" name="state" value="<?= htmlspecialchars($location['state']) ?>" class="form-control" />
+                                                    <td class="p-2px">
+                                                        <input type="text" id="city_<?= $index ?>" name="city" value="<?= htmlspecialchars($location['city']) ?>" class="form-control" style="width: 70px" />
                                                     </td>
-                                                    <td class="col-md-3">
-                                                        <input type="text" id="city_<?= $index ?>" name="city" value="<?= htmlspecialchars($location['city']) ?>" class="form-control" />
+                                                    <td class="p-2px">
+                                                        <input type="text" id="state_<?= $index ?>" name="state" value="<?= htmlspecialchars($location['state']) ?>" class="form-control"  style="width: 40px" />
                                                     </td>
-                                                    <td class="col-md-1">
-                                                        <input type="text" id="latitude_<?= $index ?>" name="latitude" value="<?= htmlspecialchars($location['latitude']) ?>" class="form-control" />
+                                                    <td class="p-2px">
+                                                        <input type="text" id="zipcode_<?= $index ?>" name="zipcode" class="form-control" placeholder="Zip" style="width: 45px" value="<?= htmlspecialchars($location['zipcode'] ?? '') ?>" />
                                                     </td>
-                                                    <td class="col-md-1">
-                                                        <input type="text" id="longitude_<?= $index ?>" name="longitude" value="<?= htmlspecialchars($location['longitude']) ?>" class="form-control" />
+                                                    <input type="hidden" id="latitude_<?= $index ?>" name="latitude" value="<?= htmlspecialchars($location['latitude']) ?>" class="form-control" />
+                                                    <input type="hidden" id="longitude_<?= $index ?>" name="longitude" value="<?= htmlspecialchars($location['longitude']) ?>" class="form-control" />
+                                                    <td class="p-2px">
+                                                        <input type="text" id="country_code_<?= $index ?>" name="country_code" value="<?= htmlspecialchars($location['country_code']) ?>" class="form-control" style="width: 35px" />
                                                     </td>
-                                                    <td class="col-md-1">
-                                                        <input type="text" id="country_code_<?= $index ?>" name="country_code" value="<?= htmlspecialchars($location['country_code']) ?>" class="form-control" />
+                                                    <?php
+                                                    $phones = isset($location['phone_numbers']) ? explode(',', $location['phone_numbers']) : [];
+                                                    ?>
+
+                                                    <td class="p-2px">
+                                                        <input type="text" id="phone_new" name="phone[]" class="form-control" placeholder="Phone 1"
+                                                            style="width: 112px" value="<?= isset($phones[0]) ? htmlspecialchars(trim($phones[0])) : '' ?>"
+                                                             oninput="this.value = formatPhoneNumberUSRC(this.value);" />
+                                                    </td>
+                                                    <td class="p-2px">
+                                                        <input type="text" id="phone_new_2" name="phone[]" class="form-control" placeholder="Phone 2"
+                                                            style="width: 112px" value="<?= isset($phones[1]) ? htmlspecialchars(trim($phones[1])) : '' ?>"  oninput="this.value = formatPhoneNumberUSRC(this.value);" />
+                                                    </td>
+                                                    <td class="p-2px">
+                                                        <input type="text" id="phone_new_3" name="phone[]" class="form-control" placeholder="Phone 3"
+                                                            style="width: 112px" value="<?= isset($phones[2]) ? htmlspecialchars(trim($phones[2])) : '' ?>"  oninput="this.value = formatPhoneNumberUSRC(this.value);" />
+                                                    </td>
+                                                    <td class="p-2px">
+                                                        <input type="text" id="fax_new" name="fax" class="form-control" placeholder="Fax" value="<?= htmlspecialchars($location['fax']) ?>" style="width: 112px" />
                                                     </td>
                                                     <td class="text-center">
                                                         <input type="hidden" name="location_id" value="<?= $location['id']; ?>">
@@ -766,42 +842,66 @@
                                             <?php endforeach; ?>
                                         </tbody>
                                     </table>
+                                </div>
                                 <?php else: ?>
                                     <p>No Post locations available.</p>
                                 <?php endif; ?>
 
-                                <h5>Company Branches</h5>
+                                <h5 class="mt-3">Company Branches</h5>
                                 <hr />
                                 <!-- Add New Branch Row -->
+                                <div class="set-table-scroll-below-1900">
                                     <table class="table table-bordered table-striped">
                                         <tr>
                                             <form method="POST">
-                                                <td class="col-md-4">
-                                                    <input type="text" id="address_new" name="address" class="form-control address-autocomplete" placeholder="Enter address" autocomplete="off" />
+                                                <td class="p-2px" >
+                                                    <input type="text" id="branch_new" name="branch" class="form-control" placeholder="Branch" autocomplete="off" style="width: 70px" />
                                                 </td>
-                                                <td class="col-md-2">
-                                                    <input type="text" id="state_new" name="state" class="form-control" placeholder="State" />
+                                                <td class="p-2px">
+                                                    <input type="text" id="address_new" name="address" class="form-control address-autocomplete" placeholder="Enter address" autocomplete="off" style="width: 145px" />
                                                 </td>
-                                                <td class="col-md-3">
-                                                    <input type="text" id="city_new" name="city" class="form-control" placeholder="City" />
+                                                <td class="p-2px">
+                                                    <input type="text" id="city_new" name="city" class="form-control" placeholder="City" style="width: 70px" />
                                                 </td>
-                                              
-                                                <td class="col-md-3">
-                                                    <input type="text" id="country_code_new" name="country_code" class="form-control" placeholder="Country Code" />
+                                                <td class="p-2px">
+                                                    <input type="text" id="state_new" name="state" class="form-control" placeholder="State" style="width: 40px" />
+                                                </td>
+                                                <td class="p-2px">
+                                                    <input type="text" id="zipcode_new" name="zipcode" class="form-control" placeholder="Zip" style="width: 45px" />
+                                                </td>
+                                                <td class="p-2px">
+                                                    <input type="text" id="latitude_new" name="latitude" class="form-control" placeholder="Lat" style="width: 40px" />
+                                                </td>
+                                                <td class="p-2px">
+                                                    <input type="text" id="longitude_new" name="longitude" class="form-control" placeholder="Long" style="width: 40px" />
+                                                </td>
+                                                
+                                                <td class="p-2px">
+                                                    <input type="text" id="country_code_new" name="country_code" class="form-control" placeholder="Country Code" style="width: 35px" />
+                                                </td>
+                                                <td class="p-2px">
+                                                    <input type="text" id="phone_new" name="phone[]" class="form-control" placeholder="Phone 1" style="width: 112px"  oninput="this.value = formatPhoneNumberUSRC(this.value);" />
+                                                </td>
+                                                <td class="p-2px">
+                                                    <input type="text" id="phone_new_2" name="phone[]" class="form-control" placeholder="Phone 2" style="width: 112px"  oninput="this.value = formatPhoneNumberUSRC(this.value);" />
+                                                </td>
+                                                <td class="p-2px">
+                                                    <input type="text" id="phone_new_3" name="phone[]" class="form-control" placeholder="Phone 3" style="width: 112px"  oninput="this.value = formatPhoneNumberUSRC(this.value);" />
+                                                </td>
+                                                <td class="p-2px">
+                                                    <input type="text" id="fax_new" name="fax" class="form-control" placeholder="Fax" style="width: 112px" />
                                                 </td>
                                                 <td class="text-center">
                                                     <input type="hidden" name="type" value="1">
-                                                    <input type="hidden" id="longitude_new" name="longitude" class="form-control" placeholder="Longitude" />
-                                                    <input type="hidden" id="latitude_new" name="latitude" class="form-control" placeholder="Latitude" />
 
                                                     <button type="submit" name="addBranch" class="btn btn-success btn-sm">
-                                                        <i class="fas fa-plus-circle"></i> Add Branch
+                                                        <i class="fas fa-plus-circle"></i> Branch
                                                     </button>
                                                 </td>
                                             </form>
                                         </tr>
                                     </table>
-
+                                </div>
 
                                 <hr />
                                 <?php if (!empty($final['company_data']['company_branches'])): ?>
@@ -1239,6 +1339,26 @@
                 });
             });
         });
+
+        // Function to format phone number
+        function formatPhoneNumber(value) {
+            const cleaned = value.replace(/\D/g, "").substring(0, 10); // Only digits, max 10
+            const match = cleaned.match(/^(\d{3})(\d{3})(\d{0,4})$/);
+            if (match) {
+                return `(${match[1]}) ${match[2]}-${match[3]}`;
+            }
+            return cleaned;
+        }
+
+        // Function to format phone number
+        function formatPhoneNumberUSRC(value) {
+            const cleaned = value.replace(/\D/g, "").substring(0, 10); // Only digits, max 10
+            const match = cleaned.match(/^(\d{3})(\d{3})(\d{0,4})$/);
+            if (match) {
+                return `(${match[1]}) ${match[2]}-${match[3]}`;
+            }
+            return cleaned;
+        }
     </script>
 
     

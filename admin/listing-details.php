@@ -69,6 +69,70 @@ $breadcrumb = [
     ['name' => $final['title'], 'url' => ''],
 ];
 
+if (count($final['post_categories']) > 0) {
+    foreach ($final['post_categories'] as $key => $category) {
+        // Get the master category based on the selected type
+        $defaultType = $category['parentCategory']['type'];
+        $responseM = sendCurlRequest(BASE_URL . '/admin-master-cat-subs?type=' . $defaultType, 'GET', []);
+        $decodedResponseM = json_decode($responseM, true);
+
+        // Add masterCatSub as a new key to the category array
+        $final['post_categories'][$key]['masterCatSub'] = $decodedResponseM['body'] ?? [];
+    }
+}
+
+if (isset($_POST['updateCat'])) {
+
+    $post_category_master_c     = $_POST['post_category_master_c'];
+    $request_id_c               = $_POST['request_id_c'];
+
+    $apiData = [
+        'id' => $request_id_c,
+        'category_id' => $post_category_master_c,
+        'post_id' => $id
+    ];
+
+    $response = sendCurlRequest(BASE_URL.'/update-post-category', 'POST', $apiData, [], true);
+    $decodedResponse = json_decode($response, true);
+    if($decodedResponse['success']){
+        echo "<script>window.location.href = 'listing-details.php?id=".$_GET['id']."&redirect=categories'</script>";
+    }
+}
+
+if (isset($_GET['del']) && isset($_GET['request_id'])) {
+    $request_id_c               = $_GET['request_id'];
+    //dump($request_id_c);
+    $response = sendCurlRequest(BASE_URL.'/delete-post-category?id='.$request_id_c.'', 'DELETE', [], [], true);
+    $decodedResponse = json_decode($response, true);
+    if($decodedResponse['success']){
+        echo "<script>window.location.href = 'listing-details.php?id=".$_GET['id']."&redirect=categories'</script>";
+    }
+}
+
+if (isset($_POST['addCat'])) {
+
+    $post_category_master_c     = $_POST['post_category_master'];
+    $apiData = [
+        'category_id' => $post_category_master_c,
+        'post_id' => $id
+    ];
+
+    if(!$post_category_master_c){
+        setcookie('errorMsg', 'Select Category', time() + 5, "/");
+        echo "<script>window.location.href = 'listing-details.php?id=".base64_encode($id)."&redirect=categories'</script>";exit;
+    }
+
+    $response = sendCurlRequest(BASE_URL.'/add-post-category', 'POST', $apiData, [], true);
+    $decodedResponse = json_decode($response, true);
+    //dump($decodedResponse);
+    if($decodedResponse['success']){
+        echo "<script>window.location.href = 'listing-details.php?id=".$_GET['id']."&redirect=categories'</script>";
+    }else{
+        setcookie('errorMsg', $decodedResponse['message'], time() + 5, "/");
+        echo "<script>window.location.href = 'listing-details.php?id=".base64_encode($id)."&redirect=categories'</script>";
+    }
+}
+
 // update post loc
 if (isset($_POST['updateLoc'])) {
 

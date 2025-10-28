@@ -1166,22 +1166,152 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
-const roleSelect = document.getElementById('role-select');
-const verifySection = document.getElementById('owner-verification-section');
-const inputField = document.getElementById('verify-input');
+$(document).ready(function () {
+    const roleSelect = $('#role-select');
+    const verifySection = $('#owner-verification-section');
+    const inputField = $('#verify-input');
+    const sendOtpBtn = $('#send-otp-btn');
+    const otpSection = $('#otp-section');
+    const verifyOtpBtn = $('#verify-otp-btn');
+    const otpInput = $('#otp-input');
+    const createBtn = $('#create-company-btn');
+    const hiddenVerifyStatus = $('<input>', { type: 'hidden', name: 'owner_verified', value: '0' });
+    $('form').append(hiddenVerifyStatus);
 
-// Show/hide section on role change
-roleSelect.addEventListener('change', () => {
-    if (roleSelect.value === 'Owner') {
-        verifySection.style.display = 'block';
-    } else {
-        verifySection.style.display = 'none';
+    let otpSent = false;
+
+    // Initially disable button visually
+    disableCreateButton();
+
+    function disableCreateButton() {
+        createBtn.css({ opacity: '0.5', pointerEvents: 'none', cursor: 'not-allowed' });
+        createBtn.prop('disabled', true);
     }
-});
 
-// Change input placeholder based on selected radio
-document.querySelectorAll('input[name="verify-method"]').forEach(radio => {
-    radio.addEventListener('change', function () {
-        inputField.placeholder = this.value === 'email' ? 'Enter company email' : 'Enter mobile number';
+    function enableCreateButton() {
+        createBtn.css({ opacity: '1', pointerEvents: 'auto', cursor: 'pointer' });
+        createBtn.prop('disabled', false);
+    }
+
+    // Show/hide verification section
+    roleSelect.on('change', function () {
+        if ($(this).val() === 'Owner') {
+            verifySection.show();
+            disableCreateButton();
+            hiddenVerifyStatus.val('0');
+        } else {
+            verifySection.hide();
+            enableCreateButton();
+            hiddenVerifyStatus.val('1'); // not needed but avoids block
+        }
+    });
+
+    // Change placeholder
+    $('input[name="verify-method"]').on('change', function () {
+        const method = $(this).val();
+        inputField.attr('placeholder', method === 'email' ? 'Enter company email' : 'Enter mobile number');
+        if(method !== 'email'){
+            inputField.addClass('phone-input');
+        }else{
+            inputField.removeClass('phone-input');
+        }
+    });
+
+    // Send OTP
+    sendOtpBtn.on('click', function () {
+        const verifyMethod = $('input[name="verify-method"]:checked').val();
+        const verifyValue = inputField.val().trim();
+
+        if (!verifyValue) {
+            $.toastr.error('Please enter your ' + verifyMethod, {position: 'top-center', time: 5000});
+            return;
+        }
+
+        const data = {
+            method: verifyMethod,
+            value: verifyValue
+        };
+
+        if(verifyMethod !== 'email'){
+            data.value = formatPhoneNumberCleanUS(verifyValue);
+        }
+
+        $.ajax({
+            url: 'ajax.php?action=ownerVerification',
+            type: 'POST',
+            data: data,
+            beforeSend: function () {
+                sendOtpBtn.prop('disabled', true).text('Sending verification code...');
+                openScreenLoader('Sending Verification Code... Do not refresh this page...');
+            },
+            success: function (response) {
+                try {
+                    var RespJson = JSON.parse(response);
+                    if (RespJson.success) {
+                        localStorage.setItem('otpCode', RespJson.body.otp);
+                        otpSection.show();
+                        otpSent = true;
+                        $.toastr.success('OTP sent successfully! Please check your ' + verifyMethod + '.', {position: 'top-center', time: 5000});
+                    } else {
+                        $.toastr.error(RespJson.message || 'Failed to send OTP.', {position: 'top-center', time: 5000});
+                    }
+                } catch (e) {
+                    console.error('Invalid JSON response:', response);
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error("Error: " + error);
+                $.toastr.error('Error sending OTP.', {position: 'top-center', time: 5000});
+            },
+            complete: function () {
+                sendOtpBtn.prop('disabled', false).text('Send OTP');
+                closeScreenLoader();
+            }
+        });
+    });
+
+    // Verify OTP
+    verifyOtpBtn.on('click', function () {
+        if (!otpSent) {
+            $.toastr.error('Please request an OTP first.', {position: 'top-center', time: 5000});
+            return;
+        }
+
+        const enteredOtp = otpInput.val().trim();
+        const storedOtp = localStorage.getItem('otpCode');
+
+        if (!enteredOtp) {
+            $.toastr.error('Please enter OTP.', {position: 'top-center', time: 5000});
+            return;
+        }
+
+        if (enteredOtp === storedOtp) {
+            otpSection.hide();
+            sendOtpBtn.prop('disabled', true);
+            inputField.prop('disabled', true);
+            $('input[name="verify-method"]').prop('disabled', true);
+            localStorage.removeItem('otpCode');
+            enableCreateButton();
+            hiddenVerifyStatus.val('1');
+            sendOtpBtn
+            .html('<span style="color:green;font-weight:600;">Verified <i class="fa fa-check-circle"></i></span>')
+            .css({
+                backgroundColor: '#e6ffee',
+                borderColor: '#8cd98c',
+                cursor: 'default'
+            });
+        } else {
+            $.toastr.error('Invalid OTP. Please try again.', {position: 'top-center', time: 5000});
+        }
+    });
+
+    // Extra layer: block manual click via DevTools
+    createBtn.on('click', function (e) {
+        if (hiddenVerifyStatus.val() !== '1' && roleSelect.val() === 'Owner') {
+            e.preventDefault();
+            $.toastr.error('You must verify your ownership before creating the company.', {position: 'top-center', time: 5000});
+            disableCreateButton();
+            return false;
+        }
     });
 });

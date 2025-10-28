@@ -37,10 +37,24 @@ $active_members = array_values(array_filter($members, function($mem) {
     return $mem['status'] == 1;
 }));
 
+usort($active_members, function($a, $b) {
+    // First, prioritize main_owner
+    if ($a['main_owner'] != $b['main_owner']) {
+        return $b['main_owner'] - $a['main_owner']; // main_owner = 1 goes first
+    }
+
+    // Then prioritize is_admin
+    if ($a['is_admin'] != $b['is_admin']) {
+        return $b['is_admin'] - $a['is_admin']; // is_admin = 1 goes next
+    }
+
+    // Optional: fallback (e.g., by name or id)
+    return 0;
+});
+
 $chat_members = array_values(array_filter($members, function($mem) {
     return $mem['can_chat'] == 1;
 }));
-//dump($members);
 
 $isMainAdmin = isAdminOrMainOwner(@$userDetails['id'], $members);
 $isMainOwner = isMainOwner(@$userDetails['id'], $members);

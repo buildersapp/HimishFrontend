@@ -36,6 +36,9 @@ if(isset($_POST['reject']) || isset($_POST['approve'])){
 
     if(!empty($gender)){
         $apiData['gender'] = $gender;
+    }else{
+        echo "<script>alert('Please select profile group or gender.');</script>";
+        exit;
     }
 
     $response = sendCurlRequest(BASE_URL.'/admin-change-post-listing-type', 'POST', $apiData, [], false, "8fcd91ae5e316cb6611d");

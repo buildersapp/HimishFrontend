@@ -139,10 +139,10 @@
                     <div class="mt-4">
                                                     <h5 class="f-18-gb">Company Info</h5>
                                                     <!-- Owner -->
-                                                    <?php if(!empty($companyDetails[0]['owner_name'])){ ?>
+                                                    <?php if(!empty($companyDetails[0]['owner_name']) && !$companyDetails[0]['hide_name']){ ?>
                                                     <div class="new-builder-com">
                                                         <p>Owner Name</p>
-                                                        <a href="user-details.php?id=<?= base64_encode($companyDetails[0]['owner_id']) ?>" target="_blank"><span class="text-primary"><?= $companyDetails[0]['owner_name'] ?></span></a>
+                                                        <a href="##udT<?= base64_encode($companyDetails[0]['owner_id']) ?>"><span class="text-primary"><?= $companyDetails[0]['owner_name'] ?></span></a>
                                                     </div>
                                                     <?php } ?>
                                                     
@@ -413,7 +413,7 @@
                                                             <div class="inner-info-coms-left-three-pill">
                                                                 <p>
                                                                     Incoming chats handled  by
-                                                                    <a class="text-primary" href="user-details.php?id=<?= base64_encode($chat_members[0]['user']['id']) ?>"><?= substr($chat_members[0]['user']['name'],0,15) ?>..</a>
+                                                                    <a class="text-primary" href="##udT<?= base64_encode($chat_members[0]['user']['id']) ?>"><?= substr($chat_members[0]['user']['name'],0,15) ?>..</a>
                                                                 </p>
                                                                 <button>
                                                                     <img src="assets/img/msg-items-pill.svg" alt="" />
@@ -422,7 +422,7 @@
                                                         </div>
                                                         <?php } ?>
                                                         <div class="inner-info-coms-right d-flex align-items-center justify-content-end">
-                                                            <button class="saveBtn">
+                                                            <button type="button" class="saveBtn share-fn" data-id="<?php echo base64_encode($companyDetails[0]['id']); ?>" data-title="link to invite Company Members" data-type="get_companies">
                                                                 <span class="saveBtnTxt">Invite Members</span>
                                                                 <span class="saveBtnImg"><img src="assets/img/forward.png" class="img-fluid w-100" alt="" /></span>
                                                             </button>
@@ -461,7 +461,7 @@
                                                                             <img src="<?php echo !empty($members['user']['image']) ? MEDIA_BASE_URL.$members['user']['image'] : generateBase64Image($members['user']['name']); ?>" class="img-fluid w-100 rounded-pz" alt="" />
                                                                         </div>
                                                                         <div class="notification-content new-notification-content ms-2">
-                                                                            <a href="user-details.php?id=<?= base64_encode($members['user']['id']) ?>" class="new-read-title" target="_blank">
+                                                                            <a href="##udT<?= base64_encode($members['user']['id']) ?>" class="new-read-title">
                                                                                 <?= $members['user']['name'] ?>
                                                                                 <img src="assets/img/mdi_approve-check.svg" alt="" />
                                                                             </a>
@@ -472,7 +472,9 @@
                                                                                         fill="#979797"
                                                                                     />
                                                                                 </svg>
-                                                                                Owner (Me)
+                                                                                Owner 
+                                                                                <?php if($isMainOwner) { ?> (Me)
+                                                                                <?php } ?>
                                                                             </p>
                                                                         </div>
                                                                     </div>
@@ -485,7 +487,7 @@
                                                                             <img src="<?php echo !empty($members['user']['image']) ? MEDIA_BASE_URL.$members['user']['image'] : generateBase64Image($members['user']['name']); ?>" class="img-fluid w-100 rounded-pz" alt="" />
                                                                         </div>
                                                                         <div class="notification-content new-notification-content ms-2">
-                                                                            <a href="user-details.php?id=<?= base64_encode($members['user']['id']) ?>" class="new-read-title" target="_blank">
+                                                                            <a href="##udT<?= base64_encode($members['user']['id']) ?>" class="new-read-title">
                                                                                 <?= $members['user']['name'] ?>
                                                                                 <img src="assets/img/mdi_approve-check.svg" alt="" />
                                                                             </a>
@@ -504,7 +506,10 @@
                                                                     </div>
                                                                     <div class="notification-btns new-notification-btns d-flex flex-column align-items-end">
                                                                         <?php if($isMainAdmin){ ?>
+
+                                                                        <?php if($members['can_chat'] == 0){ ?>
                                                                         <button class="cancel-btn" data-id="<?= $members['id'] ?>" id="removeCompanyMemberFn">Remove</button>
+                                                                        <?php } ?>
 
                                                                         <button class="accept-btn" data-company-id="<?= $companyId ?>" data-user-id="<?= $members['user']['id'] ?>" id="makeCompanyAdminFn" data-is-admin="<?= $members['is_admin'] ?>">
                                                                             <?= ($members['is_admin']==0) ? 'Make' : 'Remove' ?> Admin
@@ -524,7 +529,7 @@
                                                                         <img src="<?php echo !empty($members['user']['image']) ? MEDIA_BASE_URL.$members['user']['image'] : generateBase64Image($members['user']['name']); ?>" class="img-fluid w-100 rounded-pz" alt="" />
                                                                     </div>
                                                                     <div class="notification-content new-notification-content ms-2">
-                                                                        <a href="user-details.php?id=<?= base64_encode($members['user']['id']) ?>" class="new-read-title" target="_blank">
+                                                                        <a href="##udT<?= base64_encode($members['user']['id']) ?>" class="new-read-title">
                                                                             <?= $members['user']['name'] ?>
                                                                             <img src="assets/img/mdi_approve-check.svg" alt="" />
                                                                         </a>
@@ -576,7 +581,7 @@
                                                                     <img src="<?php echo !empty($recommend['user']['image']) ? MEDIA_BASE_URL.$recommend['user']['image'] : generateBase64Image($recommend['user']['name']); ?>" class="img-fluid w-100 rounded-pz" alt="" />
                                                                 </div>
                                                                 <div class="notification-content new-notification-content ms-2">
-                                                                    <a href="user-details.php?id=<?= base64_encode($recommend['user']['id']) ?>" class="new-read-title">
+                                                                    <a href="##udT<?= base64_encode($recommend['user']['id']) ?>" class="new-read-title">
                                                                         <?= $recommend['user']['name'] ?>
                                                                     </a>
                                                                     <p class="new-read-msg">
@@ -621,7 +626,6 @@
         </main>
         <?php include('includes/footer-scripts.php') ?>
         <script src="assets/js/company-details.js?v=<?= time() ?>"></script>
-        <script src="assets/js/scrollPost.js?v=<?= time() ?>"></script>
         <script>
             $(document).ready(function () {
                 Fancybox.bind('[data-fancybox="all-showcases"]', {
